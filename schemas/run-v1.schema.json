@@ -13,7 +13,7 @@
     "suite_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
     "classification": {"enum": ["smoke", "exploratory", "official"]},
-    "seed": {"type": "integer", "minimum": 0},
+    "seed": {"type": "integer", "minimum": 1},
     "workloads_manifest": {"type": "string", "minLength": 1},
     "software_manifest": {"type": "string", "minLength": 1},
     "resources": {
@@ -30,11 +30,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "setup_timeout_seconds", "warmup_shots", "correctness_shots",
+        "setup_timeout_seconds", "request_timeout_seconds", "warmup_shots", "correctness_shots",
         "min_sample_seconds", "repetitions"
       ],
       "properties": {
         "setup_timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "request_timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
         "warmup_shots": {"type": "integer", "minimum": 1},
         "correctness_shots": {"type": "integer", "minimum": 1},
         "min_sample_seconds": {"type": "number", "exclusiveMinimum": 0},

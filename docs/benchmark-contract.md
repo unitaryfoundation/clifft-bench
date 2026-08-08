@@ -44,6 +44,9 @@ Each raw execution sample continues until its accumulated wall time meets the
 profile's minimum interval. The final API call may make a sample longer than
 that minimum. Individual samples are retained; median and median absolute
 deviation are derived convenience fields, not replacements for raw data.
+Every worker request also has a manifest-defined wall-clock deadline. If a
+simulator stops responding, the runner terminates that isolated worker and
+records a structured timeout rather than leaving the run indefinitely active.
 
 ## Resources and ordering
 
@@ -61,6 +64,12 @@ Linux affinity is applied with `sched_setaffinity` and verified. An unsupported
 or failed affinity request is recorded, never silently treated as successful.
 Within each pair, repetitions alternate forward and reverse order. Two
 repetitions therefore produce `A/B/B/A`.
+
+The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
+`seed`, and execution repetition `r` begins at
+`seed + 10_000 + r * 1_000_000`; repeated public calls increment that value by
+one. These non-overlapping ranges keep every phase deterministic without
+reusing a stream identifier.
 
 ## Batching
 
@@ -89,11 +98,13 @@ checks can extend the versioned correctness check without changing timed work.
 
 ## Failures and incomparability
 
-An adapter/workload combination appears in a run only if the workload manifest
-declares it compatible. Unsupported combinations must be omitted with a reason,
-not coerced into a different task. Import, setup, timeout, correctness, and
-sampling failures are recorded as structured case errors. Successful cases
-cannot omit raw samples or correctness evidence under the result schema.
+An adapter/workload combination may appear in a run manifest only if the
+workload declares it compatible. Manifest validation rejects an incompatible
+combination with a specific error before execution; it is never coerced into a
+different task or emitted as a result case. Import, setup, warmup, timeout,
+correctness, and sampling failures after validation are recorded as structured
+case errors. Successful cases cannot omit raw samples or correctness evidence
+under the result schema.
 
 ## Profiles
 

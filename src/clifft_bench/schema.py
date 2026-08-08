@@ -21,7 +21,7 @@ class SchemaValidationError(ValueError):
 
 
 def repository_root() -> Path:
-    """Return the checkout containing schemas and manifests."""
+    """Return the checkout or installed data root containing benchmark assets."""
     source_candidate = Path(__file__).resolve().parents[2]
     if (source_candidate / "schemas").is_dir() and (source_candidate / "manifests").is_dir():
         return source_candidate
@@ -29,7 +29,10 @@ def repository_root() -> Path:
     for candidate in (current, *current.parents):
         if (candidate / "schemas").is_dir() and (candidate / "manifests").is_dir():
             return candidate
-    return source_candidate
+    package_candidate = Path(__file__).resolve().parent / "data"
+    if (package_candidate / "schemas").is_dir() and (package_candidate / "manifests").is_dir():
+        return package_candidate
+    raise SchemaValidationError("cannot locate packaged schemas and manifests")
 
 
 def read_json(path: Path) -> dict[str, Any]:

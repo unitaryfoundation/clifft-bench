@@ -1,0 +1,38 @@
+{
+  "schema_version": "clifft-bench/workloads/v1",
+  "suite_version": "0.1.0",
+  "workloads": [
+    {
+      "id": "tiny-fixture",
+      "family": "test",
+      "description": "Deterministic fixture used by the example raw result.",
+      "artifact": {
+        "path": "tiny.stim",
+        "sha256": "081ec460e30eef43ad42e742f712e002f01b9da98b2be436711fcb3f16d17c5c"
+      },
+      "dialect": "stim",
+      "angle_convention": "none",
+      "parameters": {},
+      "semantics": {
+        "logical_work": "One deterministic fixture update.",
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": false,
+        "throughput_numerator": "attempted shots",
+        "batch_semantics": "Fixture batch semantics."
+      },
+      "expected_metadata": {
+        "num_qubits": 1,
+        "num_measurements": 1,
+        "num_detectors": 0,
+        "num_observables": 1
+      },
+      "compatible_adapters": ["fixture"],
+      "provenance": {
+        "source_url": "https://example.com/fixture",
+        "source_commit": "0000000000000000000000000000000000000000",
+        "source_path": "tiny.stim",
+        "license": "CC0-1.0"
+      }
+    }
+  ]
+}

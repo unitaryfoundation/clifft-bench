@@ -55,6 +55,18 @@ class SymftAdapter(Adapter):
             raise RuntimeError(
                 f"SymFT backend {info['backend']!r} does not match {expected_backend!r}"
             )
+        requested_batch_size = int(execution["batch_size"])
+        if int(info["batch_size"]) != requested_batch_size:
+            raise RuntimeError(
+                f"SymFT batch size {info['batch_size']!r} does not match "
+                f"requested {requested_batch_size}"
+            )
+        requested_chunk_shots = int(execution.get("sample_chunk_shots", 0))
+        if int(info["sample_chunk_shots"]) != requested_chunk_shots:
+            raise RuntimeError(
+                f"SymFT sample chunk {info['sample_chunk_shots']!r} does not match "
+                f"requested {requested_chunk_shots}"
+            )
 
         preprocessing = {
             key: float(value) for key, value in dict(sampler.preprocessing_timing).items()

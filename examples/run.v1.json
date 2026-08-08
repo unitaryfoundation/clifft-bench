@@ -1,0 +1,46 @@
+{
+  "schema_version": "clifft-bench/run/v1",
+  "suite_version": "0.1.0",
+  "profile_id": "fixture",
+  "classification": "smoke",
+  "seed": 10,
+  "workloads_manifest": "workloads.v1.json",
+  "software_manifest": "software.v1.json",
+  "resources": {"logical_cpu": null, "concurrent_cases": 1, "threads_per_case": 1},
+  "measurement": {
+    "setup_timeout_seconds": 5,
+    "request_timeout_seconds": 5,
+    "warmup_shots": 1,
+    "correctness_shots": 8,
+    "min_sample_seconds": 0.0001,
+    "repetitions": 2
+  },
+  "cases": [
+    {
+      "id": "fixture-a",
+      "pair_id": "fixture-pair",
+      "workload_id": "tiny-fixture",
+      "implementation_id": "fixture-a",
+      "shots_per_call": 8,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "fixture-b",
+      "pair_id": "fixture-pair",
+      "workload_id": "tiny-fixture",
+      "implementation_id": "fixture-b",
+      "shots_per_call": 8,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    }
+  ]
+}

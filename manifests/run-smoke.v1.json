@@ -9,6 +9,7 @@
   "resources": {"logical_cpu": null, "concurrent_cases": 1, "threads_per_case": 1},
   "measurement": {
     "setup_timeout_seconds": 300,
+    "request_timeout_seconds": 60,
     "warmup_shots": 4,
     "correctness_shots": 16,
     "min_sample_seconds": 0.05,

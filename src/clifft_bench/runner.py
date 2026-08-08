@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import json
 import os
+import queue
 import re
 import statistics
 import subprocess
+import threading
 import uuid
 from pathlib import Path
 from typing import Any
@@ -33,7 +35,7 @@ class WorkerClient:
     def __init__(self, case: Case, cpu: int | None) -> None:
         self.case = case
         environment = restricted_environment()
-        source = str(repository_root() / "src")
+        source = str(Path(__file__).resolve().parents[1])
         existing = environment.get("PYTHONPATH")
         environment["PYTHONPATH"] = source if not existing else source + os.pathsep + existing
         self.process = subprocess.Popen(
@@ -45,14 +47,45 @@ class WorkerClient:
             env=environment,
         )
         self.cpu = cpu
+        self._responses: queue.Queue[str | None] = queue.Queue()
+        self._reader = threading.Thread(target=self._read_responses, daemon=True)
+        self._reader.start()
 
-    def request(self, message: dict[str, Any]) -> dict[str, Any]:
+    def _read_responses(self) -> None:
+        if self.process.stdout is None:
+            self._responses.put(None)
+            return
+        for line in self.process.stdout:
+            self._responses.put(line)
+        self._responses.put(None)
+
+    def _stop(self) -> None:
+        if self.process.poll() is not None:
+            return
+        self.process.terminate()
+        try:
+            self.process.wait(timeout=1)
+        except subprocess.TimeoutExpired:
+            self.process.kill()
+            self.process.wait(timeout=5)
+
+    def request(self, message: dict[str, Any], *, timeout_seconds: float) -> dict[str, Any]:
         if self.process.stdin is None or self.process.stdout is None:
             raise RuntimeError("worker pipes are unavailable")
         self.process.stdin.write(json.dumps(message, separators=(",", ":")) + "\n")
         self.process.stdin.flush()
-        line = self.process.stdout.readline()
-        if not line:
+        try:
+            line = self._responses.get(timeout=timeout_seconds)
+        except queue.Empty as error:
+            command = str(message.get("command", "request"))
+            self._stop()
+            raise WorkerError(
+                {
+                    "type": "WorkerTimeout",
+                    "message": f"worker {command} exceeded {timeout_seconds:g} seconds",
+                }
+            ) from error
+        if line is None:
             code = self.process.poll()
             raise WorkerError(
                 {
@@ -78,15 +111,16 @@ class WorkerClient:
                 "dependency_distributions": definition["dependency_distributions"],
                 "logical_cpu": self.cpu,
                 "timeout_seconds": timeout_seconds,
-            }
+            },
+            timeout_seconds=timeout_seconds + 5,
         )
 
     def close(self) -> None:
         if self.process.poll() is None:
             try:
-                self.request({"command": "close"})
+                self.request({"command": "close"}, timeout_seconds=5)
             except (BrokenPipeError, WorkerError, json.JSONDecodeError):
-                self.process.terminate()
+                self._stop()
         try:
             self.process.wait(timeout=5)
         except subprocess.TimeoutExpired:
@@ -139,6 +173,7 @@ def _new_case_result(case: Case, measurement: dict[str, Any]) -> dict[str, Any]:
             "threads_requested": 1,
             "shots_per_call": case.definition["shots_per_call"],
             "min_sample_seconds": measurement["min_sample_seconds"],
+            "request_timeout_seconds": measurement["request_timeout_seconds"],
             "repetitions": measurement["repetitions"],
             "postselection": bool(
                 case.workload.definition["semantics"]["postselect_all_detectors"]
@@ -215,6 +250,7 @@ def run_suite(
         measurement["repetitions"] = repetitions
     if measurement["min_sample_seconds"] <= 0 or measurement["repetitions"] < 1:
         raise ValueError("measurement overrides must be positive")
+    request_timeout = float(measurement["request_timeout_seconds"])
 
     cases = _select_cases(suite, case_pattern)
     if not cases:
@@ -282,17 +318,26 @@ def run_suite(
                                 "command": "warmup",
                                 "shots": measurement["warmup_shots"],
                                 "seed": suite.run["seed"] - 1,
-                            }
+                            },
+                            timeout_seconds=request_timeout,
                         )
                         result["warmup"] = {
                             key: value for key, value in warmup.items() if key != "ok"
                         }
+                    except Exception as error:  # noqa: BLE001
+                        result["status"] = "error"
+                        result["error"] = _error_record(error, "warmup")
+                        _atomic_write(output_path, document)
+                        continue
+
+                    try:
                         correctness = client.request(
                             {
                                 "command": "correctness",
                                 "shots": measurement["correctness_shots"],
                                 "seed": suite.run["seed"],
-                            }
+                            },
+                            timeout_seconds=request_timeout,
                         )
                         contract_errors = correctness.pop("contract_errors")
                         correctness.pop("ok", None)
@@ -333,7 +378,8 @@ def run_suite(
                                 "seed": suite.run["seed"]
                                 + 10_000
                                 + scheduled.repetition * 1_000_000,
-                            }
+                            },
+                            timeout_seconds=request_timeout,
                         )
                         sample.pop("ok", None)
                         sample["repetition"] = scheduled.repetition

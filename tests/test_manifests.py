@@ -1,3 +1,5 @@
+import copy
+import json
 from pathlib import Path
 
 import pytest
@@ -40,8 +42,6 @@ def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
         "sha256": workloads["workloads"][0]["artifact"]["sha256"],
     }
     (tmp_path / "changed.stim").write_text("M 0\n")
-    import json
-
     path = tmp_path / "workloads.json"
     path.write_text(json.dumps(workloads))
     run = dict(suite.run)
@@ -50,4 +50,26 @@ def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
     run_path = tmp_path / "run.json"
     run_path.write_text(json.dumps(run))
     with pytest.raises(SchemaValidationError, match="SHA-256 mismatch"):
+        load_suite(run_path)
+
+
+def test_incompatible_case_is_rejected_before_execution(tmp_path: Path) -> None:
+    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    workloads = copy.deepcopy(suite.workloads_document)
+    for workload in workloads["workloads"]:
+        workload["artifact"]["path"] = str(
+            suite.workloads_path.parent / workload["artifact"]["path"]
+        )
+    target = workloads["workloads"][0]
+    target["compatible_adapters"] = ["clifft"]
+    workloads_path = tmp_path / "workloads.json"
+    workloads_path.write_text(json.dumps(workloads))
+
+    run = copy.deepcopy(suite.run)
+    run["workloads_manifest"] = "workloads.json"
+    run["software_manifest"] = str(suite.software_path)
+    run_path = tmp_path / "suite.json"
+    run_path.write_text(json.dumps(run))
+
+    with pytest.raises(SchemaValidationError, match="forces incomparable adapter"):
         load_suite(run_path)

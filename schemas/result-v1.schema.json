@@ -135,14 +135,15 @@
       "properties": {
         "case_id": {"type": "string"},
         "pair_id": {"$ref": "#/$defs/nullableString"},
-        "status": {"enum": ["running", "success", "error", "unsupported", "interrupted"]},
+        "status": {"enum": ["running", "success", "error", "interrupted"]},
         "workload": {"$ref": "#/$defs/workload"},
         "simulator": {"$ref": "#/$defs/simulator"},
         "execution": {
           "type": "object",
           "required": [
             "mode", "batch_enabled", "batch_size", "sample_chunk_shots", "threads_requested",
-            "shots_per_call", "min_sample_seconds", "repetitions", "postselection"
+            "shots_per_call", "min_sample_seconds", "request_timeout_seconds", "repetitions",
+            "postselection"
           ],
           "properties": {
             "mode": {"enum": ["latency", "throughput"]},
@@ -154,6 +155,7 @@
             "batch_size_effective": {"type": "integer", "minimum": 1},
             "shots_per_call": {"type": "integer", "minimum": 1},
             "min_sample_seconds": {"type": "number", "exclusiveMinimum": 0},
+            "request_timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
             "repetitions": {"type": "integer", "minimum": 1},
             "postselection": {"type": "boolean"}
           },

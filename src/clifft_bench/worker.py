@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import signal
 import sys
 import time
@@ -10,7 +11,7 @@ import traceback
 from contextlib import contextmanager, redirect_stdout
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
@@ -19,6 +20,9 @@ from clifft_bench.system import apply_affinity, utc_now
 
 class WorkerTimeout(TimeoutError):
     pass
+
+
+_PROTOCOL_STREAM: TextIO | None = None
 
 
 @contextmanager
@@ -40,8 +44,23 @@ def deadline(seconds: float) -> Iterator[None]:
 
 
 def emit(message: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(message, separators=(",", ":")) + "\n")
-    sys.stdout.flush()
+    stream = _PROTOCOL_STREAM or sys.stdout
+    stream.write(json.dumps(message, separators=(",", ":")) + "\n")
+    stream.flush()
+
+
+def isolate_protocol_stream() -> None:
+    """Keep JSON on a private fd and send all Python/native stdout to stderr."""
+    global _PROTOCOL_STREAM
+    protocol_fd = os.dup(sys.stdout.fileno())
+    _PROTOCOL_STREAM = os.fdopen(
+        protocol_fd,
+        "w",
+        buffering=1,
+        encoding=sys.stdout.encoding or "utf-8",
+        closefd=True,
+    )
+    os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
 
 
 def timed_sample(prepared: Any, shots: int, seed: int) -> tuple[Counts, float]:
@@ -99,6 +118,7 @@ def _package_version(distribution: str) -> str:
 
 
 def main() -> int:
+    isolate_protocol_stream()
     prepared = None
     workload: dict[str, Any] | None = None
     try:

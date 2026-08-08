@@ -24,6 +24,12 @@ clifft-bench = "clifft_bench.cli:main"
 [tool.hatch.build.targets.wheel]
 packages = ["src/clifft_bench"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"schemas" = "clifft_bench/data/schemas"
+"manifests" = "clifft_bench/data/manifests"
+"workloads" = "clifft_bench/data/workloads"
+"examples" = "clifft_bench/data/examples"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"

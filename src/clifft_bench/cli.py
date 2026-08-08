@@ -55,6 +55,7 @@ def _default_validation_paths() -> list[Path]:
         root / "manifests/software.v1.json",
         root / "manifests/run-smoke.v1.json",
         root / "manifests/run-phase1.v1.json",
+        root / "examples/run.v1.json",
         root / "examples/result.v1.json",
     ]
 
@@ -63,8 +64,8 @@ def _validate(paths: list[Path]) -> int:
     selected = paths or _default_validation_paths()
     for path in selected:
         resolved = _resolve(path)
-        validate_path(resolved)
-        if resolved.name.startswith("run-"):
+        document = validate_path(resolved)
+        if document["schema_version"] == "clifft-bench/run/v1":
             load_suite(resolved)
         print(f"valid: {resolved}")
     return 0

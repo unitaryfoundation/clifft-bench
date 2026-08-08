@@ -7,8 +7,9 @@ JSON is the source result format. The current schema identifier is
 A result contains one run envelope, one runner snapshot, and one record per
 selected case. Successful cases include setup provenance, affinity outcome,
 warmup counts, an out-of-band correctness check, every raw timing sample, and a
-robust summary. Error cases preserve their failure phase and message without
-fabricating throughput.
+robust summary. The effective request deadline is recorded with the execution
+configuration. Error cases preserve their exact failure phase and message
+without fabricating throughput.
 
 Validate any result with:
 
