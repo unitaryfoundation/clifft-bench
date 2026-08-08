@@ -1,0 +1,104 @@
+# Phase 1 benchmark contract
+
+## Benchmark question
+
+For the same versioned circuit and output contract, how many independent
+attempted shots per second can a pinned simulator execute in steady state on one
+logical CPU, and how much do repeated paired measurements vary?
+
+This question is narrower than "which simulator is best." Results are only
+comparable when workload semantics, batch configuration, precision, thread and
+affinity policy, runner identity, and timed boundaries agree.
+
+## Logical work and output
+
+One unit of logical work is one complete independent attempted shot of the
+selected circuit. The simulator must return aggregate counts for:
+
+- attempted shots,
+- shots discarded by detector postselection,
+- accepted shots, and
+- observable-0 logical errors among accepted shots.
+
+For cultivation workloads every declared detector is a postselection check.
+The pure-Clifford surface-code workload does not postselect. Throughput always
+uses attempted shots as the numerator, before detector rejection.
+
+Materializing full measurement or detector arrays is not part of the logical
+work. Clifft's `sample_survivors(..., keep_records=False)` and SymFT's compiled
+counts sampler implement the same aggregate-count contract.
+
+## Timed boundaries
+
+| Phase | Timed as steady-state execution? | Contents |
+|---|---:|---|
+| Installation | No | Environment creation, download, source build |
+| Import | No | Python and extension-module import |
+| Setup | No, recorded separately | Parse, trace/plan, optimization, lowering, sampler creation |
+| Warmup | No, recorded separately | One declared sampler call after setup |
+| Correctness | No, recorded separately | Metadata and aggregate-count invariant check |
+| Execution sample | Yes | Wall time around repeated public aggregate sampling calls |
+| Result validation/write | No | Schema validation, JSON serialization, atomic write |
+
+Each raw execution sample continues until its accumulated wall time meets the
+profile's minimum interval. The final API call may make a sample longer than
+that minimum. Individual samples are retained; median and median absolute
+deviation are derived convenience fields, not replacements for raw data.
+
+## Resources and ordering
+
+Cases run serially. The harness may keep the two members of a declared
+comparison pair prepared in separate Python workers so different package
+environments can coexist, but only one worker samples at a time. Both workers
+belong to one process tree, request the same logical CPU, and receive the same
+single-thread environment:
+
+`OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`,
+`NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, and `BLIS_NUM_THREADS` are 1;
+JAX is CPU-only, x64-enabled, and has Eigen multithreading disabled.
+
+Linux affinity is applied with `sched_setaffinity` and verified. An unsupported
+or failed affinity request is recorded, never silently treated as successful.
+Within each pair, repetitions alternate forward and reverse order. Two
+repetitions therefore produce `A/B/B/A`.
+
+## Batching
+
+Two distinct quantities are recorded:
+
+- `batch_size`: the simulator's internal number of shots processed together;
+- `shots_per_call`: attempted shots requested by one public API call.
+
+Clifft exposes no internal shot-batch choice in this API, so its batch size is
+1. SymFT batch sizes are explicit manifest values, never hidden automatic
+choices. A large-batch throughput result is not a single-circuit latency result.
+
+## Correctness
+
+Correctness work occurs outside the timed region. The initial check verifies:
+
+- parsed qubit, measurement, detector, and observable counts against the
+  workload manifest;
+- attempted = accepted + discarded;
+- logical errors lie between zero and accepted shots; and
+- non-postselected workloads discard no shots.
+
+These checks catch circuit or API mismatches but do not prove two independent
+random streams are sample-for-sample equal. Later statistical distribution
+checks can extend the versioned correctness check without changing timed work.
+
+## Failures and incomparability
+
+An adapter/workload combination appears in a run only if the workload manifest
+declares it compatible. Unsupported combinations must be omitted with a reason,
+not coerced into a different task. Import, setup, timeout, correctness, and
+sampling failures are recorded as structured case errors. Successful cases
+cannot omit raw samples or correctness evidence under the result schema.
+
+## Profiles
+
+`run-smoke.v1.json` is a short CI/developer correctness check and has no
+performance significance. `run-phase1.v1.json` uses 30-second minimum samples
+and five repetitions. Neither becomes canonical merely by running it; official
+publication also requires the runner study, trusted workflow, review, and
+approval described in the project plan.

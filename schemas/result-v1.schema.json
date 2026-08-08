@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unitaryfoundation.github.io/clifft-bench/schemas/result-v1.schema.json",
+  "title": "clifft-bench raw result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "suite_version", "run", "runner", "cases"],
+  "properties": {
+    "schema_version": {"const": "clifft-bench/result/v1"},
+    "suite_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "run": {"$ref": "#/$defs/run"},
+    "runner": {"$ref": "#/$defs/runner"},
+    "cases": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "nullableString": {"type": ["string", "null"]},
+    "counts": {
+      "type": "object",
+      "required": ["attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"],
+      "properties": {
+        "attempted_shots": {"type": "integer", "minimum": 0},
+        "accepted_shots": {"type": "integer", "minimum": 0},
+        "discarded_shots": {"type": "integer", "minimum": 0},
+        "logical_errors": {"type": "integer", "minimum": 0},
+        "adapter_timing": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}}
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "profile_id", "classification", "started_at", "finished_at", "run_manifest",
+        "workloads_manifest", "software_manifest", "selection", "schedule_policy", "workflow"
+      ],
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "profile_id": {"type": "string"},
+        "classification": {"enum": ["smoke", "exploratory", "official"]},
+        "started_at": {"type": "string", "format": "date-time"},
+        "finished_at": {"type": ["string", "null"], "format": "date-time"},
+        "run_manifest": {"type": "string"},
+        "workloads_manifest": {"type": "string"},
+        "software_manifest": {"type": "string"},
+        "selection": {"$ref": "#/$defs/nullableString"},
+        "schedule_policy": {"const": "serial-alternating-forward-reverse"},
+        "workflow": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider", "repository", "workflow", "run_id", "run_attempt", "ref", "sha",
+            "runner_name", "runner_os", "image_os", "image_version"
+          ],
+          "properties": {
+            "provider": {"$ref": "#/$defs/nullableString"},
+            "repository": {"$ref": "#/$defs/nullableString"},
+            "workflow": {"$ref": "#/$defs/nullableString"},
+            "run_id": {"$ref": "#/$defs/nullableString"},
+            "run_attempt": {"$ref": "#/$defs/nullableString"},
+            "ref": {"$ref": "#/$defs/nullableString"},
+            "sha": {"$ref": "#/$defs/nullableString"},
+            "runner_name": {"$ref": "#/$defs/nullableString"},
+            "runner_os": {"$ref": "#/$defs/nullableString"},
+            "image_os": {"$ref": "#/$defs/nullableString"},
+            "image_version": {"$ref": "#/$defs/nullableString"}
+          }
+        }
+      }
+    },
+    "runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hostname", "os", "os_release", "kernel_version", "machine", "python", "python_compiler",
+        "cpu_model", "physical_cores", "logical_cpus", "allowed_logical_cpus", "memory_bytes",
+        "load_average_at_start", "thread_environment",
+        "accelerator", "suite_source"
+      ],
+      "properties": {
+        "hostname": {"type": "string"},
+        "os": {"type": "string"},
+        "os_release": {"type": "string"},
+        "kernel_version": {"type": "string"},
+        "machine": {"type": "string"},
+        "python": {"type": "string"},
+        "python_compiler": {"type": "string"},
+        "cpu_model": {"type": "string"},
+        "physical_cores": {"type": ["integer", "null"], "minimum": 1},
+        "logical_cpus": {"type": ["integer", "null"], "minimum": 1},
+        "allowed_logical_cpus": {
+          "type": ["array", "null"],
+          "items": {"type": "integer", "minimum": 0}
+        },
+        "memory_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "load_average_at_start": {
+          "type": ["array", "null"],
+          "items": {"type": "number"},
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "thread_environment": {"type": "object", "additionalProperties": {"type": "string"}},
+        "accelerator": {"type": ["object", "null"]},
+        "suite_source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["commit", "dirty"],
+          "properties": {
+            "commit": {"$ref": "#/$defs/nullableString"},
+            "dirty": {"type": ["boolean", "null"]}
+          }
+        }
+      }
+    },
+    "affinity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested", "logical_cpu", "applied", "available_before", "available_after", "reason"
+      ],
+      "properties": {
+        "requested": {"type": "boolean"},
+        "logical_cpu": {"type": ["integer", "null"], "minimum": 0},
+        "applied": {"type": "boolean"},
+        "available_before": {"type": ["array", "null"], "items": {"type": "integer"}},
+        "available_after": {"type": ["array", "null"], "items": {"type": "integer"}},
+        "reason": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id", "pair_id", "status", "workload", "simulator", "execution", "setup",
+        "warmup", "correctness", "samples", "summary", "error"
+      ],
+      "properties": {
+        "case_id": {"type": "string"},
+        "pair_id": {"$ref": "#/$defs/nullableString"},
+        "status": {"enum": ["running", "success", "error", "unsupported", "interrupted"]},
+        "workload": {"$ref": "#/$defs/workload"},
+        "simulator": {"$ref": "#/$defs/simulator"},
+        "execution": {
+          "type": "object",
+          "required": [
+            "mode", "batch_enabled", "batch_size", "sample_chunk_shots", "threads_requested",
+            "shots_per_call", "min_sample_seconds", "repetitions", "postselection"
+          ],
+          "properties": {
+            "mode": {"enum": ["latency", "throughput"]},
+            "batch_enabled": {"type": "boolean"},
+            "batch_size": {"type": "integer", "minimum": 1},
+            "sample_chunk_shots": {"type": "integer", "minimum": 0},
+            "threads_requested": {"const": 1},
+            "threads_effective": {"type": "integer", "minimum": 1},
+            "batch_size_effective": {"type": "integer", "minimum": 1},
+            "shots_per_call": {"type": "integer", "minimum": 1},
+            "min_sample_seconds": {"type": "number", "exclusiveMinimum": 0},
+            "repetitions": {"type": "integer", "minimum": 1},
+            "postselection": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "setup": {
+          "type": ["object", "null"],
+          "properties": {
+            "duration_seconds": {"type": "number", "minimum": 0},
+            "affinity": {"$ref": "#/$defs/affinity"},
+            "adapter_version": {"type": "string"},
+            "runtime_metadata": {"type": "object"}
+          },
+          "required": ["duration_seconds", "affinity", "adapter_version", "runtime_metadata"]
+        },
+        "warmup": {
+          "type": ["object", "null"],
+          "properties": {
+            "duration_seconds": {"type": "number", "minimum": 0},
+            "contract_errors": {"type": "array", "items": {"type": "string"}},
+            "adapter_timing": {"type": "object"},
+            "attempted_shots": {"type": "integer", "minimum": 0},
+            "accepted_shots": {"type": "integer", "minimum": 0},
+            "discarded_shots": {"type": "integer", "minimum": 0},
+            "logical_errors": {"type": "integer", "minimum": 0}
+          },
+          "required": [
+            "duration_seconds", "contract_errors", "attempted_shots", "accepted_shots",
+            "discarded_shots", "logical_errors"
+          ],
+          "additionalProperties": false
+        },
+        "correctness": {
+          "type": ["object", "null"],
+          "properties": {
+            "status": {"enum": ["passed", "failed", "not-run"]},
+            "check_id": {"type": "string"},
+            "details": {"type": "object"},
+            "errors": {"type": "array", "items": {"type": "string"}},
+            "timed_region": {"const": false}
+          },
+          "required": ["status", "check_id", "details", "errors", "timed_region"],
+          "additionalProperties": false
+        },
+        "samples": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {"$ref": "#/$defs/counts"},
+              {
+                "type": "object",
+                "required": [
+                  "started_at", "duration_seconds", "api_calls",
+                  "throughput_attempted_shots_per_second", "seed_first", "seed_last",
+                  "adapter_call_timings", "repetition", "sequence_index"
+                ],
+                "properties": {
+                  "started_at": {"type": "string", "format": "date-time"},
+                  "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+                  "api_calls": {"type": "integer", "minimum": 1},
+                  "throughput_attempted_shots_per_second": {"type": "number", "exclusiveMinimum": 0},
+                  "seed_first": {"type": "integer", "minimum": 0},
+                  "seed_last": {"type": "integer", "minimum": 0},
+                  "adapter_call_timings": {"type": "array", "items": {"type": "object"}},
+                  "repetition": {"type": "integer", "minimum": 0},
+                  "sequence_index": {"type": "integer", "minimum": 0}
+                }
+              }
+            ]
+          }
+        },
+        "summary": {
+          "type": ["object", "null"],
+          "properties": {
+            "sample_count": {"type": "integer", "minimum": 1},
+            "median_attempted_shots_per_second": {"type": "number", "exclusiveMinimum": 0},
+            "mad_attempted_shots_per_second": {"type": "number", "minimum": 0},
+            "min_attempted_shots_per_second": {"type": "number", "exclusiveMinimum": 0},
+            "max_attempted_shots_per_second": {"type": "number", "exclusiveMinimum": 0},
+            "total_attempted_shots": {"type": "integer", "minimum": 1},
+            "total_duration_seconds": {"type": "number", "exclusiveMinimum": 0}
+          },
+          "required": [
+            "sample_count", "median_attempted_shots_per_second", "mad_attempted_shots_per_second",
+            "min_attempted_shots_per_second", "max_attempted_shots_per_second",
+            "total_attempted_shots", "total_duration_seconds"
+          ],
+          "additionalProperties": false
+        },
+        "error": {
+          "type": ["object", "null"],
+          "properties": {
+            "phase": {"type": "string"},
+            "type": {"type": "string"},
+            "message": {"type": "string"},
+            "traceback": {"type": "string"}
+          },
+          "required": ["phase", "type", "message"],
+          "additionalProperties": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "success"}}},
+          "then": {
+            "properties": {
+              "setup": {"type": "object"},
+              "warmup": {"type": "object"},
+              "correctness": {"type": "object", "properties": {"status": {"const": "passed"}}},
+              "samples": {"minItems": 1},
+              "summary": {"type": "object"},
+              "error": {"type": "null"}
+            }
+          }
+        }
+      ]
+    },
+    "workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "family", "parameters", "semantics", "artifact", "provenance"],
+      "properties": {
+        "id": {"type": "string"},
+        "family": {"type": "string"},
+        "parameters": {"type": "object"},
+        "semantics": {"type": "object"},
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"type": "string"},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        "provenance": {"type": "object"}
+      }
+    },
+    "simulator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_id", "name", "version", "commit_sha", "source_url", "adapter",
+        "python_executable", "build", "dependencies"
+      ],
+      "properties": {
+        "implementation_id": {"type": "string"},
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "source_url": {"type": "string", "format": "uri"},
+        "adapter": {"type": "string"},
+        "python_executable": {"type": "string"},
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["precision", "compiler_flags", "features"],
+          "properties": {
+            "precision": {"type": "string"},
+            "compiler_flags": {"type": "array", "items": {"type": "string"}},
+            "features": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "dependencies": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    }
+  }
+}

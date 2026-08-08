@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unitaryfoundation.github.io/clifft-bench/schemas/workloads-v1.schema.json",
+  "title": "clifft-bench workload manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "suite_version", "workloads"],
+  "properties": {
+    "schema_version": {"const": "clifft-bench/workloads/v1"},
+    "suite_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "workloads": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/workload"}
+    }
+  },
+  "$defs": {
+    "workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "family", "description", "artifact", "dialect", "angle_convention",
+        "parameters", "semantics", "expected_metadata", "compatible_adapters", "provenance"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+        "family": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        "dialect": {"enum": ["stim", "clifft-symft-extended-stim"]},
+        "angle_convention": {"enum": ["none", "half-turns"]},
+        "parameters": {"type": "object"},
+        "semantics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "logical_work", "output_contract", "postselect_all_detectors",
+            "throughput_numerator", "batch_semantics"
+          ],
+          "properties": {
+            "logical_work": {"type": "string", "minLength": 1},
+            "output_contract": {"const": "aggregate detector-discard and logical-observable counts"},
+            "postselect_all_detectors": {"type": "boolean"},
+            "throughput_numerator": {"const": "attempted shots"},
+            "batch_semantics": {"type": "string", "minLength": 1}
+          }
+        },
+        "expected_metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["num_qubits", "num_measurements", "num_detectors", "num_observables"],
+          "properties": {
+            "num_qubits": {"type": "integer", "minimum": 0},
+            "num_measurements": {"type": "integer", "minimum": 0},
+            "num_detectors": {"type": "integer", "minimum": 0},
+            "num_observables": {"type": "integer", "minimum": 0}
+          }
+        },
+        "compatible_adapters": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["clifft", "symft", "fixture"]}
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_url", "source_commit", "source_path", "license"],
+          "properties": {
+            "source_url": {"type": "string", "format": "uri"},
+            "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            "source_path": {"type": "string", "minLength": 1},
+            "license": {"type": "string", "minLength": 1},
+            "notes": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}

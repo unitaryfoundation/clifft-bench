@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unitaryfoundation.github.io/clifft-bench/schemas/run-v1.schema.json",
+  "title": "clifft-bench run manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "suite_version", "profile_id", "classification", "seed",
+    "workloads_manifest", "software_manifest", "resources", "measurement", "cases"
+  ],
+  "properties": {
+    "schema_version": {"const": "clifft-bench/run/v1"},
+    "suite_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "classification": {"enum": ["smoke", "exploratory", "official"]},
+    "seed": {"type": "integer", "minimum": 0},
+    "workloads_manifest": {"type": "string", "minLength": 1},
+    "software_manifest": {"type": "string", "minLength": 1},
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_cpu", "concurrent_cases", "threads_per_case"],
+      "properties": {
+        "logical_cpu": {"type": ["integer", "null"], "minimum": 0},
+        "concurrent_cases": {"const": 1},
+        "threads_per_case": {"const": 1}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "setup_timeout_seconds", "warmup_shots", "correctness_shots",
+        "min_sample_seconds", "repetitions"
+      ],
+      "properties": {
+        "setup_timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "warmup_shots": {"type": "integer", "minimum": 1},
+        "correctness_shots": {"type": "integer", "minimum": 1},
+        "min_sample_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "repetitions": {"type": "integer", "minimum": 1}
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "workload_id", "implementation_id", "shots_per_call", "execution"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "pair_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "workload_id": {"type": "string", "minLength": 1},
+          "implementation_id": {"type": "string", "minLength": 1},
+          "shots_per_call": {"type": "integer", "minimum": 1},
+          "execution": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mode", "batch_enabled", "batch_size", "sample_chunk_shots"],
+            "properties": {
+              "mode": {"enum": ["latency", "throughput"]},
+              "batch_enabled": {"type": "boolean"},
+              "batch_size": {"type": "integer", "minimum": 1},
+              "sample_chunk_shots": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    }
+  }
+}

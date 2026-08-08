@@ -1,0 +1,67 @@
+{
+  "schema_version": "clifft-bench/run/v1",
+  "suite_version": "0.1.0",
+  "profile_id": "phase1-cpu-current",
+  "classification": "exploratory",
+  "seed": 20260808,
+  "workloads_manifest": "workloads.v1.json",
+  "software_manifest": "software.v1.json",
+  "resources": {"logical_cpu": null, "concurrent_cases": 1, "threads_per_case": 1},
+  "measurement": {
+    "setup_timeout_seconds": 300,
+    "warmup_shots": 64,
+    "correctness_shots": 4096,
+    "min_sample_seconds": 30,
+    "repetitions": 5
+  },
+  "cases": [
+    {
+      "id": "msc-d3-clifft",
+      "pair_id": "msc-d3-current",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 100000,
+      "execution": {"mode": "throughput", "batch_enabled": false, "batch_size": 1, "sample_chunk_shots": 0}
+    },
+    {
+      "id": "msc-d3-symft-b2048",
+      "pair_id": "msc-d3-current",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 5000000,
+      "execution": {"mode": "throughput", "batch_enabled": true, "batch_size": 2048, "sample_chunk_shots": 2048}
+    },
+    {
+      "id": "msc-d5-clifft",
+      "pair_id": "msc-d5-current",
+      "workload_id": "msc-d5-inject-cultivate-p1e-3",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 20000,
+      "execution": {"mode": "throughput", "batch_enabled": false, "batch_size": 1, "sample_chunk_shots": 0}
+    },
+    {
+      "id": "msc-d5-symft-b32",
+      "pair_id": "msc-d5-current",
+      "workload_id": "msc-d5-inject-cultivate-p1e-3",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1000000,
+      "execution": {"mode": "throughput", "batch_enabled": true, "batch_size": 32, "sample_chunk_shots": 2048}
+    },
+    {
+      "id": "surface-d7-r7-clifft",
+      "pair_id": "surface-d7-r7-current",
+      "workload_id": "surface-code-d7-r7-p1e-3",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 100000,
+      "execution": {"mode": "throughput", "batch_enabled": false, "batch_size": 1, "sample_chunk_shots": 0}
+    },
+    {
+      "id": "surface-d7-r7-symft-b2048",
+      "pair_id": "surface-d7-r7-current",
+      "workload_id": "surface-code-d7-r7-p1e-3",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 10000000,
+      "execution": {"mode": "throughput", "batch_enabled": true, "batch_size": 2048, "sample_chunk_shots": 2048}
+    }
+  ]
+}

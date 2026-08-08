@@ -1,0 +1,387 @@
+{
+  "cases": [
+    {
+      "case_id": "fixture-a",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 8,
+          "attempted_shots": 8,
+          "discarded_shots": 0,
+          "duration_seconds": 0.0002,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "min_sample_seconds": 0.0001,
+        "mode": "throughput",
+        "postselection": false,
+        "repetitions": 2,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 8,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "pair_id": "fixture-pair",
+      "samples": [
+        {
+          "accepted_shots": 80,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 80,
+          "discarded_shots": 0,
+          "duration_seconds": 0.1,
+          "logical_errors": 4,
+          "repetition": 0,
+          "seed_first": 10010,
+          "seed_last": 10019,
+          "sequence_index": 0,
+          "started_at": "2026-08-08T12:00:01Z",
+          "throughput_attempted_shots_per_second": 800
+        },
+        {
+          "accepted_shots": 80,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 80,
+          "discarded_shots": 0,
+          "duration_seconds": 0.1,
+          "logical_errors": 4,
+          "repetition": 1,
+          "seed_first": 1010010,
+          "seed_last": 1010019,
+          "sequence_index": 3,
+          "started_at": "2026-08-08T12:00:02Z",
+          "throughput_attempted_shots_per_second": 820
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "requested": true,
+          "logical_cpu": 0,
+          "applied": true,
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_after": [
+            0
+          ],
+          "reason": null
+        },
+        "duration_seconds": 0.001,
+        "runtime_metadata": {
+          "batch_enabled": false,
+          "effective_batch_size": 1,
+          "name": "fixture",
+          "num_detectors": 0,
+          "num_measurements": 1,
+          "num_observables": 1,
+          "num_qubits": 1,
+          "precision": "integer",
+          "threads": 1,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "fixture",
+        "build": {
+          "compiler_flags": [],
+          "features": [],
+          "precision": "integer"
+        },
+        "commit_sha": "0000000000000000000000000000000000000000",
+        "dependencies": {
+          "clifft-bench": "0.1.0"
+        },
+        "implementation_id": "fixture-a",
+        "name": "fixture",
+        "python_executable": "/opt/clifft-bench/bin/python",
+        "source_url": "https://example.com/fixture",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "summary": {
+        "sample_count": 2,
+        "median_attempted_shots_per_second": 810,
+        "mad_attempted_shots_per_second": 10,
+        "min_attempted_shots_per_second": 800,
+        "max_attempted_shots_per_second": 820,
+        "total_attempted_shots": 160,
+        "total_duration_seconds": 0.2
+      },
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 0,
+        "duration_seconds": 0.0001,
+        "logical_errors": 0
+      },
+      "workload": {
+        "artifact": {
+          "path": "examples/tiny.stim",
+          "sha256": "081ec460e30eef43ad42e742f712e002f01b9da98b2be436711fcb3f16d17c5c"
+        },
+        "family": "test",
+        "id": "tiny-fixture",
+        "parameters": {},
+        "provenance": {
+          "license": "CC0-1.0",
+          "source_commit": "0000000000000000000000000000000000000000",
+          "source_path": "tiny.stim",
+          "source_url": "https://example.com/fixture"
+        },
+        "semantics": {
+          "batch_semantics": "Fixture batch semantics.",
+          "logical_work": "One deterministic fixture update.",
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": false,
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "case_id": "fixture-b",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 8,
+          "attempted_shots": 8,
+          "discarded_shots": 0,
+          "duration_seconds": 0.0002,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "min_sample_seconds": 0.0001,
+        "mode": "throughput",
+        "postselection": false,
+        "repetitions": 2,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 8,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "pair_id": "fixture-pair",
+      "samples": [
+        {
+          "accepted_shots": 80,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 80,
+          "discarded_shots": 0,
+          "duration_seconds": 0.1,
+          "logical_errors": 5,
+          "repetition": 0,
+          "seed_first": 10010,
+          "seed_last": 10019,
+          "sequence_index": 1,
+          "started_at": "2026-08-08T12:00:01Z",
+          "throughput_attempted_shots_per_second": 900
+        },
+        {
+          "accepted_shots": 80,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 80,
+          "discarded_shots": 0,
+          "duration_seconds": 0.1,
+          "logical_errors": 5,
+          "repetition": 1,
+          "seed_first": 1010010,
+          "seed_last": 1010019,
+          "sequence_index": 2,
+          "started_at": "2026-08-08T12:00:02Z",
+          "throughput_attempted_shots_per_second": 880
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "requested": true,
+          "logical_cpu": 0,
+          "applied": true,
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_after": [
+            0
+          ],
+          "reason": null
+        },
+        "duration_seconds": 0.001,
+        "runtime_metadata": {
+          "batch_enabled": false,
+          "effective_batch_size": 1,
+          "name": "fixture",
+          "num_detectors": 0,
+          "num_measurements": 1,
+          "num_observables": 1,
+          "num_qubits": 1,
+          "precision": "integer",
+          "threads": 1,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "fixture",
+        "build": {
+          "compiler_flags": [],
+          "features": [],
+          "precision": "integer"
+        },
+        "commit_sha": "0000000000000000000000000000000000000000",
+        "dependencies": {
+          "clifft-bench": "0.1.0"
+        },
+        "implementation_id": "fixture-b",
+        "name": "fixture",
+        "python_executable": "/opt/clifft-bench/bin/python",
+        "source_url": "https://example.com/fixture",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "summary": {
+        "sample_count": 2,
+        "median_attempted_shots_per_second": 890,
+        "mad_attempted_shots_per_second": 10,
+        "min_attempted_shots_per_second": 880,
+        "max_attempted_shots_per_second": 900,
+        "total_attempted_shots": 160,
+        "total_duration_seconds": 0.2
+      },
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 0,
+        "duration_seconds": 0.0001,
+        "logical_errors": 0
+      },
+      "workload": {
+        "artifact": {
+          "path": "examples/tiny.stim",
+          "sha256": "081ec460e30eef43ad42e742f712e002f01b9da98b2be436711fcb3f16d17c5c"
+        },
+        "family": "test",
+        "id": "tiny-fixture",
+        "parameters": {},
+        "provenance": {
+          "license": "CC0-1.0",
+          "source_commit": "0000000000000000000000000000000000000000",
+          "source_path": "tiny.stim",
+          "source_url": "https://example.com/fixture"
+        },
+        "semantics": {
+          "batch_semantics": "Fixture batch semantics.",
+          "logical_work": "One deterministic fixture update.",
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": false,
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    }
+  ],
+  "run": {
+    "classification": "smoke",
+    "finished_at": "2026-08-08T12:00:01Z",
+    "id": "00000000-0000-4000-8000-000000000001",
+    "profile_id": "fixture",
+    "run_manifest": "examples/run.v1.json",
+    "schedule_policy": "serial-alternating-forward-reverse",
+    "selection": null,
+    "software_manifest": "examples/software.v1.json",
+    "started_at": "2026-08-08T12:00:00Z",
+    "workloads_manifest": "examples/workloads.v1.json",
+    "workflow": {
+      "image_os": null,
+      "image_version": null,
+      "provider": null,
+      "ref": null,
+      "repository": null,
+      "run_attempt": null,
+      "run_id": null,
+      "runner_name": null,
+      "runner_os": null,
+      "sha": null,
+      "workflow": null
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "cpu_model": "Example CPU",
+    "hostname": "example-runner",
+    "kernel_version": "#1 SMP",
+    "load_average_at_start": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "logical_cpus": 8,
+    "machine": "x86_64",
+    "memory_bytes": 17179869184,
+    "os": "Linux",
+    "os_release": "6.8.0",
+    "physical_cores": 4,
+    "python": "3.12.11",
+    "python_compiler": "GCC 13.2.0",
+    "suite_source": {
+      "commit": "cea5fa6376a48e60c4aa0dae434eb1dee29702a6",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  },
+  "schema_version": "clifft-bench/result/v1",
+  "suite_version": "0.1.0"
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "clifft-bench/software/v1",
+  "suite_version": "0.1.0",
+  "implementations": [
+    {
+      "id": "clifft-v0.7.0",
+      "name": "clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.7.0",
+      "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "runtime CPU baseline recorded by adapter"]
+      }
+    },
+    {
+      "id": "symft-0.1.0-9ec5790",
+      "name": "SymFT",
+      "adapter": "symft",
+      "distribution": "symft",
+      "version": "0.1.0",
+      "commit_sha": "9ec5790322f93140e78bdb6d6620a2a43eceba0b",
+      "source_url": "https://github.com/haoliri0/SymFT_Test",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_SYMFT_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": ["SYMFT_PY_NATIVE=1"],
+        "features": ["CPU-only", "runtime-dispatched SIMD", "CUDA disabled"]
+      }
+    }
+  ]
+}
