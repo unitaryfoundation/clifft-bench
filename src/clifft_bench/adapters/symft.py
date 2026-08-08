@@ -40,7 +40,7 @@ class SymftAdapter(Adapter):
         circuit = symft.Circuit(path=artifact_path)
         sampler = circuit.compile_counts_sampler(
             batch=bool(execution["batch_enabled"]),
-            observable=0,
+            observable=int(workload["semantics"]["observable_index"]),
             postselect_detectors=bool(workload["semantics"]["postselect_all_detectors"]),
             batch_size=int(execution["batch_size"]),
             sample_chunk_shots=int(execution.get("sample_chunk_shots", 0)),

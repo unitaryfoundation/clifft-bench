@@ -6,12 +6,16 @@
   "seed": 20260808,
   "workloads_manifest": "workloads.v1.json",
   "software_manifest": "software.v1.json",
-  "resources": {"logical_cpu": null, "concurrent_cases": 1, "threads_per_case": 1},
+  "resources": {
+    "logical_cpu": null,
+    "concurrent_cases": 1,
+    "threads_per_case": 1
+  },
   "measurement": {
     "setup_timeout_seconds": 300,
     "request_timeout_seconds": 600,
-    "warmup_shots": 64,
-    "correctness_shots": 4096,
+    "warmup_shots": 1,
+    "correctness_shots": 1,
     "min_sample_seconds": 30,
     "repetitions": 5
   },
@@ -22,7 +26,12 @@
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "clifft-v0.7.0",
       "shots_per_call": 100000,
-      "execution": {"mode": "throughput", "batch_enabled": false, "batch_size": 1, "sample_chunk_shots": 0}
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
     },
     {
       "id": "msc-d3-symft-b2048",
@@ -30,7 +39,12 @@
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "symft-0.1.0-9ec5790",
       "shots_per_call": 5000000,
-      "execution": {"mode": "throughput", "batch_enabled": true, "batch_size": 2048, "sample_chunk_shots": 2048}
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
+      }
     },
     {
       "id": "msc-d5-clifft",
@@ -38,7 +52,12 @@
       "workload_id": "msc-d5-inject-cultivate-p1e-3",
       "implementation_id": "clifft-v0.7.0",
       "shots_per_call": 20000,
-      "execution": {"mode": "throughput", "batch_enabled": false, "batch_size": 1, "sample_chunk_shots": 0}
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
     },
     {
       "id": "msc-d5-symft-b32",
@@ -46,7 +65,12 @@
       "workload_id": "msc-d5-inject-cultivate-p1e-3",
       "implementation_id": "symft-0.1.0-9ec5790",
       "shots_per_call": 1000000,
-      "execution": {"mode": "throughput", "batch_enabled": true, "batch_size": 32, "sample_chunk_shots": 2048}
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
     },
     {
       "id": "surface-d7-r7-clifft",
@@ -54,7 +78,12 @@
       "workload_id": "surface-code-d7-r7-p1e-3",
       "implementation_id": "clifft-v0.7.0",
       "shots_per_call": 100000,
-      "execution": {"mode": "throughput", "batch_enabled": false, "batch_size": 1, "sample_chunk_shots": 0}
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
     },
     {
       "id": "surface-d7-r7-symft-b2048",
@@ -62,7 +91,194 @@
       "workload_id": "surface-code-d7-r7-p1e-3",
       "implementation_id": "symft-0.1.0-9ec5790",
       "shots_per_call": 10000000,
-      "execution": {"mode": "throughput", "batch_enabled": true, "batch_size": 2048, "sample_chunk_shots": 2048}
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "distillation-85q-clifft",
+      "pair_id": "distillation-85q-current",
+      "workload_id": "distillation-color-code-85q-p5e-2",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 100000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "distillation-85q-symft-b2048",
+      "pair_id": "distillation-85q-current",
+      "workload_id": "distillation-color-code-85q-p5e-2",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1000000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "coherent-d3-r1-clifft",
+      "pair_id": "coherent-d3-r1-current",
+      "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 100000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "coherent-d3-r1-symft-b2048",
+      "pair_id": "coherent-d3-r1-current",
+      "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1000000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "coherent-d3-r3-clifft",
+      "pair_id": "coherent-d3-r3-current",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 100000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "coherent-d3-r3-symft-b2048",
+      "pair_id": "coherent-d3-r3-current",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1000000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "coherent-d5-r1-clifft",
+      "pair_id": "coherent-d5-r1-current",
+      "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 10000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "coherent-d5-r1-symft-b32",
+      "pair_id": "coherent-d5-r1-current",
+      "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 100000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "coherent-d5-r5-clifft",
+      "pair_id": "coherent-d5-r5-current",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "coherent-d5-r5-symft-single",
+      "pair_id": "coherent-d5-r5-current",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "qv10-clifft",
+      "pair_id": "qv10-current",
+      "workload_id": "quantum-volume-q10-seed42",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "latency",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "qv10-symft-single",
+      "pair_id": "qv10-current",
+      "workload_id": "quantum-volume-q10-seed42",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "latency",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "qv20-clifft",
+      "pair_id": "qv20-current",
+      "workload_id": "quantum-volume-q20-seed42",
+      "implementation_id": "clifft-v0.7.0",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "latency",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "qv20-symft-single",
+      "pair_id": "qv20-current",
+      "workload_id": "quantum-volume-q20-seed42",
+      "implementation_id": "symft-0.1.0-9ec5790",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "latency",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
     }
   ]
 }

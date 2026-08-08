@@ -298,14 +298,17 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "implementation_id", "name", "version", "commit_sha", "source_url", "adapter",
-        "python_executable", "build", "dependencies"
+        "implementation_id", "name", "version", "commit_sha", "commit_datetime",
+        "release_datetime", "source_url", "adapter", "python_executable", "build",
+        "dependencies"
       ],
       "properties": {
         "implementation_id": {"type": "string"},
         "name": {"type": "string"},
         "version": {"type": "string"},
         "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "commit_datetime": {"type": "string", "format": "date-time"},
+        "release_datetime": {"type": ["string", "null"], "format": "date-time"},
         "source_url": {"type": "string", "format": "uri"},
         "adapter": {"type": "string"},
         "python_executable": {"type": "string"},

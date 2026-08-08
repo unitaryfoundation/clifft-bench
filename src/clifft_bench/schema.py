@@ -21,7 +21,7 @@ class SchemaValidationError(ValueError):
 
 
 def repository_root() -> Path:
-    """Return the checkout or installed data root containing benchmark assets."""
+    """Return the benchmark-suite checkout containing manifests and schemas."""
     source_candidate = Path(__file__).resolve().parents[2]
     if (source_candidate / "schemas").is_dir() and (source_candidate / "manifests").is_dir():
         return source_candidate
@@ -29,10 +29,9 @@ def repository_root() -> Path:
     for candidate in (current, *current.parents):
         if (candidate / "schemas").is_dir() and (candidate / "manifests").is_dir():
             return candidate
-    package_candidate = Path(__file__).resolve().parent / "data"
-    if (package_candidate / "schemas").is_dir() and (package_candidate / "manifests").is_dir():
-        return package_candidate
-    raise SchemaValidationError("cannot locate packaged schemas and manifests")
+    raise SchemaValidationError(
+        "cannot locate the clifft-bench checkout; run the CLI from this repository"
+    )
 
 
 def read_json(path: Path) -> dict[str, Any]:

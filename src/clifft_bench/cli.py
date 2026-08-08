@@ -55,7 +55,6 @@ def _default_validation_paths() -> list[Path]:
         root / "manifests/software.v1.json",
         root / "manifests/run-smoke.v1.json",
         root / "manifests/run-phase1.v1.json",
-        root / "examples/run.v1.json",
         root / "examples/result.v1.json",
     ]
 

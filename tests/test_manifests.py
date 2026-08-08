@@ -73,3 +73,24 @@ def test_incompatible_case_is_rejected_before_execution(tmp_path: Path) -> None:
 
     with pytest.raises(SchemaValidationError, match="forces incomparable adapter"):
         load_suite(run_path)
+
+
+def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) -> None:
+    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    workloads = copy.deepcopy(suite.workloads_document)
+    for workload in workloads["workloads"]:
+        workload["artifact"]["path"] = str(
+            suite.workloads_path.parent / workload["artifact"]["path"]
+        )
+    workloads["workloads"][0]["semantics"]["observable_index"] = 1
+    workloads_path = tmp_path / "workloads.json"
+    workloads_path.write_text(json.dumps(workloads))
+
+    run = copy.deepcopy(suite.run)
+    run["workloads_manifest"] = "workloads.json"
+    run["software_manifest"] = str(suite.software_path)
+    run_path = tmp_path / "suite.json"
+    run_path.write_text(json.dumps(run))
+
+    with pytest.raises(SchemaValidationError, match="observable index 1 is outside"):
+        load_suite(run_path)

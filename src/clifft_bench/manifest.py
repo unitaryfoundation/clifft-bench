@@ -96,6 +96,13 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
 
     workloads: dict[str, Workload] = {}
     for identifier, definition in workload_definitions.items():
+        observable_index = int(definition["semantics"]["observable_index"])
+        num_observables = int(definition["expected_metadata"]["num_observables"])
+        if observable_index >= num_observables:
+            raise SchemaValidationError(
+                f"workload {identifier!r} observable index {observable_index} is outside "
+                f"the declared {num_observables} observables"
+            )
         artifact_path = (workloads_path.parent / definition["artifact"]["path"]).resolve()
         expected_sha256 = str(definition["artifact"]["sha256"])
         if verify_artifacts:

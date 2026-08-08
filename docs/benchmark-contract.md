@@ -18,15 +18,24 @@ selected circuit. The simulator must return aggregate counts for:
 - attempted shots,
 - shots discarded by detector postselection,
 - accepted shots, and
-- observable-0 logical errors among accepted shots.
+- logical errors for the manifest-selected observable among accepted shots.
 
 For cultivation workloads every declared detector is a postselection check.
-The pure-Clifford surface-code workload does not postselect. Throughput always
-uses attempted shots as the numerator, before detector rejection.
+The other QEC and Quantum Volume workloads do not postselect. Every Phase 1
+workload selects observable 0 explicitly; this matters for the distillation
+circuit, which declares five observables. Throughput always uses attempted shots
+as the numerator, before detector rejection.
 
 Materializing full measurement or detector arrays is not part of the logical
 work. Clifft's `sample_survivors(..., keep_records=False)` and SymFT's compiled
 counts sampler implement the same aggregate-count contract.
+
+## Software identity
+
+Each implementation records its version, source commit SHA, source commit
+datetime, and release datetime. `release_datetime` is the first published PyPI
+artifact timestamp when the version has a PyPI release, and `null` for a pinned
+unreleased commit such as the current SymFT baseline.
 
 ## Timed boundaries
 
@@ -47,6 +56,9 @@ deviation are derived convenience fields, not replacements for raw data.
 Every worker request also has a manifest-defined wall-clock deadline. If a
 simulator stops responding, the runner terminates that isolated worker and
 records a structured timeout rather than leaving the run indefinitely active.
+The deadline must exceed the minimum sample interval and should include ample
+margin for the slowest expected final public API call; profiles use a larger
+margin for workloads whose single call may itself take substantial time.
 
 ## Resources and ordering
 
@@ -81,6 +93,9 @@ Two distinct quantities are recorded:
 Clifft exposes no internal shot-batch choice in this API, so its batch size is
 1. SymFT batch sizes are explicit manifest values, never hidden automatic
 choices. A large-batch throughput result is not a single-circuit latency result.
+The Quantum Volume cases therefore request one shot per call with batching
+disabled and are marked as latency measurements; their inverse latency is still
+reported in the common attempted-shots-per-second field.
 
 ## Correctness
 
@@ -108,8 +123,10 @@ under the result schema.
 
 ## Profiles
 
-`run-smoke.v1.json` is a short CI/developer correctness check and has no
-performance significance. `run-phase1.v1.json` uses 30-second minimum samples
-and five repetitions. Neither becomes canonical merely by running it; official
-publication also requires the runner study, trusted workflow, review, and
-approval described in the project plan.
+`run-smoke.v1.json` is a short CI/developer correctness check across the
+cultivation, multi-observable distillation, and Quantum Volume gate regimes; it
+has no performance significance. `run-phase1.v1.json` pairs Clifft and SymFT on
+all ten workloads, using 30-second minimum samples and five repetitions. Neither
+becomes canonical merely by running it; official publication also requires the
+runner study, trusted workflow, review, and approval described in the project
+plan.

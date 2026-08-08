@@ -10,9 +10,16 @@ from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
 
 
 class _PreparedClifft(PreparedAdapter):
-    def __init__(self, clifft: Any, program: Any, runtime_metadata: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        clifft: Any,
+        program: Any,
+        observable_index: int,
+        runtime_metadata: dict[str, Any],
+    ) -> None:
         self._clifft = clifft
         self._program = program
+        self._observable_index = observable_index
         self.runtime_metadata = runtime_metadata
 
     def sample(self, shots: int, seed: int) -> Counts:
@@ -26,7 +33,7 @@ class _PreparedClifft(PreparedAdapter):
             attempted_shots=int(result.total_shots),
             accepted_shots=int(result.passed_shots),
             discarded_shots=int(result.discards),
-            logical_errors=int(result.logical_errors),
+            logical_errors=int(result.observable_ones[self._observable_index]),
         )
 
 
@@ -83,4 +90,9 @@ class ClifftAdapter(Adapter):
             "cpu_baseline": str(getattr(clifft, "CPU_BASELINE", "unknown")),
             "svm_backend": str(clifft.svm_backend()),
         }
-        return _PreparedClifft(clifft, program, metadata)
+        return _PreparedClifft(
+            clifft,
+            program,
+            int(workload["semantics"]["observable_index"]),
+            metadata,
+        )

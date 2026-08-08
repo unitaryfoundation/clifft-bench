@@ -13,7 +13,9 @@ two results are actually comparable.
 
 - CPU-only, one thread per simulator and one active benchmark case at a time.
 - One logical CPU affinity where the operating system supports it.
-- Magic-state cultivation at distances 3 and 5 plus a pure-Clifford surface-code anchor.
+- The eight QEC circuits used by `clifft-paper`: cultivation, distillation,
+  coherent-noise surface-code, and pure-Clifford surface-code workloads.
+- Fixed-seed Quantum Volume circuits at 10 and 20 qubits.
 - Attempted-shot steady-state throughput as the primary metric.
 - Setup/compilation, warmup, correctness, and sampling represented separately.
 - Explicit SymFT batch sizes; Clifft's internal logical batch size is recorded as 1.
@@ -22,9 +24,13 @@ two results are actually comparable.
 The full contract is in [docs/benchmark-contract.md](docs/benchmark-contract.md).
 Multicore and GPU experiments are intentionally outside Phase 1.
 
-## Install
+## Set up a checkout
 
 Python 3.12 or newer is required.
+
+This repository is run from a source checkout. It is not a library or CLI
+distribution project; the Python project metadata exists only to create the
+development environment and expose the checkout-local command.
 
 ```bash
 uv sync --extra test

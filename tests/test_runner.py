@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from clifft_bench.manifest import load_suite
 from clifft_bench.runner import run_suite
 from clifft_bench.schema import validate_document
@@ -39,6 +41,7 @@ def _write_fixture_suite(
                 "semantics": {
                     "logical_work": "One deterministic fixture update.",
                     "output_contract": "aggregate detector-discard and logical-observable counts",
+                    "observable_index": 0,
                     "postselect_all_detectors": False,
                     "throughput_numerator": "attempted shots",
                     "batch_semantics": "Fixture batch semantics.",
@@ -70,6 +73,8 @@ def _write_fixture_suite(
                 "distribution": "clifft-bench",
                 "version": "1.0.0",
                 "commit_sha": source_commit,
+                "commit_datetime": "2026-01-01T00:00:00Z",
+                "release_datetime": None,
                 "source_url": "https://example.com/fixture",
                 "dependency_distributions": ["clifft-bench"],
                 "build": {"precision": "integer", "compiler_flags": [], "features": []},
@@ -169,3 +174,13 @@ def test_warmup_failure_records_warmup_phase(tmp_path: Path) -> None:
     validate_document(result)
     assert [case["status"] for case in result["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "warmup" for case in result["cases"])
+
+
+def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None:
+    run_path, _, _ = _write_fixture_suite(tmp_path, request_timeout_seconds=5)
+    with pytest.raises(ValueError, match="must be greater than min_sample_seconds"):
+        run_suite(
+            load_suite(run_path),
+            output_path=tmp_path / "invalid-timeout.json",
+            min_sample_seconds=5,
+        )

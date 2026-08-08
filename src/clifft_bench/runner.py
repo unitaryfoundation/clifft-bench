@@ -35,7 +35,7 @@ class WorkerClient:
     def __init__(self, case: Case, cpu: int | None) -> None:
         self.case = case
         environment = restricted_environment()
-        source = str(Path(__file__).resolve().parents[1])
+        source = str(repository_root() / "src")
         existing = environment.get("PYTHONPATH")
         environment["PYTHONPATH"] = source if not existing else source + os.pathsep + existing
         self.process = subprocess.Popen(
@@ -158,6 +158,8 @@ def _simulator_record(case: Case) -> dict[str, Any]:
         "name": definition["name"],
         "version": definition["version"],
         "commit_sha": definition["commit_sha"],
+        "commit_datetime": definition["commit_datetime"],
+        "release_datetime": definition["release_datetime"],
         "source_url": definition["source_url"],
         "adapter": definition["adapter"],
         "python_executable": case.implementation.python_executable(),
@@ -251,6 +253,10 @@ def run_suite(
     if measurement["min_sample_seconds"] <= 0 or measurement["repetitions"] < 1:
         raise ValueError("measurement overrides must be positive")
     request_timeout = float(measurement["request_timeout_seconds"])
+    if request_timeout <= measurement["min_sample_seconds"]:
+        raise ValueError(
+            "request_timeout_seconds must be greater than min_sample_seconds"
+        )
 
     cases = _select_cases(suite, case_pattern)
     if not cases:

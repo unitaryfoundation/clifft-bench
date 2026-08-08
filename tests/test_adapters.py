@@ -6,6 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from clifft_bench.adapters.clifft import _PreparedClifft
 from clifft_bench.adapters.symft import SymftAdapter
 
 
@@ -26,6 +27,7 @@ class _Circuit:
         self.path = path
 
     def compile_counts_sampler(self, **kwargs):
+        self.compile_kwargs = kwargs
         return _Sampler(
             batch_size=int(kwargs["batch_size"]),
             sample_chunk_shots=int(kwargs["sample_chunk_shots"]),
@@ -62,10 +64,32 @@ def test_symft_rejects_effective_batching_mismatch(
     with pytest.raises(RuntimeError, match=message):
         SymftAdapter().prepare(
             artifact_path=tmp_path / "unused.stim",
-            workload={"semantics": {"postselect_all_detectors": False}},
+            workload={
+                "semantics": {
+                    "observable_index": 0,
+                    "postselect_all_detectors": False,
+                }
+            },
             execution={
                 "batch_enabled": True,
                 "batch_size": 32,
                 "sample_chunk_shots": 2048,
             },
         )
+
+
+def test_clifft_counts_the_selected_observable() -> None:
+    class FakeClifft:
+        @staticmethod
+        def sample_survivors(program, shots, *, seed, keep_records):
+            assert (program, shots, seed, keep_records) == ("program", 10, 7, False)
+            return SimpleNamespace(
+                total_shots=10,
+                passed_shots=10,
+                discards=0,
+                logical_errors=10,
+                observable_ones=[2, 7],
+            )
+
+    counts = _PreparedClifft(FakeClifft, "program", 1, {}).sample(10, 7)
+    assert counts.logical_errors == 7
