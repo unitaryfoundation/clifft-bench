@@ -11,13 +11,24 @@ from clifft_bench.adapters.symft import SymftAdapter
 
 
 class _Sampler:
-    def __init__(self, *, batch_size: int, sample_chunk_shots: int) -> None:
+    def __init__(
+        self,
+        *,
+        batch_size: int,
+        sample_chunk_shots: int,
+        backend: str = "batch",
+    ) -> None:
         self.info = {
             "threads": 1,
-            "backend": "batch",
+            "backend": backend,
             "batch_size": batch_size,
             "sample_chunk_shots": sample_chunk_shots,
+            "num_qubits": 1,
+            "num_measurements": 1,
+            "num_detectors": 0,
+            "max_active_qubits": 1,
         }
+        self.preprocessing_timing = {}
 
 
 class _Circuit:
@@ -93,3 +104,40 @@ def test_clifft_counts_the_selected_observable() -> None:
 
     counts = _PreparedClifft(FakeClifft, "program", 1, {}).sample(10, 7)
     assert counts.logical_errors == 7
+
+
+def test_symft_single_backend_normalizes_disabled_batch_sentinel(
+    tmp_path: Path, monkeypatch
+) -> None:
+    class SingleCircuit(_Circuit):
+        def compile_counts_sampler(self, **kwargs):
+            return _Sampler(
+                batch_size=0,
+                sample_chunk_shots=int(kwargs["sample_chunk_shots"]),
+                backend="single",
+            )
+
+    monkeypatch.setitem(
+        sys.modules,
+        "symft",
+        SimpleNamespace(
+            Circuit=SingleCircuit,
+            __version__="0.1.0",
+            simd_backend=lambda: "test",
+        ),
+    )
+    prepared = SymftAdapter().prepare(
+        artifact_path=tmp_path / "unused.stim",
+        workload={
+            "semantics": {
+                "observable_index": 0,
+                "postselect_all_detectors": False,
+            }
+        },
+        execution={
+            "batch_enabled": False,
+            "batch_size": 1,
+            "sample_chunk_shots": 2048,
+        },
+    )
+    assert prepared.runtime_metadata["effective_batch_size"] == 1

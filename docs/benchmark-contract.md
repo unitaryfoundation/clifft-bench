@@ -93,6 +93,8 @@ Two distinct quantities are recorded:
 Clifft exposes no internal shot-batch choice in this API, so its batch size is
 1. SymFT batch sizes are explicit manifest values, never hidden automatic
 choices. A large-batch throughput result is not a single-circuit latency result.
+SymFT uses native batch size 0 as a disabled sentinel on its single backend; the
+harness records the effective logical batch size as 1 in that mode.
 The Quantum Volume cases therefore request one shot per call with batching
 disabled and are marked as latency measurements; their inverse latency is still
 reported in the common attempted-shots-per-second field.

@@ -56,7 +56,8 @@ class SymftAdapter(Adapter):
                 f"SymFT backend {info['backend']!r} does not match {expected_backend!r}"
             )
         requested_batch_size = int(execution["batch_size"])
-        if int(info["batch_size"]) != requested_batch_size:
+        native_batch_size = int(info["batch_size"])
+        if execution["batch_enabled"] and native_batch_size != requested_batch_size:
             raise RuntimeError(
                 f"SymFT batch size {info['batch_size']!r} does not match "
                 f"requested {requested_batch_size}"
@@ -77,7 +78,7 @@ class SymftAdapter(Adapter):
             "threads": int(info["threads"]),
             "precision": "complex-fp64",
             "batch_enabled": bool(execution["batch_enabled"]),
-            "effective_batch_size": int(info["batch_size"]),
+            "effective_batch_size": native_batch_size if execution["batch_enabled"] else 1,
             "sample_chunk_shots": int(info["sample_chunk_shots"]),
             "num_qubits": int(info["num_qubits"]),
             "num_measurements": int(info["num_measurements"]),
