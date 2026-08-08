@@ -107,10 +107,10 @@
         "basis": "Z"
       },
       "semantics": {
-        "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot and count observable-0 parity without detector postselection.",
+        "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
         "output_contract": "aggregate detector-discard and logical-observable counts",
         "observable_index": 0,
-        "postselect_all_detectors": false,
+        "postselect_all_detectors": true,
         "throughput_numerator": "attempted shots",
         "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
       },
@@ -148,10 +148,10 @@
         "preparation_error_rate": 0.05
       },
       "semantics": {
-        "logical_work": "Sample the complete circuit once per attempted shot and count output-block observable 0 without detector postselection.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors.",
         "output_contract": "aggregate detector-discard and logical-observable counts",
         "observable_index": 0,
-        "postselect_all_detectors": false,
+        "postselect_all_detectors": true,
         "throughput_numerator": "attempted shots",
         "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
       },
@@ -190,10 +190,10 @@
         "coherent_z_rotation": 0.02
       },
       "semantics": {
-        "logical_work": "Sample the complete circuit once per attempted shot and count observable-0 parity without detector postselection.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
         "output_contract": "aggregate detector-discard and logical-observable counts",
         "observable_index": 0,
-        "postselect_all_detectors": false,
+        "postselect_all_detectors": true,
         "throughput_numerator": "attempted shots",
         "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
       },
@@ -232,10 +232,10 @@
         "coherent_z_rotation": 0.02
       },
       "semantics": {
-        "logical_work": "Sample the complete circuit once per attempted shot and count observable-0 parity without detector postselection.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
         "output_contract": "aggregate detector-discard and logical-observable counts",
         "observable_index": 0,
-        "postselect_all_detectors": false,
+        "postselect_all_detectors": true,
         "throughput_numerator": "attempted shots",
         "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
       },
@@ -274,10 +274,10 @@
         "coherent_z_rotation": 0.02
       },
       "semantics": {
-        "logical_work": "Sample the complete circuit once per attempted shot and count observable-0 parity without detector postselection.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
         "output_contract": "aggregate detector-discard and logical-observable counts",
         "observable_index": 0,
-        "postselect_all_detectors": false,
+        "postselect_all_detectors": true,
         "throughput_numerator": "attempted shots",
         "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
       },
@@ -316,10 +316,10 @@
         "coherent_z_rotation": 0.02
       },
       "semantics": {
-        "logical_work": "Sample the complete circuit once per attempted shot and count observable-0 parity without detector postselection.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
         "output_contract": "aggregate detector-discard and logical-observable counts",
         "observable_index": 0,
-        "postselect_all_detectors": false,
+        "postselect_all_detectors": true,
         "throughput_numerator": "attempted shots",
         "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
       },

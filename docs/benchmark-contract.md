@@ -20,11 +20,11 @@ selected circuit. The simulator must return aggregate counts for:
 - accepted shots, and
 - logical errors for the manifest-selected observable among accepted shots.
 
-For cultivation workloads every declared detector is a postselection check.
-The other QEC and Quantum Volume workloads do not postselect. Every Phase 1
-workload selects observable 0 explicitly; this matters for the distillation
-circuit, which declares five observables. Throughput always uses attempted shots
-as the numerator, before detector rejection.
+For every QEC workload, each declared detector is a postselection check. The
+Quantum Volume workloads declare no detectors and do not postselect. Every
+Phase 1 workload selects observable 0 explicitly; this matters for the
+distillation circuit, which declares five observables. Throughput always uses
+attempted shots as the numerator, before detector rejection.
 
 Materializing full measurement or detector arrays is not part of the logical
 work. Clifft's `sample_survivors(..., keep_records=False)` and SymFT's compiled

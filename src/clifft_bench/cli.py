@@ -111,6 +111,15 @@ def _run(args: argparse.Namespace) -> int:
         repetitions=args.repetitions,
     )
     successes = sum(case["status"] == "success" for case in document["cases"])
+    for case in document["cases"]:
+        if case["status"] == "success":
+            continue
+        error = case.get("error") or {}
+        print(
+            f"Failed {case['case_id']} during {error.get('phase', 'unknown')}: "
+            f"{error.get('type', 'Error')}: {error.get('message', 'no details')}",
+            file=sys.stderr,
+        )
     print(f"Result: {output.resolve()} ({successes}/{len(document['cases'])} successful)")
     return 0 if successes == len(document["cases"]) else 1
 

@@ -225,7 +225,7 @@
         "mode": "throughput",
         "batch_enabled": false,
         "batch_size": 1,
-        "sample_chunk_shots": 0
+        "sample_chunk_shots": 2048
       }
     },
     {
@@ -251,7 +251,7 @@
         "mode": "latency",
         "batch_enabled": false,
         "batch_size": 1,
-        "sample_chunk_shots": 0
+        "sample_chunk_shots": 2048
       }
     },
     {
@@ -277,7 +277,7 @@
         "mode": "latency",
         "batch_enabled": false,
         "batch_size": 1,
-        "sample_chunk_shots": 0
+        "sample_chunk_shots": 2048
       }
     }
   ]
