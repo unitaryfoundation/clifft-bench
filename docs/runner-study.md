@@ -19,11 +19,16 @@ Each pair remains resident in two isolated workers. Samples run serially in
 alternating `A/B`, then `B/A` order on one selected logical CPU. The default
 profile records six 30-second samples per slot.
 
-The manually dispatched `Runner A/A study` workflow starts three independent
-`ubuntu-24.04` jobs. Every job uploads its schema-valid raw result, a per-pair
-CSV, and a JSON summary. Run the default configuration several times at
-different times of day before drawing a conclusion; the three replicas within
-one dispatch are not a substitute for temporal coverage.
+The `Runner A/A study` workflow starts three independent `ubuntu-24.04` jobs.
+During the initial evidence window it runs at 01:00 and 13:00 UTC each day, and
+it can also be dispatched manually. The scheduled path always uses the full
+profile defaults; manual inputs can shorten a commissioning run. Every job
+uploads its schema-valid raw result, a per-pair CSV, and a JSON summary.
+
+Collect six full dispatches over three days before the initial evaluation. The
+three replicas within one dispatch are not a substitute for temporal coverage.
+Remove the temporary schedule when that evidence set is complete; manual
+dispatch remains useful for later spot checks.
 
 ## Analysis
 
