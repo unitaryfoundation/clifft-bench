@@ -17,6 +17,7 @@ ROOT = repository_root()
         "manifests/software.v1.json",
         "manifests/run-smoke.v1.json",
         "manifests/run-phase1.v1.json",
+        "manifests/run-runner-aa.v1.json",
     ],
 )
 def test_checked_in_manifests_validate(relative: str) -> None:
@@ -25,7 +26,11 @@ def test_checked_in_manifests_validate(relative: str) -> None:
 
 @pytest.mark.parametrize(
     "relative",
-    ["manifests/run-smoke.v1.json", "manifests/run-phase1.v1.json"],
+    [
+        "manifests/run-smoke.v1.json",
+        "manifests/run-phase1.v1.json",
+        "manifests/run-runner-aa.v1.json",
+    ],
 )
 def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
     suite = load_suite(ROOT / relative)
