@@ -113,3 +113,11 @@ uv run ruff check .
 
 The GitHub-hosted CI smoke check validates harness behavior and adapter
 correctness. It does not publish or interpret hosted-runner timings.
+
+## Runner variance study
+
+Before defining release-regression thresholds, the manually dispatched runner
+A/A workflow measures pinned Clifft against itself on short- and long-call
+workloads across three independent GitHub-hosted jobs. Its raw artifacts remain
+exploratory. See [docs/runner-study.md](docs/runner-study.md) for the collection
+and analysis procedure.
