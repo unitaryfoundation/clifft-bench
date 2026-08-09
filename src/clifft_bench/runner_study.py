@@ -5,12 +5,13 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
 import statistics
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.schema import validate_document
+from clifft_bench.schema import read_json, validate_document
 
 PAIR_FIELDS = [
     "source_result",
@@ -91,7 +92,11 @@ def _sample_by_repetition(case: dict[str, Any]) -> dict[int, dict[str, Any]]:
     return samples
 
 
-def _check_aa_pair(pair_id: str, cases: list[dict[str, Any]]) -> None:
+def _simulator_identity(simulator: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in simulator.items() if key != "python_executable"}
+
+
+def _check_aa_pair(pair_id: str, cases: list[dict[str, Any]]) -> dict[str, Any]:
     if len(cases) != 2:
         raise ValueError(f"A/A pair {pair_id!r} must contain exactly two cases")
     left, right = cases
@@ -107,84 +112,136 @@ def _check_aa_pair(pair_id: str, cases: list[dict[str, Any]]) -> None:
         raise ValueError(f"A/A pair {pair_id!r} uses different implementations")
     if left["simulator"]["commit_sha"] != right["simulator"]["commit_sha"]:
         raise ValueError(f"A/A pair {pair_id!r} uses different simulator commits")
-    stable_simulator_fields = [
-        "name",
-        "version",
-        "commit_datetime",
-        "release_datetime",
-        "source_url",
-        "adapter",
-        "build",
-        "dependencies",
-    ]
-    if any(left["simulator"][key] != right["simulator"][key] for key in stable_simulator_fields):
+    simulator_identity = _simulator_identity(left["simulator"])
+    if simulator_identity != _simulator_identity(right["simulator"]):
         raise ValueError(f"A/A pair {pair_id!r} uses different simulator identities")
     if left["execution"] != right["execution"]:
         raise ValueError(f"A/A pair {pair_id!r} uses different execution settings")
+    return {
+        "case_ids": [left["case_id"], right["case_id"]],
+        "workload": {
+            key: value for key, value in left["workload"].items() if key != "artifact"
+        },
+        "artifact_sha256": left["workload"]["artifact"]["sha256"],
+        "simulator": simulator_identity,
+        "execution": left["execution"],
+    }
 
 
-def _document_observations(path: Path, document: dict[str, Any]) -> list[dict[str, Any]]:
+def _document_observations(
+    path: Path, document: dict[str, Any]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, dict[str, Any]]]:
     validate_document(document, source=str(path))
     identity = _hardware_identity(document)
     hardware_key = _hardware_key(identity)
     workflow = document["run"]["workflow"]
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    skipped_pairs = []
     for case in document["cases"]:
         pair_id = case["pair_id"]
         if pair_id is None:
-            raise ValueError(f"case {case['case_id']!r} has no A/A pair_id")
-        groups[str(pair_id)].append(case)
-
-    observations = []
-    for pair_id, cases in sorted(groups.items()):
-        cases.sort(key=lambda case: str(case["case_id"]))
-        _check_aa_pair(pair_id, cases)
-        left, right = cases
-        left_samples = _sample_by_repetition(left)
-        right_samples = _sample_by_repetition(right)
-        if left_samples.keys() != right_samples.keys():
-            raise ValueError(f"A/A pair {pair_id!r} has unmatched repetitions")
-        for repetition in sorted(left_samples):
-            sample_a = left_samples[repetition]
-            sample_b = right_samples[repetition]
-            rate_a = float(sample_a["throughput_attempted_shots_per_second"])
-            rate_b = float(sample_b["throughput_attempted_shots_per_second"])
-            observations.append(
+            skipped_pairs.append(
                 {
                     "source_result": path.name,
                     "run_id": document["run"]["id"],
-                    "workflow_run_id": workflow["run_id"],
-                    "run_attempt": workflow["run_attempt"],
-                    "hardware_key": hardware_key,
-                    "cpu_model": identity["cpu_model"],
-                    "physical_cores": identity["physical_cores"],
-                    "logical_cpus": identity["logical_cpus"],
-                    "memory_bytes": identity["memory_bytes"],
-                    "image_os": identity["image_os"],
-                    "image_version": workflow["image_version"],
-                    "pair_id": pair_id,
-                    "workload_id": left["workload"]["id"],
-                    "case_a": left["case_id"],
-                    "case_b": right["case_id"],
-                    "repetition": repetition,
-                    "sequence_a": sample_a["sequence_index"],
-                    "sequence_b": sample_b["sequence_index"],
-                    "rate_a": rate_a,
-                    "rate_b": rate_b,
-                    "ratio_b_over_a": rate_b / rate_a,
-                    "absolute_delta_percent": 200 * abs(rate_b - rate_a) / (rate_a + rate_b),
+                    "pair_id": None,
+                    "reason": f"case {case['case_id']!r} has no A/A pair_id",
                 }
             )
-    return observations
+            continue
+        groups[str(pair_id)].append(case)
+
+    observations = []
+    identities = {}
+    for pair_id, cases in sorted(groups.items()):
+        try:
+            pair_identity = _check_aa_pair(pair_id, cases)
+            left, right = cases
+            left_samples = _sample_by_repetition(left)
+            right_samples = _sample_by_repetition(right)
+            if left_samples.keys() != right_samples.keys():
+                raise ValueError(f"A/A pair {pair_id!r} has unmatched repetitions")
+            for repetition in sorted(left_samples):
+                sample_a = left_samples[repetition]
+                sample_b = right_samples[repetition]
+                rate_a = float(sample_a["throughput_attempted_shots_per_second"])
+                rate_b = float(sample_b["throughput_attempted_shots_per_second"])
+                observations.append(
+                    {
+                        "source_result": path.name,
+                        "run_id": document["run"]["id"],
+                        "workflow_run_id": workflow["run_id"],
+                        "run_attempt": workflow["run_attempt"],
+                        "hardware_key": hardware_key,
+                        "cpu_model": identity["cpu_model"],
+                        "physical_cores": identity["physical_cores"],
+                        "logical_cpus": identity["logical_cpus"],
+                        "memory_bytes": identity["memory_bytes"],
+                        "image_os": identity["image_os"],
+                        "image_version": workflow["image_version"],
+                        "pair_id": pair_id,
+                        "workload_id": left["workload"]["id"],
+                        "case_a": left["case_id"],
+                        "case_b": right["case_id"],
+                        "repetition": repetition,
+                        "sequence_a": sample_a["sequence_index"],
+                        "sequence_b": sample_b["sequence_index"],
+                        "rate_a": rate_a,
+                        "rate_b": rate_b,
+                        "ratio_b_over_a": rate_b / rate_a,
+                        "absolute_delta_percent": (
+                            200 * abs(rate_b - rate_a) / (rate_a + rate_b)
+                        ),
+                    }
+                )
+            identities[pair_id] = pair_identity
+        except ValueError as error:
+            skipped_pairs.append(
+                {
+                    "source_result": path.name,
+                    "run_id": document["run"]["id"],
+                    "pair_id": pair_id,
+                    "reason": str(error),
+                }
+            )
+    return observations, skipped_pairs, identities
 
 
 def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     if not paths:
         raise ValueError("at least one raw result is required")
+    resolved_paths = [path.resolve() for path in paths]
+    if len(set(resolved_paths)) != len(resolved_paths):
+        raise ValueError("duplicate raw result path")
     observations = []
-    for path in paths:
-        document = json.loads(path.read_text())
-        observations.extend(_document_observations(path, document))
+    skipped_pairs = []
+    identities: dict[str, tuple[dict[str, Any], str]] = {}
+    run_ids: dict[str, str] = {}
+    for path in resolved_paths:
+        try:
+            document = read_json(path)
+        except OSError as error:
+            raise ValueError(f"{path}: cannot read raw result: {error}") from error
+        document_observations, document_skips, document_identities = (
+            _document_observations(path, document)
+        )
+        run_id = str(document["run"]["id"])
+        if run_id in run_ids:
+            raise ValueError(
+                f"duplicate raw result run id {run_id!r} in "
+                f"{run_ids[run_id]!r} and {path.name!r}"
+            )
+        run_ids[run_id] = path.name
+        for pair_id, identity in document_identities.items():
+            if pair_id in identities and identities[pair_id][0] != identity:
+                previous_path = identities[pair_id][1]
+                raise ValueError(
+                    f"A/A pair {pair_id!r} changes identity between "
+                    f"{previous_path!r} and {path.name!r}"
+                )
+            identities[pair_id] = (identity, path.name)
+        observations.extend(document_observations)
+        skipped_pairs.extend(document_skips)
 
     grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for observation in observations:
@@ -232,9 +289,11 @@ def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[s
         )
 
     report = {
-        "schema_version": "clifft-bench/runner-study-summary/v1",
-        "result_count": len(paths),
+        "report_format": "clifft-bench/runner-study-summary/v1",
+        "result_count": len(resolved_paths),
         "observation_count": len(observations),
+        "skipped_pair_count": len(skipped_pairs),
+        "skipped_pairs": skipped_pairs,
         "groups": summaries,
     }
     return report, observations
@@ -242,12 +301,16 @@ def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[s
 
 def write_runner_study_json(path: Path, report: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    os.replace(temporary, path)
 
 
 def write_runner_study_csv(path: Path, observations: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="") as stream:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=PAIR_FIELDS)
         writer.writeheader()
         writer.writerows(observations)
+    os.replace(temporary, path)

@@ -4,7 +4,8 @@ on:
   # Temporary twice-daily collection window for issue #4. Remove this schedule
   # when the initial evidence set has been collected.
   schedule:
-    - cron: "0 1,13 * * *"
+    # GitHub identifies the start of each hour as a high-load period.
+    - cron: "17 1,13 * * *"
   workflow_dispatch:
     inputs:
       min_sample_seconds:
@@ -35,7 +36,7 @@ jobs:
       matrix:
         replica: [1, 2, 3]
     env:
-      RESULT_PATH: results/runner-aa-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.replica }}.json
+      RESULT_PREFIX: results/runner-aa-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.replica }}
       STUDY_MIN_SAMPLE_SECONDS: ${{ inputs.min_sample_seconds || '30' }}
       STUDY_REPETITIONS: ${{ inputs.repetitions || '6' }}
     steps:
@@ -47,18 +48,23 @@ jobs:
       - run: python -m pip install -e . 'clifft==0.7.0'
       - run: clifft-bench validate manifests/run-runner-aa.v1.json
       - name: Collect A/A measurements
+        id: collect
+        continue-on-error: true
         run: >-
           clifft-bench run
           --run-manifest manifests/run-runner-aa.v1.json
           --min-sample-seconds "$STUDY_MIN_SAMPLE_SECONDS"
           --repetitions "$STUDY_REPETITIONS"
-          --output "$RESULT_PATH"
-      - run: clifft-bench validate "$RESULT_PATH"
+          --output "$RESULT_PREFIX-raw.json"
+      - name: Validate the raw result
+        if: always() && hashFiles('results/*-raw.json') != ''
+        run: clifft-bench validate "$RESULT_PREFIX-raw.json"
       - name: Summarize this replica
+        if: always() && hashFiles('results/*-raw.json') != ''
         run: >-
-          clifft-bench analyze-aa "$RESULT_PATH"
-          --output-json "${RESULT_PATH%.json}-summary.json"
-          --output-csv "${RESULT_PATH%.json}-pairs.csv"
+          clifft-bench analyze-aa "$RESULT_PREFIX-raw.json"
+          --output-json "$RESULT_PREFIX-summary.json"
+          --output-csv "$RESULT_PREFIX-pairs.csv"
       - name: Upload raw result and derived summaries
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -67,3 +73,6 @@ jobs:
           path: results/runner-aa-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.replica }}*
           if-no-files-found: error
           retention-days: 90
+      - name: Preserve a collection failure after uploading diagnostics
+        if: always() && steps.collect.outcome == 'failure'
+        run: exit 1

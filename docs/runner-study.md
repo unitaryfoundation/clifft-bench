@@ -20,10 +20,15 @@ alternating `A/B`, then `B/A` order on one selected logical CPU. The default
 profile records six 30-second samples per slot.
 
 The `Runner A/A study` workflow starts three independent `ubuntu-24.04` jobs.
-During the initial evidence window it runs at 01:00 and 13:00 UTC each day, and
-it can also be dispatched manually. The scheduled path always uses the full
-profile defaults; manual inputs can shorten a commissioning run. Every job
-uploads its schema-valid raw result, a per-pair CSV, and a JSON summary.
+During the initial evidence window it runs at 01:17 and 13:17 UTC each day,
+away from GitHub's high-load start-of-hour window, and it can also be dispatched
+manually. The scheduled path always uses the full profile defaults; manual
+inputs can shorten a commissioning run.
+
+A successful job uploads its schema-valid raw result, a per-pair CSV, and a
+JSON summary. If an individual case fails, the job uploads the raw result and a
+partial summary that identifies skipped pairs before retaining a failed job
+status. Failures before result creation may have no benchmark artifact.
 
 Collect six full dispatches over three days before the initial evaluation. The
 three replicas within one dispatch are not a substitute for temporal coverage.
@@ -35,17 +40,18 @@ dispatch remains useful for later spot checks.
 Download raw JSON artifacts from multiple workflow runs, then run:
 
 ```bash
-uv run clifft-bench analyze-aa results/runner-aa-*.json \
+uv run clifft-bench analyze-aa results/runner-aa-*-raw.json \
   --output-json results/runner-study-summary.json \
   --output-csv results/runner-study-pairs.csv
 ```
 
 The analyzer rejects pairs whose workload, artifact, implementation, commit,
-or execution settings differ. It reports absolute throughput, the B/A ratio,
-and the symmetric absolute pair difference. Summaries include median, MAD,
-90th and 95th percentiles, minimum, and maximum, grouped by workload and a
-hardware key derived from CPU model, topology, memory, architecture, and runner
-image OS.
+or execution settings differ within or across raw result files. Unsuccessful
+pairs are listed under `skipped_pairs`; healthy pairs remain usable. It reports
+absolute throughput, the B/A ratio, and the symmetric absolute pair difference.
+Summaries include median, MAD, 90th and 95th percentiles, minimum, and maximum,
+grouped by workload and a hardware key derived from CPU model, topology,
+memory, architecture, and runner image OS.
 
 The analyzer intentionally does not declare a regression threshold. The
 evidence PR will select an inconclusive region only after reviewing multiple
