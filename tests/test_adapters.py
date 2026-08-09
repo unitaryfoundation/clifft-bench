@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from clifft_bench.adapters.clifft import _PreparedClifft
+from clifft_bench.adapters.clifft import ClifftAdapter, _PreparedClifft
 from clifft_bench.adapters.symft import SymftAdapter
 
 
@@ -79,6 +79,7 @@ def test_symft_rejects_effective_batching_mismatch(
                 "semantics": {
                     "observable_index": 0,
                     "postselect_all_detectors": False,
+                    "reference_convention": "raw-record-parity",
                 }
             },
             execution={
@@ -132,6 +133,7 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
             "semantics": {
                 "observable_index": 0,
                 "postselect_all_detectors": False,
+                "reference_convention": "raw-record-parity",
             }
         },
         execution={
@@ -141,3 +143,25 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
         },
     )
     assert prepared.runtime_metadata["effective_batch_size"] == 1
+
+
+@pytest.mark.parametrize("adapter", [ClifftAdapter(), SymftAdapter()])
+def test_adapters_reject_unsupported_reference_convention(
+    adapter, tmp_path: Path
+) -> None:
+    with pytest.raises(ValueError, match="does not support reference convention"):
+        adapter.prepare(
+            artifact_path=tmp_path / "unused.stim",
+            workload={
+                "semantics": {
+                    "observable_index": 0,
+                    "postselect_all_detectors": False,
+                    "reference_convention": "reference-normalized-parity",
+                }
+            },
+            execution={
+                "batch_enabled": False,
+                "batch_size": 1,
+                "sample_chunk_shots": 0,
+            },
+        )
