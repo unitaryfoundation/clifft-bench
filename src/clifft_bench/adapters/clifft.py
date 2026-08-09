@@ -47,6 +47,12 @@ class ClifftAdapter(Adapter):
         workload: dict[str, Any],
         execution: dict[str, Any],
     ) -> PreparedAdapter:
+        reference_convention = str(workload["semantics"]["reference_convention"])
+        if reference_convention != "raw-record-parity":
+            raise ValueError(
+                f"Clifft adapter does not support reference convention "
+                f"{reference_convention!r}"
+            )
         if execution["batch_size"] != 1 or execution["batch_enabled"]:
             raise ValueError(
                 "Clifft does not expose an internal shot-batch setting; use batch_size=1"
@@ -78,6 +84,7 @@ class ClifftAdapter(Adapter):
             "version": str(clifft.version()),
             "threads": int(clifft.get_num_threads()),
             "precision": "complex-fp64",
+            "reference_convention": reference_convention,
             "batch_enabled": False,
             "effective_batch_size": 1,
             "num_qubits": int(program.num_qubits),

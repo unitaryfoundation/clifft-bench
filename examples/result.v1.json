@@ -72,6 +72,7 @@
           "parse_seconds": 0.00007908325642347336,
           "peak_active_width": 4,
           "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
           "svm_backend": "example",
           "threads": 1,
           "version": "0.7.0"
@@ -145,6 +146,7 @@
           "observable_index": 0,
           "output_contract": "aggregate detector-discard and logical-observable counts",
           "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
           "throughput_numerator": "attempted shots"
         }
       }

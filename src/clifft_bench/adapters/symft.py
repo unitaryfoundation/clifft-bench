@@ -35,6 +35,12 @@ class SymftAdapter(Adapter):
         workload: dict[str, Any],
         execution: dict[str, Any],
     ) -> PreparedAdapter:
+        reference_convention = str(workload["semantics"]["reference_convention"])
+        if reference_convention != "raw-record-parity":
+            raise ValueError(
+                f"SymFT adapter does not support reference convention "
+                f"{reference_convention!r}"
+            )
         import symft
 
         circuit = symft.Circuit(path=artifact_path)
@@ -77,6 +83,7 @@ class SymftAdapter(Adapter):
             "version": str(symft.__version__),
             "threads": int(info["threads"]),
             "precision": "complex-fp64",
+            "reference_convention": reference_convention,
             "batch_enabled": bool(execution["batch_enabled"]),
             "effective_batch_size": native_batch_size if execution["batch_enabled"] else 1,
             "sample_chunk_shots": int(info["sample_chunk_shots"]),

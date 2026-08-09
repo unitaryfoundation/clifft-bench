@@ -26,6 +26,14 @@ Phase 1 workload selects observable 0 explicitly; this matters for the
 distillation circuit, which declares five observables. Throughput always uses
 attempted shots as the numerator, before detector rejection.
 
+Every Phase 1 workload also declares `reference_convention` as
+`raw-record-parity`. Detector events and logical errors are the XOR parity of
+their declared measurement records, without XORing a noiseless reference
+sample into either value. The convention is embedded in each result with the
+workload definition. Reference-normalized variants are intentionally a
+separate future benchmark profile so they cannot be mixed into the same result
+series.
+
 Materializing full measurement or detector arrays is not part of the logical
 work. Clifft's `sample_survivors(..., keep_records=False)` and SymFT's compiled
 counts sampler implement the same aggregate-count contract.
@@ -108,6 +116,11 @@ Correctness work occurs outside the timed region. The initial check verifies:
 - attempted = accepted + discarded;
 - logical errors lie between zero and accepted shots; and
 - non-postselected workloads discard no shots.
+
+The real-adapter smoke test also runs deterministic detector and observable
+sentinels whose raw and reference-normalized answers are exact opposites. This
+detects an upstream change in either simulator's reference convention without
+relying on statistical agreement.
 
 These checks catch circuit or API mismatches but do not prove two independent
 random streams are sample-for-sample equal. Later statistical distribution

@@ -43,6 +43,7 @@ def _write_fixture_suite(
                     "output_contract": "aggregate detector-discard and logical-observable counts",
                     "observable_index": 0,
                     "postselect_all_detectors": False,
+                    "reference_convention": "raw-record-parity",
                     "throughput_numerator": "attempted shots",
                     "batch_semantics": "Fixture batch semantics.",
                 },
