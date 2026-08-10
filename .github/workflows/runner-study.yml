@@ -45,7 +45,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -e . 'clifft==0.7.0'
+      - run: python -m pip install -e . -r requirements/runner-study.txt
       - run: clifft-bench validate manifests/run-runner-aa.v1.json
       - name: Collect A/A measurements
         id: collect

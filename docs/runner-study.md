@@ -20,6 +20,12 @@ alternating `A/B`, then `B/A` order on one selected logical CPU. The default
 profile records six 30-second samples per slot.
 
 The `Runner A/A study` workflow starts three independent `ubuntu-24.04` jobs.
+It installs `requirements/runner-study.txt`, which exactly pins Clifft and each
+performance-sensitive dependency named by its software manifest. When changing
+Clifft, update that requirements file and the software manifest together. Any
+intentional requirement change starts a new evidence cohort. This keeps an
+unrelated dependency release from silently changing software during a study.
+
 During the initial evidence window it runs at 01:17 and 13:17 UTC each day,
 away from GitHub's high-load start-of-hour window, and it can also be dispatched
 manually. The scheduled path always uses the full profile defaults; manual

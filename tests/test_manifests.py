@@ -38,6 +38,28 @@ def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
     assert all(case.workload.artifact_path.is_file() for case in suite.cases)
 
 
+def test_runner_study_installs_an_exactly_pinned_simulator_environment() -> None:
+    requirements_path = ROOT / "requirements/runner-study.txt"
+    pins = {}
+    for line in requirements_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        distribution, separator, version = line.partition("==")
+        assert separator == "==", f"runner-study requirement is not exactly pinned: {line}"
+        assert distribution and version
+        assert distribution not in pins
+        pins[distribution] = version
+
+    software = validate_path(ROOT / "manifests/software.v1.json")
+    clifft = next(item for item in software["implementations"] if item["name"] == "clifft")
+    assert pins[clifft["distribution"]] == clifft["version"]
+    assert set(clifft["dependency_distributions"]) <= pins.keys()
+
+    workflow = (ROOT / ".github/workflows/runner-study.yml").read_text()
+    assert "python -m pip install -e . -r requirements/runner-study.txt" in workflow
+
+
 def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
     suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
     workloads = dict(suite.workloads_document)
