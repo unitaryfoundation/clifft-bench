@@ -58,6 +58,8 @@ def test_runner_study_installs_an_exactly_pinned_simulator_environment() -> None
 
     workflow = (ROOT / ".github/workflows/runner-study.yml").read_text()
     assert "python -m pip install -e . -r requirements/runner-study.txt" in workflow
+    assert "runs-on: ucc-benchmarks-8-core-U22.04" in workflow
+    assert "max-parallel: 1" in workflow
 
 
 def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
