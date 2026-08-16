@@ -1,11 +1,6 @@
 name: Larger runner A/A study
 
 on:
-  # Temporary twice-daily collection window for issue #4. Remove this schedule
-  # after six full larger-runner dispatches have been collected.
-  schedule:
-    # GitHub identifies the start of each hour as a high-load period.
-    - cron: "17 1,13 * * *"
   workflow_dispatch:
     inputs:
       min_sample_seconds:

@@ -33,24 +33,21 @@ manifest together. Any intentional requirement change starts a new evidence
 cohort. This keeps an unrelated dependency release from silently changing
 software during a study.
 
-During an evidence window the workflow runs at 01:17 and 13:17 UTC each day,
-away from GitHub's high-load start-of-hour window, and it can also be dispatched
-manually. The scheduled path always uses three replicas and the full profile
-defaults. For the initial larger-runner commissioning run, select one replica,
-one repetition, and a one-second minimum sample. Commissioning output checks
-the runner label, installation, result validation, summarization, and artifact
-upload; it is not part of the evidence set.
+The larger-runner evidence window collected seven full dispatches from August
+13 through August 16, 2026. Its temporary twice-daily schedule has been removed;
+the workflow remains manually dispatchable for later spot checks. For a
+commissioning run, select one replica, one repetition, and a one-second minimum
+sample. Commissioning output checks the runner label, installation, result
+validation, summarization, and artifact upload; it is not evidence.
 
 A successful job uploads its schema-valid raw result, a per-pair CSV, and a
 JSON summary. If an individual case fails, the job uploads the raw result and a
 partial summary that identifies skipped pairs before retaining a failed job
 status. Failures before result creation may have no benchmark artifact.
 
-Collect six full larger-runner dispatches over three days before evaluating it
-against the standard-runner evidence. The three replicas within one dispatch
-are not a substitute for temporal coverage. Remove the temporary schedule when
-that evidence set is complete; manual dispatch remains useful for later spot
-checks.
+The collection target was six full larger-runner dispatches over three days;
+seven were collected before the temporary schedule was removed. The three
+replicas within one dispatch are not a substitute for temporal coverage.
 
 The repository has a $10 GitHub Actions budget with paid usage stopped at the
 limit. After collection, calculate the study cost from the completed job usage
