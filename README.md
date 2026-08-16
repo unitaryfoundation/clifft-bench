@@ -118,7 +118,7 @@ correctness. It does not publish or interpret hosted-runner timings.
 
 Before defining release-regression thresholds, the runner A/A workflow measures
 pinned Clifft against itself on short- and long-call workloads. The initial
-cohort used standard GitHub-hosted jobs; the current temporary cohort uses the
+cohort used standard GitHub-hosted jobs; a completed second cohort used the
 existing serialized 8-vCPU GitHub larger runner. Its raw artifacts remain
 exploratory. See [docs/runner-study.md](docs/runner-study.md) for the collection,
 cost accounting, and analysis procedure.
