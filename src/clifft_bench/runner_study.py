@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import os
 import statistics
 from collections import defaultdict
@@ -19,6 +20,7 @@ PAIR_FIELDS = [
     "workflow_run_id",
     "run_attempt",
     "hardware_key",
+    "machine",
     "cpu_model",
     "physical_cores",
     "logical_cpus",
@@ -37,6 +39,8 @@ PAIR_FIELDS = [
     "ratio_b_over_a",
     "absolute_delta_percent",
 ]
+
+HARDWARE_MEMORY_BUCKET_BYTES = 1024**3
 
 
 def _percentile(values: list[float], probability: float) -> float:
@@ -75,8 +79,22 @@ def _hardware_identity(document: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _memory_bucket(memory_bytes: int) -> int:
+    return (
+        (memory_bytes + HARDWARE_MEMORY_BUCKET_BYTES // 2)
+        // HARDWARE_MEMORY_BUCKET_BYTES
+        * HARDWARE_MEMORY_BUCKET_BYTES
+    )
+
+
 def _hardware_key(identity: dict[str, Any]) -> str:
-    encoded = json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    grouped_identity = {
+        key: value for key, value in identity.items() if key != "memory_bytes"
+    }
+    grouped_identity["memory_bytes_bucket"] = _memory_bucket(identity["memory_bytes"])
+    encoded = json.dumps(
+        grouped_identity, sort_keys=True, separators=(",", ":")
+    ).encode()
     return hashlib.sha256(encoded).hexdigest()[:12]
 
 
@@ -173,6 +191,7 @@ def _document_observations(
                         "workflow_run_id": workflow["run_id"],
                         "run_attempt": workflow["run_attempt"],
                         "hardware_key": hardware_key,
+                        "machine": identity["machine"],
                         "cpu_model": identity["cpu_model"],
                         "physical_cores": identity["physical_cores"],
                         "logical_cpus": identity["logical_cpus"],
@@ -205,6 +224,82 @@ def _document_observations(
                 }
             )
     return observations, skipped_pairs, identities
+
+
+def _dispatch_summaries(
+    observations: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    replicas: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    dispatch_metadata: dict[str, dict[str, Any]] = {}
+    for observation in observations:
+        workflow_run_id = observation["workflow_run_id"]
+        run_attempt = observation["run_attempt"]
+        if workflow_run_id is None:
+            dispatch_id = str(observation["run_id"])
+        else:
+            dispatch_id = f"{workflow_run_id}:{run_attempt or 'unknown'}"
+        dispatch_metadata[dispatch_id] = {
+            "workflow_run_id": workflow_run_id,
+            "run_attempt": run_attempt,
+        }
+        replicas[(dispatch_id, observation["pair_id"], observation["run_id"])].append(
+            observation
+        )
+
+    dispatches: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for (dispatch_id, pair_id, run_id), items in sorted(replicas.items()):
+        replica_center = statistics.median(
+            math.log(float(item["ratio_b_over_a"])) for item in items
+        )
+        dispatches[(dispatch_id, pair_id)].append(
+            {
+                "run_id": run_id,
+                "log_ratio_b_over_a": replica_center,
+                "workload_id": items[0]["workload_id"],
+            }
+        )
+
+    estimates = []
+    for (dispatch_id, pair_id), replica_items in sorted(dispatches.items()):
+        center_log_ratio = statistics.median(
+            item["log_ratio_b_over_a"] for item in replica_items
+        )
+        center_ratio = math.exp(center_log_ratio)
+        signed_delta = 200 * (center_ratio - 1) / (center_ratio + 1)
+        estimates.append(
+            {
+                "dispatch_id": dispatch_id,
+                **dispatch_metadata[dispatch_id],
+                "pair_id": pair_id,
+                "workload_id": replica_items[0]["workload_id"],
+                "replica_count": len(replica_items),
+                "replica_run_ids": [item["run_id"] for item in replica_items],
+                "ratio_b_over_a": center_ratio,
+                "signed_delta_percent": signed_delta,
+                "absolute_delta_percent": abs(signed_delta),
+            }
+        )
+
+    by_pair: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for estimate in estimates:
+        by_pair[estimate["pair_id"]].append(estimate)
+    groups = []
+    for pair_id, items in sorted(by_pair.items()):
+        groups.append(
+            {
+                "pair_id": pair_id,
+                "workload_id": items[0]["workload_id"],
+                "dispatch_count": len(items),
+                "replica_counts": sorted({item["replica_count"] for item in items}),
+                "ratio_b_over_a": _distribution(
+                    [float(item["ratio_b_over_a"]) for item in items]
+                ),
+                "absolute_delta_percent": _distribution(
+                    [float(item["absolute_delta_percent"]) for item in items]
+                ),
+            }
+        )
+    return estimates, groups
 
 
 def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -258,14 +353,16 @@ def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[s
             {
                 "hardware_key": hardware_key,
                 "hardware": {
-                    key: items[0][key]
-                    for key in [
-                        "cpu_model",
-                        "physical_cores",
-                        "logical_cpus",
-                        "memory_bytes",
-                        "image_os",
-                    ]
+                    "machine": items[0]["machine"],
+                    "cpu_model": items[0]["cpu_model"],
+                    "physical_cores": items[0]["physical_cores"],
+                    "logical_cpus": items[0]["logical_cpus"],
+                    "memory_bytes_bucket": _memory_bucket(items[0]["memory_bytes"]),
+                    "observed_memory_bytes": {
+                        "min": min(item["memory_bytes"] for item in items),
+                        "max": max(item["memory_bytes"] for item in items),
+                    },
+                    "image_os": items[0]["image_os"],
                 },
                 "pair_id": pair_id,
                 "workload_id": items[0]["workload_id"],
@@ -288,13 +385,38 @@ def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[s
             }
         )
 
+    paired: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for observation in observations:
+        paired[observation["pair_id"]].append(observation)
+    pair_summaries = []
+    for pair_id, items in sorted(paired.items()):
+        pair_summaries.append(
+            {
+                "pair_id": pair_id,
+                "workload_id": items[0]["workload_id"],
+                "hardware_key_count": len({item["hardware_key"] for item in items}),
+                "result_count": len({item["run_id"] for item in items}),
+                "observation_count": len(items),
+                "ratio_b_over_a": _distribution(
+                    [float(item["ratio_b_over_a"]) for item in items]
+                ),
+                "absolute_delta_percent": _distribution(
+                    [float(item["absolute_delta_percent"]) for item in items]
+                ),
+            }
+        )
+
+    dispatch_estimates, dispatch_groups = _dispatch_summaries(observations)
     report = {
-        "report_format": "clifft-bench/runner-study-summary/v1",
+        "report_format": "clifft-bench/runner-study-summary/v2",
         "result_count": len(resolved_paths),
         "observation_count": len(observations),
         "skipped_pair_count": len(skipped_pairs),
         "skipped_pairs": skipped_pairs,
         "groups": summaries,
+        "pair_groups": pair_summaries,
+        "dispatch_estimates": dispatch_estimates,
+        "dispatch_groups": dispatch_groups,
     }
     return report, observations
 
@@ -310,7 +432,7 @@ def write_runner_study_csv(path: Path, observations: list[dict[str, Any]]) -> No
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     with temporary.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=PAIR_FIELDS)
+        writer = csv.DictWriter(stream, fieldnames=PAIR_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(observations)
     os.replace(temporary, path)

@@ -1,9 +1,11 @@
 # Runner A/A studies
 
-The runner study measures identical Clifft work against itself before this
+The runner study measured identical Clifft work against itself before this
 repository assigns performance meaning to small release-to-release changes. It
 does not compare simulators and its exploratory outputs are not official
-benchmark results.
+benchmark results. The raw cohorts, derived summaries, measurements, and final
+runner decision are committed under
+[`results/runner-study/`](../results/runner-study/README.md).
 
 ## Collection design
 
@@ -47,41 +49,51 @@ status. Failures before result creation may have no benchmark artifact.
 
 The collection target was six full larger-runner dispatches over three days;
 seven were collected before the temporary schedule was removed. The three
-replicas within one dispatch are not a substitute for temporal coverage.
-
-The repository has a $10 GitHub Actions budget with paid usage stopped at the
-limit. After collection, calculate the study cost from the completed job usage
-and reconcile it with the repository-filtered GitHub billing report. Queued
-time is not billed. Record the billed minutes, per-minute runner rate, and total
-cost in the evidence PR before removing the temporary schedule.
+replicas within one dispatch are not a substitute for temporal coverage. The
+completed larger-runner study used an estimated 294 billable minutes including
+commissioning, or $6.47 at the recorded $0.022/minute rate. The calculation and
+billing-reconciliation caveat are recorded with the evidence.
 
 ## Analysis
 
-Download raw JSON artifacts from multiple workflow runs, then run:
+To regenerate either committed cohort, run:
 
 ```bash
-uv run clifft-bench analyze-aa results/*runner-aa-*-raw.json \
-  --output-json results/runner-study-summary.json \
-  --output-csv results/runner-study-pairs.csv
+uv run clifft-bench analyze-aa results/runner-study/free/raw/*-raw.json \
+  --output-json results/runner-study/free/summary.json \
+  --output-csv results/runner-study/free/pairs.csv
 ```
 
 The analyzer rejects pairs whose workload, artifact, implementation, commit,
 or execution settings differ within or across raw result files. Unsuccessful
 pairs are listed under `skipped_pairs`; healthy pairs remain usable. It reports
 absolute throughput, the B/A ratio, and the symmetric absolute pair difference.
-Summaries include median, MAD, 90th and 95th percentiles, minimum, and maximum,
-grouped by workload and a hardware key derived from CPU model, topology,
-memory, architecture, and runner image OS.
+Summaries include median, MAD, 90th and 95th percentiles, minimum, and maximum.
+`pair_groups` are pooled repetition-level diagnostics. `groups` stratify them
+by a hardware key derived from CPU model, topology, GiB-scale memory,
+architecture, and runner image OS; exact observed memory remains in the raw
+results and CSV.
 
-The analyzer intentionally does not declare a regression threshold. The
-evidence PR will select an inconclusive region only after reviewing multiple
-jobs and hardware strata. Raw results remain authoritative; CSV and summary
-JSON files are derived and reproducible.
+`dispatch_estimates` are the comparison statistic. Within each independent job
+the analyzer takes the median of `log(B/A)` across repetitions, then takes the
+median of the three job centers from one workflow dispatch. `dispatch_groups`
+summarize those estimates across dispatches. This nesting gives each replica
+equal weight and prevents a noisy repetition from masquerading as independent
+evidence.
+
+Across both studied runner pools and workloads, the largest absolute
+dispatch-level A/A estimate was 1.08%. Until a selected reference host has its
+own commissioning evidence, 1.1% is the provisional inconclusive band for this
+three-job design. Exceeding it warrants confirmation; it is not by itself an
+official regression. Raw results remain authoritative; CSV and summary JSON
+files are derived and reproducible.
 
 ## Runner decision
 
-Compare the standard and larger-runner cohorts only after the six-dispatch
-larger-runner window is complete. The decision should consider paired-ratio
-noise, absolute-throughput variation, hardware consistency, operating cost,
-and operational reliability. Consider a dedicated cloud host only if neither
-GitHub-hosted option provides enough repeatability for release decisions.
+The standard runner remains suitable for correctness CI and exploratory
+same-job paired comparisons. The larger runner is not the canonical performance
+host: it supplied three CPU models across two image versions, did not reduce
+dispatch-level A/A noise, and cost money without making absolute throughput
+portable. Neither GitHub pool supports an unstratified official absolute
+number. A separately selected and commissioned reference host is the next
+candidate for infrequent release/tool comparisons and absolute results.
