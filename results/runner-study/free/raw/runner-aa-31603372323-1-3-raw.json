@@ -1,0 +1,1001 @@
+{
+  "cases": [
+    {
+      "case_id": "msc-d3-aa-a",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 1,
+          "discarded_shots": 0,
+          "duration_seconds": 3.223899999937885e-05,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "min_sample_seconds": 30.0,
+        "mode": "throughput",
+        "postselection": true,
+        "repetitions": 6,
+        "request_timeout_seconds": 600,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 100000,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "pair_id": "msc-d3-clifft-aa",
+      "samples": [
+        {
+          "accepted_shots": 13050074,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5949926,
+          "duration_seconds": 30.09838857999995,
+          "logical_errors": 14,
+          "repetition": 0,
+          "seed_first": 20270809,
+          "seed_last": 20270998,
+          "sequence_index": 0,
+          "started_at": "2026-08-12T13:48:57.912159Z",
+          "throughput_attempted_shots_per_second": 631263.0308927998
+        },
+        {
+          "accepted_shots": 13046502,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5953498,
+          "duration_seconds": 30.057064821999887,
+          "logical_errors": 12,
+          "repetition": 1,
+          "seed_first": 21270809,
+          "seed_last": 21270998,
+          "sequence_index": 3,
+          "started_at": "2026-08-12T13:50:28.178353Z",
+          "throughput_attempted_shots_per_second": 632130.9187214179
+        },
+        {
+          "accepted_shots": 13051779,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5948221,
+          "duration_seconds": 30.013091568999954,
+          "logical_errors": 14,
+          "repetition": 2,
+          "seed_first": 22270809,
+          "seed_last": 22270998,
+          "sequence_index": 4,
+          "started_at": "2026-08-12T13:50:58.238260Z",
+          "throughput_attempted_shots_per_second": 633057.0763201482
+        },
+        {
+          "accepted_shots": 13050837,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5949163,
+          "duration_seconds": 30.00563461699963,
+          "logical_errors": 9,
+          "repetition": 3,
+          "seed_first": 23270809,
+          "seed_last": 23270998,
+          "sequence_index": 7,
+          "started_at": "2026-08-12T13:52:28.505611Z",
+          "throughput_attempted_shots_per_second": 633214.4026454148
+        },
+        {
+          "accepted_shots": 13047433,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5952567,
+          "duration_seconds": 30.010523746999922,
+          "logical_errors": 15,
+          "repetition": 4,
+          "seed_first": 24270809,
+          "seed_last": 24270998,
+          "sequence_index": 8,
+          "started_at": "2026-08-12T13:52:58.514056Z",
+          "throughput_attempted_shots_per_second": 633111.2432484416
+        },
+        {
+          "accepted_shots": 13047919,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5952081,
+          "duration_seconds": 30.022017658999914,
+          "logical_errors": 11,
+          "repetition": 5,
+          "seed_first": 25270809,
+          "seed_last": 25270998,
+          "sequence_index": 11,
+          "started_at": "2026-08-12T13:54:28.695061Z",
+          "throughput_attempted_shots_per_second": 632868.8569771803
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.10677573499999937,
+        "runtime_metadata": {
+          "batch_enabled": false,
+          "compile_seconds": 0.0008470640000055596,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15,
+          "parse_seconds": 0.00015638100000359145,
+          "peak_active_width": 4,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "svm_backend": "avx512",
+          "threads": 1,
+          "version": "0.7.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "features": [
+            "CPU-only",
+            "runtime CPU baseline recorded by adapter"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_datetime": "2026-07-31T15:10:55Z",
+        "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "implementation_id": "clifft-v0.7.0",
+        "name": "clifft",
+        "python_executable": "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "release_datetime": "2026-07-31T15:28:45.643981Z",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.7.0"
+      },
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 199.85629826388322,
+        "max_attempted_shots_per_second": 633214.4026454148,
+        "median_attempted_shots_per_second": 632962.9666486643,
+        "min_attempted_shots_per_second": 631263.0308927998,
+        "sample_count": 6,
+        "total_attempted_shots": 114000000,
+        "total_duration_seconds": 180.20672099399926
+      },
+      "warmup": {
+        "accepted_shots": 0,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 1,
+        "duration_seconds": 6.379599999917218e-05,
+        "logical_errors": 0
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+          "sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d3-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "case_id": "msc-d3-aa-b",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 1,
+          "discarded_shots": 0,
+          "duration_seconds": 3.0275999996831615e-05,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "min_sample_seconds": 30.0,
+        "mode": "throughput",
+        "postselection": true,
+        "repetitions": 6,
+        "request_timeout_seconds": 600,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 100000,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "pair_id": "msc-d3-clifft-aa",
+      "samples": [
+        {
+          "accepted_shots": 13050074,
+          "adapter_call_timings": [],
+          "api_calls": 190,
+          "attempted_shots": 19000000,
+          "discarded_shots": 5949926,
+          "duration_seconds": 30.01318873599992,
+          "logical_errors": 14,
+          "repetition": 0,
+          "seed_first": 20270809,
+          "seed_last": 20270998,
+          "sequence_index": 1,
+          "started_at": "2026-08-12T13:49:28.012971Z",
+          "throughput_attempted_shots_per_second": 633055.0268125982
+        },
+        {
+          "accepted_shots": 13115005,
+          "adapter_call_timings": [],
+          "api_calls": 191,
+          "attempted_shots": 19100000,
+          "discarded_shots": 5984995,
+          "duration_seconds": 30.144830401999954,
+          "logical_errors": 12,
+          "repetition": 1,
+          "seed_first": 21270809,
+          "seed_last": 21270999,
+          "sequence_index": 2,
+          "started_at": "2026-08-12T13:49:58.029436Z",
+          "throughput_attempted_shots_per_second": 633607.8108680557
+        },
+        {
+          "accepted_shots": 13120136,
+          "adapter_call_timings": [],
+          "api_calls": 191,
+          "attempted_shots": 19100000,
+          "discarded_shots": 5979864,
+          "duration_seconds": 30.12618453399992,
+          "logical_errors": 14,
+          "repetition": 2,
+          "seed_first": 22270809,
+          "seed_last": 22270999,
+          "sequence_index": 5,
+          "started_at": "2026-08-12T13:51:28.254272Z",
+          "throughput_attempted_shots_per_second": 633999.9669869927
+        },
+        {
+          "accepted_shots": 13119346,
+          "adapter_call_timings": [],
+          "api_calls": 191,
+          "attempted_shots": 19100000,
+          "discarded_shots": 5980654,
+          "duration_seconds": 30.119649439,
+          "logical_errors": 9,
+          "repetition": 3,
+          "seed_first": 23270809,
+          "seed_last": 23270999,
+          "sequence_index": 6,
+          "started_at": "2026-08-12T13:51:58.383214Z",
+          "throughput_attempted_shots_per_second": 634137.5266894255
+        },
+        {
+          "accepted_shots": 12978744,
+          "adapter_call_timings": [],
+          "api_calls": 189,
+          "attempted_shots": 18900000,
+          "discarded_shots": 5921256,
+          "duration_seconds": 30.052190591000056,
+          "logical_errors": 15,
+          "repetition": 4,
+          "seed_first": 24270809,
+          "seed_last": 24270997,
+          "sequence_index": 9,
+          "started_at": "2026-08-12T13:53:28.527190Z",
+          "throughput_attempted_shots_per_second": 628905.9009781509
+        },
+        {
+          "accepted_shots": 13116785,
+          "adapter_call_timings": [],
+          "api_calls": 191,
+          "attempted_shots": 19100000,
+          "discarded_shots": 5983215,
+          "duration_seconds": 30.11049626599987,
+          "logical_errors": 11,
+          "repetition": 5,
+          "seed_first": 25270809,
+          "seed_last": 25270999,
+          "sequence_index": 10,
+          "started_at": "2026-08-12T13:53:58.581935Z",
+          "throughput_attempted_shots_per_second": 634330.2956971623
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04567728899999679,
+        "runtime_metadata": {
+          "batch_enabled": false,
+          "compile_seconds": 0.0008788440000060405,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15,
+          "parse_seconds": 0.00019490100000041366,
+          "peak_active_width": 4,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "svm_backend": "avx512",
+          "threads": 1,
+          "version": "0.7.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "features": [
+            "CPU-only",
+            "runtime CPU baseline recorded by adapter"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_datetime": "2026-07-31T15:10:55Z",
+        "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "implementation_id": "clifft-v0.7.0",
+        "name": "clifft",
+        "python_executable": "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "release_datetime": "2026-07-31T15:28:45.643981Z",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.7.0"
+      },
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 430.0222657696577,
+        "max_attempted_shots_per_second": 634330.2956971623,
+        "median_attempted_shots_per_second": 633803.8889275242,
+        "min_attempted_shots_per_second": 628905.9009781509,
+        "sample_count": 6,
+        "total_attempted_shots": 114300000,
+        "total_duration_seconds": 180.56653996799972
+      },
+      "warmup": {
+        "accepted_shots": 0,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 1,
+        "duration_seconds": 5.760500000207003e-05,
+        "logical_errors": 0
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+          "sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d3-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "case_id": "coherent-d5-r5-aa-a",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 0,
+          "attempted_shots": 1,
+          "discarded_shots": 1,
+          "duration_seconds": 2.8118310380000366,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "min_sample_seconds": 30.0,
+        "mode": "throughput",
+        "postselection": true,
+        "repetitions": 6,
+        "request_timeout_seconds": 600,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "samples": [
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 31.061019685999952,
+          "logical_errors": 0,
+          "repetition": 0,
+          "seed_first": 20270809,
+          "seed_last": 20270818,
+          "sequence_index": 12,
+          "started_at": "2026-08-12T13:55:26.842232Z",
+          "throughput_attempted_shots_per_second": 0.32194693223504417
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 30.945279862000007,
+          "logical_errors": 0,
+          "repetition": 1,
+          "seed_first": 21270809,
+          "seed_last": 21270818,
+          "sequence_index": 15,
+          "started_at": "2026-08-12T13:56:59.627266Z",
+          "throughput_attempted_shots_per_second": 0.3231510603424769
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 39.092468456999995,
+          "logical_errors": 0,
+          "repetition": 2,
+          "seed_first": 22270809,
+          "seed_last": 22270818,
+          "sequence_index": 16,
+          "started_at": "2026-08-12T13:57:30.574272Z",
+          "throughput_attempted_shots_per_second": 0.25580374928228344
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 11,
+          "attempted_shots": 11,
+          "discarded_shots": 11,
+          "duration_seconds": 31.03327573799993,
+          "logical_errors": 0,
+          "repetition": 3,
+          "seed_first": 23270809,
+          "seed_last": 23270819,
+          "sequence_index": 19,
+          "started_at": "2026-08-12T13:59:20.367476Z",
+          "throughput_attempted_shots_per_second": 0.35445823034822627
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 7,
+          "attempted_shots": 7,
+          "discarded_shots": 7,
+          "duration_seconds": 30.754645529999948,
+          "logical_errors": 0,
+          "repetition": 4,
+          "seed_first": 24270809,
+          "seed_last": 24270815,
+          "sequence_index": 20,
+          "started_at": "2026-08-12T13:59:51.402333Z",
+          "throughput_attempted_shots_per_second": 0.22760789075496823
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 30.80411681999999,
+          "logical_errors": 0,
+          "repetition": 5,
+          "seed_first": 25270809,
+          "seed_last": 25270818,
+          "sequence_index": 23,
+          "started_at": "2026-08-12T14:01:23.556796Z",
+          "throughput_attempted_shots_per_second": 0.32463193340142654
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04930420999994567,
+        "runtime_metadata": {
+          "batch_enabled": false,
+          "compile_seconds": 0.0029358170000364225,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "parse_seconds": 0.0004763370000091527,
+          "peak_active_width": 24,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "svm_backend": "avx512",
+          "threads": 1,
+          "version": "0.7.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "features": [
+            "CPU-only",
+            "runtime CPU baseline recorded by adapter"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_datetime": "2026-07-31T15:10:55Z",
+        "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "implementation_id": "clifft-v0.7.0",
+        "name": "clifft",
+        "python_executable": "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "release_datetime": "2026-07-31T15:28:45.643981Z",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.7.0"
+      },
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 0.016996085586065857,
+        "max_attempted_shots_per_second": 0.35445823034822627,
+        "median_attempted_shots_per_second": 0.32254899628876055,
+        "min_attempted_shots_per_second": 0.22760789075496823,
+        "sample_count": 6,
+        "total_attempted_shots": 58,
+        "total_duration_seconds": 193.69080609299982
+      },
+      "warmup": {
+        "accepted_shots": 0,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 1,
+        "duration_seconds": 11.123884737000026,
+        "logical_errors": 0
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "case_id": "coherent-d5-r5-aa-b",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 0,
+          "attempted_shots": 1,
+          "discarded_shots": 1,
+          "duration_seconds": 2.828469291000033,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "min_sample_seconds": 30.0,
+        "mode": "throughput",
+        "postselection": true,
+        "repetitions": 6,
+        "request_timeout_seconds": 600,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "samples": [
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 30.926591110000004,
+          "logical_errors": 0,
+          "repetition": 0,
+          "seed_first": 20270809,
+          "seed_last": 20270818,
+          "sequence_index": 13,
+          "started_at": "2026-08-12T13:55:57.905073Z",
+          "throughput_attempted_shots_per_second": 0.3233463385742031
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 30.79235129700004,
+          "logical_errors": 0,
+          "repetition": 1,
+          "seed_first": 21270809,
+          "seed_last": 21270818,
+          "sequence_index": 14,
+          "started_at": "2026-08-12T13:56:28.833287Z",
+          "throughput_attempted_shots_per_second": 0.3247559727916671
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 39.407339934000106,
+          "logical_errors": 0,
+          "repetition": 2,
+          "seed_first": 22270809,
+          "seed_last": 22270818,
+          "sequence_index": 17,
+          "started_at": "2026-08-12T13:58:09.668360Z",
+          "throughput_attempted_shots_per_second": 0.25375983298411214
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 11,
+          "attempted_shots": 11,
+          "discarded_shots": 11,
+          "duration_seconds": 31.288403238,
+          "logical_errors": 0,
+          "repetition": 3,
+          "seed_first": 23270809,
+          "seed_last": 23270819,
+          "sequence_index": 18,
+          "started_at": "2026-08-12T13:58:49.077454Z",
+          "throughput_attempted_shots_per_second": 0.35156795686653697
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 7,
+          "attempted_shots": 7,
+          "discarded_shots": 7,
+          "duration_seconds": 30.589865183999905,
+          "logical_errors": 0,
+          "repetition": 4,
+          "seed_first": 24270809,
+          "seed_last": 24270815,
+          "sequence_index": 21,
+          "started_at": "2026-08-12T14:00:22.158637Z",
+          "throughput_attempted_shots_per_second": 0.22883396046025614
+        },
+        {
+          "accepted_shots": 0,
+          "adapter_call_timings": [],
+          "api_calls": 10,
+          "attempted_shots": 10,
+          "discarded_shots": 10,
+          "duration_seconds": 30.804375392999987,
+          "logical_errors": 0,
+          "repetition": 5,
+          "seed_first": 25270809,
+          "seed_last": 25270818,
+          "sequence_index": 22,
+          "started_at": "2026-08-12T14:00:52.750501Z",
+          "throughput_attempted_shots_per_second": 0.3246292084296703
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04876999700002216,
+        "runtime_metadata": {
+          "batch_enabled": false,
+          "compile_seconds": 0.002918176000036965,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "parse_seconds": 0.00047600400000646914,
+          "peak_active_width": 24,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "svm_backend": "avx512",
+          "threads": 1,
+          "version": "0.7.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "features": [
+            "CPU-only",
+            "runtime CPU baseline recorded by adapter"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_datetime": "2026-07-31T15:10:55Z",
+        "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "implementation_id": "clifft-v0.7.0",
+        "name": "clifft",
+        "python_executable": "/opt/hostedtoolcache/Python/3.12.13/x64/bin/python",
+        "release_datetime": "2026-07-31T15:28:45.643981Z",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.7.0"
+      },
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 0.014174191327165353,
+        "max_attempted_shots_per_second": 0.35156795686653697,
+        "median_attempted_shots_per_second": 0.3239877735019367,
+        "min_attempted_shots_per_second": 0.22883396046025614,
+        "sample_count": 6,
+        "total_attempted_shots": 58,
+        "total_duration_seconds": 193.80892615600004
+      },
+      "warmup": {
+        "accepted_shots": 0,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 1,
+        "duration_seconds": 11.06972835700003,
+        "logical_errors": 0
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    }
+  ],
+  "run": {
+    "classification": "exploratory",
+    "finished_at": "2026-08-12T14:01:54.427245Z",
+    "id": "cdaba57a-466f-4b40-9d8d-291a450de0dc",
+    "profile_id": "github-hosted-aa-clifft-v0.7.0",
+    "run_manifest": "/home/runner/work/clifft-bench/clifft-bench/manifests/run-runner-aa.v1.json",
+    "schedule_policy": "serial-alternating-forward-reverse",
+    "selection": null,
+    "software_manifest": "/home/runner/work/clifft-bench/clifft-bench/manifests/software.v1.json",
+    "started_at": "2026-08-12T13:48:57.627719Z",
+    "workflow": {
+      "image_os": "ubuntu24",
+      "image_version": "20260810.271.1",
+      "provider": "github-actions",
+      "ref": "refs/heads/main",
+      "repository": "unitaryfoundation/clifft-bench",
+      "run_attempt": "1",
+      "run_id": "31603372323",
+      "runner_name": "GitHub Actions 1000075084",
+      "runner_os": "Linux",
+      "sha": "74d9fce171ca5e13ebe658f1261091cc18ab4605",
+      "workflow": "Runner A/A study"
+    },
+    "workloads_manifest": "/home/runner/work/clifft-bench/clifft-bench/manifests/workloads.v1.json"
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cpu_model": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "hostname": "runnervmzvulz",
+    "kernel_version": "#22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026",
+    "load_average_at_start": [
+      0.45068359375,
+      0.111328125,
+      0.037109375
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16765378560,
+    "os": "Linux",
+    "os_release": "6.17.0-1022-azure",
+    "physical_cores": 2,
+    "python": "3.12.13",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "74d9fce171ca5e13ebe658f1261091cc18ab4605",
+      "dirty": null
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  },
+  "schema_version": "clifft-bench/result/v1",
+  "suite_version": "0.1.0"
+}

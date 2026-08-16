@@ -42,12 +42,13 @@ The SymFT source URL is pinned because SymFT 0.1.0 currently has no standalone
 tagged release. The exact identity is also recorded in
 [manifests/software.v1.json](manifests/software.v1.json).
 
-Official benchmark and CI runs use an x86-64 GitHub Linux runner, where the
-pinned SymFT CPU extension is supported. The same extension does not compile on
-this project's Apple Silicon development laptops because an upstream kernel
-header includes x86 intrinsics. That is only a local-development limitation: on
-Apple Silicon, validate the harness and run the Clifft case locally, while the
-paired adapter smoke and all official measurements run on GitHub Linux.
+CI and hosted-runner studies use x86-64 GitHub Linux, where the pinned SymFT CPU
+extension is supported. The same extension does not compile on this project's
+Apple Silicon development laptops because an upstream kernel header includes
+x86 intrinsics. That is only a local-development limitation: on Apple Silicon,
+validate the harness and run the Clifft case locally, while paired adapter
+smoke checks run on GitHub Linux. The canonical host for official performance
+measurements has not yet been selected.
 
 ## Use
 
@@ -116,9 +117,10 @@ correctness. It does not publish or interpret hosted-runner timings.
 
 ## Runner variance study
 
-Before defining release-regression thresholds, the runner A/A workflow measures
-pinned Clifft against itself on short- and long-call workloads. The initial
-cohort used standard GitHub-hosted jobs; a completed second cohort used the
-existing serialized 8-vCPU GitHub larger runner. Its raw artifacts remain
-exploratory. See [docs/runner-study.md](docs/runner-study.md) for the collection,
-cost accounting, and analysis procedure.
+The runner A/A workflow measured pinned Clifft against itself on short- and
+long-call workloads. The initial cohort used standard GitHub-hosted jobs; a
+second cohort used the existing serialized 8-vCPU GitHub larger runner. The
+larger runner was neither fixed hardware nor more stable, so it is not a
+canonical performance host. See [docs/runner-study.md](docs/runner-study.md) for
+the method and [results/runner-study/](results/runner-study/README.md) for raw
+evidence, derived summaries, cost accounting, and the runner decision.
