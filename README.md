@@ -121,6 +121,8 @@ The runner A/A workflow measured pinned Clifft against itself on short- and
 long-call workloads. The initial cohort used standard GitHub-hosted jobs; a
 second cohort used the existing serialized 8-vCPU GitHub larger runner. The
 larger runner was neither fixed hardware nor more stable, so it is not a
-canonical performance host. See [docs/runner-study.md](docs/runner-study.md) for
-the method and [results/runner-study/](results/runner-study/README.md) for raw
-evidence, derived summaries, cost accounting, and the runner decision.
+canonical performance host. A bounded third cohort is commissioning an
+explicit Ubicloud standard x64 shape as a possible reference host. See
+[docs/runner-study.md](docs/runner-study.md) for the method and
+[results/runner-study/](results/runner-study/README.md) for raw evidence,
+derived summaries, cost accounting, and runner decisions.
