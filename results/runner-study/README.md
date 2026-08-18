@@ -124,4 +124,6 @@ uv run clifft-bench analyze-aa results/runner-study/larger/raw/*-raw.json \
 
 The summary's `pair_groups` contain pooled repetition diagnostics;
 `dispatch_estimates` and `dispatch_groups` contain the release-style estimator;
-and `groups` retain hardware-stratified throughput and pair distributions.
+`dispatch_groups` also contain the distribution of nested dispatch-level
+absolute throughput; and `groups` retain pooled hardware-stratified throughput
+and pair distributions.

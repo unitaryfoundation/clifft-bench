@@ -179,6 +179,7 @@
   },
   "runner": {
     "accelerator": null,
+    "cloud": null,
     "allowed_logical_cpus": [
       0
     ],

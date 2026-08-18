@@ -151,6 +151,46 @@ def test_runner_study_reports_median_of_replica_log_medians(tmp_path: Path) -> N
     assert estimate["ratio_b_over_a"] == pytest.approx(1.04)
     assert estimate["signed_delta_percent"] == pytest.approx(200 * 0.04 / 2.04)
     assert estimate["absolute_delta_percent"] == pytest.approx(200 * 0.04 / 2.04)
+    assert estimate["throughput_attempted_shots_per_second"] == pytest.approx(100.0)
+    assert report["dispatch_groups"][0]["throughput_attempted_shots_per_second"][
+        "median"
+    ] == pytest.approx(100.0)
+
+
+def test_runner_study_groups_cloud_boots_by_fixed_launch_configuration(
+    tmp_path: Path,
+) -> None:
+    first = _aa_result(tmp_path, name="first.json")
+    second = _aa_result(tmp_path, name="second.json")
+    for index, path in enumerate((first, second), start=1):
+        document = json.loads(path.read_text())
+        document["runner"]["cloud"] = {
+            "provider": "aws",
+            "instance_id": f"i-{index}",
+            "instance_type": "m7a.xlarge",
+            "image_id": "ami-fixed",
+            "region": "us-east-1",
+            "availability_zone": "us-east-1a",
+            "lifecycle": "on-demand",
+            "boot_id": f"boot-{index}",
+        }
+        path.write_text(json.dumps(document))
+
+    report, observations = analyze_runner_study([first, second])
+
+    assert report["pair_groups"][0]["hardware_key_count"] == 1
+    assert len({item["hardware_key"] for item in observations}) == 1
+    assert report["groups"][0]["hardware"]["instance_type"] == "m7a.xlarge"
+    assert {item["cloud_identity"]["instance_id"] for item in observations} == {
+        "i-1",
+        "i-2",
+    }
+
+    changed = json.loads(second.read_text())
+    changed["runner"]["cloud"]["image_id"] = "ami-changed"
+    second.write_text(json.dumps(changed))
+    changed_report, _ = analyze_runner_study([first, second])
+    assert changed_report["pair_groups"][0]["hardware_key_count"] == 2
 
 
 def test_runner_study_skips_failed_pair_but_keeps_healthy_pair(tmp_path: Path) -> None:
