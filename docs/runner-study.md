@@ -95,9 +95,10 @@ results and CSV.
 `dispatch_estimates` are the comparison statistic. Within each independent job
 the analyzer takes the median of `log(B/A)` across repetitions, then takes the
 median of the three job centers from one workflow dispatch. `dispatch_groups`
-summarize those estimates across dispatches. This nesting gives each replica
-equal weight and prevents a noisy repetition from masquerading as independent
-evidence.
+summarize those estimates across dispatches. The same nesting also reports one
+absolute-throughput center per dispatch and its distribution across
+dispatches. This gives each replica equal weight and prevents a noisy
+repetition from masquerading as independent evidence.
 
 Across both studied runner pools and workloads, the largest absolute
 dispatch-level A/A estimate was 1.08%. Until a selected reference host has its

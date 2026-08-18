@@ -99,6 +99,24 @@
         },
         "thread_environment": {"type": "object", "additionalProperties": {"type": "string"}},
         "accelerator": {"type": ["object", "null"]},
+        "cloud": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": [
+            "provider", "instance_id", "instance_type", "image_id", "region",
+            "availability_zone", "lifecycle", "boot_id"
+          ],
+          "properties": {
+            "provider": {"type": "string", "minLength": 1},
+            "instance_id": {"type": "string", "minLength": 1},
+            "instance_type": {"type": "string", "minLength": 1},
+            "image_id": {"type": "string", "minLength": 1},
+            "region": {"type": "string", "minLength": 1},
+            "availability_zone": {"type": "string", "minLength": 1},
+            "lifecycle": {"type": "string", "minLength": 1},
+            "boot_id": {"type": "string", "minLength": 1}
+          }
+        },
         "suite_source": {
           "type": "object",
           "additionalProperties": false,

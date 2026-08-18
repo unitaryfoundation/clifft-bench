@@ -18,6 +18,21 @@ def test_example_result_validates() -> None:
     assert document["schema_version"] == "clifft-bench/result/v1"
 
 
+def test_result_accepts_complete_cloud_identity() -> None:
+    document = validate_path(repository_root() / "examples/result.v1.json")
+    document["runner"]["cloud"] = {
+        "provider": "aws",
+        "instance_id": "i-0123456789abcdef0",
+        "instance_type": "m7a.xlarge",
+        "image_id": "ami-0123456789abcdef0",
+        "region": "us-east-1",
+        "availability_zone": "us-east-1a",
+        "lifecycle": "on-demand",
+        "boot_id": "12345678-1234-1234-1234-123456789abc",
+    }
+    validate_document(document, source="cloud result")
+
+
 def test_incomplete_success_result_is_rejected() -> None:
     document = validate_path(repository_root() / "examples/result.v1.json")
     broken = copy.deepcopy(document)

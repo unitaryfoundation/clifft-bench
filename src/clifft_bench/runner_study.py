@@ -69,7 +69,8 @@ def _distribution(values: list[float]) -> dict[str, float]:
 def _hardware_identity(document: dict[str, Any]) -> dict[str, Any]:
     runner = document["runner"]
     workflow = document["run"]["workflow"]
-    return {
+    cloud = runner.get("cloud") or {}
+    identity = {
         "machine": runner["machine"],
         "cpu_model": runner["cpu_model"],
         "physical_cores": runner["physical_cores"],
@@ -77,6 +78,18 @@ def _hardware_identity(document: dict[str, Any]) -> dict[str, Any]:
         "memory_bytes": runner["memory_bytes"],
         "image_os": workflow["image_os"],
     }
+    if cloud:
+        identity.update(
+            {
+                "cloud_provider": cloud["provider"],
+                "instance_type": cloud["instance_type"],
+                "image_id": cloud["image_id"],
+                "region": cloud["region"],
+                "availability_zone": cloud["availability_zone"],
+                "lifecycle": cloud["lifecycle"],
+            }
+        )
+    return identity
 
 
 def _memory_bucket(memory_bytes: int) -> int:
@@ -153,6 +166,7 @@ def _document_observations(
     identity = _hardware_identity(document)
     hardware_key = _hardware_key(identity)
     workflow = document["run"]["workflow"]
+    cloud = document["runner"].get("cloud") or {}
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     skipped_pairs = []
     for case in document["cases"]:
@@ -198,6 +212,7 @@ def _document_observations(
                         "memory_bytes": identity["memory_bytes"],
                         "image_os": identity["image_os"],
                         "image_version": workflow["image_version"],
+                        "cloud_identity": dict(cloud),
                         "pair_id": pair_id,
                         "workload_id": left["workload"]["id"],
                         "case_a": left["case_id"],
@@ -251,10 +266,16 @@ def _dispatch_summaries(
         replica_center = statistics.median(
             math.log(float(item["ratio_b_over_a"])) for item in items
         )
+        replica_throughput = statistics.median(
+            math.log(float(rate))
+            for item in items
+            for rate in (item["rate_a"], item["rate_b"])
+        )
         dispatches[(dispatch_id, pair_id)].append(
             {
                 "run_id": run_id,
                 "log_ratio_b_over_a": replica_center,
+                "log_throughput_attempted_shots_per_second": replica_throughput,
                 "workload_id": items[0]["workload_id"],
             }
         )
@@ -265,6 +286,12 @@ def _dispatch_summaries(
             item["log_ratio_b_over_a"] for item in replica_items
         )
         center_ratio = math.exp(center_log_ratio)
+        center_throughput = math.exp(
+            statistics.median(
+                item["log_throughput_attempted_shots_per_second"]
+                for item in replica_items
+            )
+        )
         signed_delta = 200 * (center_ratio - 1) / (center_ratio + 1)
         estimates.append(
             {
@@ -277,6 +304,7 @@ def _dispatch_summaries(
                 "ratio_b_over_a": center_ratio,
                 "signed_delta_percent": signed_delta,
                 "absolute_delta_percent": abs(signed_delta),
+                "throughput_attempted_shots_per_second": center_throughput,
             }
         )
 
@@ -285,6 +313,10 @@ def _dispatch_summaries(
         by_pair[estimate["pair_id"]].append(estimate)
     groups = []
     for pair_id, items in sorted(by_pair.items()):
+        throughput = _distribution(
+            [float(item["throughput_attempted_shots_per_second"]) for item in items]
+        )
+        throughput["relative_mad_percent"] = 100 * throughput["mad"] / throughput["median"]
         groups.append(
             {
                 "pair_id": pair_id,
@@ -297,6 +329,7 @@ def _dispatch_summaries(
                 "absolute_delta_percent": _distribution(
                     [float(item["absolute_delta_percent"]) for item in items]
                 ),
+                "throughput_attempted_shots_per_second": throughput,
             }
         )
     return estimates, groups
@@ -349,21 +382,34 @@ def analyze_runner_study(paths: list[Path]) -> tuple[dict[str, Any], list[dict[s
         throughput["relative_mad_percent"] = (
             100 * throughput["mad"] / throughput["median"]
         )
+        hardware = {
+            "machine": items[0]["machine"],
+            "cpu_model": items[0]["cpu_model"],
+            "physical_cores": items[0]["physical_cores"],
+            "logical_cpus": items[0]["logical_cpus"],
+            "memory_bytes_bucket": _memory_bucket(items[0]["memory_bytes"]),
+            "observed_memory_bytes": {
+                "min": min(item["memory_bytes"] for item in items),
+                "max": max(item["memory_bytes"] for item in items),
+            },
+            "image_os": items[0]["image_os"],
+        }
+        cloud_identity = items[0]["cloud_identity"]
+        if cloud_identity:
+            hardware.update(
+                {
+                    "cloud_provider": cloud_identity["provider"],
+                    "instance_type": cloud_identity["instance_type"],
+                    "image_id": cloud_identity["image_id"],
+                    "region": cloud_identity["region"],
+                    "availability_zone": cloud_identity["availability_zone"],
+                    "lifecycle": cloud_identity["lifecycle"],
+                }
+            )
         summaries.append(
             {
                 "hardware_key": hardware_key,
-                "hardware": {
-                    "machine": items[0]["machine"],
-                    "cpu_model": items[0]["cpu_model"],
-                    "physical_cores": items[0]["physical_cores"],
-                    "logical_cpus": items[0]["logical_cpus"],
-                    "memory_bytes_bucket": _memory_bucket(items[0]["memory_bytes"]),
-                    "observed_memory_bytes": {
-                        "min": min(item["memory_bytes"] for item in items),
-                        "max": max(item["memory_bytes"] for item in items),
-                    },
-                    "image_os": items[0]["image_os"],
-                },
+                "hardware": hardware,
                 "pair_id": pair_id,
                 "workload_id": items[0]["workload_id"],
                 "image_versions": sorted(
@@ -434,5 +480,8 @@ def write_runner_study_csv(path: Path, observations: list[dict[str, Any]]) -> No
     with temporary.open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=PAIR_FIELDS, lineterminator="\n")
         writer.writeheader()
-        writer.writerows(observations)
+        writer.writerows(
+            {field: observation.get(field) for field in PAIR_FIELDS}
+            for observation in observations
+        )
     os.replace(temporary, path)

@@ -50,6 +50,11 @@ validate the harness and run the Clifft case locally, while paired adapter
 smoke checks run on GitHub Linux. The canonical host for official performance
 measurements has not yet been selected.
 
+For the next reference-host experiment, see the
+[manual EC2 playbook](docs/ec2-playbook.md). It keeps AWS provisioning manual,
+collects schema-valid evidence from fixed EC2 boots, and prepares results for a
+normal reviewed commit.
+
 ## Use
 
 Validate the manifests, circuit digests, schemas, and example result:
@@ -104,6 +109,7 @@ to the same logical CPU and common BLAS/OpenMP/JAX thread settings.
 | `src/clifft_bench/` | CLI, scheduler, resource controls, and simulator adapters |
 | `examples/` | Schema-valid example raw result |
 | `tests/` | Contract, schema, scheduler, and isolated-worker tests |
+| `scripts/ec2/` | Manual EC2 commissioning and result preparation |
 
 ## Development
 
