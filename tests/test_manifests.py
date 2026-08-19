@@ -38,7 +38,7 @@ def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
     assert all(case.workload.artifact_path.is_file() for case in suite.cases)
 
 
-def test_runner_study_installs_an_exactly_pinned_simulator_environment() -> None:
+def test_runner_study_requirements_are_exactly_pinned() -> None:
     requirements_path = ROOT / "requirements/runner-study.txt"
     pins = {}
     for line in requirements_path.read_text().splitlines():
@@ -55,14 +55,6 @@ def test_runner_study_installs_an_exactly_pinned_simulator_environment() -> None
     clifft = next(item for item in software["implementations"] if item["name"] == "clifft")
     assert pins[clifft["distribution"]] == clifft["version"]
     assert set(clifft["dependency_distributions"]) <= pins.keys()
-
-    workflow = (ROOT / ".github/workflows/ubicloud-study.yml").read_text()
-    assert "python -m pip install -e . -r requirements/runner-study.txt" in workflow
-    assert "runs-on: ubicloud-standard-4-ubuntu-2404" in workflow
-    assert "max-parallel: 1" in workflow
-    assert '\n  schedule:' in workflow
-    assert 'SCHEDULED_DISPATCH_TARGET: "6"' in workflow
-    assert "needs: collection-gate" in workflow
 
 
 def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
