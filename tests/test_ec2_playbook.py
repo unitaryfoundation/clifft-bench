@@ -10,6 +10,9 @@ def test_ec2_playbook_uses_the_fixed_study_profile() -> None:
     finalize = (root / "scripts/ec2/finalize.sh").read_text()
 
     assert "shutdown -h +180" in bootstrap
+    assert "Amazon EC2" in bootstrap
+    assert '"${VERSION_ID:-}" != "24.04"' in bootstrap
+    assert bootstrap.index("shutdown -h +180") < bootstrap.index("python_version=")
     assert "pip install -e . -r requirements/runner-study.txt" in bootstrap
     assert "clifft-bench validate manifests/run-runner-aa.v1.json" in bootstrap
     assert "--min-sample-seconds 30" in placement
@@ -17,8 +20,20 @@ def test_ec2_playbook_uses_the_fixed_study_profile() -> None:
     assert "for replica in 1 2 3" in placement
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement
+    assert placement.index("shutdown -h +180") < placement.index("if (( $# != 6 ))")
     assert "[.[].runner.cloud.boot_id] | unique | length) == 3" in finalize
     assert "clifft-bench analyze-aa" in finalize
+
+
+def test_ec2_playbook_documents_the_exact_image_and_storage_choices() -> None:
+    playbook = (repository_root() / "docs/ec2-playbook.md").read_text()
+
+    assert "verified Canonical" in playbook
+    assert "Ubuntu Server 24.04 LTS (HVM), SSD Volume Type" in playbook
+    assert "64-bit (x86)" in playbook
+    assert "File systems" in playbook
+    assert "leave **None** selected" in playbook
+    assert "second Python version" in playbook
 
 
 def test_ec2_playbook_spools_before_preparing_the_commit() -> None:
