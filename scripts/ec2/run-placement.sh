@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "$(uname -s)" != "Linux" || "$(uname -m)" != "x86_64" ]]; then
+  echo "error: placement runs require x86-64 Linux" >&2
+  exit 1
+fi
+
+system_vendor="$(cat /sys/devices/virtual/dmi/id/sys_vendor 2>/dev/null || true)"
+if [[ "$system_vendor" != "Amazon EC2" ]]; then
+  echo "error: refusing to arm the shutdown guard outside Amazon EC2" >&2
+  exit 1
+fi
+
+echo "Arming a three-hour shutdown safety guard."
+sudo shutdown -c >/dev/null 2>&1 || true
+sudo shutdown -h +180
+
 if (( $# != 6 )); then
   echo "usage: $0 COHORT PLACEMENT INSTANCE_TYPE AMI_ID REGION AVAILABILITY_ZONE" >&2
   exit 2
@@ -20,10 +35,6 @@ fi
 if [[ ! "$placement" =~ ^[123]$ ]]; then
   echo "error: placement must be 1, 2, or 3" >&2
   exit 2
-fi
-if [[ "$(uname -s)" != "Linux" || "$(uname -m)" != "x86_64" ]]; then
-  echo "error: placement runs require x86-64 Linux" >&2
-  exit 1
 fi
 
 repo_root="$(git rev-parse --show-toplevel)"
@@ -101,10 +112,6 @@ if (( ${#existing_raw[@]} > 0 )); then
     fi
   done
 fi
-
-echo "Arming a three-hour shutdown safety guard."
-sudo shutdown -c >/dev/null 2>&1 || true
-sudo shutdown -h +180
 
 source /etc/os-release
 export CLIFFT_BENCH_CLOUD_PROVIDER=aws

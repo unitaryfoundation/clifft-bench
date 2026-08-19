@@ -13,8 +13,10 @@ outputs are exploratory runner evidence, not an official simulator comparison.
 
 Each placement takes approximately 45–55 minutes. Three sequential placements
 take approximately 2.5–3 hours, with a few minutes of attention at launch and
-between stop/start cycles. Every placement refreshes a three-hour operating
-system shutdown guard before benchmarking.
+between stop/start cycles. Bootstrap and every placement arm a three-hour
+operating system shutdown guard immediately after verifying that the machine is
+an x86-64 EC2 instance. The guard therefore remains active if a later image,
+source, argument, or benchmark preflight check fails.
 
 The shutdown guard is a backstop, not the normal stopping procedure. Confirm
 that **instance-initiated shutdown behavior is `Stop`** during launch, and stop
@@ -24,13 +26,20 @@ the instance from the EC2 console promptly after each placement.
 
 Create one instance manually with these fixed choices:
 
-- Ubuntu Server 24.04 LTS, x86-64; record the exact AMI ID shown by the console.
+- In **Application and OS Images**, select the verified Canonical entry named
+  **Ubuntu Server 24.04 LTS (HVM), SSD Volume Type** and choose
+  **64-bit (x86)**. Do not choose Arm, Ubuntu 26.04, Ubuntu Pro, or a
+  Marketplace or community image. AMI IDs are region-specific; record the
+  exact x86 AMI ID shown by the console rather than copying one from an example.
 - `m7a.xlarge` (4 vCPUs and 16 GiB) as the initial candidate.
 - On-Demand purchasing, not Spot and not a burstable `t` family.
 - One fixed region and availability zone for all placements.
 - Default/shared tenancy for this first test.
 - IMDS enabled with IMDSv2 required.
-- At least 16 GiB of `gp3` EBS storage.
+- One 16 GiB `gp3` EBS root volume at its default 3,000 IOPS. Do not add another
+  volume. Under **File systems**, leave **None** selected; S3 Files, EFS, and
+  FSx are not part of this experiment. A warning that the selected AMI contains
+  inaccessible instance-store mappings is harmless for this EBS-only shape.
 - Instance-initiated shutdown behavior set to `Stop`.
 - SSH restricted to your current IP, or an equivalent AWS console connection.
 - No IAM role is required.
@@ -39,6 +48,18 @@ Keep the instance ID, instance type, AMI ID, region, and availability zone from
 the console. The collection script obtains those values independently from the
 EC2 Instance Metadata Service and exits before benchmarking if they do not
 match the expected command-line values.
+
+After connecting, verify the untouched image before cloning or installing
+anything:
+
+```bash
+grep '^\(NAME\|VERSION_ID\)=' /etc/os-release
+python3 --version
+```
+
+Expect Ubuntu with `VERSION_ID="24.04"` and Python `3.12.x`. If either differs,
+stop or terminate the instance and correct the AMI selection. Do not install a
+second Python version to make a different image pass.
 
 ## 2. Clone the playbook branch
 
@@ -61,10 +82,13 @@ The collector requires one clean source commit across the cohort.
 ./scripts/ec2/bootstrap.sh
 ```
 
-Bootstrap verifies x86-64 Linux and Python 3.12, creates `.venv`, installs the
-exact performance-sensitive dependencies in `requirements/runner-study.txt`,
-validates the run manifest, and arms the shutdown guard. Installation and
-validation are outside the timed benchmark region.
+Bootstrap verifies that it is running on x86-64 Amazon EC2, arms the shutdown
+guard, then verifies Canonical Ubuntu 24.04 and Python 3.12. It creates `.venv`,
+installs the exact performance-sensitive dependencies in
+`requirements/runner-study.txt`, and validates the run manifest. Installation
+and validation are outside the timed benchmark region. If bootstrap exits with
+an error after announcing the guard, stop or terminate the instance promptly;
+the guard is only a three-hour backstop.
 
 Choose one cohort name and keep it unchanged. For example:
 
