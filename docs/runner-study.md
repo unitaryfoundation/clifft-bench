@@ -39,6 +39,14 @@ Every raw result records the CPU model, topology, memory, kernel, runner image
 metadata, and selected CPU. The workflow serialized its three independent
 ephemeral jobs with `max-parallel: 1`.
 
+The fourth window used one manually operated On-Demand `m7a.xlarge` in
+`us-east-1c`, with four physical AMD EPYC 9R14 cores, 16 GiB of memory, and the
+recorded Canonical Ubuntu 24.04 AMI. Three stop/start boots each collected three
+serial replicas. Distinct Linux boot IDs establish distinct boots; EC2 does not
+expose enough information to claim distinct physical hosts. The checkout,
+instance, AMI, region, availability zone, kernel, Python, dependency, affinity,
+and thread identities remained fixed across all nine results.
+
 The workflow installs `requirements/runner-study.txt`, which exactly pins
 Clifft and each performance-sensitive dependency named by its software
 manifest. When changing Clifft, update that requirements file and the software
@@ -64,9 +72,14 @@ documented four-vCPU premium rate before any
 [monthly credit](https://www.ubicloud.com/docs/about/pricing). This remains an
 estimate until reconciled with provider billing.
 
+The EC2 window collected three complete placements and nine results on August
+19, 2026. Installation and instance control remained outside the benchmark;
+the reference-host scripts retained raw data outside the checkout and prepared
+one normal result commit after validating the full cohort.
+
 ## Analysis
 
-To regenerate either committed cohort, run:
+To regenerate a committed cohort, run:
 
 ```bash
 uv run clifft-bench analyze-aa results/runner-study/free/raw/*-raw.json \
@@ -92,12 +105,14 @@ absolute-throughput center per dispatch and its distribution across
 dispatches. This gives each replica equal weight and prevents a noisy
 repetition from masquerading as independent evidence.
 
-Across both studied runner pools and workloads, the largest absolute
-dispatch-level A/A estimate was 1.08%. Until a selected reference host has its
-own commissioning evidence, 1.1% is the provisional inconclusive band for this
-three-job design. Exceeding it warrants confirmation; it is not by itself an
-official regression. Raw results remain authoritative; CSV and summary JSON
-files are derived and reproducible.
+Across the GitHub runner pools and workloads, the largest absolute
+dispatch-level A/A estimate was 1.08%; the EC2 candidate's maximum was 0.71%.
+Because its three boots were collected in one afternoon, 1.1% remains the
+conservative provisional inconclusive band for this three-replica design until
+time-separated release campaigns add evidence. Exceeding it warrants
+confirmation on another boot; it is not by itself an official regression. Raw
+results remain authoritative; CSV and summary JSON files are derived and
+reproducible.
 
 ## Completed runner decision
 
@@ -106,8 +121,8 @@ same-job paired comparisons. The larger runner is not the canonical performance
 host: it supplied three CPU models across two image versions, did not reduce
 dispatch-level A/A noise, and cost money without making absolute throughput
 portable. Neither GitHub pool supports an unstratified official absolute
-number. A separately selected and commissioned reference host is the next
-candidate for infrequent release/tool comparisons and absolute results.
+number. The manual EC2 cohort below evaluates the separately controlled
+reference-host approach.
 
 ## Completed Ubicloud decision
 
@@ -126,7 +141,35 @@ runner:
 
 Ubicloud therefore did not solve the absolute-throughput requirement, and its
 paired A/A measurements did not improve on the free standard GitHub-hosted
-cohort. The scheduled workflow was removed after the third full dispatch. A
-separately controlled reference host remains the candidate for absolute
-throughput, while standard GitHub-hosted runners remain suitable for
-correctness CI and exploratory paired comparisons.
+cohort. The scheduled workflow was removed after the third full dispatch. The
+manual EC2 cohort supplied the separately controlled candidate, while standard
+GitHub-hosted runners remain suitable for correctness CI and exploratory paired
+comparisons.
+
+## Completed EC2 decision
+
+All nine EC2 results validated, all cases succeeded, and every case applied
+one-core affinity. The three-replica placement estimates were:
+
+| Workload regime | Placement A/A differences | Placement throughput centers | Symmetric min/max span |
+|---|---:|---:|---:|
+| Short public calls | 0.714%, 0.041%, 0.057% | 788,811; 791,667; 791,408 shots/s | 0.36% |
+| Long public calls | 0.009%, 0.051%, 0.192% | 0.3860; 0.3782; 0.3761 shots/s | 2.60% |
+
+Within one boot, the largest min/max span among the three replica centers was
+0.35% for the short workload and 0.53% for the long workload. This is materially
+better absolute stability than either managed candidate and commissions the
+stopped `m7a.xlarge` provisionally for infrequent reference measurements.
+
+The long workload still exposes individual-sample granularity: each 30-second
+sample completed only 10–14 public calls, and pooled raw sample throughput had
+an 8.29% relative MAD. Paired aggregation was stable, but an official absolute
+number for a slow workload must report the median and range across placements,
+not one sample or an over-precise scalar.
+
+Use one boot with three serial replicas for routine paired release or tool
+comparisons. Treat changes at or below 1.1% as inconclusive, and confirm a
+larger candidate change on another boot. For absolute results, use three
+stop/start placements and publish their median and range. The first real
+time-separated release campaigns also serve as continued commissioning
+evidence; this one-afternoon study does not establish month-to-month stability.

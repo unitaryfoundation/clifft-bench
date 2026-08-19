@@ -48,11 +48,14 @@ Apple Silicon development laptops because an upstream kernel header includes
 x86 intrinsics. That is only a local-development limitation: on Apple Silicon,
 validate the harness and run the Clifft case locally, while paired adapter
 smoke checks run on GitHub Linux. The canonical host for official performance
-measurements has not yet been selected.
+measurements is the manually operated reference host described below.
 
-For the next reference-host experiment, see the
-[manual EC2 playbook](docs/ec2-playbook.md). It keeps AWS provisioning manual,
-collects schema-valid evidence from fixed EC2 boots, and prepares results for a
+The initial [manual EC2 commissioning study](docs/runner-study.md#completed-ec2-decision)
+provisionally selected an On-Demand `m7a.xlarge` in `us-east-1c`: paired A/A
+differences remained below 0.72%, while boot-level absolute throughput spanned
+0.36% for the short workload and 2.60% for the long workload. The
+[EC2 playbook](docs/ec2-playbook.md) keeps provisioning manual, collects
+schema-valid evidence across stop/start boots, and prepares results for a
 normal reviewed commit.
 
 ## Use
