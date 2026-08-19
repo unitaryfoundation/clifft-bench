@@ -13,6 +13,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.32119964957894415,
+      "throughput_attempted_shots_per_second": 0.37564624748292047,
       "workflow_run_id": "31393394827",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -29,6 +30,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.25526560778884994,
+      "throughput_attempted_shots_per_second": 791241.8100783027,
       "workflow_run_id": "31393394827",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -45,6 +47,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.23317103016302912,
+      "throughput_attempted_shots_per_second": 0.35822781413070476,
       "workflow_run_id": "31394687395",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -61,6 +64,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.3392913751394762,
+      "throughput_attempted_shots_per_second": 503849.93597147585,
       "workflow_run_id": "31394687395",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -77,6 +81,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.5210537049655628,
+      "throughput_attempted_shots_per_second": 0.3805438773323287,
       "workflow_run_id": "31450804215",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -93,6 +98,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.08200687277900542,
+      "throughput_attempted_shots_per_second": 503211.4562658426,
       "workflow_run_id": "31450804215",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -109,6 +115,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.3459380517559438,
+      "throughput_attempted_shots_per_second": 0.3198961845110547,
       "workflow_run_id": "31497996881",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -125,6 +132,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.17184657831566935,
+      "throughput_attempted_shots_per_second": 594021.3263974418,
       "workflow_run_id": "31497996881",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -141,6 +149,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.06316856235662933,
+      "throughput_attempted_shots_per_second": 0.35972836361419885,
       "workflow_run_id": "31555272611",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -157,6 +166,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.02971146009356948,
+      "throughput_attempted_shots_per_second": 501523.2273385347,
       "workflow_run_id": "31555272611",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -173,6 +183,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.21644417079892753,
+      "throughput_attempted_shots_per_second": 0.3516670620326974,
       "workflow_run_id": "31603372323",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -189,6 +200,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.0835038799606381,
+      "throughput_attempted_shots_per_second": 633084.1592049764,
       "workflow_run_id": "31603372323",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     }
@@ -216,6 +228,15 @@
       "replica_counts": [
         3
       ],
+      "throughput_attempted_shots_per_second": {
+        "mad": 0.011989592725111547,
+        "max": 0.3805438773323287,
+        "median": 0.3589780888724518,
+        "min": 0.3198961845110547,
+        "p90": 0.3780950624076246,
+        "p95": 0.37931946986997667,
+        "relative_mad_percent": 3.3399232701836463
+      },
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
     {
@@ -240,6 +261,15 @@
       "replica_counts": [
         3
       ],
+      "throughput_attempted_shots_per_second": {
+        "mad": 46568.28938227019,
+        "max": 791241.8100783027,
+        "median": 548935.6311844588,
+        "min": 501523.2273385347,
+        "p90": 712162.9846416395,
+        "p95": 751702.3973599712,
+        "relative_mad_percent": 8.48337887664316
+      },
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     }
   ],

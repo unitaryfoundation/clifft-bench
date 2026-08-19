@@ -13,6 +13,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.6219620324540185,
+      "throughput_attempted_shots_per_second": 0.3812974117540025,
       "workflow_run_id": "31659297813",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -29,6 +30,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.13870077704179024,
+      "throughput_attempted_shots_per_second": 793155.0213290218,
       "workflow_run_id": "31659297813",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -45,6 +47,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.47994799212342965,
+      "throughput_attempted_shots_per_second": 0.37937829860223277,
       "workflow_run_id": "31706863022",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -61,6 +64,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.5397572494767996,
+      "throughput_attempted_shots_per_second": 792677.318496753,
       "workflow_run_id": "31706863022",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -77,6 +81,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.06266279898817101,
+      "throughput_attempted_shots_per_second": 0.3683906582025427,
       "workflow_run_id": "31762167063",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -93,6 +98,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.38104168207415623,
+      "throughput_attempted_shots_per_second": 768768.7834113442,
       "workflow_run_id": "31762167063",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -109,6 +115,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.18545204141118657,
+      "throughput_attempted_shots_per_second": 0.3535368016237952,
       "workflow_run_id": "31806330052",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -125,6 +132,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.1067982411583363,
+      "throughput_attempted_shots_per_second": 588141.9368991049,
       "workflow_run_id": "31806330052",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -141,6 +149,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -1.079469858132217,
+      "throughput_attempted_shots_per_second": 0.42067615778047557,
       "workflow_run_id": "31857548257",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -157,6 +166,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.17936981954204084,
+      "throughput_attempted_shots_per_second": 788603.9137707895,
       "workflow_run_id": "31857548257",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -173,6 +183,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.013968526661919164,
+      "throughput_attempted_shots_per_second": 0.3015470431729386,
       "workflow_run_id": "31887227514",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -189,6 +200,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.12098450436131351,
+      "throughput_attempted_shots_per_second": 673058.681606894,
       "workflow_run_id": "31887227514",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     },
@@ -205,6 +217,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": 0.22338274852799414,
+      "throughput_attempted_shots_per_second": 0.30583268641102296,
       "workflow_run_id": "31920595656",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
@@ -221,6 +234,7 @@
       ],
       "run_attempt": "1",
       "signed_delta_percent": -0.033684174135203554,
+      "throughput_attempted_shots_per_second": 671065.5661654267,
       "workflow_run_id": "31920595656",
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     }
@@ -248,6 +262,15 @@
       "replica_counts": [
         3
       ],
+      "throughput_attempted_shots_per_second": {
+        "mad": 0.014853856578747493,
+        "max": 0.42067615778047557,
+        "median": 0.3683906582025427,
+        "min": 0.3015470431729386,
+        "p90": 0.39704891016459176,
+        "p95": 0.40886253397253364,
+        "relative_mad_percent": 4.032093715737163
+      },
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
     },
     {
@@ -272,6 +295,15 @@
       "replica_counts": [
         3
       ],
+      "throughput_attempted_shots_per_second": {
+        "mad": 24386.237917677616,
+        "max": 793155.0213290218,
+        "median": 768768.7834113442,
+        "min": 588141.9368991049,
+        "p90": 792868.3996296604,
+        "p95": 793011.7104793412,
+        "relative_mad_percent": 3.1721160437167883
+      },
       "workload_id": "msc-d3-inject-cultivate-p1e-3"
     }
   ],

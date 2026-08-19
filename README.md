@@ -48,7 +48,15 @@ Apple Silicon development laptops because an upstream kernel header includes
 x86 intrinsics. That is only a local-development limitation: on Apple Silicon,
 validate the harness and run the Clifft case locally, while paired adapter
 smoke checks run on GitHub Linux. The canonical host for official performance
-measurements has not yet been selected.
+measurements is the manually operated reference host described below.
+
+The initial [manual EC2 commissioning study](docs/runner-study.md#completed-ec2-decision)
+provisionally selected an On-Demand `m7a.xlarge` in `us-east-1c`: paired A/A
+differences remained below 0.72%, while boot-level absolute throughput spanned
+0.36% for the short workload and 2.60% for the long workload. The
+[EC2 playbook](docs/ec2-playbook.md) keeps provisioning manual, collects
+schema-valid evidence across stop/start boots, and prepares results for a
+normal reviewed commit.
 
 ## Use
 
@@ -104,6 +112,7 @@ to the same logical CPU and common BLAS/OpenMP/JAX thread settings.
 | `src/clifft_bench/` | CLI, scheduler, resource controls, and simulator adapters |
 | `examples/` | Schema-valid example raw result |
 | `tests/` | Contract, schema, scheduler, and isolated-worker tests |
+| `scripts/ec2/` | Manual EC2 commissioning and result preparation |
 
 ## Development
 

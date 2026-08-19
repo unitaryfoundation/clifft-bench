@@ -104,8 +104,24 @@ used for the study did not have billing access.
 - Do not use the paid larger runner as a canonical performance host. It was
   neither fixed hardware nor measurably more stable in this study.
 - Do not interpret unstratified GitHub-hosted throughput as an absolute number.
-- Select and commission a separate, explicitly described reference host for
-  infrequent official comparisons and absolute throughput results.
+- Use the separately commissioned manual EC2 reference host for infrequent
+  official comparisons and absolute throughput results.
+
+## Manual EC2 reference-host evidence
+
+`ec2/m7a-xlarge-ubuntu2404-202608-v2/` contains nine validated Clifft 0.7.0 A/A
+results from three stop/start boots of one On-Demand `m7a.xlarge`. Each boot has
+three serial replicas. All results record one fixed source, AMI, EC2
+configuration, AMD EPYC 9R14 model, Ubuntu kernel, Python and dependency set,
+and applied one-core affinity.
+
+The three placement-level A/A differences were 0.714%, 0.041%, and 0.057% for
+the short workload and 0.009%, 0.051%, and 0.192% for the long workload.
+Boot-level throughput centers spanned 0.36% and 2.60%, respectively. This
+provisionally commissions the stopped instance for paired comparisons and for
+absolute results reported as a three-placement median and range. See
+[`docs/runner-study.md`](../../docs/runner-study.md#completed-ec2-decision) for
+the interpretation and limitations.
 
 ## Files and reproduction
 
@@ -120,8 +136,15 @@ uv run clifft-bench analyze-aa results/runner-study/free/raw/*-raw.json \
 uv run clifft-bench analyze-aa results/runner-study/larger/raw/*-raw.json \
   --output-json results/runner-study/larger/summary.json \
   --output-csv results/runner-study/larger/pairs.csv
+
+uv run clifft-bench analyze-aa \
+  results/runner-study/ec2/m7a-xlarge-ubuntu2404-202608-v2/raw/*-raw.json \
+  --output-json results/runner-study/ec2/m7a-xlarge-ubuntu2404-202608-v2/summary.json \
+  --output-csv results/runner-study/ec2/m7a-xlarge-ubuntu2404-202608-v2/pairs.csv
 ```
 
 The summary's `pair_groups` contain pooled repetition diagnostics;
 `dispatch_estimates` and `dispatch_groups` contain the release-style estimator;
-and `groups` retain hardware-stratified throughput and pair distributions.
+`dispatch_groups` also contain the distribution of nested dispatch-level
+absolute throughput; and `groups` retain pooled hardware-stratified throughput
+and pair distributions.

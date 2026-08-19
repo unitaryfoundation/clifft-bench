@@ -11,6 +11,12 @@ robust summary. The effective request deadline is recorded with the execution
 configuration. Error cases preserve their exact failure phase and message
 without fabricating throughput.
 
+When an external launcher supplies a complete cloud identity, the runner
+snapshot also records provider, instance and image IDs, instance type,
+region/AZ, lifecycle, and Linux boot ID. The benchmark harness never contacts a
+cloud metadata service itself; the EC2 playbook verifies IMDSv2 and passes the
+complete identity through an explicit environment.
+
 Validate any result with:
 
 ```bash

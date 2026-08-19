@@ -1,0 +1,335 @@
+{
+  "dispatch_estimates": [
+    {
+      "absolute_delta_percent": 0.008655783343424154,
+      "dispatch_id": "i-0b559eec365c2acb7/c680357a-e94d-4ca6-9ff4-933420e4e8eb:1",
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "ratio_b_over_a": 1.0000865615797256,
+      "replica_count": 3,
+      "replica_run_ids": [
+        "590a5d73-ac3d-4ef6-b579-6cc8291b7a34",
+        "64a4d370-c2fa-4da9-b6e9-de03e4017719",
+        "934976c3-beaf-4ce8-8ec4-c3b70eddb3c5"
+      ],
+      "run_attempt": "1",
+      "signed_delta_percent": 0.008655783343424154,
+      "throughput_attempted_shots_per_second": 0.38601271489483696,
+      "workflow_run_id": "i-0b559eec365c2acb7/c680357a-e94d-4ca6-9ff4-933420e4e8eb",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "absolute_delta_percent": 0.7138438718780831,
+      "dispatch_id": "i-0b559eec365c2acb7/c680357a-e94d-4ca6-9ff4-933420e4e8eb:1",
+      "pair_id": "msc-d3-clifft-aa",
+      "ratio_b_over_a": 1.0071640086370992,
+      "replica_count": 3,
+      "replica_run_ids": [
+        "590a5d73-ac3d-4ef6-b579-6cc8291b7a34",
+        "64a4d370-c2fa-4da9-b6e9-de03e4017719",
+        "934976c3-beaf-4ce8-8ec4-c3b70eddb3c5"
+      ],
+      "run_attempt": "1",
+      "signed_delta_percent": 0.7138438718780831,
+      "throughput_attempted_shots_per_second": 788811.2965291319,
+      "workflow_run_id": "i-0b559eec365c2acb7/c680357a-e94d-4ca6-9ff4-933420e4e8eb",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "absolute_delta_percent": 0.051460825313020465,
+      "dispatch_id": "i-0b559eec365c2acb7/da486a47-ba1f-4134-80a3-f66d5ffea5cc:2",
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "ratio_b_over_a": 1.000514740698036,
+      "replica_count": 3,
+      "replica_run_ids": [
+        "49eacc85-7699-4400-a4be-31d0fb9f8450",
+        "6cae5e13-a3d1-46cc-b9c4-1d361fb2c462",
+        "d917a134-1c70-4f87-a93c-ac37be78dae2"
+      ],
+      "run_attempt": "2",
+      "signed_delta_percent": 0.051460825313020465,
+      "throughput_attempted_shots_per_second": 0.37816362052556907,
+      "workflow_run_id": "i-0b559eec365c2acb7/da486a47-ba1f-4134-80a3-f66d5ffea5cc",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "absolute_delta_percent": 0.040587539221539,
+      "dispatch_id": "i-0b559eec365c2acb7/da486a47-ba1f-4134-80a3-f66d5ffea5cc:2",
+      "pair_id": "msc-d3-clifft-aa",
+      "ratio_b_over_a": 0.9995942069584896,
+      "replica_count": 3,
+      "replica_run_ids": [
+        "49eacc85-7699-4400-a4be-31d0fb9f8450",
+        "6cae5e13-a3d1-46cc-b9c4-1d361fb2c462",
+        "d917a134-1c70-4f87-a93c-ac37be78dae2"
+      ],
+      "run_attempt": "2",
+      "signed_delta_percent": -0.040587539221539,
+      "throughput_attempted_shots_per_second": 791666.7392341584,
+      "workflow_run_id": "i-0b559eec365c2acb7/da486a47-ba1f-4134-80a3-f66d5ffea5cc",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "absolute_delta_percent": 0.19157696431238339,
+      "dispatch_id": "i-0b559eec365c2acb7/e82b0854-1be6-42c6-8083-dcc38a3fee3a:3",
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "ratio_b_over_a": 1.0019176064892736,
+      "replica_count": 3,
+      "replica_run_ids": [
+        "167deab1-67a7-4cb5-ae97-ffb470f87a94",
+        "728c3d6c-6878-4b58-ab6e-0a9f8456888d",
+        "da7aa1a2-3f70-4f68-947e-3e48d220dad7"
+      ],
+      "run_attempt": "3",
+      "signed_delta_percent": 0.19157696431238339,
+      "throughput_attempted_shots_per_second": 0.37610345890395674,
+      "workflow_run_id": "i-0b559eec365c2acb7/e82b0854-1be6-42c6-8083-dcc38a3fee3a",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "absolute_delta_percent": 0.05728784012254702,
+      "dispatch_id": "i-0b559eec365c2acb7/e82b0854-1be6-42c6-8083-dcc38a3fee3a:3",
+      "pair_id": "msc-d3-clifft-aa",
+      "ratio_b_over_a": 0.9994272856466161,
+      "replica_count": 3,
+      "replica_run_ids": [
+        "167deab1-67a7-4cb5-ae97-ffb470f87a94",
+        "728c3d6c-6878-4b58-ab6e-0a9f8456888d",
+        "da7aa1a2-3f70-4f68-947e-3e48d220dad7"
+      ],
+      "run_attempt": "3",
+      "signed_delta_percent": -0.05728784012254702,
+      "throughput_attempted_shots_per_second": 791408.0664787949,
+      "workflow_run_id": "i-0b559eec365c2acb7/e82b0854-1be6-42c6-8083-dcc38a3fee3a",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "absolute_delta_percent": {
+        "mad": 0.04280504196959631,
+        "max": 0.19157696431238339,
+        "median": 0.051460825313020465,
+        "min": 0.008655783343424154,
+        "p90": 0.1635537365125108,
+        "p95": 0.1775653504124471
+      },
+      "dispatch_count": 3,
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "ratio_b_over_a": {
+        "mad": 0.000428179118310279,
+        "max": 1.0019176064892736,
+        "median": 1.000514740698036,
+        "min": 1.0000865615797256,
+        "p90": 1.001637033331026,
+        "p95": 1.0017773199101498
+      },
+      "replica_counts": [
+        3
+      ],
+      "throughput_attempted_shots_per_second": {
+        "mad": 0.002060161621612322,
+        "max": 0.38601271489483696,
+        "median": 0.37816362052556907,
+        "min": 0.37610345890395674,
+        "p90": 0.38444289602098336,
+        "p95": 0.3852278054579102,
+        "relative_mad_percent": 0.5447804891303728
+      },
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "absolute_delta_percent": {
+        "mad": 0.01670030090100802,
+        "max": 0.7138438718780831,
+        "median": 0.05728784012254702,
+        "min": 0.040587539221539,
+        "p90": 0.5825326655269758,
+        "p95": 0.6481882687025294
+      },
+      "dispatch_count": 3,
+      "pair_id": "msc-d3-clifft-aa",
+      "ratio_b_over_a": {
+        "mad": 0.00016692131187345804,
+        "max": 1.0071640086370992,
+        "median": 0.9995942069584896,
+        "min": 0.9994272856466161,
+        "p90": 1.0056500483013773,
+        "p95": 1.0064070284692381
+      },
+      "replica_counts": [
+        3
+      ],
+      "throughput_attempted_shots_per_second": {
+        "mad": 258.6727553635137,
+        "max": 791666.7392341584,
+        "median": 791408.0664787949,
+        "min": 788811.2965291319,
+        "p90": 791615.0046830857,
+        "p95": 791640.871958622,
+        "relative_mad_percent": 0.03268513000056016
+      },
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    }
+  ],
+  "groups": [
+    {
+      "absolute_delta_percent": {
+        "mad": 0.12522105558996496,
+        "max": 1.027864628603425,
+        "median": 0.23337198815247018,
+        "min": 0.004987497715241659,
+        "p90": 0.629523893955725,
+        "p95": 0.7743221614502727
+      },
+      "hardware": {
+        "availability_zone": "us-east-1c",
+        "cloud_provider": "aws",
+        "cpu_model": "AMD EPYC 9R14",
+        "image_id": "ami-0f8a61b66d1accaee",
+        "image_os": "ubuntu-24.04",
+        "instance_type": "m7a.xlarge",
+        "lifecycle": "on-demand",
+        "logical_cpus": 4,
+        "machine": "x86_64",
+        "memory_bytes_bucket": 16106127360,
+        "observed_memory_bytes": {
+          "max": 16375955456,
+          "min": 16375951360
+        },
+        "physical_cores": 4,
+        "region": "us-east-1"
+      },
+      "hardware_key": "f594787add0d",
+      "image_versions": [
+        "ami-0f8a61b66d1accaee"
+      ],
+      "observation_count": 54,
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "ratio_b_over_a": {
+        "mad": 0.002204599981260047,
+        "max": 1.0103317444594424,
+        "median": 1.0001531461541622,
+        "min": 0.9904646058516325,
+        "p90": 1.003781999736528,
+        "p95": 1.0056057323183902
+      },
+      "run_count": 9,
+      "throughput_attempted_shots_per_second": {
+        "mad": 0.031551929643106685,
+        "max": 0.42692203820428226,
+        "median": 0.38043214688826843,
+        "min": 0.3150810248518777,
+        "p90": 0.4197813648123686,
+        "p95": 0.4219264317630512,
+        "relative_mad_percent": 8.2937075379104
+      },
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "absolute_delta_percent": {
+        "mad": 0.2869957810838372,
+        "max": 1.8067067697186157,
+        "median": 0.3767955791853651,
+        "min": 0.02405401944837798,
+        "p90": 0.9940310328600755,
+        "p95": 1.2583293211391955
+      },
+      "hardware": {
+        "availability_zone": "us-east-1c",
+        "cloud_provider": "aws",
+        "cpu_model": "AMD EPYC 9R14",
+        "image_id": "ami-0f8a61b66d1accaee",
+        "image_os": "ubuntu-24.04",
+        "instance_type": "m7a.xlarge",
+        "lifecycle": "on-demand",
+        "logical_cpus": 4,
+        "machine": "x86_64",
+        "memory_bytes_bucket": 16106127360,
+        "observed_memory_bytes": {
+          "max": 16375955456,
+          "min": 16375951360
+        },
+        "physical_cores": 4,
+        "region": "us-east-1"
+      },
+      "hardware_key": "f594787add0d",
+      "image_versions": [
+        "ami-0f8a61b66d1accaee"
+      ],
+      "observation_count": 54,
+      "pair_id": "msc-d3-clifft-aa",
+      "ratio_b_over_a": {
+        "mad": 0.003684975811859059,
+        "max": 1.0142603554018697,
+        "median": 1.0003416300976165,
+        "min": 0.982094680611579,
+        "p90": 1.0092649503440871,
+        "p95": 1.011483137860567
+      },
+      "run_count": 9,
+      "throughput_attempted_shots_per_second": {
+        "mad": 1710.4004138226737,
+        "max": 803908.036036115,
+        "median": 790757.3753116115,
+        "min": 778446.3461634343,
+        "p90": 793028.2814247422,
+        "p95": 794076.3320834676,
+        "relative_mad_percent": 0.21629901499795195
+      },
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    }
+  ],
+  "observation_count": 108,
+  "pair_groups": [
+    {
+      "absolute_delta_percent": {
+        "mad": 0.12522105558996496,
+        "max": 1.027864628603425,
+        "median": 0.23337198815247018,
+        "min": 0.004987497715241659,
+        "p90": 0.629523893955725,
+        "p95": 0.7743221614502727
+      },
+      "hardware_key_count": 1,
+      "observation_count": 54,
+      "pair_id": "coherent-d5-r5-clifft-aa",
+      "ratio_b_over_a": {
+        "mad": 0.002204599981260047,
+        "max": 1.0103317444594424,
+        "median": 1.0001531461541622,
+        "min": 0.9904646058516325,
+        "p90": 1.003781999736528,
+        "p95": 1.0056057323183902
+      },
+      "result_count": 9,
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "absolute_delta_percent": {
+        "mad": 0.2869957810838372,
+        "max": 1.8067067697186157,
+        "median": 0.3767955791853651,
+        "min": 0.02405401944837798,
+        "p90": 0.9940310328600755,
+        "p95": 1.2583293211391955
+      },
+      "hardware_key_count": 1,
+      "observation_count": 54,
+      "pair_id": "msc-d3-clifft-aa",
+      "ratio_b_over_a": {
+        "mad": 0.003684975811859059,
+        "max": 1.0142603554018697,
+        "median": 1.0003416300976165,
+        "min": 0.982094680611579,
+        "p90": 1.0092649503440871,
+        "p95": 1.011483137860567
+      },
+      "result_count": 9,
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    }
+  ],
+  "report_format": "clifft-bench/runner-study-summary/v2",
+  "result_count": 9,
+  "skipped_pair_count": 0,
+  "skipped_pairs": []
+}
