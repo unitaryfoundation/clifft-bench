@@ -70,7 +70,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"enum": ["clifft", "symft", "fixture"]}
+          "items": {"enum": ["clifft", "symft", "tsim", "fixture"]}
         },
         "provenance": {
           "type": "object",

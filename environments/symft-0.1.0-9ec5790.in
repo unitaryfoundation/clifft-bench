@@ -1,0 +1,2 @@
+numpy==2.5.2
+symft @ git+https://github.com/haoliri0/SymFT_Test.git@9ec5790322f93140e78bdb6d6620a2a43eceba0b#subdirectory=python

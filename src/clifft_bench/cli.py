@@ -8,13 +8,9 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
-from clifft_bench.manifest import load_suite
+from clifft_bench.manifest import load_campaign, load_suite
+from clifft_bench.results import finalize_execution
 from clifft_bench.runner import run_suite
-from clifft_bench.runner_study import (
-    analyze_runner_study,
-    write_runner_study_csv,
-    write_runner_study_json,
-)
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
 DEFAULT_RUN_MANIFEST = Path("manifests/run-smoke.v1.json")
@@ -42,12 +38,13 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--min-sample-seconds", type=float)
     run.add_argument("--repetitions", type=int)
 
-    analyze = commands.add_parser(
-        "analyze-aa", help="summarize identical-software runner A/A results"
+    finalize = commands.add_parser(
+        "finalize", help="generate an execution index and plot-ready tables"
     )
-    analyze.add_argument("results", nargs="+", type=Path)
-    analyze.add_argument("--output-json", type=Path)
-    analyze.add_argument("--output-csv", type=Path)
+    finalize.add_argument("--campaign", required=True, type=Path)
+    finalize.add_argument("--execution-id", required=True)
+    finalize.add_argument("--output-dir", required=True, type=Path)
+    finalize.add_argument("results", nargs="+", type=Path)
     return parser
 
 
@@ -66,9 +63,8 @@ def _default_validation_paths() -> list[Path]:
         root / "manifests/workloads.v1.json",
         root / "manifests/software.v1.json",
         root / "manifests/run-smoke.v1.json",
-        root / "manifests/run-phase1.v1.json",
-        root / "manifests/run-runner-aa.v1.json",
         root / "examples/result.v1.json",
+        *sorted(root.glob("campaigns/*/campaign.v1.json")),
     ]
 
 
@@ -79,6 +75,8 @@ def _validate(paths: list[Path]) -> int:
         document = validate_path(resolved)
         if document["schema_version"] == "clifft-bench/run/v1":
             load_suite(resolved)
+        if document["schema_version"] == "clifft-bench/campaign/v1":
+            load_campaign(resolved)
         print(f"valid: {resolved}")
     return 0
 
@@ -137,15 +135,15 @@ def _run(args: argparse.Namespace) -> int:
     return 0 if successes == len(document["cases"]) else 1
 
 
-def _analyze_aa(args: argparse.Namespace) -> int:
-    paths = [_resolve(path) for path in args.results]
-    report, observations = analyze_runner_study(paths)
-    if args.output_json:
-        write_runner_study_json(args.output_json.resolve(), report)
-    else:
-        print(json.dumps(report, indent=2, sort_keys=True))
-    if args.output_csv:
-        write_runner_study_csv(args.output_csv.resolve(), observations)
+def _finalize(args: argparse.Namespace) -> int:
+    campaign = load_campaign(_resolve(args.campaign))
+    index = finalize_execution(
+        campaign,
+        execution_id=args.execution_id,
+        raw_paths=[_resolve(path) for path in args.results],
+        output_dir=args.output_dir.resolve(),
+    )
+    print(json.dumps(index, indent=2, sort_keys=True))
     return 0
 
 
@@ -158,8 +156,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _list(args.run_manifest, args.as_json)
         if args.command == "run":
             return _run(args)
-        if args.command == "analyze-aa":
-            return _analyze_aa(args)
+        if args.command == "finalize":
+            return _finalize(args)
         raise AssertionError(f"unhandled command {args.command!r}")
     except (SchemaValidationError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)

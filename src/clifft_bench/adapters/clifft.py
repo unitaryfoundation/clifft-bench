@@ -60,9 +60,10 @@ class ClifftAdapter(Adapter):
 
         import clifft
 
-        clifft.set_num_threads(1)
-        if int(clifft.get_num_threads()) != 1:
-            raise RuntimeError("Clifft did not accept the one-thread setting")
+        if hasattr(clifft, "set_num_threads"):
+            clifft.set_num_threads(1)
+            if int(clifft.get_num_threads()) != 1:
+                raise RuntimeError("Clifft did not accept the one-thread setting")
 
         text = artifact_path.read_text()
         parse_started = time.perf_counter()
@@ -75,27 +76,42 @@ class ClifftAdapter(Adapter):
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
         mask = [1] * int(hir.num_detectors) if postselect else []
         program = clifft.lower(hir, postselection_mask=mask)
-        clifft.default_bytecode_pass_manager().run(program)
+        if hasattr(clifft, "default_bytecode_pass_manager"):
+            clifft.default_bytecode_pass_manager().run(program)
         compile_seconds = time.perf_counter() - compile_started
 
         active_history = list(getattr(program, "active_k_history", []))
+        peak_active_width = getattr(program, "peak_active_width", None)
+        if peak_active_width is None:
+            peak_active_width = max(active_history) if active_history else 0
+
+        def circuit_size(name: str) -> int:
+            value = getattr(program, name, None)
+            if value is None:
+                value = getattr(hir, name)
+            return int(value)
+
         metadata = {
             "name": "clifft",
             "version": str(clifft.version()),
-            "threads": int(clifft.get_num_threads()),
+            "threads": int(clifft.get_num_threads())
+            if hasattr(clifft, "get_num_threads")
+            else 1,
             "precision": "complex-fp64",
             "reference_convention": reference_convention,
             "batch_enabled": False,
             "effective_batch_size": 1,
-            "num_qubits": int(program.num_qubits),
-            "num_measurements": int(program.num_measurements),
-            "num_detectors": int(program.num_detectors),
-            "num_observables": int(program.num_observables),
-            "peak_active_width": max(active_history) if active_history else 0,
+            "num_qubits": circuit_size("num_qubits"),
+            "num_measurements": circuit_size("num_measurements"),
+            "num_detectors": circuit_size("num_detectors"),
+            "num_observables": circuit_size("num_observables"),
+            "peak_active_width": int(peak_active_width),
             "parse_seconds": parse_seconds,
             "compile_seconds": compile_seconds,
             "cpu_baseline": str(getattr(clifft, "CPU_BASELINE", "unknown")),
-            "svm_backend": str(clifft.svm_backend()),
+            "sampling_backend": str(clifft.svm_backend())
+            if hasattr(clifft, "svm_backend")
+            else "symbolic-coordinate",
         }
         return _PreparedClifft(
             clifft,

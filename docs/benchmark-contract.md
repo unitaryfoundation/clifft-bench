@@ -1,4 +1,4 @@
-# Phase 1 benchmark contract
+# Benchmark contract
 
 ## Benchmark question
 
@@ -22,11 +22,11 @@ selected circuit. The simulator must return aggregate counts for:
 
 For every QEC workload, each declared detector is a postselection check. The
 Quantum Volume workloads declare no detectors and do not postselect. Every
-Phase 1 workload selects observable 0 explicitly; this matters for the
+benchmark workload selects observable 0 explicitly; this matters for the
 distillation circuit, which declares five observables. Throughput always uses
 attempted shots as the numerator, before detector rejection.
 
-Every Phase 1 workload also declares `reference_convention` as
+Every benchmark workload also declares `reference_convention` as
 `raw-record-parity`. Detector events and logical errors are the XOR parity of
 their declared measurement records, without XORing a noiseless reference
 sample into either value. The convention is embedded in each result with the
@@ -35,8 +35,11 @@ separate future benchmark profile so they cannot be mixed into the same result
 series.
 
 Materializing full measurement or detector arrays is not part of the logical
-work. Clifft's `sample_survivors(..., keep_records=False)` and SymFT's compiled
-counts sampler implement the same aggregate-count contract.
+work. Clifft and SymFT expose aggregate-count APIs. Tsim returns detector and
+observable arrays, so its adapter reduces those arrays to the same counts
+inside the timed public-call boundary. That unavoidable API overhead is part of
+the observed Tsim throughput and is recorded as such; it does not change the
+attempted-shot numerator.
 
 ## Software identity
 
@@ -70,11 +73,11 @@ margin for workloads whose single call may itself take substantial time.
 
 ## Resources and ordering
 
-Cases run serially. The harness may keep the two members of a declared
-comparison pair prepared in separate Python workers so different package
-environments can coexist, but only one worker samples at a time. Both workers
-belong to one process tree, request the same logical CPU, and receive the same
-single-thread environment:
+Cases and campaign runs execute serially. Each run uses an isolated Python
+environment, so incompatible versions never share a process. The harness may
+keep members of an explicitly declared in-run pair prepared in separate
+workers, but only one worker samples at a time. Every worker requests the same
+logical CPU and receives the same single-thread environment:
 
 `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`,
 `NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, and `BLIS_NUM_THREADS` are 1;
@@ -89,7 +92,10 @@ The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
 `seed`, and execution repetition `r` begins at
 `seed + 10_000 + r * 1_000_000`; repeated public calls increment that value by
 one. These non-overlapping ranges keep every phase deterministic without
-reusing a stream identifier.
+reusing a stream identifier for adapters that expose per-call streams. Tsim
+0.1.5 instead accepts a seed when its sampler is prepared and advances that
+prepared stream across calls. Its adapter fixes that seed and records the
+different stream semantics in runtime metadata.
 
 ## Batching
 
@@ -99,8 +105,9 @@ Two distinct quantities are recorded:
 - `shots_per_call`: attempted shots requested by one public API call.
 
 Clifft exposes no internal shot-batch choice in this API, so its batch size is
-1. SymFT batch sizes are explicit manifest values, never hidden automatic
-choices. A large-batch throughput result is not a single-circuit latency result.
+1. SymFT and Tsim batch sizes are explicit manifest values, never hidden
+automatic choices. A large-batch throughput result is not a single-circuit
+latency result.
 SymFT uses native batch size 0 as a disabled sentinel on its single backend; the
 harness records the effective logical batch size as 1 in that mode.
 The Quantum Volume cases therefore request one shot per call with batching
@@ -136,12 +143,11 @@ correctness, and sampling failures after validation are recorded as structured
 case errors. Successful cases cannot omit raw samples or correctness evidence
 under the result schema.
 
-## Profiles
+## Runs and campaigns
 
-`run-smoke.v1.json` is a short CI/developer correctness check across the
-cultivation, multi-observable distillation, and Quantum Volume gate regimes; it
-has no performance significance. `run-phase1.v1.json` pairs Clifft and SymFT on
-all ten workloads, using 30-second minimum samples and five repetitions. Neither
-becomes canonical merely by running it; official publication also requires the
-runner study, trusted workflow, review, and approval described in the project
-plan.
+`manifests/run-smoke.v1.json` is a short CI/developer correctness check and has
+no performance significance. A campaign groups one or more isolated run
+manifests, exact environment locks, comparison declarations, a hardware epoch,
+and the required placements/replicas. A run becomes official evidence only
+after the manual host checks, complete finalization, and review of its results
+PR.

@@ -3,45 +3,45 @@ from __future__ import annotations
 from clifft_bench.schema import repository_root
 
 
-def test_ec2_playbook_uses_the_fixed_study_profile() -> None:
+def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     root = repository_root()
+    common = (root / "scripts/ec2/common.sh").read_text()
     bootstrap = (root / "scripts/ec2/bootstrap.sh").read_text()
     placement = (root / "scripts/ec2/run-placement.sh").read_text()
     finalize = (root / "scripts/ec2/finalize.sh").read_text()
 
-    assert "shutdown -h +180" in bootstrap
-    assert "Amazon EC2" in bootstrap
-    assert '"${VERSION_ID:-}" != "24.04"' in bootstrap
-    assert bootstrap.index("shutdown -h +180") < bootstrap.index("python_version=")
-    assert "pip install -e . -r requirements/runner-study.txt" in bootstrap
-    assert "clifft-bench validate manifests/run-runner-aa.v1.json" in bootstrap
-    assert "--min-sample-seconds 30" in placement
-    assert "--repetitions 6" in placement
-    assert "for replica in 1 2 3" in placement
+    assert "shutdown -h +480" in common
+    assert "Amazon EC2" in common
+    assert "sanitize_remote_url" in common
+    assert "git remote get-url origin" in placement
+    assert "require_clean_checkout" in bootstrap
+    assert '"${VERSION_ID:-}" == "24.04"' in bootstrap
+    assert ".environments[]" in bootstrap
+    assert ".runs[]" in placement
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement
-    assert placement.index("shutdown -h +180") < placement.index("if (( $# != 6 ))")
-    assert "[.[].runner.cloud.boot_id] | unique | length) == 3" in finalize
-    assert "clifft-bench analyze-aa" in finalize
+    assert "clifft-bench finalize" in finalize
+    assert "results/$campaign_id/$execution_id" in finalize
+    assert "runner-study" not in bootstrap + placement + finalize
 
 
-def test_ec2_playbook_documents_the_exact_image_and_storage_choices() -> None:
-    playbook = (repository_root() / "docs/ec2-playbook.md").read_text()
+def test_ec2_playbook_documents_storage_security_and_manual_control() -> None:
+    playbook = (repository_root() / "docs/manual-ec2.md").read_text()
 
     assert "verified Canonical" in playbook
     assert "Ubuntu Server 24.04 LTS (HVM), SSD Volume Type" in playbook
     assert "64-bit (x86)" in playbook
-    assert "File systems" in playbook
-    assert "leave **None** selected" in playbook
-    assert "second Python version" in playbook
+    assert "16 GiB `gp3`" in playbook
+    assert "no S3 Files, EFS, FSx" in playbook
+    assert "no IAM role" in playbook
+    assert "eight-hour" in playbook
 
 
-def test_ec2_playbook_spools_before_preparing_the_commit() -> None:
+def test_ec2_results_spool_outside_checkout_until_finalization() -> None:
     root = repository_root()
     placement = (root / "scripts/ec2/run-placement.sh").read_text()
     finalize = (root / "scripts/ec2/finalize.sh").read_text()
 
     assert "clifft-bench-ec2-results" in placement
-    assert "results/runner-study/ec2" not in placement
-    assert "results/runner-study/ec2" in finalize
-    assert "refusing to overwrite existing result cohort" in finalize
+    assert "results/" not in placement
+    assert "refusing to overwrite existing execution" in finalize

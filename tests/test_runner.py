@@ -103,6 +103,7 @@ def _write_fixture_suite(
         "schema_version": "clifft-bench/run/v1",
         "suite_version": "0.1.0",
         "profile_id": "fixture",
+        "run_id": "fixture",
         "classification": "smoke",
         "seed": 10,
         "workloads_manifest": "workloads.json",

@@ -156,7 +156,8 @@
     "classification": "smoke",
     "finished_at": "2026-08-08T00:00:01Z",
     "id": "00000000-0000-4000-8000-000000000001",
-    "profile_id": "phase1-smoke",
+    "profile_id": "adapter-smoke",
+    "campaign_run_id": "smoke",
     "run_manifest": "manifests/run-smoke.v1.json",
     "schedule_policy": "serial-alternating-forward-reverse",
     "selection": "^msc-d3-smoke-clifft$",
@@ -218,5 +219,5 @@
     }
   },
   "schema_version": "clifft-bench/result/v1",
-  "suite_version": "0.1.0"
+  "suite_version": "0.2.0"
 }

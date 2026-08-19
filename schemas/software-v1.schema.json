@@ -22,7 +22,7 @@
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
           "name": {"type": "string", "minLength": 1},
-          "adapter": {"enum": ["clifft", "symft", "fixture"]},
+          "adapter": {"enum": ["clifft", "symft", "tsim", "fixture"]},
           "distribution": {"type": "string", "minLength": 1},
           "version": {"type": "string", "minLength": 1},
           "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},

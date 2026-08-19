@@ -1,76 +1,57 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if (( $# != 1 )); then
-  echo "usage: $0 COHORT" >&2
-  exit 2
-fi
-
-cohort="$1"
-if [[ ! "$cohort" =~ ^[a-z0-9][a-z0-9._-]{2,63}$ ]]; then
-  echo "error: invalid cohort name" >&2
-  exit 2
-fi
-
 repo_root="$(git rev-parse --show-toplevel)"
+source "$repo_root/scripts/ec2/common.sh"
 cd "$repo_root"
-if [[ ! -x .venv/bin/clifft-bench ]]; then
-  echo "error: run scripts/ec2/bootstrap.sh first" >&2
-  exit 1
+
+if (( $# != 2 )); then
+  echo "usage: $0 CAMPAIGN_ID EXECUTION_ID" >&2
+  exit 2
 fi
+
+campaign_id="$1"
+execution_id="$2"
+validate_identifier "campaign id" "$campaign_id"
+validate_identifier "execution id" "$execution_id"
+campaign_path="$(campaign_manifest "$campaign_id")"
+require_clean_checkout
 
 spool_root="${CLIFFT_BENCH_EC2_SPOOL_ROOT:-$repo_root/../clifft-bench-ec2-results}"
-cohort_dir="$spool_root/$cohort"
+execution_dir="$spool_root/$execution_id"
+[[ -d "$execution_dir" ]] || fail "execution spool does not exist: $execution_dir"
+[[ -f "$execution_dir/campaign-id" ]] || fail "execution spool is missing campaign identity"
+check_campaign="$(< "$execution_dir/campaign-id")"
+[[ "$check_campaign" == "$campaign_id" ]] || fail "execution belongs to $check_campaign"
+
+placements="$(jq -er '.collection.placements' "$campaign_path")"
 raw_paths=()
-for placement in 1 2 3; do
-  placement_dir="$cohort_dir/placement-0$placement"
-  if [[ ! -f "$placement_dir/COMPLETE" ]]; then
-    echo "error: placement $placement is incomplete or missing" >&2
-    exit 1
-  fi
-  shopt -s nullglob
+shopt -s nullglob
+for (( placement = 1; placement <= placements; placement++ )); do
+  placement_dir="$execution_dir/placement-$(printf '%02d' "$placement")"
+  [[ -f "$placement_dir/COMPLETE" ]] || fail "placement $placement is not complete"
   placement_raw=("$placement_dir"/raw/*-raw.json)
-  if (( ${#placement_raw[@]} != 3 )); then
-    echo "error: placement $placement must contain exactly three raw results" >&2
-    exit 1
-  fi
-  boot_count="$(jq -s '[.[].runner.cloud.boot_id] | unique | length' "${placement_raw[@]}")"
-  if [[ "$boot_count" != "1" ]]; then
-    echo "error: placement $placement contains more than one boot ID" >&2
-    exit 1
-  fi
+  (( ${#placement_raw[@]} > 0 )) || fail "placement $placement contains no raw results"
   raw_paths+=("${placement_raw[@]}")
 done
 
-if ! jq -e -s '
-  ([.[].runner.cloud | del(.instance_id, .boot_id)] | unique | length) == 1 and
-  ([.[].runner.cloud.boot_id] | unique | length) == 3 and
-  ([.[].runner.suite_source] | unique | length) == 1 and
-  ([.[].runner.suite_source.dirty] | all(.[]; . == false))
-' "${raw_paths[@]}" >/dev/null; then
-  echo "error: placements do not share one fixed launch and clean source identity" >&2
-  exit 1
-fi
-
-target="$repo_root/results/runner-study/ec2/$cohort"
-if [[ -e "$target" ]]; then
-  echo "error: refusing to overwrite existing result cohort: $target" >&2
-  exit 1
-fi
+target="$repo_root/results/$campaign_id/$execution_id"
+[[ ! -e "$target" ]] || fail "refusing to overwrite existing execution: $target"
 mkdir -p "$(dirname "$target")"
-stage="$(mktemp -d "$(dirname "$target")/.$cohort.XXXXXX")"
+stage="$(mktemp -d "$(dirname "$target")/.$execution_id.XXXXXX")"
 mkdir "$stage/raw"
 cp "${raw_paths[@]}" "$stage/raw/"
 
 staged_raw=("$stage"/raw/*-raw.json)
-.venv/bin/clifft-bench validate "${staged_raw[@]}"
-.venv/bin/clifft-bench analyze-aa "${staged_raw[@]}" \
-  --output-json "$stage/summary.json" \
-  --output-csv "$stage/pairs.csv"
+.venv/bin/clifft-bench finalize \
+  --campaign "$campaign_path" \
+  --execution-id "$execution_id" \
+  --output-dir "$stage" \
+  "${staged_raw[@]}"
 mv "$stage" "$target"
 
-relative="results/runner-study/ec2/$cohort"
-echo "Prepared reviewable cohort: $relative"
+relative="results/$campaign_id/$execution_id"
+echo "Prepared reviewable execution: $relative"
 echo "Review it, then commit with:"
 echo "  git add '$relative'"
-echo "  git commit --no-gpg-sign -m 'data: add EC2 cohort $cohort'"
+echo "  git commit --no-gpg-sign -m 'data: add $campaign_id execution $execution_id'"

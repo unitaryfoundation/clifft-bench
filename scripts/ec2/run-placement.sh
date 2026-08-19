@@ -1,59 +1,47 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$(uname -s)" != "Linux" || "$(uname -m)" != "x86_64" ]]; then
-  echo "error: placement runs require x86-64 Linux" >&2
-  exit 1
-fi
+repo_root="$(git rev-parse --show-toplevel)"
+source "$repo_root/scripts/ec2/common.sh"
+cd "$repo_root"
 
-system_vendor="$(cat /sys/devices/virtual/dmi/id/sys_vendor 2>/dev/null || true)"
-if [[ "$system_vendor" != "Amazon EC2" ]]; then
-  echo "error: refusing to arm the shutdown guard outside Amazon EC2" >&2
-  exit 1
-fi
-
-echo "Arming a three-hour shutdown safety guard."
-sudo shutdown -c >/dev/null 2>&1 || true
-sudo shutdown -h +180
+require_ec2_linux
+arm_shutdown_guard
 
 if (( $# != 6 )); then
-  echo "usage: $0 COHORT PLACEMENT INSTANCE_TYPE AMI_ID REGION AVAILABILITY_ZONE" >&2
+  echo "usage: $0 CAMPAIGN_ID EXECUTION_ID PLACEMENT AMI_ID REGION AVAILABILITY_ZONE" >&2
   exit 2
 fi
 
-cohort="$1"
-placement="$2"
-expected_instance_type="$3"
+campaign_id="$1"
+execution_id="$2"
+placement="$3"
 expected_image_id="$4"
 expected_region="$5"
 expected_zone="$6"
+validate_identifier "campaign id" "$campaign_id"
+validate_identifier "execution id" "$execution_id"
+[[ "$placement" =~ ^[0-9]+$ ]] || fail "placement must be a positive integer"
 
-if [[ ! "$cohort" =~ ^[a-z0-9][a-z0-9._-]{2,63}$ ]]; then
-  echo "error: invalid cohort name" >&2
-  exit 2
-fi
-if [[ ! "$placement" =~ ^[123]$ ]]; then
-  echo "error: placement must be 1, 2, or 3" >&2
-  exit 2
-fi
+campaign_path="$(campaign_manifest "$campaign_id")"
+expected_instance_type="$(jq -er '.reference_host.instance_type' "$campaign_path")"
+placement_count="$(jq -er '.collection.placements' "$campaign_path")"
+replicas="$(jq -er '.collection.replicas_per_placement' "$campaign_path")"
+timeout_minutes="$(jq -er '.collection.run_timeout_minutes' "$campaign_path")"
+(( placement >= 1 && placement <= placement_count )) || \
+  fail "placement must be between 1 and $placement_count"
 
-repo_root="$(git rev-parse --show-toplevel)"
-cd "$repo_root"
-if [[ ! -x .venv/bin/clifft-bench ]]; then
-  echo "error: run scripts/ec2/bootstrap.sh first" >&2
-  exit 1
-fi
-if [[ -n "$(git status --porcelain --untracked-files=all)" ]]; then
-  echo "error: the benchmark checkout must be clean" >&2
-  exit 1
-fi
+[[ -x .venv/bin/clifft-bench ]] || fail "run scripts/ec2/bootstrap.sh $campaign_id first"
+require_clean_checkout
+.venv/bin/clifft-bench validate "$campaign_path"
 
 spool_root="${CLIFFT_BENCH_EC2_SPOOL_ROOT:-$repo_root/../clifft-bench-ec2-results}"
-cohort_dir="$spool_root/$cohort"
-complete_dir="$cohort_dir/placement-0$placement"
-if [[ -e "$complete_dir" ]]; then
-  echo "error: placement $placement is already complete" >&2
-  exit 1
+execution_dir="$spool_root/$execution_id"
+complete_dir="$execution_dir/placement-$(printf '%02d' "$placement")"
+[[ ! -e "$complete_dir" ]] || fail "placement $placement is already complete"
+if [[ -f "$execution_dir/campaign-id" ]]; then
+  [[ "$(< "$execution_dir/campaign-id")" == "$campaign_id" ]] || \
+    fail "execution id already belongs to another campaign"
 fi
 
 token="$(curl --fail --silent --show-error --request PUT \
@@ -77,10 +65,8 @@ check_value() {
   local label="$1"
   local expected="$2"
   local actual="$3"
-  if [[ "$actual" != "$expected" ]]; then
-    echo "error: $label mismatch: expected '$expected', received '$actual'" >&2
-    exit 1
-  fi
+  [[ "$actual" == "$expected" ]] || \
+    fail "$label mismatch: expected '$expected', received '$actual'"
 }
 
 check_value "instance type" "$expected_instance_type" "$instance_type"
@@ -91,27 +77,30 @@ check_value "lifecycle" "on-demand" "$lifecycle"
 
 source_commit="$(git rev-parse HEAD)"
 source_branch="$(git branch --show-current)"
-source_repository="$(git config --get remote.origin.url)"
+source_repository="$(sanitize_remote_url "$(git remote get-url origin)")"
 
 shopt -s nullglob
-existing_raw=("$cohort_dir"/placement-*/raw/*-raw.json)
-if (( ${#existing_raw[@]} > 0 )); then
-  expected_cloud="aws|$instance_type|$image_id|$region|$availability_zone|$lifecycle"
-  for path in "${existing_raw[@]}"; do
-    observed_cloud="$(jq -r \
-      '.runner.cloud | [.provider,.instance_type,.image_id,.region,.availability_zone,.lifecycle] | join("|")' \
-      "$path")"
-    check_value "existing cohort launch configuration" "$expected_cloud" "$observed_cloud"
-    check_value "existing cohort source commit" "$source_commit" \
-      "$(jq -er '.runner.suite_source.commit' "$path")"
-    check_value "existing cohort clean source" "false" \
-      "$(jq -r '.runner.suite_source.dirty' "$path")"
-    if [[ "$(jq -er '.runner.cloud.boot_id' "$path")" == "$boot_id" ]]; then
-      echo "error: this boot ID is already represented; stop/start first" >&2
-      exit 1
-    fi
-  done
-fi
+existing_raw=("$execution_dir"/placement-*/raw/*-raw.json)
+for path in "${existing_raw[@]}"; do
+  check_value "existing execution campaign" "$campaign_id" \
+    "$(jq -er '.run.profile_id' "$path")"
+  check_value "existing execution source commit" "$source_commit" \
+    "$(jq -er '.runner.suite_source.commit' "$path")"
+  check_value "existing execution clean source" "false" \
+    "$(jq -er '.runner.suite_source.dirty' "$path")"
+  check_value "existing execution instance type" "$instance_type" \
+    "$(jq -er '.runner.cloud.instance_type' "$path")"
+  check_value "existing execution AMI" "$image_id" \
+    "$(jq -er '.runner.cloud.image_id' "$path")"
+  check_value "existing execution region" "$region" \
+    "$(jq -er '.runner.cloud.region' "$path")"
+  check_value "existing execution availability zone" "$availability_zone" \
+    "$(jq -er '.runner.cloud.availability_zone' "$path")"
+  check_value "existing execution lifecycle" "$lifecycle" \
+    "$(jq -er '.runner.cloud.lifecycle' "$path")"
+  [[ "$(jq -er '.runner.cloud.boot_id' "$path")" != "$boot_id" ]] || \
+    fail "this boot ID is already represented; stop/start before a new placement"
+done
 
 source /etc/os-release
 export CLIFFT_BENCH_CLOUD_PROVIDER=aws
@@ -125,8 +114,6 @@ export CLIFFT_BENCH_CLOUD_BOOT_ID="$boot_id"
 export CLIFFT_BENCH_RUN_PROVIDER=aws-ec2-manual
 export CLIFFT_BENCH_RUN_REPOSITORY="$source_repository"
 export CLIFFT_BENCH_RUN_WORKFLOW=scripts/ec2/run-placement.sh
-export CLIFFT_BENCH_RUN_ID="$instance_id/$boot_id"
-export CLIFFT_BENCH_RUN_ATTEMPT="$placement"
 export CLIFFT_BENCH_RUN_REF="$source_branch"
 export CLIFFT_BENCH_RUN_SHA="$source_commit"
 export CLIFFT_BENCH_RUNNER_NAME="$instance_id"
@@ -134,30 +121,33 @@ export CLIFFT_BENCH_RUNNER_OS=Linux
 export CLIFFT_BENCH_IMAGE_OS="$ID-$VERSION_ID"
 export CLIFFT_BENCH_IMAGE_VERSION="$image_id"
 
-work_dir="$cohort_dir/.incomplete-p0$placement-${boot_id:0:8}"
-if [[ -e "$work_dir" ]]; then
-  echo "error: incomplete placement directory already exists: $work_dir" >&2
-  exit 1
-fi
+while IFS=$'\t' read -r variable environment_id; do
+  environment_python="$repo_root/.campaign-envs/$campaign_id/$environment_id/bin/python"
+  [[ -x "$environment_python" ]] || fail "missing environment $environment_id; bootstrap again"
+  export "$variable=$environment_python"
+done < <(jq -r '.environments[] | [.python_executable_env,.id] | @tsv' "$campaign_path")
+
+work_dir="$execution_dir/.incomplete-p$(printf '%02d' "$placement")-${boot_id:0:8}"
+[[ ! -e "$work_dir" ]] || fail "incomplete placement directory already exists: $work_dir"
 mkdir -p "$work_dir/raw"
+mkdir -p "$execution_dir"
+printf '%s\n' "$campaign_id" > "$execution_dir/campaign-id"
 
-raw_paths=()
-for replica in 1 2 3; do
-  output="$work_dir/raw/ec2-aa-p0$placement-r0$replica-raw.json"
-  timeout --signal=TERM 45m .venv/bin/clifft-bench run \
-    --run-manifest manifests/run-runner-aa.v1.json \
-    --min-sample-seconds 30 \
-    --repetitions 6 \
-    --output "$output"
-  .venv/bin/clifft-bench validate "$output"
-  raw_paths+=("$output")
-done
+while IFS=$'\t' read -r run_id manifest_relative; do
+  run_manifest="$(dirname "$campaign_path")/$manifest_relative"
+  for (( replica = 1; replica <= replicas; replica++ )); do
+    label="${run_id}-p$(printf '%02d' "$placement")-r$(printf '%02d' "$replica")"
+    output="$work_dir/raw/$label-raw.json"
+    export CLIFFT_BENCH_RUN_ID="$execution_id/$label"
+    export CLIFFT_BENCH_RUN_ATTEMPT="$placement.$replica"
+    echo "Running $label"
+    timeout --signal=TERM "${timeout_minutes}m" .venv/bin/clifft-bench run \
+      --run-manifest "$run_manifest" \
+      --output "$output"
+    .venv/bin/clifft-bench validate "$output"
+  done
+done < <(jq -r '.runs[] | [.id,.run_manifest] | @tsv' "$campaign_path")
 
-.venv/bin/clifft-bench analyze-aa "${raw_paths[@]}" \
-  --output-json "$work_dir/summary.json" \
-  --output-csv "$work_dir/pairs.csv"
-date -u +"Completed %Y-%m-%dT%H:%M:%SZ" > "$work_dir/COMPLETE"
+touch "$work_dir/COMPLETE"
 mv "$work_dir" "$complete_dir"
-
-echo "Placement complete: $complete_dir"
-echo "Stop the instance from the EC2 console before the next placement."
+echo "Completed $campaign_id placement $placement at $complete_dir"

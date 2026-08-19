@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unitaryfoundation.github.io/clifft-bench/schemas/execution-v1.schema.json",
+  "title": "clifft-bench finalized execution index v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "execution_id", "campaign_id", "hardware_epoch",
+    "campaign_manifest", "run_manifests", "created_at", "source", "cloud",
+    "placements", "derived"
+  ],
+  "properties": {
+    "schema_version": {"const": "clifft-bench/execution/v1"},
+    "execution_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "campaign_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "hardware_epoch": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "campaign_manifest": {"type": "string", "minLength": 1},
+    "run_manifests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "dirty": {"const": false}
+      }
+    },
+    "cloud": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider", "instance_type", "image_id", "region", "availability_zone", "lifecycle"
+      ],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1},
+        "instance_type": {"type": "string", "minLength": 1},
+        "image_id": {"type": "string", "minLength": 1},
+        "region": {"type": "string", "minLength": 1},
+        "availability_zone": {"type": "string", "minLength": 1},
+        "lifecycle": {"type": "string", "minLength": 1}
+      }
+    },
+    "placements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["number", "boot_id", "instance_id", "raw_results"],
+        "properties": {
+          "number": {"type": "integer", "minimum": 1},
+          "boot_id": {"type": "string", "minLength": 1},
+          "instance_id": {"type": "string", "minLength": 1},
+          "raw_results": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["samples", "cases", "comparisons", "summary"],
+      "properties": {
+        "samples": {"const": "samples.csv"},
+        "cases": {"const": "cases.csv"},
+        "comparisons": {"const": "comparisons.csv"},
+        "summary": {"const": "summary.json"}
+      }
+    }
+  }
+}

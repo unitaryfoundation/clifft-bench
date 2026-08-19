@@ -269,6 +269,7 @@ def run_suite(
         "run": {
             "id": str(uuid.uuid4()),
             "profile_id": suite.run["profile_id"],
+            "campaign_run_id": suite.run["run_id"],
             "classification": suite.run["classification"],
             "started_at": started_at,
             "finished_at": None,

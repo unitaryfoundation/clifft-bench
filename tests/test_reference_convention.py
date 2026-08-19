@@ -42,7 +42,7 @@ def _prepare(
     )
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "tsim"])
 def test_detector_postselection_uses_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
@@ -62,7 +62,7 @@ def test_detector_postselection_uses_raw_record_parity(
     assert counts.logical_errors == 0
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "tsim"])
 def test_logical_errors_use_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:

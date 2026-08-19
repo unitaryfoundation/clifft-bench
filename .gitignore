@@ -1,6 +1,7 @@
 .DS_Store
 
 .venv/
+.campaign-envs/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/

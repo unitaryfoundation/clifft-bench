@@ -1,23 +1,149 @@
 {
   "schema_version": "clifft-bench/software/v1",
-  "suite_version": "0.1.0",
+  "suite_version": "0.2.0",
   "implementations": [
     {
-      "id": "clifft-v0.7.0",
-      "name": "clifft",
+      "id": "clifft-0.1.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.1.0",
+      "commit_sha": "427a499a4fd835d5a6324f4b1fbcd906c28639a1",
+      "commit_datetime": "2026-04-16T16:03:20Z",
+      "release_datetime": "2026-04-16T16:12:43Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_1_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.2.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.2.0",
+      "commit_sha": "3947f4634cab191b4e36fd10a91818a916ac5ea3",
+      "commit_datetime": "2026-05-01T13:55:57Z",
+      "release_datetime": "2026-05-01T14:03:20Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_2_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.3.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.3.0",
+      "commit_sha": "7dc0a263b3d79fecef20e29de36fca0adc25b3c8",
+      "commit_datetime": "2026-05-08T13:51:11Z",
+      "release_datetime": "2026-05-08T14:09:29Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_3_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.4.1",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.4.1",
+      "commit_sha": "85c23f5c76eb87e7add254641dd18ef38e914f22",
+      "commit_datetime": "2026-05-19T15:18:30Z",
+      "release_datetime": "2026-05-19T15:34:17Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_4_1_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.5.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.5.0",
+      "commit_sha": "ba0edee7e6971df55939c52af8d9892932d279a7",
+      "commit_datetime": "2026-06-15T13:02:47Z",
+      "release_datetime": "2026-06-15T13:22:20Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_5_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.6.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.6.0",
+      "commit_sha": "a65a7e7d1078280e453c81feaad4babe3e2d32c2",
+      "commit_datetime": "2026-07-14T22:10:01Z",
+      "release_datetime": "2026-07-14T22:18:37Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_6_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.7.0",
+      "name": "Clifft",
       "adapter": "clifft",
       "distribution": "clifft",
       "version": "0.7.0",
       "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
       "commit_datetime": "2026-07-31T15:10:55Z",
-      "release_datetime": "2026-07-31T15:28:45.643981Z",
+      "release_datetime": "2026-07-31T15:29:02Z",
       "source_url": "https://github.com/unitaryfoundation/clifft",
       "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_PYTHON",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_7_0_PYTHON",
       "build": {
         "precision": "complex-fp64",
         "compiler_flags": [],
-        "features": ["CPU-only", "runtime CPU baseline recorded by adapter"]
+        "features": ["CPU-only", "PyPI release wheel"]
+      }
+    },
+    {
+      "id": "clifft-0.8.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.8.0",
+      "commit_sha": "859272faaea971d4599b3c8e323dcb79079aa8ac",
+      "commit_datetime": "2026-08-18T20:08:55Z",
+      "release_datetime": "2026-08-18T20:17:52Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_8_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "symbolic-coordinate sampler", "PyPI release wheel"]
       }
     },
     {
@@ -31,11 +157,31 @@
       "release_datetime": null,
       "source_url": "https://github.com/haoliri0/SymFT_Test",
       "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_SYMFT_PYTHON",
+      "python_executable_env": "CLIFFT_BENCH_SYMFT_9EC5790_PYTHON",
       "build": {
         "precision": "complex-fp64",
         "compiler_flags": ["SYMFT_PY_NATIVE=1"],
         "features": ["CPU-only", "runtime-dispatched SIMD", "CUDA disabled"]
+      }
+    },
+    {
+      "id": "tsim-0.1.5",
+      "name": "Tsim",
+      "adapter": "tsim",
+      "distribution": "bloqade-tsim",
+      "version": "0.1.5",
+      "commit_sha": "c001c1a815f3a7e790a53f7f8ed189ab5a3e19b0",
+      "commit_datetime": "2026-07-21T22:14:47Z",
+      "release_datetime": "2026-07-21T22:17:23Z",
+      "source_url": "https://github.com/QuEraComputing/tsim",
+      "dependency_distributions": [
+        "bloqade-tsim", "jax", "jaxlib", "numpy", "pyzx-param", "stim"
+      ],
+      "python_executable_env": "CLIFFT_BENCH_TSIM_0_1_5_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": ["CPU-only", "JAX x64", "cat5 decomposition"]
       }
     }
   ]
