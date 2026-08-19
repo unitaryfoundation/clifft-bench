@@ -1,13 +1,21 @@
 from __future__ import annotations
 
+import sys
+
 import pytest
 
+from clifft_bench import system
 from clifft_bench.system import (
     CLOUD_METADATA_ENVIRONMENT,
     RUN_PROVENANCE_ENVIRONMENT,
     collect_cloud_metadata,
     collect_workflow_metadata,
 )
+
+
+def test_run_text_distinguishes_empty_success_from_failure() -> None:
+    assert system._run_text([sys.executable, "-c", "pass"]) == ""
+    assert system._run_text(["command-that-does-not-exist-clifft-bench"]) is None
 
 
 def test_cloud_metadata_is_absent_without_an_external_launcher(monkeypatch) -> None:

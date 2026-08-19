@@ -109,8 +109,7 @@ def _run_text(command: list[str], cwd: Path | None = None) -> str | None:
         )
     except (OSError, subprocess.SubprocessError):
         return None
-    value = result.stdout.strip()
-    return value or None
+    return result.stdout.strip()
 
 
 def _cpu_model() -> str:
