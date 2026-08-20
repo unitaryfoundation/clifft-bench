@@ -61,6 +61,11 @@ Inspect the declared number of placements before starting:
 jq '.collection' "campaigns/$CLIFFT_BENCH_CAMPAIGN/campaign.v1.json"
 ```
 
+The current-tools campaign gives each Tsim setup or request five minutes and
+caps each complete tool run at 90 minutes. A Tsim timeout is retained as a
+structured result: the campaign does not spend unbounded EC2 time trying to
+turn an impractical circuit into a throughput number.
+
 ## 4. Collect a placement
 
 Choose a unique execution ID and substitute the exact launch values:
@@ -79,8 +84,10 @@ export CLIFFT_BENCH_EXECUTION=current-tools-v1-202608
 Run inside `tmux` if the SSH connection may close. The collector executes each
 campaign run and replica serially, pins every worker to one logical CPU, and
 spools completed raw files under `~/clifft-bench-ec2-results/`. A failed case
-or timeout leaves an `.incomplete-*` directory for diagnosis and is never
-silently omitted from a completed placement.
+or worker timeout remains in its schema-valid raw result and does not prevent
+the other cases from running. A launcher-level timeout, interruption, or
+invalid result leaves an `.incomplete-*` directory for diagnosis and is never
+silently promoted to a completed placement.
 
 When the command succeeds, stop the instance in the console. For a campaign
 with additional placements, start the same EBS-backed instance again and run

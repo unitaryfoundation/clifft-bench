@@ -7,8 +7,10 @@ import uuid
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from clifft_bench.manifest import Campaign
-from clifft_bench.results import finalize_execution
+from clifft_bench.results import _comparison_rows, finalize_execution
 from clifft_bench.schema import repository_root, validate_path
 
 
@@ -33,6 +35,11 @@ def _result(tmp_path: Path, *, run_id: str, case_id: str, rate: float) -> Path:
     case = document["cases"][0]
     case["case_id"] = case_id
     case["simulator"]["implementation_id"] = run_id
+    if run_id == "candidate":
+        case["execution"]["batch_enabled"] = True
+        case["execution"]["batch_size"] = 32
+        case["execution"]["batch_size_effective"] = 32
+        case["execution"]["shots_per_call"] = 64
     case["samples"][0]["throughput_attempted_shots_per_second"] = rate
     case["summary"]["median_attempted_shots_per_second"] = rate
     case["summary"]["min_attempted_shots_per_second"] = rate
@@ -95,3 +102,39 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
         comparisons = list(csv.DictReader(stream))
     assert len(comparisons) == 1
     assert float(comparisons[0]["ratio_candidate_over_baseline"]) == 1.25
+    assert comparisons[0]["baseline_batch_enabled"] == "false"
+    assert comparisons[0]["candidate_batch_enabled"] == "true"
+    assert comparisons[0]["candidate_batch_size_effective"] == "32"
+    assert comparisons[0]["candidate_shots_per_call"] == "64"
+
+
+def test_comparison_rejects_multiple_successful_cases_for_one_run_and_workload() -> None:
+    campaign = Campaign(
+        path=repository_root() / "campaigns/current-tools-v1/campaign.v1.json",
+        document={
+            "id": "test-campaign",
+            "hardware_epoch": "test-epoch",
+            "collection": {"placements": 1, "replicas_per_placement": 1},
+            "comparisons": [
+                {
+                    "id": "candidate-vs-baseline",
+                    "baseline_run": "baseline",
+                    "candidate_runs": ["candidate"],
+                }
+            ],
+        },
+        suites=(),
+    )
+    rows = [
+        {
+            "status": "success",
+            "campaign_run_id": run_id,
+            "placement": 1,
+            "replica": 1,
+            "workload_id": "workload",
+        }
+        for run_id in ["baseline", "baseline", "candidate"]
+    ]
+
+    with pytest.raises(ValueError, match="multiple successful baseline cases"):
+        _comparison_rows(campaign, "execution", rows)

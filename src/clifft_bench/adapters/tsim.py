@@ -70,6 +70,11 @@ class TsimAdapter(Adapter):
         import numpy as np
         import tsim
 
+        if not bool(jax.config.x64_enabled):
+            raise RuntimeError(
+                "Tsim benchmarks require JAX x64; set JAX_ENABLE_X64=true before startup"
+            )
+
         circuit = tsim.Circuit(artifact_path.read_text())
         sampler = circuit.compile_detector_sampler(strategy="cat5", seed=0)
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
@@ -91,7 +96,7 @@ class TsimAdapter(Adapter):
             "num_observables": int(circuit.num_observables),
             "decomposition_strategy": "cat5",
             "jax_backend": str(jax.default_backend()),
-            "jax_x64_enabled": bool(jax.config.x64_enabled),
+            "jax_x64_enabled": True,
             "seed_semantics": "fixed prepared stream advanced across calls",
         }
         return _PreparedTsim(

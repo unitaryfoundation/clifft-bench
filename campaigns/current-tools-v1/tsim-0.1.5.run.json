@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.0",
+  "suite_version": "0.2.1",
   "profile_id": "current-tools-v1",
   "run_id": "tsim-0.1.5",
   "classification": "official",
@@ -13,8 +13,8 @@
     "threads_per_case": 1
   },
   "measurement": {
-    "setup_timeout_seconds": 1800,
-    "request_timeout_seconds": 1800,
+    "setup_timeout_seconds": 300,
+    "request_timeout_seconds": 300,
     "warmup_shots": 1,
     "correctness_shots": 8,
     "min_sample_seconds": 30,

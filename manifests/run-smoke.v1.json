@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.0",
+  "suite_version": "0.2.1",
   "profile_id": "adapter-smoke",
   "run_id": "smoke",
   "classification": "smoke",

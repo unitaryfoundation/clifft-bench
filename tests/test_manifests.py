@@ -40,6 +40,7 @@ def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
 def test_checked_in_campaigns_resolve_all_runs(campaign_id: str) -> None:
     campaign = load_campaign(ROOT / "campaigns" / campaign_id / "campaign.v1.json")
     assert campaign.suites
+    assert all(environment["import_modules"] for environment in campaign.document["environments"])
     assert {suite.run["run_id"] for suite in campaign.suites} == {
         run["id"] for run in campaign.document["runs"]
     }

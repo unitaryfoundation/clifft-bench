@@ -32,7 +32,9 @@ facts absent from the raw results or campaign manifest.
 - `cases.csv` contains one row per case in each raw result, including failures
   and the per-result median/MAD summary.
 - `comparisons.csv` joins campaign-declared baseline and candidate runs within
-  the same placement and replica, using each result's sample median.
+  the same placement and replica, using each result's sample median. It carries
+  both sides' mode, batching, and shots-per-call configuration so cross-mode
+  throughput comparisons cannot be mistaken for equal call granularity.
 - `summary.json` provides compact case and comparison distributions for review.
 
 All tables carry `campaign_id`, `hardware_epoch`, placement, replica, workload,

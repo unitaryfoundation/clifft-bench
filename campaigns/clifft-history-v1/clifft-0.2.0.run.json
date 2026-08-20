@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.0",
+  "suite_version": "0.2.1",
   "profile_id": "clifft-history-v1",
   "run_id": "clifft-0.2.0",
   "classification": "official",

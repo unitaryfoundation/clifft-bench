@@ -5,6 +5,9 @@ repo_root="$(git rev-parse --show-toplevel)"
 source "$repo_root/scripts/ec2/common.sh"
 cd "$repo_root"
 
+require_ec2_linux
+arm_shutdown_guard
+
 if (( $# != 2 )); then
   echo "usage: $0 CAMPAIGN_ID EXECUTION_ID" >&2
   exit 2
