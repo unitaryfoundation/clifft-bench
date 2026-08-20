@@ -8,6 +8,7 @@ import signal
 import sys
 import time
 import traceback
+from collections import defaultdict
 from contextlib import contextmanager, redirect_stdout
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
@@ -77,13 +78,18 @@ def aggregate_sample(
     min_seconds: float,
     seed: int,
     postselect: bool,
+    max_api_calls: int,
 ) -> dict[str, Any]:
     total = Counts(0, 0, 0, 0)
     calls = 0
     elapsed = 0.0
-    adapter_timings: list[dict[str, float]] = []
+    adapter_timing_totals: dict[str, float] = defaultdict(float)
     started_at = utc_now()
     while calls == 0 or elapsed < min_seconds:
+        if calls >= max_api_calls:
+            raise RuntimeError(
+                f"sample exceeded its non-overlapping seed range of {max_api_calls} calls"
+            )
         counts, duration = timed_sample(prepared, shots_per_call, seed + calls)
         errors = validate_counts(counts, postselect=postselect)
         if errors:
@@ -95,7 +101,8 @@ def aggregate_sample(
             total.logical_errors + counts.logical_errors,
         )
         if counts.adapter_timing:
-            adapter_timings.append(counts.adapter_timing)
+            for key, value in counts.adapter_timing.items():
+                adapter_timing_totals[key] += float(value)
         elapsed += duration
         calls += 1
     return {
@@ -106,7 +113,8 @@ def aggregate_sample(
         "throughput_attempted_shots_per_second": total.attempted_shots / elapsed,
         "seed_first": seed,
         "seed_last": seed + calls - 1,
-        "adapter_call_timings": adapter_timings,
+        "adapter_call_timings": [],
+        "adapter_timing_totals": dict(sorted(adapter_timing_totals.items())),
     }
 
 
@@ -194,6 +202,7 @@ def main() -> int:
                             min_seconds=float(request["min_seconds"]),
                             seed=int(request["seed"]),
                             postselect=bool(workload["semantics"]["postselect_all_detectors"]),
+                            max_api_calls=int(request["max_api_calls"]),
                         ),
                     }
                 )

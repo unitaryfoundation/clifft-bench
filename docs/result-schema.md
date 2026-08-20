@@ -12,6 +12,11 @@ robust summary. The effective request deadline is recorded with the execution
 configuration. Error cases preserve their exact failure phase and message
 without fabricating throughput.
 
+Per-call adapter timing dictionaries are summed into
+`adapter_timing_totals` for each sample. The legacy `adapter_call_timings`
+array remains empty for result-v1 compatibility, preventing fast single-shot
+loops from producing unbounded raw files.
+
 When an external launcher supplies a complete cloud identity, the runner
 snapshot also records provider, instance and image IDs, instance type,
 region/AZ, lifecycle, and Linux boot ID. The benchmark harness never contacts a

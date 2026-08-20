@@ -35,6 +35,7 @@
         {
           "accepted_shots": 7732,
           "adapter_call_timings": [],
+          "adapter_timing_totals": {},
           "api_calls": 175,
           "attempted_shots": 11200,
           "discarded_shots": 3468,
@@ -219,5 +220,5 @@
     }
   },
   "schema_version": "clifft-bench/result/v1",
-  "suite_version": "0.2.0"
+  "suite_version": "0.2.1"
 }

@@ -6,9 +6,12 @@ For the same versioned circuit and output contract, how many independent
 attempted shots per second can a pinned simulator execute in steady state on one
 logical CPU, and how much do repeated paired measurements vary?
 
-This question is narrower than "which simulator is best." Results are only
-comparable when workload semantics, batch configuration, precision, thread and
-affinity policy, runner identity, and timed boundaries agree.
+This question is narrower than "which simulator is best." Like-for-like
+results require matching workload semantics, precision, thread and affinity
+policy, runner identity, timed boundaries, and call/batch configuration.
+Campaigns may also declare end-to-end comparisons between differently labeled
+call/batch modes, but those answer a configured-throughput question rather than
+an equal-granularity one.
 
 ## Logical work and output
 
@@ -90,12 +93,18 @@ repetitions therefore produce `A/B/B/A`.
 
 The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
 `seed`, and execution repetition `r` begins at
-`seed + 10_000 + r * 1_000_000`; repeated public calls increment that value by
-one. These non-overlapping ranges keep every phase deterministic without
-reusing a stream identifier for adapters that expose per-call streams. Tsim
+`seed + 10_000 + r * 1_000_000_000`; repeated public calls increment that value
+by one. The worker enforces the billion-call stride before a stream identifier
+can overlap the following repetition. These non-overlapping ranges keep every
+phase deterministic for adapters that expose per-call streams. Tsim
 0.1.5 instead accepts a seed when its sampler is prepared and advances that
 prepared stream across calls. Its adapter fixes that seed and records the
 different stream semantics in runtime metadata.
+
+These fixed streams exist only to make performance runs replayable and
+auditable. They are not a seeding recommendation for scientific simulation or
+statistical inference, where independent seeds should be drawn from operating-
+system entropy backed by hardware entropy when available.
 
 ## Batching
 
@@ -108,6 +117,10 @@ Clifft exposes no internal shot-batch choice in this API, so its batch size is
 1. SymFT and Tsim batch sizes are explicit manifest values, never hidden
 automatic choices. A large-batch throughput result is not a single-circuit
 latency result.
+Cross-mode tool comparisons are intentional end-to-end configuration
+comparisons, not claims of equal public-call granularity. Derived comparison
+rows therefore carry both sides' mode, effective batch size, and shots per
+call; reports and plots must display those dimensions.
 SymFT uses native batch size 0 as a disabled sentinel on its single backend; the
 harness records the effective logical batch size as 1 in that mode.
 The Quantum Volume cases therefore request one shot per call with batching

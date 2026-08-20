@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/software/v1",
-  "suite_version": "0.2.0",
+  "suite_version": "0.2.1",
   "implementations": [
     {
       "id": "clifft-0.1.0",

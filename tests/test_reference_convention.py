@@ -5,6 +5,8 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
+from clifft_bench.manifest import Case, Implementation, Workload
+from clifft_bench.runner import WorkerClient
 
 
 def _prepare(
@@ -80,3 +82,59 @@ def test_logical_errors_use_raw_record_parity(
     assert counts.accepted_shots == 32
     assert counts.discarded_shots == 0
     assert counts.logical_errors == 32
+
+
+def test_tsim_runs_through_the_isolated_worker_with_x64(tmp_path: Path) -> None:
+    pytest.importorskip("tsim")
+    artifact_path = tmp_path / "tsim-worker.stim"
+    artifact_path.write_text("X 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    workload = Workload(
+        definition={
+            "semantics": {
+                "observable_index": 0,
+                "postselect_all_detectors": False,
+                "reference_convention": "raw-record-parity",
+            }
+        },
+        artifact_path=artifact_path,
+        artifact_sha256="0" * 64,
+    )
+    implementation = Implementation(
+        {
+            "adapter": "tsim",
+            "version": "0.1.5",
+            "dependency_distributions": ["bloqade-tsim", "jax", "jaxlib", "numpy"],
+        }
+    )
+    case = Case(
+        definition={
+            "execution": {
+                "batch_enabled": True,
+                "batch_size": 32,
+                "sample_chunk_shots": 0,
+            }
+        },
+        workload=workload,
+        implementation=implementation,
+    )
+    client = WorkerClient(case, cpu=None)
+    try:
+        setup = client.prepare(timeout_seconds=60)
+        sample = client.request(
+            {
+                "command": "sample",
+                "shots_per_call": 32,
+                "min_seconds": 0.001,
+                "seed": 7,
+                "max_api_calls": 1_000,
+            },
+            timeout_seconds=60,
+        )
+    finally:
+        client.close()
+
+    assert setup["runtime_metadata"]["jax_x64_enabled"] is True
+    assert setup["runtime_metadata"]["precision"] == "complex-fp64"
+    assert sample["attempted_shots"] >= 32
+    assert sample["accepted_shots"] == sample["attempted_shots"]
+    assert sample["logical_errors"] == sample["attempted_shots"]

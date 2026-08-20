@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/workloads/v1",
-  "suite_version": "0.2.0",
+  "suite_version": "0.2.1",
   "workloads": [
     {
       "id": "msc-d3-inject-cultivate-p1e-3",

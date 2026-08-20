@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 
 from clifft_bench.manifest import load_suite
-from clifft_bench.runner import run_suite
+from clifft_bench.runner import SEED_REPETITION_STRIDE, run_suite
 from clifft_bench.schema import validate_document
 
 
@@ -139,6 +139,11 @@ def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> 
     ]
     assert sequences == [[0, 3], [1, 2]]
     assert all(case["correctness"]["status"] == "passed" for case in result["cases"])
+    for case in result["cases"]:
+        samples = sorted(case["samples"], key=lambda sample: sample["repetition"])
+        assert samples[1]["seed_first"] - samples[0]["seed_first"] == (
+            SEED_REPETITION_STRIDE
+        )
 
     bad_software = json.loads(json.dumps(software))
     for implementation in bad_software["implementations"]:

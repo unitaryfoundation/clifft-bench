@@ -239,6 +239,10 @@
                   "seed_first": {"type": "integer", "minimum": 0},
                   "seed_last": {"type": "integer", "minimum": 0},
                   "adapter_call_timings": {"type": "array", "items": {"type": "object"}},
+                  "adapter_timing_totals": {
+                    "type": "object",
+                    "additionalProperties": {"type": "number", "minimum": 0}
+                  },
                   "repetition": {"type": "integer", "minimum": 0},
                   "sequence_index": {"type": "integer", "minimum": 0}
                 }

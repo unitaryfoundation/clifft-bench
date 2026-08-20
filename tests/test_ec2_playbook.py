@@ -17,11 +17,14 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "require_clean_checkout" in bootstrap
     assert '"${VERSION_ID:-}" == "24.04"' in bootstrap
     assert ".environments[]" in bootstrap
+    assert "pip install --no-deps" in bootstrap
     assert ".runs[]" in placement
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement
     assert "clifft-bench finalize" in finalize
+    assert "arm_shutdown_guard" in finalize
     assert "results/$campaign_id/$execution_id" in finalize
+    assert "run_status == 1" in placement
     assert "runner-study" not in bootstrap + placement + finalize
 
 

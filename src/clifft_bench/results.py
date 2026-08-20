@@ -104,10 +104,18 @@ COMPARISON_FIELDS = [
     "baseline_result_id",
     "baseline_case_id",
     "baseline_implementation_id",
+    "baseline_mode",
+    "baseline_batch_enabled",
+    "baseline_batch_size_effective",
+    "baseline_shots_per_call",
     "candidate_run_id",
     "candidate_result_id",
     "candidate_case_id",
     "candidate_implementation_id",
+    "candidate_mode",
+    "candidate_batch_enabled",
+    "candidate_batch_size_effective",
+    "candidate_shots_per_call",
     "statistic",
     "baseline_rate",
     "candidate_rate",
@@ -264,52 +272,72 @@ def _comparison_rows(
                         candidate_rows = indexed.get(
                             (str(candidate_run), placement, replica, workload_id), []
                         )
-                        if len(baseline_rows) != 1:
+                        if len(baseline_rows) > 1:
+                            raise ValueError(
+                                f"comparison {comparison['id']!r} found multiple successful "
+                                f"baseline cases for {baseline_run!r}/{workload_id!r}"
+                            )
+                        if len(candidate_rows) > 1:
+                            raise ValueError(
+                                f"comparison {comparison['id']!r} found multiple successful "
+                                f"candidate cases for {candidate_run!r}/{workload_id!r}"
+                            )
+                        if not baseline_rows or not candidate_rows:
                             continue
                         baseline = baseline_rows[0]
+                        candidate = candidate_rows[0]
                         baseline_rate = float(
                             baseline["median_attempted_shots_per_second"]
                         )
-                        for candidate in candidate_rows:
-                            candidate_rate = float(
-                                candidate["median_attempted_shots_per_second"]
-                            )
-                            comparisons.append(
-                                {
-                                    "execution_id": execution_id,
-                                    "campaign_id": campaign.id,
-                                    "hardware_epoch": campaign.document[
-                                        "hardware_epoch"
-                                    ],
-                                    "placement": placement,
-                                    "replica": replica,
-                                    "comparison_id": comparison["id"],
-                                    "workload_id": workload_id,
-                                    "baseline_run_id": baseline_run,
-                                    "baseline_result_id": baseline["result_id"],
-                                    "baseline_case_id": baseline["case_id"],
-                                    "baseline_implementation_id": baseline[
-                                        "implementation_id"
-                                    ],
-                                    "candidate_run_id": candidate_run,
-                                    "candidate_result_id": candidate["result_id"],
-                                    "candidate_case_id": candidate["case_id"],
-                                    "candidate_implementation_id": candidate[
-                                        "implementation_id"
-                                    ],
-                                    "statistic": "result-sample-median",
-                                    "baseline_rate": baseline_rate,
-                                    "candidate_rate": candidate_rate,
-                                    "ratio_candidate_over_baseline": (
-                                        candidate_rate / baseline_rate
-                                    ),
-                                    "symmetric_delta_percent": (
-                                        200
-                                        * abs(candidate_rate - baseline_rate)
-                                        / (candidate_rate + baseline_rate)
-                                    ),
-                                }
-                            )
+                        candidate_rate = float(
+                            candidate["median_attempted_shots_per_second"]
+                        )
+                        comparisons.append(
+                            {
+                                "execution_id": execution_id,
+                                "campaign_id": campaign.id,
+                                "hardware_epoch": campaign.document["hardware_epoch"],
+                                "placement": placement,
+                                "replica": replica,
+                                "comparison_id": comparison["id"],
+                                "workload_id": workload_id,
+                                "baseline_run_id": baseline_run,
+                                "baseline_result_id": baseline["result_id"],
+                                "baseline_case_id": baseline["case_id"],
+                                "baseline_implementation_id": baseline[
+                                    "implementation_id"
+                                ],
+                                "baseline_mode": baseline["mode"],
+                                "baseline_batch_enabled": baseline["batch_enabled"],
+                                "baseline_batch_size_effective": baseline[
+                                    "batch_size_effective"
+                                ],
+                                "baseline_shots_per_call": baseline["shots_per_call"],
+                                "candidate_run_id": candidate_run,
+                                "candidate_result_id": candidate["result_id"],
+                                "candidate_case_id": candidate["case_id"],
+                                "candidate_implementation_id": candidate[
+                                    "implementation_id"
+                                ],
+                                "candidate_mode": candidate["mode"],
+                                "candidate_batch_enabled": candidate["batch_enabled"],
+                                "candidate_batch_size_effective": candidate[
+                                    "batch_size_effective"
+                                ],
+                                "candidate_shots_per_call": candidate["shots_per_call"],
+                                "statistic": "result-sample-median",
+                                "baseline_rate": baseline_rate,
+                                "candidate_rate": candidate_rate,
+                                "ratio_candidate_over_baseline": (
+                                    candidate_rate / baseline_rate
+                                ),
+                                "symmetric_delta_percent": (
+                                    200
+                                    * abs(candidate_rate - baseline_rate)
+                                    / (candidate_rate + baseline_rate)
+                                ),
+                            }
+                        )
     return comparisons
 
 

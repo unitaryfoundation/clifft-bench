@@ -24,6 +24,8 @@ from clifft_bench.system import (
     utc_now,
 )
 
+SEED_REPETITION_STRIDE = 1_000_000_000
+
 
 class WorkerError(RuntimeError):
     def __init__(self, error: dict[str, Any]) -> None:
@@ -384,7 +386,8 @@ def run_suite(
                                 "min_seconds": measurement["min_sample_seconds"],
                                 "seed": suite.run["seed"]
                                 + 10_000
-                                + scheduled.repetition * 1_000_000,
+                                + scheduled.repetition * SEED_REPETITION_STRIDE,
+                                "max_api_calls": SEED_REPETITION_STRIDE,
                             },
                             timeout_seconds=request_timeout,
                         )

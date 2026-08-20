@@ -52,7 +52,7 @@ while IFS=$'\t' read -r environment_id requirements_relative; do
       "$campaign_path"
   )
   env "${install_environment[@]}" \
-    "$environment_path/bin/python" -m pip install -r "$requirements_path"
+    "$environment_path/bin/python" -m pip install --no-deps -r "$requirements_path"
 done < <(jq -r '.environments[] | [.id,.requirements] | @tsv' "$campaign_path")
 
 echo

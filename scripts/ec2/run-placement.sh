@@ -141,10 +141,19 @@ while IFS=$'\t' read -r run_id manifest_relative; do
     export CLIFFT_BENCH_RUN_ID="$execution_id/$label"
     export CLIFFT_BENCH_RUN_ATTEMPT="$placement.$replica"
     echo "Running $label"
+    set +e
     timeout --signal=TERM "${timeout_minutes}m" .venv/bin/clifft-bench run \
       --run-manifest "$run_manifest" \
       --output "$output"
+    run_status=$?
+    set -e
+    if (( run_status != 0 && run_status != 1 )); then
+      fail "$label terminated without a complete structured result (exit $run_status)"
+    fi
     .venv/bin/clifft-bench validate "$output"
+    if (( run_status == 1 )); then
+      echo "Recorded one or more structured case failures in $label; continuing."
+    fi
   done
 done < <(jq -r '.runs[] | [.id,.run_manifest] | @tsv' "$campaign_path")
 
