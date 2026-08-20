@@ -93,10 +93,12 @@ repetitions therefore produce `A/B/B/A`.
 
 The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
 `seed`, and execution repetition `r` begins at
-`seed + 10_000 + r * 1_000_000_000`; repeated public calls increment that value
-by one. The worker enforces the billion-call stride before a stream identifier
-can overlap the following repetition. These non-overlapping ranges keep every
-phase deterministic for adapters that expose per-call streams. Tsim
+`seed + 10_000 + r * 100_000_000`; repeated public calls increment that value
+by one. The worker enforces the 100-million-call stride before a stream
+identifier can overlap the following repetition, and the harness rejects
+repetition counts whose reserved ranges exceed the unsigned 32-bit seed space.
+These non-overlapping ranges keep every phase deterministic for adapters that
+expose per-call streams. Tsim
 0.1.5 instead accepts a seed when its sampler is prepared and advances that
 prepared stream across calls. Its adapter fixes that seed and records the
 different stream semantics in runtime metadata.

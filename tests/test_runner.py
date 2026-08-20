@@ -191,3 +191,12 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
             output_path=tmp_path / "invalid-timeout.json",
             min_sample_seconds=5,
         )
+
+
+def test_repetition_seed_ranges_must_fit_unsigned_32_bit_space(tmp_path: Path) -> None:
+    run_path, run, _ = _write_fixture_suite(tmp_path)
+    run["measurement"]["repetitions"] = 50
+    _write(run_path, run)
+
+    with pytest.raises(ValueError, match="unsigned 32-bit benchmark seed space"):
+        run_suite(load_suite(run_path), output_path=tmp_path / "invalid-seeds.json")

@@ -53,6 +53,20 @@ while IFS=$'\t' read -r environment_id requirements_relative; do
   )
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip install --no-deps -r "$requirements_path"
+  env "${install_environment[@]}" \
+    "$environment_path/bin/python" -m pip check
+
+  while IFS= read -r import_module; do
+    echo "Checking import: $import_module"
+    env "${install_environment[@]}" \
+      "$environment_path/bin/python" -c \
+      'import importlib, sys; importlib.import_module(sys.argv[1])' \
+      "$import_module"
+  done < <(
+    jq -r --arg id "$environment_id" \
+      '.environments[] | select(.id == $id) | .import_modules[]' \
+      "$campaign_path"
+  )
 done < <(jq -r '.environments[] | [.id,.requirements] | @tsv' "$campaign_path")
 
 echo

@@ -24,7 +24,8 @@ from clifft_bench.system import (
     utc_now,
 )
 
-SEED_REPETITION_STRIDE = 1_000_000_000
+SEED_REPETITION_STRIDE = 100_000_000
+SEED_MAX_EXCLUSIVE = 2**32
 
 
 class WorkerError(RuntimeError):
@@ -254,6 +255,15 @@ def run_suite(
         measurement["repetitions"] = repetitions
     if measurement["min_sample_seconds"] <= 0 or measurement["repetitions"] < 1:
         raise ValueError("measurement overrides must be positive")
+    seed_range_end = (
+        int(suite.run["seed"])
+        + 10_000
+        + int(measurement["repetitions"]) * SEED_REPETITION_STRIDE
+    )
+    if seed_range_end > SEED_MAX_EXCLUSIVE:
+        raise ValueError(
+            "declared repetitions exceed the unsigned 32-bit benchmark seed space"
+        )
     request_timeout = float(measurement["request_timeout_seconds"])
     if request_timeout <= measurement["min_sample_seconds"]:
         raise ValueError(

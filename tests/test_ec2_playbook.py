@@ -18,6 +18,9 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert '"${VERSION_ID:-}" == "24.04"' in bootstrap
     assert ".environments[]" in bootstrap
     assert "pip install --no-deps" in bootstrap
+    assert "pip check" in bootstrap
+    assert ".import_modules[]" in bootstrap
+    assert "importlib.import_module" in bootstrap
     assert ".runs[]" in placement
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement

@@ -54,11 +54,20 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "python_executable_env", "requirements"],
+        "required": ["id", "python_executable_env", "requirements", "import_modules"],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
           "python_executable_env": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]+$"},
           "requirements": {"type": "string", "minLength": 1},
+          "import_modules": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_.]*$"
+            }
+          },
           "install_environment": {
             "type": "object",
             "additionalProperties": {"type": "string"}

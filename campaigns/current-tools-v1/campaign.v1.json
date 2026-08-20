@@ -39,23 +39,26 @@
   "collection": {
     "placements": 3,
     "replicas_per_placement": 1,
-    "run_timeout_minutes": 60
+    "run_timeout_minutes": 90
   },
   "environments": [
     {
       "id": "clifft-0.7.0",
       "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_7_0_PYTHON",
-      "requirements": "../../environments/clifft-0.7.0.txt"
+      "requirements": "../../environments/clifft-0.7.0.txt",
+      "import_modules": ["clifft"]
     },
     {
       "id": "clifft-0.8.0",
       "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_8_0_PYTHON",
-      "requirements": "../../environments/clifft-0.8.0.txt"
+      "requirements": "../../environments/clifft-0.8.0.txt",
+      "import_modules": ["clifft"]
     },
     {
       "id": "symft-0.1.0-9ec5790",
       "python_executable_env": "CLIFFT_BENCH_SYMFT_9EC5790_PYTHON",
       "requirements": "../../environments/symft-0.1.0-9ec5790.txt",
+      "import_modules": ["symft"],
       "install_environment": {
         "SYMFT_PY_NATIVE": "1",
         "SYMFT_PY_ENABLE_CUDA": "0"
@@ -64,7 +67,8 @@
     {
       "id": "tsim-0.1.5",
       "python_executable_env": "CLIFFT_BENCH_TSIM_0_1_5_PYTHON",
-      "requirements": "../../environments/tsim-0.1.5.txt"
+      "requirements": "../../environments/tsim-0.1.5.txt",
+      "import_modules": ["tsim"]
     }
   ],
   "comparisons": [

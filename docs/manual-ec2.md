@@ -62,7 +62,7 @@ jq '.collection' "campaigns/$CLIFFT_BENCH_CAMPAIGN/campaign.v1.json"
 ```
 
 The current-tools campaign gives each Tsim setup or request five minutes and
-caps each complete tool run at one hour. A Tsim timeout is retained as a
+caps each complete tool run at 90 minutes. A Tsim timeout is retained as a
 structured result: the campaign does not spend unbounded EC2 time trying to
 turn an impractical circuit into a throughput number.
 
