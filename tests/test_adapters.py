@@ -4,10 +4,12 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import numpy as np
 import pytest
 
 from clifft_bench.adapters.clifft import ClifftAdapter, _PreparedClifft
 from clifft_bench.adapters.symft import SymftAdapter
+from clifft_bench.adapters.tsim import _PreparedTsim
 
 
 class _Sampler:
@@ -143,6 +145,32 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
         },
     )
     assert prepared.runtime_metadata["effective_batch_size"] == 1
+
+
+def test_tsim_reduces_raw_detector_and_observable_arrays_to_counts() -> None:
+    class Sampler:
+        def sample(self, shots, **kwargs):
+            assert shots == 4
+            assert kwargs["batch_size"] == 32
+            detectors = np.array([[False], [True], [False], [True]])
+            observables = np.array([[True], [True], [False], [False]])
+            return detectors, observables
+
+    prepared = _PreparedTsim(
+        Sampler(),
+        np,
+        batch_size=32,
+        observable_index=0,
+        postselection_mask=np.array([True]),
+        runtime_metadata={},
+    )
+
+    counts = prepared.sample(4, seed=7)
+
+    assert counts.attempted_shots == 4
+    assert counts.accepted_shots == 2
+    assert counts.discarded_shots == 2
+    assert counts.logical_errors == 1
 
 
 @pytest.mark.parametrize("adapter", [ClifftAdapter(), SymftAdapter()])

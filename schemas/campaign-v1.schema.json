@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unitaryfoundation.github.io/clifft-bench/schemas/campaign-v1.schema.json",
+  "title": "clifft-bench campaign manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "title", "hardware_epoch", "runs",
+    "reference_host", "collection", "environments", "comparisons"
+  ],
+  "properties": {
+    "schema_version": {"const": "clifft-bench/campaign/v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "hardware_epoch": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "runs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "run_manifest"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "run_manifest": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "reference_host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "instance_type", "architecture", "os_id", "os_version"],
+      "properties": {
+        "provider": {"const": "aws"},
+        "instance_type": {"type": "string", "minLength": 1},
+        "architecture": {"const": "x86_64"},
+        "os_id": {"const": "ubuntu"},
+        "os_version": {"const": "24.04"}
+      }
+    },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["placements", "replicas_per_placement", "run_timeout_minutes"],
+      "properties": {
+        "placements": {"type": "integer", "minimum": 1},
+        "replicas_per_placement": {"type": "integer", "minimum": 1},
+        "run_timeout_minutes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "environments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "python_executable_env", "requirements"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "python_executable_env": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]+$"},
+          "requirements": {"type": "string", "minLength": 1},
+          "install_environment": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      }
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "baseline_run", "candidate_runs"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "baseline_run": {"type": "string", "minLength": 1},
+          "candidate_runs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  }
+}

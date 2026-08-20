@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from clifft_bench.manifest import load_suite
+from clifft_bench.manifest import load_campaign, load_suite
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
 ROOT = repository_root()
@@ -16,8 +16,8 @@ ROOT = repository_root()
         "manifests/workloads.v1.json",
         "manifests/software.v1.json",
         "manifests/run-smoke.v1.json",
-        "manifests/run-phase1.v1.json",
-        "manifests/run-runner-aa.v1.json",
+        "campaigns/clifft-history-v1/campaign.v1.json",
+        "campaigns/current-tools-v1/campaign.v1.json",
     ],
 )
 def test_checked_in_manifests_validate(relative: str) -> None:
@@ -28,8 +28,6 @@ def test_checked_in_manifests_validate(relative: str) -> None:
     "relative",
     [
         "manifests/run-smoke.v1.json",
-        "manifests/run-phase1.v1.json",
-        "manifests/run-runner-aa.v1.json",
     ],
 )
 def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
@@ -38,23 +36,37 @@ def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
     assert all(case.workload.artifact_path.is_file() for case in suite.cases)
 
 
-def test_runner_study_requirements_are_exactly_pinned() -> None:
-    requirements_path = ROOT / "requirements/runner-study.txt"
-    pins = {}
-    for line in requirements_path.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        distribution, separator, version = line.partition("==")
-        assert separator == "==", f"runner-study requirement is not exactly pinned: {line}"
-        assert distribution and version
-        assert distribution not in pins
-        pins[distribution] = version
+@pytest.mark.parametrize("campaign_id", ["clifft-history-v1", "current-tools-v1"])
+def test_checked_in_campaigns_resolve_all_runs(campaign_id: str) -> None:
+    campaign = load_campaign(ROOT / "campaigns" / campaign_id / "campaign.v1.json")
+    assert campaign.suites
+    assert {suite.run["run_id"] for suite in campaign.suites} == {
+        run["id"] for run in campaign.document["runs"]
+    }
 
-    software = validate_path(ROOT / "manifests/software.v1.json")
-    clifft = next(item for item in software["implementations"] if item["name"] == "clifft")
-    assert pins[clifft["distribution"]] == clifft["version"]
-    assert set(clifft["dependency_distributions"]) <= pins.keys()
+
+def test_campaign_environment_locks_pin_every_requirement() -> None:
+    for requirements_path in sorted((ROOT / "environments").glob("*.txt")):
+        requirements = [
+            line.strip()
+            for line in requirements_path.read_text().splitlines()
+            if line.strip() and not line.startswith("#")
+        ]
+        assert requirements
+        for requirement in requirements:
+            assert "==" in requirement or " @ git+https://" in requirement
+            if " @ git+https://" in requirement:
+                assert "@9ec5790322f93140e78bdb6d6620a2a43eceba0b" in requirement
+
+
+def test_campaign_matrix_expands_to_unique_cases() -> None:
+    run_path = ROOT / "campaigns/current-tools-v1/symft-single.run.json"
+    suite = load_suite(run_path)
+    assert len(suite.cases) == 8
+    assert len({case.id for case in suite.cases}) == 8
+    assert {case.implementation.id for case in suite.cases} == {
+        "symft-0.1.0-9ec5790"
+    }
 
 
 def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:

@@ -5,13 +5,14 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schema_version", "suite_version", "profile_id", "classification", "seed",
-    "workloads_manifest", "software_manifest", "resources", "measurement", "cases"
+    "schema_version", "suite_version", "profile_id", "run_id", "classification", "seed",
+    "workloads_manifest", "software_manifest", "resources", "measurement"
   ],
   "properties": {
     "schema_version": {"const": "clifft-bench/run/v1"},
     "suite_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "run_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
     "classification": {"enum": ["smoke", "exploratory", "official"]},
     "seed": {"type": "integer", "minimum": 1},
     "workloads_manifest": {"type": "string", "minLength": 1},
@@ -68,6 +69,54 @@
           }
         }
       }
+    },
+    "matrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workloads", "variants"],
+      "properties": {
+        "workloads": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["workload_id", "shots_per_call"],
+            "properties": {
+              "workload_id": {"type": "string", "minLength": 1},
+              "shots_per_call": {"type": "integer", "minimum": 1}
+            }
+          }
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "implementation_id", "execution"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+              "implementation_id": {"type": "string", "minLength": 1},
+              "execution": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["mode", "batch_enabled", "batch_size", "sample_chunk_shots"],
+                "properties": {
+                  "mode": {"enum": ["latency", "throughput"]},
+                  "batch_enabled": {"type": "boolean"},
+                  "batch_size": {"type": "integer", "minimum": 1},
+                  "sample_chunk_shots": {"type": "integer", "minimum": 0}
+                }
+              }
+            }
+          }
+        }
+      }
     }
-  }
+  },
+  "oneOf": [
+    {"required": ["cases"], "not": {"required": ["matrix"]}},
+    {"required": ["matrix"], "not": {"required": ["cases"]}}
+  ]
 }

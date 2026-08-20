@@ -1,0 +1,109 @@
+{
+  "schema_version": "clifft-bench/campaign/v1",
+  "id": "clifft-history-v1",
+  "title": "Clifft release history from 0.1.0 through 0.8.0",
+  "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+  "runs": [
+    {
+      "id": "clifft-0.1.0",
+      "run_manifest": "clifft-0.1.0.run.json"
+    },
+    {
+      "id": "clifft-0.2.0",
+      "run_manifest": "clifft-0.2.0.run.json"
+    },
+    {
+      "id": "clifft-0.3.0",
+      "run_manifest": "clifft-0.3.0.run.json"
+    },
+    {
+      "id": "clifft-0.4.1",
+      "run_manifest": "clifft-0.4.1.run.json"
+    },
+    {
+      "id": "clifft-0.5.0",
+      "run_manifest": "clifft-0.5.0.run.json"
+    },
+    {
+      "id": "clifft-0.6.0",
+      "run_manifest": "clifft-0.6.0.run.json"
+    },
+    {
+      "id": "clifft-0.7.0",
+      "run_manifest": "clifft-0.7.0.run.json"
+    },
+    {
+      "id": "clifft-0.8.0",
+      "run_manifest": "clifft-0.8.0.run.json"
+    }
+  ],
+  "reference_host": {
+    "provider": "aws",
+    "instance_type": "m7a.xlarge",
+    "architecture": "x86_64",
+    "os_id": "ubuntu",
+    "os_version": "24.04"
+  },
+  "collection": {
+    "placements": 1,
+    "replicas_per_placement": 1,
+    "run_timeout_minutes": 120
+  },
+  "environments": [
+    {
+      "id": "clifft-0.1.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_1_0_PYTHON",
+      "requirements": "../../environments/clifft-0.1.0.txt"
+    },
+    {
+      "id": "clifft-0.2.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_2_0_PYTHON",
+      "requirements": "../../environments/clifft-0.2.0.txt"
+    },
+    {
+      "id": "clifft-0.3.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_3_0_PYTHON",
+      "requirements": "../../environments/clifft-0.3.0.txt"
+    },
+    {
+      "id": "clifft-0.4.1",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_4_1_PYTHON",
+      "requirements": "../../environments/clifft-0.4.1.txt"
+    },
+    {
+      "id": "clifft-0.5.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_5_0_PYTHON",
+      "requirements": "../../environments/clifft-0.5.0.txt"
+    },
+    {
+      "id": "clifft-0.6.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_6_0_PYTHON",
+      "requirements": "../../environments/clifft-0.6.0.txt"
+    },
+    {
+      "id": "clifft-0.7.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_7_0_PYTHON",
+      "requirements": "../../environments/clifft-0.7.0.txt"
+    },
+    {
+      "id": "clifft-0.8.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_8_0_PYTHON",
+      "requirements": "../../environments/clifft-0.8.0.txt"
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "release-history-vs-0.1.0",
+      "baseline_run": "clifft-0.1.0",
+      "candidate_runs": [
+        "clifft-0.2.0",
+        "clifft-0.3.0",
+        "clifft-0.4.1",
+        "clifft-0.5.0",
+        "clifft-0.6.0",
+        "clifft-0.7.0",
+        "clifft-0.8.0"
+      ]
+    }
+  ]
+}

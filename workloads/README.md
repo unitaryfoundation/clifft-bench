@@ -1,11 +1,11 @@
-# Phase 1 workload corpus
+# benchmark workload corpus
 
 The checked-in `.stim` files are immutable benchmark inputs. Their SHA-256
 digests, semantic contracts, compatible adapters, and source commits live in
 [`manifests/workloads.v1.json`](../manifests/workloads.v1.json).
 
-The Phase 1 corpus contains the eight QEC inputs in the `clifft-paper` paper
-matrix plus two fixed Quantum Volume inputs:
+The benchmark corpus contains the eight QEC inputs shared by the original
+Clifft and SymFT benchmark sets, plus two fixed Quantum Volume inputs:
 
 - distance-3 and distance-5 magic-state cultivation,
 - 85-qubit color-code magic-state distillation,

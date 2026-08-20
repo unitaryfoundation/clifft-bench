@@ -1,4 +1,0 @@
-# Performance-sensitive environment for manifests/run-runner-aa.v1.json.
-# An intentional change here starts a new A/A evidence cohort.
-clifft==0.7.0
-numpy==2.5.2

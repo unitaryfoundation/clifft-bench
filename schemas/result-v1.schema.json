@@ -29,12 +29,13 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "id", "profile_id", "classification", "started_at", "finished_at", "run_manifest",
+        "id", "profile_id", "campaign_run_id", "classification", "started_at", "finished_at", "run_manifest",
         "workloads_manifest", "software_manifest", "selection", "schedule_policy", "workflow"
       ],
       "properties": {
         "id": {"type": "string", "format": "uuid"},
         "profile_id": {"type": "string"},
+        "campaign_run_id": {"type": "string"},
         "classification": {"enum": ["smoke", "exploratory", "official"]},
         "started_at": {"type": "string", "format": "date-time"},
         "finished_at": {"type": ["string", "null"], "format": "date-time"},
