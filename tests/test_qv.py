@@ -12,7 +12,7 @@ import pytest
 from clifft_bench.qv import load_qv_campaign, scheduled_cases, select_physical_cpus
 from clifft_bench.qv_adapters import parse_qasm, to_clifft_stim
 from clifft_bench.qv_results import finalize_qv_execution
-from clifft_bench.qv_worker import _configure_clifft_threads
+from clifft_bench.qv_worker import _clifft_compile_arguments, _configure_clifft_threads
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_document
 from clifft_bench.system import collect_runner_metadata
 
@@ -86,6 +86,22 @@ def test_clifft_thread_configuration_supports_released_and_openmp_apis() -> None
         {"threads": 16},
         "sample-argument",
     )
+
+
+def test_clifft_compile_configuration_supports_released_and_openmp_apis() -> None:
+    hir_passes = object()
+    bytecode_passes = object()
+    released = SimpleNamespace(
+        default_hir_pass_manager=lambda: hir_passes,
+        default_bytecode_pass_manager=lambda: bytecode_passes,
+    )
+    candidate = SimpleNamespace(default_hir_pass_manager=lambda: hir_passes)
+
+    assert _clifft_compile_arguments(released) == {
+        "hir_passes": hir_passes,
+        "bytecode_passes": bytecode_passes,
+    }
+    assert _clifft_compile_arguments(candidate) == {"hir_passes": hir_passes}
 
 
 def test_qv_manifest_rejects_more_threads_than_physical_cores(tmp_path) -> None:

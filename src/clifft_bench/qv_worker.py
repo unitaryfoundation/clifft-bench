@@ -106,6 +106,15 @@ def _configure_clifft_threads(
     return threads, {"threads": threads}, "sample-argument"
 
 
+def _clifft_compile_arguments(clifft: Any) -> dict[str, Any]:
+    arguments: dict[str, Any] = {
+        "hir_passes": clifft.default_hir_pass_manager(),
+    }
+    if hasattr(clifft, "default_bytecode_pass_manager"):
+        arguments["bytecode_passes"] = clifft.default_bytecode_pass_manager()
+    return arguments
+
+
 def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[str, Any]]:
     import clifft
 
@@ -118,8 +127,7 @@ def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[st
     started = time.perf_counter()
     program = clifft.compile(
         program_text,
-        hir_passes=clifft.default_hir_pass_manager(),
-        bytecode_passes=clifft.default_bytecode_pass_manager(),
+        **_clifft_compile_arguments(clifft),
     )
     compile_seconds = time.perf_counter() - started
     started = time.perf_counter()
