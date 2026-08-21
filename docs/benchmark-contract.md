@@ -1,5 +1,11 @@
 # Benchmark contract
 
+This contract governs the single-core QEC throughput campaigns and their
+historical appendix workloads. The separate single-shot multicore experiment
+has its own resource and timing contract in
+[`qv-multicore.md`](qv-multicore.md); its results cannot be mixed into this
+throughput schema.
+
 ## Benchmark question
 
 For the same versioned circuit and output contract, how many independent

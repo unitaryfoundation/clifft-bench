@@ -45,3 +45,56 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[test]' 'clifft==0.1.0'
       - run: python -m pytest tests/test_reference_convention.py -k clifft
+
+  qv-adapter-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install isolated QV environments
+        run: |
+          set -euo pipefail
+          for environment in \
+            generator-paper \
+            qiskit-2.5.2-aer-0.17.2 \
+            qulacs-0.6.14 \
+            qsimcirq-0.22.0 \
+            qrack-provider-1.10.0; do
+            python -m venv "/tmp/qv-$environment"
+            "/tmp/qv-$environment/bin/python" -m pip install --upgrade pip
+            "/tmp/qv-$environment/bin/python" -m pip install \
+              --no-deps -r "environments/qv-$environment.txt"
+            "/tmp/qv-$environment/bin/python" -m pip check
+          done
+          /tmp/qv-qrack-provider-1.10.0/bin/python -m pip install \
+            --force-reinstall --no-deps pyqrack-cpu==2.18.0
+          python -m venv /tmp/qv-clifft-openmp
+          /tmp/qv-clifft-openmp/bin/python -m pip install --upgrade pip
+          CLIFFT_CPU_BASELINE=native \
+            /tmp/qv-clifft-openmp/bin/python -m pip install --no-deps \
+              --config-settings cmake.define.CLIFFT_MAX_QUBITS=64 \
+              --config-settings cmake.define.CLIFFT_OPENMP=ON \
+              -r environments/qv-clifft-openmp-8ff04f7.txt
+          /tmp/qv-clifft-openmp/bin/python -m pip check
+      - name: Run one case per QV adapter
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE/src"
+          cpu="$(python -c 'import os; print(min(os.sched_getaffinity(0)))')"
+          /tmp/qv-generator-paper/bin/python \
+            -m clifft_bench.qv_worker generate \
+            --qubits 6 --seed 42 --output /tmp/qv6.qasm
+          for adapter_environment in \
+            qiskit:qiskit-2.5.2-aer-0.17.2 \
+            qulacs:qulacs-0.6.14 \
+            qsim:qsimcirq-0.22.0 \
+            qrack:qrack-provider-1.10.0 \
+            clifft:clifft-openmp; do
+            adapter="${adapter_environment%%:*}"
+            environment="${adapter_environment#*:}"
+            "/tmp/qv-$environment/bin/python" -m clifft_bench.qv_worker run \
+              --adapter "$adapter" --qasm /tmp/qv6.qasm \
+              --threads 1 --cpu-set "$cpu" --memory-limit-gib 10
+          done

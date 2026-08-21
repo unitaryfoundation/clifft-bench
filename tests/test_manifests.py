@@ -1,5 +1,6 @@
 import copy
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,7 @@ ROOT = repository_root()
         "manifests/run-smoke.v1.json",
         "campaigns/clifft-history-v1/campaign.v1.json",
         "campaigns/current-tools-v1/campaign.v1.json",
+        "campaigns/qv-multicore-v1/qv-campaign.v1.json",
     ],
 )
 def test_checked_in_manifests_validate(relative: str) -> None:
@@ -57,7 +59,7 @@ def test_campaign_environment_locks_pin_every_requirement() -> None:
         for requirement in requirements:
             assert "==" in requirement or " @ git+https://" in requirement
             if " @ git+https://" in requirement:
-                assert "@9ec5790322f93140e78bdb6d6620a2a43eceba0b" in requirement
+                assert re.search(r"@[0-9a-f]{40}(?:#|$)", requirement)
 
 
 def test_campaign_matrix_expands_to_unique_cases() -> None:

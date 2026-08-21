@@ -25,3 +25,12 @@ GitHub-hosted, GitHub larger, and Ubicloud runners remain suitable for
 correctness CI or exploratory work, but were not stable enough to define the
 absolute-throughput reference series. Their raw commissioning files remain
 available in repository history rather than the active tree.
+
+## QV multicore host
+
+The less-frequent single-shot QV campaign uses a separate `c8i.8xlarge`
+hardware epoch with 16 physical cores, 32 logical CPUs, and 64 GiB RAM. It does
+not replace the `m7a.xlarge` QEC reference or make their absolute numbers
+comparable. The QV launch settings, physical-core affinity policy, matrix, and
+two-stopped-instance convention are documented in
+[`qv-multicore.md`](qv-multicore.md).

@@ -42,6 +42,27 @@ implementation, version, batching mode, CPU model, AMI, and boot identity as
 applicable. Plotting code should consume these long-form tables rather than
 creating plot-specific checked-in data layouts.
 
+## QV multicore executions
+
+`qv-multicore-v1` uses the same top-level execution directory but has a smaller
+derived surface suited to latency and strong-scaling plots:
+
+```text
+results/qv-multicore-v1/<execution-id>/
+├── index.json
+├── raw/
+│   └── *-raw.json
+├── circuits/
+│   └── *.qasm
+├── cases.csv
+└── summary.json
+```
+
+The generated QASM files are retained once per execution. Every case records
+their digest, seed, width, requested physical-core set, tool environment, peak
+RSS, and timing components. `cases.csv` is long-form: comparisons and speedups
+remain plot/post-processing decisions rather than additional collection modes.
+
 ## Hardware changes
 
 Absolute throughput is only comparable within one hardware epoch. A future

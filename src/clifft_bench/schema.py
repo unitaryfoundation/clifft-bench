@@ -15,6 +15,8 @@ SCHEMA_FILES = {
     "clifft-bench/result/v1": "result-v1.schema.json",
     "clifft-bench/campaign/v1": "campaign-v1.schema.json",
     "clifft-bench/execution/v1": "execution-v1.schema.json",
+    "clifft-bench/qv-campaign/v1": "qv-campaign-v1.schema.json",
+    "clifft-bench/qv-result/v1": "qv-result-v1.schema.json",
 }
 
 

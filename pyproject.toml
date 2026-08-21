@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "clifft-bench"
 version = "0.1.0"
-description = "Reproducible single-CPU benchmarks for near-Clifford quantum simulators"
+description = "Reproducible CPU benchmarks for near-Clifford quantum simulators"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "LICENSE" }
