@@ -133,6 +133,9 @@ def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[st
     started = time.perf_counter()
     clifft.sample(program, shots=1, **sample_arguments)
     sample_seconds = time.perf_counter() - started
+    metadata: dict[str, Any] = {"thread_interface": thread_interface}
+    if hasattr(clifft, "max_sim_qubits"):
+        metadata["max_sim_qubits"] = int(clifft.max_sim_qubits())
     return (
         {
             "execution_seconds": compile_seconds + sample_seconds,
@@ -140,10 +143,7 @@ def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[st
             "sample_seconds": sample_seconds,
         },
         effective,
-        {
-            "max_sim_qubits": int(clifft.max_sim_qubits()),
-            "thread_interface": thread_interface,
-        },
+        metadata,
     )
 
 
