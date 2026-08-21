@@ -96,13 +96,24 @@ def _dependency_versions(adapter: str) -> dict[str, str]:
     return found
 
 
+def _configure_clifft_threads(
+    clifft: Any, threads: int
+) -> tuple[int, dict[str, int], str]:
+    """Support both released Clifft and the post-OpenMP sampling API."""
+    if hasattr(clifft, "set_num_threads"):
+        clifft.set_num_threads(threads)
+        return int(clifft.get_num_threads()), {}, "module-setter"
+    return threads, {"threads": threads}, "sample-argument"
+
+
 def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[str, Any]]:
     import clifft
 
     from clifft_bench.qv_adapters import to_clifft_stim
 
-    clifft.set_num_threads(threads)
-    effective = int(clifft.get_num_threads())
+    effective, sample_arguments, thread_interface = _configure_clifft_threads(
+        clifft, threads
+    )
     program_text = to_clifft_stim(qasm)
     started = time.perf_counter()
     program = clifft.compile(
@@ -112,7 +123,7 @@ def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[st
     )
     compile_seconds = time.perf_counter() - started
     started = time.perf_counter()
-    clifft.sample(program, shots=1)
+    clifft.sample(program, shots=1, **sample_arguments)
     sample_seconds = time.perf_counter() - started
     return (
         {
@@ -121,7 +132,10 @@ def _run_clifft(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[st
             "sample_seconds": sample_seconds,
         },
         effective,
-        {"max_sim_qubits": int(clifft.max_sim_qubits())},
+        {
+            "max_sim_qubits": int(clifft.max_sim_qubits()),
+            "thread_interface": thread_interface,
+        },
     )
 
 

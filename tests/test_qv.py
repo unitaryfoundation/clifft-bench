@@ -5,12 +5,14 @@ import hashlib
 import json
 import uuid
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from clifft_bench.qv import load_qv_campaign, scheduled_cases, select_physical_cpus
 from clifft_bench.qv_adapters import parse_qasm, to_clifft_stim
 from clifft_bench.qv_results import finalize_qv_execution
+from clifft_bench.qv_worker import _configure_clifft_threads
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_document
 from clifft_bench.system import collect_runner_metadata
 
@@ -68,6 +70,22 @@ measure q[1] -> c[1];
     assert [operation.name for operation in operations] == ["u3", "cx", "measure", "measure"]
     assert "U3(0.5,0.0,-1.0) 0" in converted
     assert converted.endswith("M 1\n")
+
+
+def test_clifft_thread_configuration_supports_released_and_openmp_apis() -> None:
+    configured: list[int] = []
+    released = SimpleNamespace(
+        set_num_threads=configured.append,
+        get_num_threads=lambda: configured[-1],
+    )
+
+    assert _configure_clifft_threads(released, 8) == (8, {}, "module-setter")
+    assert configured == [8]
+    assert _configure_clifft_threads(SimpleNamespace(), 16) == (
+        16,
+        {"threads": 16},
+        "sample-argument",
+    )
 
 
 def test_qv_manifest_rejects_more_threads_than_physical_cores(tmp_path) -> None:
