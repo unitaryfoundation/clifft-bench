@@ -18,6 +18,7 @@ execution_id="$2"
 validate_identifier "campaign id" "$campaign_id"
 validate_identifier "execution id" "$execution_id"
 campaign_path="$(campaign_manifest "$campaign_id")"
+campaign_schema="$(jq -er '.schema_version' "$campaign_path")"
 require_clean_checkout
 
 spool_root="${CLIFFT_BENCH_EC2_SPOOL_ROOT:-$repo_root/../clifft-bench-ec2-results}"
@@ -46,11 +47,22 @@ mkdir "$stage/raw"
 cp "${raw_paths[@]}" "$stage/raw/"
 
 staged_raw=("$stage"/raw/*-raw.json)
-.venv/bin/clifft-bench finalize \
-  --campaign "$campaign_path" \
-  --execution-id "$execution_id" \
-  --output-dir "$stage" \
-  "${staged_raw[@]}"
+if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
+  [[ -d "$execution_dir/circuits" ]] || fail "execution spool is missing QV circuits"
+  cp -R "$execution_dir/circuits" "$stage/circuits"
+  .venv/bin/clifft-bench qv-finalize \
+    --campaign "$campaign_path" \
+    --execution-id "$execution_id" \
+    --circuit-dir "$stage/circuits" \
+    --output-dir "$stage" \
+    "${staged_raw[@]}"
+else
+  .venv/bin/clifft-bench finalize \
+    --campaign "$campaign_path" \
+    --execution-id "$execution_id" \
+    --output-dir "$stage" \
+    "${staged_raw[@]}"
+fi
 mv "$stage" "$target"
 
 relative="results/$campaign_id/$execution_id"

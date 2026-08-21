@@ -1,6 +1,6 @@
 # clifft-bench
 
-Reproducible, single-core CPU benchmarks for
+Reproducible CPU benchmarks for
 [Clifft](https://github.com/unitaryfoundation/clifft) and comparable
 near-Clifford circuit simulators.
 
@@ -21,6 +21,11 @@ The checked-in campaigns currently prepare two evidence sets:
 - `clifft-history-v1`: Clifft 0.1.0 through 0.8.0 on the shared QEC corpus;
 - `current-tools-v1`: Clifft 0.7/0.8, SymFT single/batched, and Tsim 0.1.5.
 
+An additional, less-frequent `qv-multicore-v1` campaign measures single-shot
+Quantum Volume latency across current simulators and Clifft's intra-shot
+scaling. It uses a separate 16-physical-core reference host and result schema;
+it does not weaken the single-core contract of the QEC campaigns.
+
 The eight shared QEC workloads form the comparison core. QV10 and QV20 remain
 available as historical appendix workloads but are not in the current
 cross-tool campaigns.
@@ -34,7 +39,7 @@ cross-tool campaigns.
 | `manifests/` | Shared software catalog, workload catalog, and CI smoke run |
 | `workloads/circuits/` | Immutable circuit artifacts and applicable license |
 | `schemas/` | JSON Schemas for manifests, raw results, and execution indexes |
-| `src/clifft_bench/` | CLI, scheduler, adapters, and result finalization |
+| `src/clifft_bench/` | CLI, schedulers, adapters, and result finalization |
 | `scripts/ec2/` | Generic manual EC2 bootstrap, collection, and finalization |
 | `results/` | Reviewed executions; raw JSON plus deterministic derived tables |
 
@@ -42,6 +47,8 @@ The measurement contract is in
 [`docs/benchmark-contract.md`](docs/benchmark-contract.md), the manual procedure
 is in [`docs/manual-ec2.md`](docs/manual-ec2.md), and the checked-in result
 layout is in [`docs/data-format.md`](docs/data-format.md).
+The occasional multicore procedure and its deliberately small matrix are in
+[`docs/qv-multicore.md`](docs/qv-multicore.md).
 
 ## Local development
 

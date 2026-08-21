@@ -22,6 +22,9 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert ".import_modules[]" in bootstrap
     assert "importlib.import_module" in bootstrap
     assert ".runs[]" in placement
+    assert "clifft-bench/qv-campaign/v1" in placement
+    assert "clifft-bench qv-run" in placement
+    assert "clifft-bench qv-finalize" in finalize
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement
     assert "clifft-bench finalize" in finalize
@@ -41,6 +44,10 @@ def test_ec2_playbook_documents_storage_security_and_manual_control() -> None:
     assert "no S3 Files, EFS, FSx" in playbook
     assert "no IAM role" in playbook
     assert "eight-hour" in playbook
+    qv_playbook = (repository_root() / "docs/qv-multicore.md").read_text()
+    assert "c8i.8xlarge" in qv_playbook
+    assert "30 GiB `gp3`" in qv_playbook
+    assert "CLIFFT_OPENMP=ON" in qv_playbook
 
 
 def test_ec2_results_spool_outside_checkout_until_finalization() -> None:
