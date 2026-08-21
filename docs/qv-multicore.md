@@ -63,6 +63,12 @@ Create and retain a second stopped instance rather than resizing the QEC host:
   IPv4 allocation;
 - SSH limited to your current IP or an equivalent console connection.
 
+Qrack uses its official `pyqrack-cpu` distribution. The provider metadata
+requires the generic `pyqrack` distribution, so the complete lock retains that
+metadata dependency and bootstrap force-reinstalls the same-version CPU wheel
+last. The imported runtime is therefore the CPU build and cannot silently use
+an accelerator or depend on a host OpenCL installation.
+
 The account needs at least 32 Standard On-Demand vCPUs available in the chosen
 region. The campaign verifies the instance type, 16 physical/32 logical CPUs,
 AMI, region, AZ, lifecycle, clean source commit, and a new boot ID for every

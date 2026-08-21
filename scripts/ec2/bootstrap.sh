@@ -63,6 +63,15 @@ while IFS=$'\t' read -r environment_id requirements_relative; do
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip install --no-deps \
       "${install_options[@]}" -r "$requirements_path"
+  while IFS= read -r requirement; do
+    env "${install_environment[@]}" \
+      "$environment_path/bin/python" -m pip install \
+        --force-reinstall --no-deps "$requirement"
+  done < <(
+    jq -r --arg id "$environment_id" \
+      '.environments[] | select(.id == $id) | (.reinstall_requirements // [])[]' \
+      "$campaign_path"
+  )
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip check
 

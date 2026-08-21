@@ -1,5 +1,5 @@
 numpy==2.5.2
-pyqrack==2.18.0
+pyqrack-cpu==2.18.0
 qiskit==2.5.2
 qiskit-aer==0.17.2
 qiskit-qrack-provider==1.10.0

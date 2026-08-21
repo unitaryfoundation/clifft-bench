@@ -68,6 +68,8 @@ jobs:
               --no-deps -r "environments/qv-$environment.txt"
             "/tmp/qv-$environment/bin/python" -m pip check
           done
+          /tmp/qv-qrack-provider-1.10.0/bin/python -m pip install \
+            --force-reinstall --no-deps pyqrack-cpu==2.18.0
           python -m venv /tmp/qv-clifft-openmp
           /tmp/qv-clifft-openmp/bin/python -m pip install --upgrade pip
           CLIFFT_CPU_BASELINE=native \

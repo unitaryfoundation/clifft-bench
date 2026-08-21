@@ -92,7 +92,8 @@
     {
       "id": "qrack-provider-1.10.0",
       "requirements": "../../environments/qv-qrack-provider-1.10.0.txt",
-      "import_modules": ["qiskit.providers.qrack", "pyqrack"]
+      "import_modules": ["qiskit.providers.qrack", "pyqrack"],
+      "reinstall_requirements": ["pyqrack-cpu==2.18.0"]
     }
   ],
   "runs": [

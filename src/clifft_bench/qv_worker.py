@@ -20,6 +20,7 @@ DEPENDENCIES = {
     "qrack": [
         "qiskit-qrack-provider",
         "pyqrack",
+        "pyqrack-cpu",
         "qiskit",
         "qiskit-aer",
         "numpy",

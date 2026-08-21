@@ -111,6 +111,11 @@
             "type": "array",
             "uniqueItems": true,
             "items": {"type": "string", "minLength": 1}
+          },
+          "reinstall_requirements": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
           }
         }
       }
