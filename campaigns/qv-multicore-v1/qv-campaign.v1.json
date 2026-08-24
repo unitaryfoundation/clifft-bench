@@ -21,14 +21,6 @@
     "case_timeout_seconds": 600,
     "memory_limit_gib": 10
   },
-  "legacy_result_manifests": [
-    {
-      "sha256": "9b640356b66d9b1d8ff25a5f8178fc9a2c45c5cb65cb0e79a1c4419b991d8a47",
-      "placements": 3,
-      "replicas_per_placement": 1,
-      "reason": "QV collection changed from three stop/start placements to the paper-compatible single-placement policy."
-    }
-  ],
   "circuit": {
     "family": "quantum-volume",
     "depth": "width",
@@ -47,28 +39,6 @@
       "id": "qv-generator-paper",
       "requirements": "../../environments/qv-generator-paper.txt",
       "import_modules": ["qiskit"]
-    },
-    {
-      "id": "clifft-0.1.0-qv64",
-      "requirements": "../../environments/qv-clifft-0.1.0.txt",
-      "import_modules": ["clifft"],
-      "install_environment": {
-        "CLIFFT_CPU_BASELINE": "native"
-      },
-      "pip_config_settings": [
-        "cmake.define.CLIFFT_MAX_QUBITS=64"
-      ]
-    },
-    {
-      "id": "clifft-0.8.0-qv64",
-      "requirements": "../../environments/qv-clifft-0.8.0.txt",
-      "import_modules": ["clifft"],
-      "install_environment": {
-        "CLIFFT_CPU_BASELINE": "native"
-      },
-      "pip_config_settings": [
-        "cmake.define.CLIFFT_MAX_QUBITS=64"
-      ]
     },
     {
       "id": "clifft-0.9.0-qv64",
@@ -96,12 +66,6 @@
       "id": "qsimcirq-0.22.0",
       "requirements": "../../environments/qv-qsimcirq-0.22.0.txt",
       "import_modules": ["qsimcirq", "ply"]
-    },
-    {
-      "id": "qrack-provider-1.10.0",
-      "requirements": "../../environments/qv-qrack-provider-1.10.0.txt",
-      "import_modules": ["qiskit.providers.qrack", "pyqrack"],
-      "reinstall_requirements": ["pyqrack-cpu==2.18.0"]
     }
   ],
   "runs": [
@@ -162,20 +126,6 @@
       "qubits": [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
     },
     {
-      "id": "qrack-current",
-      "phase": "current-tools",
-      "name": "Qrack",
-      "version": "1.10.0",
-      "distribution": "qiskit-qrack-provider",
-      "expected_distribution_version": "1.10.0",
-      "commit_sha": null,
-      "source_url": "https://github.com/unitaryfund/qrack",
-      "adapter": "qrack",
-      "environment_id": "qrack-provider-1.10.0",
-      "threads": [16],
-      "qubits": [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
-    },
-    {
       "id": "clifft-0.9.0-scaling",
       "phase": "clifft-scaling",
       "name": "Clifft",
@@ -187,34 +137,6 @@
       "adapter": "clifft",
       "environment_id": "clifft-0.9.0-qv64",
       "threads": [1, 2, 4, 8, 16],
-      "qubits": [18, 20, 22, 24, 26, 28]
-    },
-    {
-      "id": "clifft-0.1.0-paper-anchor",
-      "phase": "historical-anchor",
-      "name": "Clifft",
-      "version": "0.1.0",
-      "distribution": "clifft",
-      "expected_distribution_version": "0.1.0",
-      "commit_sha": "427a499a4fd835d5a6324f4b1fbcd906c28639a1",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "adapter": "clifft",
-      "environment_id": "clifft-0.1.0-qv64",
-      "threads": [16],
-      "qubits": [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
-    },
-    {
-      "id": "clifft-0.8.0-anchor",
-      "phase": "historical-anchor",
-      "name": "Clifft",
-      "version": "0.8.0",
-      "distribution": "clifft",
-      "expected_distribution_version": "0.8.0",
-      "commit_sha": "859272faaea971d4599b3c8e323dcb79079aa8ac",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "adapter": "clifft",
-      "environment_id": "clifft-0.8.0-qv64",
-      "threads": [1, 16],
       "qubits": [18, 20, 22, 24, 26, 28]
     }
   ]

@@ -47,21 +47,6 @@
         "memory_limit_gib": {"type": "number", "exclusiveMinimum": 0}
       }
     },
-    "legacy_result_manifests": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["sha256", "placements", "replicas_per_placement", "reason"],
-        "properties": {
-          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "placements": {"type": "integer", "minimum": 1},
-          "replicas_per_placement": {"type": "integer", "minimum": 1},
-          "reason": {"type": "string", "minLength": 1}
-        }
-      }
-    },
     "circuit": {
       "type": "object",
       "additionalProperties": false,
@@ -126,11 +111,6 @@
             "type": "array",
             "uniqueItems": true,
             "items": {"type": "string", "minLength": 1}
-          },
-          "reinstall_requirements": {
-            "type": "array",
-            "uniqueItems": true,
-            "items": {"type": "string", "minLength": 1}
           }
         }
       }
@@ -148,7 +128,7 @@
         ],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
-          "phase": {"enum": ["current-tools", "clifft-scaling", "historical-anchor"]},
+          "phase": {"enum": ["current-tools", "clifft-scaling"]},
           "name": {"type": "string", "minLength": 1},
           "version": {"type": "string", "minLength": 1},
           "distribution": {"type": "string", "minLength": 1},
@@ -160,7 +140,7 @@
             ]
           },
           "source_url": {"type": "string", "format": "uri"},
-          "adapter": {"enum": ["clifft", "qiskit", "qulacs", "qsim", "qrack"]},
+          "adapter": {"enum": ["clifft", "qiskit", "qulacs", "qsim"]},
           "environment_id": {"type": "string", "minLength": 1},
           "threads": {
             "type": "array",

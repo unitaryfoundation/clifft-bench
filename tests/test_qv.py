@@ -24,29 +24,30 @@ def test_qv_campaign_has_deliberately_bounded_matrix() -> None:
     campaign = load_qv_campaign(CAMPAIGN_PATH)
     cases = scheduled_cases(campaign)
 
-    current_clifft = [
-        run
-        for run in campaign.document["runs"]
-        if run["adapter"] == "clifft" and run["phase"] != "historical-anchor"
-    ]
+    current_clifft = [run for run in campaign.document["runs"] if run["adapter"] == "clifft"]
     assert campaign.document["classification"] == "official"
     assert {run["version"] for run in current_clifft} == {"0.9.0"}
     assert {run["expected_distribution_version"] for run in current_clifft} == {"0.9.0"}
+    assert {run["adapter"] for run in campaign.document["runs"]} == {
+        "clifft",
+        "qiskit",
+        "qulacs",
+        "qsim",
+    }
     assert campaign.document["collection"]["placements"] == 1
-    assert len(cases) == 342
-    assert sum(case["run"]["phase"] == "current-tools" for case in cases) == 180
+    assert len(cases) == 234
+    assert sum(case["run"]["phase"] == "current-tools" for case in cases) == 144
     assert sum(case["run"]["phase"] == "clifft-scaling" for case in cases) == 90
-    assert sum(case["run"]["phase"] == "historical-anchor" for case in cases) == 72
 
 
 def test_qv_schedule_reverses_tool_order_between_seeds() -> None:
     cases = scheduled_cases(load_qv_campaign(CAMPAIGN_PATH))
-    first = [case["run"]["id"] for case in cases[:5]]
-    second = [case["run"]["id"] for case in cases[5:10]]
+    first = [case["run"]["id"] for case in cases[:4]]
+    second = [case["run"]["id"] for case in cases[4:8]]
 
     assert second == list(reversed(first))
-    assert {case["qubits"] for case in cases[:10]} == {6}
-    assert [case["seed"] for case in cases[:10]] == [42] * 5 + [43] * 5
+    assert {case["qubits"] for case in cases[:8]} == {6}
+    assert [case["seed"] for case in cases[:8]] == [42] * 4 + [43] * 4
 
 
 def test_physical_cpu_selection_uses_one_sibling_per_core() -> None:
@@ -128,11 +129,11 @@ def test_qv_manifest_rejects_more_threads_than_physical_cores(tmp_path) -> None:
         load_qv_campaign(path)
 
 
-def _small_campaign(tmp_path: Path, *, placements: int = 1):  # type: ignore[no-untyped-def]
+def _small_campaign(tmp_path: Path):  # type: ignore[no-untyped-def]
     document = copy.deepcopy(load_qv_campaign(CAMPAIGN_PATH).document)
     document["reference_host"]["physical_cores"] = 1
     document["reference_host"]["logical_cpus"] = 1
-    document["collection"]["placements"] = placements
+    document["collection"]["placements"] = 1
     document["circuit"]["qubits"] = [6]
     document["circuit"]["seeds"] = [42]
     generator = next(
@@ -155,8 +156,8 @@ def _small_campaign(tmp_path: Path, *, placements: int = 1):  # type: ignore[no-
     return load_qv_campaign(path), run
 
 
-def _small_result(tmp_path: Path, *, placements: int = 1):  # type: ignore[no-untyped-def]
-    campaign, run = _small_campaign(tmp_path, placements=placements)
+def _small_result(tmp_path: Path):  # type: ignore[no-untyped-def]
+    campaign, run = _small_campaign(tmp_path)
     circuit_dir = tmp_path / "circuits"
     circuit_dir.mkdir()
     circuit_path = circuit_dir / "qv-q6-seed42.qasm"
@@ -215,7 +216,7 @@ def _small_result(tmp_path: Path, *, placements: int = 1):  # type: ignore[no-un
                     "source_url": run["source_url"],
                     "adapter": run["adapter"],
                     "environment_id": run["environment_id"],
-                    "dependencies": {"clifft": "0.8.1.dev22"},
+                    "dependencies": {"clifft": "0.9.0"},
                 },
                 "circuit": {
                     "family": "quantum-volume",
@@ -265,32 +266,26 @@ def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> Non
 
     assert index["case_rows"] == 1
     assert index["classification"] == "official"
-    assert index["collection"] == {
-        "source_manifest_sha256": campaign.manifest_sha256,
-        "planned_placements": 1,
-        "completed_placements": [1],
-        "replicas_per_placement": 1,
-        "complete": True,
-    }
     assert (output / "cases.csv").read_text().count("\n") == 2
     assert json.loads((output / "summary.json").read_text())["cases"][0][
         "execution_seconds"
     ]["median"] == 0.5
 
 
-def test_qv_partial_placement_finalization_is_explicit_and_exploratory(tmp_path) -> None:
-    campaign, circuit_dir, raw_path = _small_result(tmp_path, placements=3)
+def test_qv_curated_result_is_traceable_and_exploratory(tmp_path) -> None:
+    campaign, circuit_dir, raw_path = _small_result(tmp_path)
+    result = json.loads(raw_path.read_text())
+    result["curation"] = {
+        "source_result_commit": "b" * 40,
+        "source_result_sha256": "c" * 64,
+        "source_manifest_sha256": "d" * 64,
+        "excluded_run_ids": ["removed-run"],
+        "reason": "Keep only the final comparison matrix.",
+    }
+    validate_document(result)
+    raw_path.write_text(json.dumps(result))
     output = tmp_path / "derived"
     output.mkdir()
-
-    with pytest.raises(SchemaValidationError, match="placement/replica coverage"):
-        finalize_qv_execution(
-            campaign,
-            execution_id="qv-test",
-            raw_paths=[raw_path],
-            circuit_dir=circuit_dir,
-            output_dir=output,
-        )
 
     index = finalize_qv_execution(
         campaign,
@@ -298,52 +293,10 @@ def test_qv_partial_placement_finalization_is_explicit_and_exploratory(tmp_path)
         raw_paths=[raw_path],
         circuit_dir=circuit_dir,
         output_dir=output,
-        allow_partial_placements=True,
     )
 
     assert index["classification"] == "exploratory"
-    assert index["collection"] == {
-        "source_manifest_sha256": campaign.manifest_sha256,
-        "planned_placements": 3,
-        "completed_placements": [1],
-        "replicas_per_placement": 1,
-        "complete": False,
-    }
+    assert index["curation"] == result["curation"]
     summary = json.loads((output / "summary.json").read_text())
     assert summary["classification"] == "exploratory"
-    assert summary["collection"] == index["collection"]
-
-
-def test_qv_partial_finalization_accepts_declared_legacy_manifest(tmp_path) -> None:
-    source_dir = tmp_path / "source"
-    source_dir.mkdir()
-    source_campaign, circuit_dir, raw_path = _small_result(source_dir, placements=3)
-    current_document = copy.deepcopy(source_campaign.document)
-    current_document["collection"]["placements"] = 1
-    current_document["legacy_result_manifests"] = [
-        {
-            "sha256": source_campaign.manifest_sha256,
-            "placements": 3,
-            "replicas_per_placement": 1,
-            "reason": "test migration to one placement",
-        }
-    ]
-    current_path = tmp_path / "current-qv-campaign.json"
-    current_path.write_text(json.dumps(current_document))
-    current_campaign = load_qv_campaign(current_path)
-    output = tmp_path / "derived"
-    output.mkdir()
-
-    index = finalize_qv_execution(
-        current_campaign,
-        execution_id="qv-test",
-        raw_paths=[raw_path],
-        circuit_dir=circuit_dir,
-        output_dir=output,
-        allow_partial_placements=True,
-    )
-
-    assert index["classification"] == "exploratory"
-    assert index["collection"]["source_manifest_sha256"] == source_campaign.manifest_sha256
-    assert index["collection"]["planned_placements"] == 3
-    assert index["collection"]["completed_placements"] == [1]
+    assert summary["curation"] == result["curation"]

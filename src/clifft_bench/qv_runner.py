@@ -61,7 +61,6 @@ def _worker_environment(threads: int) -> dict[str, str]:
             "OMP_DYNAMIC": "false",
             "OMP_PROC_BIND": "true",
             "OMP_PLACES": "threads",
-            "QRACK_DISABLE_OPENCL": "1",
         }
     )
     return environment

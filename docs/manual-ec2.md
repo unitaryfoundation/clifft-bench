@@ -62,9 +62,9 @@ tool/version is installed into a separate ignored environment under
 `.campaign-envs/` using its checked-in resolved lock. Installation and import
 are outside the timed region. SymFT is compiled natively on this fixed host.
 
-The QV bootstrap takes longer because it builds three Clifft revisions and
-installs the five isolated simulator environments. This setup is outside every
-timed case and persists while the QV instance is stopped.
+The QV bootstrap builds Clifft 0.9.0 and installs the generator plus three
+isolated external-simulator environments. This setup is outside every timed
+case and persists while the QV instance is stopped.
 
 Inspect the declared number of placements before starting:
 

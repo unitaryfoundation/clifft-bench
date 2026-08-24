@@ -66,11 +66,6 @@ def _parser() -> argparse.ArgumentParser:
     qv_finalize.add_argument("--execution-id", required=True)
     qv_finalize.add_argument("--circuit-dir", required=True, type=Path)
     qv_finalize.add_argument("--output-dir", required=True, type=Path)
-    qv_finalize.add_argument(
-        "--allow-partial-placements",
-        action="store_true",
-        help="finalize a complete prefix of planned placements as exploratory evidence",
-    )
     qv_finalize.add_argument("results", nargs="+", type=Path)
     return parser
 
@@ -204,7 +199,6 @@ def _qv_finalize(args: argparse.Namespace) -> int:
         raw_paths=[_resolve(path) for path in args.results],
         circuit_dir=args.circuit_dir.resolve(),
         output_dir=args.output_dir.resolve(),
-        allow_partial_placements=args.allow_partial_placements,
     )
     print(json.dumps(index, indent=2, sort_keys=True))
     return 0

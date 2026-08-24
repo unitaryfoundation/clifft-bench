@@ -61,9 +61,10 @@ The generated QASM files are retained once per execution. Every case records
 their digest, seed, width, requested physical-core set, tool environment, peak
 RSS, and timing components. `cases.csv` is long-form: comparisons and speedups
 remain plot/post-processing decisions rather than additional collection modes.
-The QV index and summary also record planned and completed placement coverage.
-An explicitly finalized prefix of a larger placement plan is classified as
-exploratory rather than official.
+If a checked-in QV result was curated from a broader collected matrix, the raw
+result, index, and summary record the source commit and file digests plus the
+excluded run IDs. Curated results are classified as exploratory; the original
+raw result remains recoverable from the recorded Git commit.
 
 ## Hardware changes
 

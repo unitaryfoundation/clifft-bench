@@ -8,27 +8,17 @@ cd "$repo_root"
 require_ec2_linux
 arm_shutdown_guard
 
-if (( $# < 2 || $# > 3 )); then
-  echo "usage: $0 CAMPAIGN_ID EXECUTION_ID [--allow-partial-placements]" >&2
+if (( $# != 2 )); then
+  echo "usage: $0 CAMPAIGN_ID EXECUTION_ID" >&2
   exit 2
 fi
 
 campaign_id="$1"
 execution_id="$2"
-allow_partial_placements=false
-if (( $# == 3 )); then
-  [[ "$3" == "--allow-partial-placements" ]] || \
-    fail "unknown finalization option: $3"
-  allow_partial_placements=true
-fi
 validate_identifier "campaign id" "$campaign_id"
 validate_identifier "execution id" "$execution_id"
 campaign_path="$(campaign_manifest "$campaign_id")"
 campaign_schema="$(jq -er '.schema_version' "$campaign_path")"
-if [[ "$allow_partial_placements" == true && \
-      "$campaign_schema" != "clifft-bench/qv-campaign/v1" ]]; then
-  fail "partial-placement finalization is supported only for QV campaigns"
-fi
 require_clean_checkout
 
 spool_root="${CLIFFT_BENCH_EC2_SPOOL_ROOT:-$repo_root/../clifft-bench-ec2-results}"
@@ -43,15 +33,11 @@ raw_paths=()
 shopt -s nullglob
 for (( placement = 1; placement <= placements; placement++ )); do
   placement_dir="$execution_dir/placement-$(printf '%02d' "$placement")"
-  if [[ ! -f "$placement_dir/COMPLETE" ]]; then
-    [[ "$allow_partial_placements" == true ]] || fail "placement $placement is not complete"
-    continue
-  fi
+  [[ -f "$placement_dir/COMPLETE" ]] || fail "placement $placement is not complete"
   placement_raw=("$placement_dir"/raw/*-raw.json)
   (( ${#placement_raw[@]} > 0 )) || fail "placement $placement contains no raw results"
   raw_paths+=("${placement_raw[@]}")
 done
-(( ${#raw_paths[@]} > 0 )) || fail "execution contains no complete placements"
 
 target="$repo_root/results/$campaign_id/$execution_id"
 [[ ! -e "$target" ]] || fail "refusing to overwrite existing execution: $target"
@@ -64,16 +50,11 @@ staged_raw=("$stage"/raw/*-raw.json)
 if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
   [[ -d "$execution_dir/circuits" ]] || fail "execution spool is missing QV circuits"
   cp -R "$execution_dir/circuits" "$stage/circuits"
-  qv_finalize_options=()
-  if [[ "$allow_partial_placements" == true ]]; then
-    qv_finalize_options+=(--allow-partial-placements)
-  fi
   .venv/bin/clifft-bench qv-finalize \
     --campaign "$campaign_path" \
     --execution-id "$execution_id" \
     --circuit-dir "$stage/circuits" \
     --output-dir "$stage" \
-    "${qv_finalize_options[@]}" \
     "${staged_raw[@]}"
 else
   .venv/bin/clifft-bench finalize \
