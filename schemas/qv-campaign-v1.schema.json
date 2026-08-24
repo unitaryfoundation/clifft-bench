@@ -47,6 +47,21 @@
         "memory_limit_gib": {"type": "number", "exclusiveMinimum": 0}
       }
     },
+    "legacy_result_manifests": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sha256", "placements", "replicas_per_placement", "reason"],
+        "properties": {
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "placements": {"type": "integer", "minimum": 1},
+          "replicas_per_placement": {"type": "integer", "minimum": 1},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    },
     "circuit": {
       "type": "object",
       "additionalProperties": false,

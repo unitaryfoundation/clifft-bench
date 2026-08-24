@@ -31,6 +31,8 @@ available in repository history rather than the active tree.
 The less-frequent single-shot QV campaign uses a separate `c8i.8xlarge`
 hardware epoch with 16 physical cores, 32 logical CPUs, and 64 GiB RAM. It does
 not replace the `m7a.xlarge` QEC reference or make their absolute numbers
-comparable. The QV launch settings, physical-core affinity policy, matrix, and
-two-stopped-instance convention are documented in
-[`qv-multicore.md`](qv-multicore.md).
+comparable. It uses one placement, matching the original paper's single-host
+collection with three deterministic circuit seeds; the three-placement QEC
+absolute-throughput rule above does not apply to it. The QV launch settings,
+physical-core affinity policy, matrix, and two-stopped-instance convention are
+documented in [`qv-multicore.md`](qv-multicore.md).

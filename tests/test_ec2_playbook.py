@@ -25,6 +25,7 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "clifft-bench/qv-campaign/v1" in placement
     assert "clifft-bench qv-run" in placement
     assert "clifft-bench qv-finalize" in finalize
+    assert "--allow-partial-placements" in finalize
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement
     assert "clifft-bench finalize" in finalize

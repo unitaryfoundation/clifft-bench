@@ -109,19 +109,25 @@ def _validate_circuit_artifacts(
 
 
 def _validate_execution(
-    campaign: QVCampaign, execution_id: str, raw_paths: list[Path], circuit_dir: Path
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    expected_results = (
-        int(campaign.document["collection"]["placements"])
-        * int(campaign.document["collection"]["replicas_per_placement"])
-    )
-    if len(raw_paths) != expected_results:
-        raise SchemaValidationError(
-            f"expected {expected_results} raw QV results, received {len(raw_paths)}"
-        )
+    campaign: QVCampaign,
+    execution_id: str,
+    raw_paths: list[Path],
+    circuit_dir: Path,
+    *,
+    allow_partial_placements: bool = False,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    if not raw_paths:
+        raise SchemaValidationError("QV finalization requires at least one raw result")
     results = [validate_path(path.resolve()) for path in raw_paths]
+    manifest_plans = {campaign.manifest_sha256: campaign.document["collection"]}
+    for item in campaign.document.get("legacy_result_manifests", []):
+        digest = str(item["sha256"])
+        if digest in manifest_plans:
+            raise SchemaValidationError(f"duplicate QV result manifest digest {digest}")
+        manifest_plans[digest] = item
     expected_cases = _expected_case_ids(campaign)
     attempts: set[tuple[int, int]] = set()
+    result_manifest_digests: set[str] = set()
     source_commits: set[str] = set()
     images: set[str] = set()
     regions: set[str] = set()
@@ -133,8 +139,10 @@ def _validate_execution(
     for result in results:
         if result["campaign"]["id"] != campaign.id:
             raise SchemaValidationError("raw result belongs to another QV campaign")
-        if result["campaign"]["manifest_sha256"] != campaign.manifest_sha256:
+        result_manifest_digest = str(result["campaign"]["manifest_sha256"])
+        if result_manifest_digest not in manifest_plans:
             raise SchemaValidationError("raw result campaign manifest digest mismatch")
+        result_manifest_digests.add(result_manifest_digest)
         if result["run"]["execution_id"] != execution_id:
             raise SchemaValidationError("raw result execution ID mismatch")
         if result["run"]["profile_id"] != campaign.id:
@@ -179,11 +187,27 @@ def _validate_execution(
             json.dumps(result["campaign"]["circuit_generator_dependencies"], sort_keys=True)
         )
         boots_by_placement[attempt[0]].add(str(cloud["boot_id"]))
-    placements = int(campaign.document["collection"]["placements"])
-    replicas = int(campaign.document["collection"]["replicas_per_placement"])
+    if len(result_manifest_digests) != 1:
+        raise SchemaValidationError("QV results use different campaign manifest digests")
+    result_manifest_digest = next(iter(result_manifest_digests))
+    source_collection = manifest_plans[result_manifest_digest]
+    placements = int(source_collection["placements"])
+    replicas = int(source_collection["replicas_per_placement"])
+    planned_placements = list(range(1, placements + 1))
+    collected_placements = sorted({placement for placement, _replica in attempts})
+    if allow_partial_placements:
+        expected_collected = list(range(1, max(collected_placements) + 1))
+        if collected_placements != expected_collected:
+            raise SchemaValidationError(
+                "partial QV placements must form a complete prefix starting at placement 1"
+            )
+        if not set(collected_placements).issubset(planned_placements):
+            raise SchemaValidationError("raw result placement exceeds the campaign plan")
+    else:
+        expected_collected = planned_placements
     expected_attempts = {
         (placement, replica)
-        for placement in range(1, placements + 1)
+        for placement in expected_collected
         for replica in range(1, replicas + 1)
     }
     if attempts != expected_attempts:
@@ -206,7 +230,14 @@ def _validate_execution(
     if len(placement_boots) != len(boots_by_placement):
         raise SchemaValidationError("each QV placement requires a distinct stop/start boot")
     circuits = _validate_circuit_artifacts(results, circuit_dir)
-    return results, circuits
+    coverage = {
+        "source_manifest_sha256": result_manifest_digest,
+        "planned_placements": placements,
+        "completed_placements": collected_placements,
+        "replicas_per_placement": replicas,
+        "complete": collected_placements == planned_placements,
+    }
+    return results, circuits, coverage
 
 
 def _case_rows(
@@ -273,7 +304,14 @@ def _distribution(values: list[float]) -> dict[str, Any] | None:
     }
 
 
-def _summary(campaign: QVCampaign, execution_id: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
+def _summary(
+    campaign: QVCampaign,
+    execution_id: str,
+    rows: list[dict[str, Any]],
+    *,
+    classification: str,
+    collection: dict[str, Any],
+) -> dict[str, Any]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
         grouped[str(row["case_id"])].append(row)
@@ -302,6 +340,8 @@ def _summary(campaign: QVCampaign, execution_id: str, rows: list[dict[str, Any]]
         "execution_id": execution_id,
         "campaign_id": campaign.id,
         "hardware_epoch": campaign.document["hardware_epoch"],
+        "classification": classification,
+        "collection": collection,
         "cases": cases,
     }
 
@@ -313,16 +353,33 @@ def finalize_qv_execution(
     raw_paths: list[Path],
     circuit_dir: Path,
     output_dir: Path,
+    allow_partial_placements: bool = False,
 ) -> dict[str, Any]:
-    results, circuits = _validate_execution(campaign, execution_id, raw_paths, circuit_dir)
+    results, circuits, collection = _validate_execution(
+        campaign,
+        execution_id,
+        raw_paths,
+        circuit_dir,
+        allow_partial_placements=allow_partial_placements,
+    )
     rows = _case_rows(campaign, execution_id, results)
-    summary = _summary(campaign, execution_id, rows)
+    classification = campaign.document["classification"]
+    if not collection["complete"] and classification != "smoke":
+        classification = "exploratory"
+    summary = _summary(
+        campaign,
+        execution_id,
+        rows,
+        classification=classification,
+        collection=collection,
+    )
     index = {
         "index_format": "clifft-bench/qv-execution/v1",
         "execution_id": execution_id,
         "campaign_id": campaign.id,
         "hardware_epoch": campaign.document["hardware_epoch"],
-        "classification": campaign.document["classification"],
+        "classification": classification,
+        "collection": collection,
         "result_count": len(results),
         "case_rows": len(rows),
         "circuits": circuits,
