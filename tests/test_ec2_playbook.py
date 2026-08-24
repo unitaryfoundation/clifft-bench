@@ -28,6 +28,8 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert ".runs[]" in placement
     assert "clifft-bench/qv-campaign/v1" in placement
     assert "clifft-bench qv-run" in placement
+    assert "--memory-limit-gib" in placement
+    assert placement.count("--kill-after=30s") == 2
     assert "clifft-bench qv-finalize" in finalize
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement

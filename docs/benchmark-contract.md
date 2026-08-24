@@ -44,11 +44,9 @@ separate future benchmark profile so they cannot be mixed into the same result
 series.
 
 Materializing full measurement or detector arrays is not part of the logical
-work. Clifft and SymFT expose aggregate-count APIs. Tsim returns detector and
-observable arrays, so its adapter reduces those arrays to the same counts
-inside the timed public-call boundary. That unavoidable API overhead is part of
-the observed Tsim throughput and is recorded as such; it does not change the
-attempted-shot numerator.
+work. The Clifft and SymFT configurations in these campaigns expose
+aggregate-count APIs, and any public-call overhead needed to produce those
+counts remains inside the timed boundary.
 
 ## Software identity
 
@@ -90,12 +88,20 @@ logical CPU and receives the same single-thread environment:
 
 `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`,
 `NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, and `BLIS_NUM_THREADS` are 1;
-JAX is CPU-only, x64-enabled, and has Eigen multithreading disabled.
+adapter-specific restrictions are also captured in runtime metadata.
 
 Linux affinity is applied with `sched_setaffinity` and verified. An unsupported
 or failed affinity request is recorded, never silently treated as successful.
 Within each pair, repetitions alternate forward and reverse order. Two
 repetitions therefore produce `A/B/B/A`.
+
+Each worker also receives the campaign's 12 GiB Linux address-space ceiling.
+The requested value is embedded in every raw case, the applied `RLIMIT_AS` is
+recorded after setup, and finalization rejects results that do not match the
+campaign. An allocation failure is retained as a structured case error. The
+ceiling follows the resource-limit pattern used by the original QV benchmark
+while reserving 4 GiB of the reference host for the controller and operating
+system; the separate QV campaign retains its 10 GiB limit.
 
 The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
 `seed`, and execution repetition `r` begins at
@@ -104,10 +110,7 @@ by one. The worker enforces the 100-million-call stride before a stream
 identifier can overlap the following repetition, and the harness rejects
 repetition counts whose reserved ranges exceed the unsigned 32-bit seed space.
 These non-overlapping ranges keep every phase deterministic for adapters that
-expose per-call streams. Tsim
-0.1.5 instead accepts a seed when its sampler is prepared and advances that
-prepared stream across calls. Its adapter fixes that seed and records the
-different stream semantics in runtime metadata.
+expose per-call streams.
 
 These fixed streams exist only to make performance runs replayable and
 auditable. They are not a seeding recommendation for scientific simulation or
@@ -122,9 +125,9 @@ Two distinct quantities are recorded:
 - `shots_per_call`: attempted shots requested by one public API call.
 
 Clifft exposes no internal shot-batch choice in this API, so its batch size is
-1. SymFT and Tsim batch sizes are explicit manifest values, never hidden
-automatic choices. A large-batch throughput result is not a single-circuit
-latency result.
+1. SymFT batch sizes are explicit manifest values, never hidden automatic
+choices. A large-batch throughput result is not a single-circuit latency
+result.
 Cross-mode tool comparisons are intentional end-to-end configuration
 comparisons, not claims of equal public-call granularity. Derived comparison
 rows therefore carry both sides' mode, effective batch size, and shots per
@@ -172,3 +175,8 @@ manifests, exact environment locks, comparison declarations, a hardware epoch,
 and the required placements/replicas. A run becomes official evidence only
 after the manual host checks, complete finalization, and review of its results
 PR.
+
+Tsim remains covered by adapter and reference-convention smoke tests, but is
+not part of the official CPU campaign. A future GPU campaign will define its
+own hardware epoch and resource contract rather than mixing CPU fallback
+results with this series.

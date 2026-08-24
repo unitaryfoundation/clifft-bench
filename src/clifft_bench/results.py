@@ -441,6 +441,7 @@ def _validate_execution(
 
     launches = set()
     placements: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    expected_memory_limit_bytes = int(float(collection["memory_limit_gib"]) * (1 << 30))
     for result in results:
         if result["run"]["profile_id"] != campaign.id:
             raise ValueError(
@@ -450,6 +451,25 @@ def _validate_execution(
         cloud = result["runner"].get("cloud")
         if cloud is None:
             raise ValueError("campaign results require complete cloud identity")
+        for case in result["cases"]:
+            observed_memory_limit = case["execution"].get("memory_limit_bytes")
+            if observed_memory_limit != expected_memory_limit_bytes:
+                raise ValueError(
+                    "raw result memory limit does not match the campaign: "
+                    f"expected {expected_memory_limit_bytes}, received "
+                    f"{observed_memory_limit!r}"
+                )
+            setup = case.get("setup")
+            if setup is not None:
+                applied_memory_limit = setup["runtime_metadata"].get(
+                    "address_space_limit_bytes"
+                )
+                if applied_memory_limit != expected_memory_limit_bytes:
+                    raise ValueError(
+                        "worker memory limit does not match the campaign: "
+                        f"expected {expected_memory_limit_bytes}, received "
+                        f"{applied_memory_limit!r}"
+                    )
         launches.add(
             tuple(
                 cloud[key]

@@ -65,6 +65,21 @@ def test_qec_campaigns_target_clifft_0_9_0() -> None:
     } == {"clifft-0.9.0"}
 
 
+def test_current_cpu_campaign_contains_only_clifft_and_symft() -> None:
+    campaign = load_campaign(ROOT / "campaigns/current-tools-v1/campaign.v1.json")
+
+    assert {
+        case.implementation.definition["adapter"]
+        for suite in campaign.suites
+        for case in suite.cases
+    } == {"clifft", "symft"}
+    assert {environment["id"] for environment in campaign.document["environments"]} == {
+        "clifft-0.8.0",
+        "clifft-0.9.0",
+        "symft-0.1.0-9ec5790",
+    }
+
+
 def test_campaign_environment_locks_pin_every_requirement() -> None:
     for requirements_path in sorted((ROOT / "environments").glob("*.txt")):
         requirements = [

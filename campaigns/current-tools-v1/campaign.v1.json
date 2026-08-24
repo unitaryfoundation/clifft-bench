@@ -1,7 +1,7 @@
 {
   "schema_version": "clifft-bench/campaign/v1",
   "id": "current-tools-v1",
-  "title": "Current single-core Clifft, SymFT, and Tsim comparison",
+  "title": "Current single-core Clifft and SymFT comparison",
   "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
   "runs": [
     {
@@ -23,10 +23,6 @@
     {
       "id": "symft-batch-32",
       "run_manifest": "symft-batch-32.run.json"
-    },
-    {
-      "id": "tsim-0.1.5",
-      "run_manifest": "tsim-0.1.5.run.json"
     }
   ],
   "reference_host": {
@@ -39,7 +35,8 @@
   "collection": {
     "placements": 3,
     "replicas_per_placement": 1,
-    "run_timeout_minutes": 90
+    "run_timeout_minutes": 90,
+    "memory_limit_gib": 12
   },
   "environments": [
     {
@@ -63,12 +60,6 @@
         "SYMFT_PY_NATIVE": "1",
         "SYMFT_PY_ENABLE_CUDA": "0"
       }
-    },
-    {
-      "id": "tsim-0.1.5",
-      "python_executable_env": "CLIFFT_BENCH_TSIM_0_1_5_PYTHON",
-      "requirements": "../../environments/tsim-0.1.5.txt",
-      "import_modules": ["tsim"]
     }
   ],
   "comparisons": [
@@ -85,8 +76,7 @@
       "candidate_runs": [
         "symft-single",
         "symft-batch-2048",
-        "symft-batch-32",
-        "tsim-0.1.5"
+        "symft-batch-32"
       ]
     }
   ]

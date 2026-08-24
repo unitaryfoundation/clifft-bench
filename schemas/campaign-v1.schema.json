@@ -41,11 +41,14 @@
     "collection": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["placements", "replicas_per_placement", "run_timeout_minutes"],
+      "required": [
+        "placements", "replicas_per_placement", "run_timeout_minutes", "memory_limit_gib"
+      ],
       "properties": {
         "placements": {"type": "integer", "minimum": 1},
         "replicas_per_placement": {"type": "integer", "minimum": 1},
-        "run_timeout_minutes": {"type": "integer", "minimum": 1}
+        "run_timeout_minutes": {"type": "integer", "minimum": 1},
+        "memory_limit_gib": {"type": "number", "exclusiveMinimum": 0}
       }
     },
     "environments": {

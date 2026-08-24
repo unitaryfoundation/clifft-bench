@@ -72,10 +72,12 @@ Inspect the declared number of placements before starting:
 jq '.collection' campaigns/"$CLIFFT_BENCH_CAMPAIGN"/*campaign.v1.json
 ```
 
-The current-tools campaign gives each Tsim setup or request five minutes and
-caps each complete tool run at 90 minutes. A Tsim timeout is retained as a
-structured result: the campaign does not spend unbounded EC2 time trying to
-turn an impractical circuit into a throughput number.
+The single-core QEC campaigns give every worker a declared 12 GiB Linux
+address-space ceiling. The request is embedded in each raw case and the
+applied ceiling is recorded after setup. Each complete run also has a campaign
+wall-clock timeout with a 30-second forced-kill fallback. These bounds protect
+the 16 GiB host while leaving memory for the controller and operating system.
+The separate QV campaign retains its own 10 GiB per-worker ceiling.
 
 ## 4. Collect a placement
 
@@ -88,6 +90,11 @@ export CLIFFT_BENCH_EXECUTION=current-tools-v1-202608
   "$CLIFFT_BENCH_EXECUTION" \
   1
 ```
+
+Always start a new execution ID after changing the campaign or harness. Tool
+environments from an earlier attempt can be reused after bootstrap verifies
+them, but incomplete raw results from a different source commit cannot be
+mixed into the new execution.
 
 Run inside `tmux` if the SSH connection may close. The collector executes each
 campaign run and replica serially, pins every worker to one logical CPU, and

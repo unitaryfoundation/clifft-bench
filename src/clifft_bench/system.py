@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import platform
+import resource
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -95,6 +96,19 @@ def apply_affinity(cpu: int | None) -> dict[str, Any]:
     if not result["applied"]:
         result["reason"] = "operating system did not retain the requested affinity mask"
     return result
+
+
+def apply_address_space_limit(memory_limit_gib: float | None) -> int | None:
+    """Apply the declared Linux per-worker address-space ceiling."""
+    if memory_limit_gib is None or not platform.system().startswith("Linux"):
+        return None
+    if memory_limit_gib <= 0:
+        raise ValueError("memory limit must be positive")
+    requested = int(memory_limit_gib * (1 << 30))
+    _soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    applied = requested if hard == resource.RLIM_INFINITY else min(requested, hard)
+    resource.setrlimit(resource.RLIMIT_AS, (applied, hard))
+    return int(resource.getrlimit(resource.RLIMIT_AS)[0])
 
 
 def _run_text(command: list[str], cwd: Path | None = None) -> str | None:

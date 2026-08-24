@@ -20,6 +20,7 @@
         "batch_enabled": false,
         "batch_size": 1,
         "batch_size_effective": 1,
+        "memory_limit_bytes": null,
         "min_sample_seconds": 0.01,
         "mode": "throughput",
         "postselection": true,
@@ -61,6 +62,7 @@
         },
         "duration_seconds": 0.022351207677274942,
         "runtime_metadata": {
+          "address_space_limit_bytes": null,
           "batch_enabled": false,
           "compile_seconds": 0.000496583990752697,
           "cpu_baseline": "example",

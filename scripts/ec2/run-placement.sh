@@ -26,6 +26,7 @@ expected_instance_type="$(jq -er '.reference_host.instance_type' "$campaign_path
 placement_count="$(jq -er '.collection.placements' "$campaign_path")"
 replicas="$(jq -er '.collection.replicas_per_placement' "$campaign_path")"
 timeout_minutes="$(jq -er '.collection.run_timeout_minutes' "$campaign_path")"
+memory_limit_gib="$(jq -er '.collection.memory_limit_gib' "$campaign_path")"
 (( placement >= 1 && placement <= placement_count )) || \
   fail "placement must be between 1 and $placement_count"
 
@@ -169,8 +170,10 @@ else
       export CLIFFT_BENCH_RUN_ATTEMPT="$placement.$replica"
       echo "Running $label"
       set +e
-      timeout --signal=TERM "${timeout_minutes}m" .venv/bin/clifft-bench run \
+      timeout --signal=TERM --kill-after=30s "${timeout_minutes}m" \
+        .venv/bin/clifft-bench run \
         --run-manifest "$run_manifest" \
+        --memory-limit-gib "$memory_limit_gib" \
         --output "$output"
       run_status=$?
       set -e

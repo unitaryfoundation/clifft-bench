@@ -19,7 +19,7 @@ reference host and merged through reviewed results PRs.
 The checked-in campaigns currently prepare two evidence sets:
 
 - `clifft-history-v1`: Clifft 0.1.0 through 0.9.0 on the shared QEC corpus;
-- `current-tools-v1`: Clifft 0.8/0.9, SymFT single/batched, and Tsim 0.1.5.
+- `current-tools-v1`: Clifft 0.8/0.9 and SymFT single/batched.
 
 An additional, less-frequent `qv-multicore-v1` campaign measures single-shot
 Quantum Volume latency across current simulators and Clifft's intra-shot
@@ -69,7 +69,10 @@ uv run clifft-bench list
 
 The real-adapter smoke check requires Clifft 0.9 and the pinned SymFT source.
 Their native Linux extensions are tested in GitHub CI; Apple Silicon can run
-the harness tests but cannot build the pinned SymFT extension.
+the harness tests but cannot build the pinned SymFT extension. A small Tsim CPU
+smoke check remains in CI to preserve its adapter and reference-convention
+contract, but Tsim performance is deferred to a future GPU campaign on its
+intended hardware.
 
 ## Add a circuit
 

@@ -101,7 +101,9 @@ class WorkerClient:
             raise WorkerError(response["error"])
         return response
 
-    def prepare(self, timeout_seconds: float) -> dict[str, Any]:
+    def prepare(
+        self, timeout_seconds: float, memory_limit_gib: float | None = None
+    ) -> dict[str, Any]:
         definition = self.case.implementation.definition
         return self.request(
             {
@@ -113,6 +115,7 @@ class WorkerClient:
                 "expected_version": definition["version"],
                 "dependency_distributions": definition["dependency_distributions"],
                 "logical_cpu": self.cpu,
+                "memory_limit_gib": memory_limit_gib,
                 "timeout_seconds": timeout_seconds,
             },
             timeout_seconds=timeout_seconds + 5,
@@ -171,11 +174,20 @@ def _simulator_record(case: Case) -> dict[str, Any]:
     }
 
 
-def _new_case_result(case: Case, measurement: dict[str, Any]) -> dict[str, Any]:
+def _new_case_result(
+    case: Case,
+    measurement: dict[str, Any],
+    memory_limit_gib: float | None,
+) -> dict[str, Any]:
     execution = dict(case.definition["execution"])
     execution.update(
         {
             "threads_requested": 1,
+            "memory_limit_bytes": (
+                int(memory_limit_gib * (1 << 30))
+                if memory_limit_gib is not None
+                else None
+            ),
             "shots_per_call": case.definition["shots_per_call"],
             "min_sample_seconds": measurement["min_sample_seconds"],
             "request_timeout_seconds": measurement["request_timeout_seconds"],
@@ -245,6 +257,7 @@ def run_suite(
     output_path: Path,
     case_pattern: str | None = None,
     cpu: int | None = None,
+    memory_limit_gib: float | None = None,
     min_sample_seconds: float | None = None,
     repetitions: int | None = None,
 ) -> dict[str, Any]:
@@ -255,6 +268,8 @@ def run_suite(
         measurement["repetitions"] = repetitions
     if measurement["min_sample_seconds"] <= 0 or measurement["repetitions"] < 1:
         raise ValueError("measurement overrides must be positive")
+    if memory_limit_gib is not None and memory_limit_gib <= 0:
+        raise ValueError("memory limit must be positive")
     seed_range_end = (
         int(suite.run["seed"])
         + 10_000
@@ -293,7 +308,9 @@ def run_suite(
             "workflow": collect_workflow_metadata(),
         },
         "runner": collect_runner_metadata(repository_root()),
-        "cases": [_new_case_result(case, measurement) for case in cases],
+        "cases": [
+            _new_case_result(case, measurement, memory_limit_gib) for case in cases
+        ],
     }
     case_results = {item["case_id"]: item for item in document["cases"]}
     _atomic_write(output_path, document)
@@ -311,7 +328,10 @@ def run_suite(
                     try:
                         client = WorkerClient(case, logical_cpu)
                         clients[case.id] = client
-                        setup = client.prepare(float(measurement["setup_timeout_seconds"]))
+                        setup = client.prepare(
+                            float(measurement["setup_timeout_seconds"]),
+                            memory_limit_gib,
+                        )
                         result["setup"] = {
                             "duration_seconds": setup["duration_seconds"],
                             "affinity": setup["affinity"],

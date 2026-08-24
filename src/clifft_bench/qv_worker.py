@@ -12,6 +12,8 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
+from clifft_bench.system import apply_address_space_limit
+
 DEPENDENCIES = {
     "clifft": ["clifft", "numpy"],
     "qiskit": ["qiskit", "qiskit-aer", "numpy"],
@@ -72,13 +74,7 @@ def _set_resource_limits(memory_limit_gib: float, cpu_set: list[int]) -> int | N
         os.sched_setaffinity(0, set(cpu_set))
         if sorted(os.sched_getaffinity(0)) != sorted(cpu_set):
             raise RuntimeError("operating system did not retain the requested CPU affinity")
-    if not sys.platform.startswith("linux"):
-        return None
-    limit = int(memory_limit_gib * (1 << 30))
-    _soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-    soft = limit if hard == resource.RLIM_INFINITY else min(limit, hard)
-    resource.setrlimit(resource.RLIMIT_AS, (soft, hard))
-    return int(resource.getrlimit(resource.RLIMIT_AS)[0])
+    return apply_address_space_limit(memory_limit_gib)
 
 
 def _peak_rss_bytes() -> int:
