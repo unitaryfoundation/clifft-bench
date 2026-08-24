@@ -13,6 +13,9 @@ authors = [{ name = "Unitary Foundation" }]
 dependencies = ["jsonschema>=4.23"]
 
 [project.optional-dependencies]
+plot = [
+    "matplotlib>=3.10",
+]
 test = [
     "numpy>=2.0",
     "pytest>=8.3",

@@ -115,3 +115,19 @@ Finalization commits the byte-identical QASM corpus, raw JSON, a long-form
 `cases.csv`, and a compact summary. Plotting can compare isolated tool runs by
 `run_id`, width, seed, thread count, placement, and hardware epoch without
 changing how measurements are collected.
+
+## Collected result
+
+![QV current-tool latency and Clifft strong scaling](../figures/qv-multicore-v1-2026082.png)
+
+[Publication PDF](../figures/qv-multicore-v1-2026082.pdf)
+
+The left panel retains the original paper's log-scale latency comparison. The
+right panel keeps the Clifft thread-scaling cases separate and reports paired
+per-seed speedup over one physical core. The figure is labeled exploratory
+because it uses the curated execution described in its raw provenance.
+Regenerate both the publication PDF and the GitHub-preview PNG with:
+
+```bash
+uv run --extra plot python scripts/plot_qv.py
+```

@@ -14,9 +14,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -e '.[test]'
+      - run: python -m pip install -e '.[plot,test]'
       - run: pytest
       - run: ruff check .
+      - run: python scripts/plot_qv.py --output-base /tmp/qv-performance
 
   adapter-smoke:
     runs-on: ubuntu-latest
