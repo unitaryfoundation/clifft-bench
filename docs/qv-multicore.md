@@ -101,8 +101,7 @@ Bootstrap compiles the three Clifft environments with a 64-qubit build limit;
 the 0.9.0 release source is built with `CLIFFT_OPENMP=ON`, so missing compiler
 support fails immediately rather than silently producing a serial build.
 
-Then collect each placement, stopping and starting the same QV instance in
-between:
+Then collect the single placement:
 
 ```bash
 export CLIFFT_BENCH_EXECUTION=qv-multicore-v1-YYYYMM
@@ -117,7 +116,7 @@ placement has a 150-minute launcher ceiling, while the existing eight-hour
 shutdown guard remains the final cost backstop. Timeouts and tool failures are
 retained as structured case evidence.
 
-After placement 3, finalize and push exactly as in the main manual playbook:
+After placement 1, finalize and push exactly as in the main manual playbook:
 
 ```bash
 ./scripts/ec2/finalize.sh \
@@ -129,3 +128,23 @@ Finalization commits the byte-identical QASM corpus, raw JSON, a long-form
 `cases.csv`, and a compact summary. Plotting can compare isolated tool runs by
 `run_id`, width, seed, thread count, placement, and hardware epoch without
 changing how measurements are collected.
+
+### Finalizing a placement started under the earlier policy
+
+The initial campaign manifest planned three stop/start placements. If placement
+1 began under that exact manifest, it may be retained without rewriting its raw
+provenance:
+
+```bash
+./scripts/ec2/finalize.sh \
+  "$CLIFFT_BENCH_CAMPAIGN" \
+  "$CLIFFT_BENCH_EXECUTION" \
+  --allow-partial-placements
+```
+
+This migration escape hatch recognizes only the checked-in legacy manifest
+digest, accepts complete placements starting at placement 1, records planned
+and completed placement coverage in `index.json` and `summary.json`, and labels
+the transitional execution as `exploratory`. It does not accept an interrupted
+placement or silently promote partial coverage to official evidence. New
+executions use the single-placement manifest and finalize without this flag.

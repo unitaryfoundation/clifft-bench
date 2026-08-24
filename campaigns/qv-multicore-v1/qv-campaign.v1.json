@@ -15,12 +15,20 @@
     "cpu_policy": "one-logical-cpu-per-physical-core"
   },
   "collection": {
-    "placements": 3,
+    "placements": 1,
     "replicas_per_placement": 1,
     "run_timeout_minutes": 150,
     "case_timeout_seconds": 600,
     "memory_limit_gib": 10
   },
+  "legacy_result_manifests": [
+    {
+      "sha256": "9b640356b66d9b1d8ff25a5f8178fc9a2c45c5cb65cb0e79a1c4419b991d8a47",
+      "placements": 3,
+      "replicas_per_placement": 1,
+      "reason": "QV collection changed from three stop/start placements to the paper-compatible single-placement policy."
+    }
+  ],
   "circuit": {
     "family": "quantum-volume",
     "depth": "width",
