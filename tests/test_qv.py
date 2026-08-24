@@ -158,11 +158,8 @@ def _small_campaign(tmp_path: Path):  # type: ignore[no-untyped-def]
 
 def _small_result(tmp_path: Path):  # type: ignore[no-untyped-def]
     campaign, run = _small_campaign(tmp_path)
-    circuit_dir = tmp_path / "circuits"
-    circuit_dir.mkdir()
-    circuit_path = circuit_dir / "qv-q6-seed42.qasm"
-    circuit_path.write_text("OPENQASM 2.0;\nqreg q[6];\n")
-    digest = hashlib.sha256(circuit_path.read_bytes()).hexdigest()
+    circuit_name = "qv-q6-seed42.qasm"
+    digest = hashlib.sha256(b"OPENQASM 2.0;\nqreg q[6];\n").hexdigest()
     runner = collect_runner_metadata(ROOT)
     runner["physical_cores"] = 1
     runner["logical_cpus"] = 1
@@ -224,7 +221,7 @@ def _small_result(tmp_path: Path):  # type: ignore[no-untyped-def]
                     "depth": 6,
                     "seed": 42,
                     "basis_gates": ["cx", "u3"],
-                    "path": circuit_path.name,
+                    "path": circuit_name,
                     "sha256": digest,
                 },
                 "threads": {
@@ -248,11 +245,11 @@ def _small_result(tmp_path: Path):  # type: ignore[no-untyped-def]
     validate_document(result)
     raw_path = tmp_path / "raw.json"
     raw_path.write_text(json.dumps(result))
-    return campaign, circuit_dir, raw_path
+    return campaign, raw_path
 
 
 def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> None:
-    campaign, circuit_dir, raw_path = _small_result(tmp_path)
+    campaign, raw_path = _small_result(tmp_path)
     output = tmp_path / "derived"
     output.mkdir()
 
@@ -260,20 +257,19 @@ def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> Non
         campaign,
         execution_id="qv-test",
         raw_paths=[raw_path],
-        circuit_dir=circuit_dir,
         output_dir=output,
     )
 
     assert index["case_rows"] == 1
     assert index["classification"] == "official"
+    assert index["files"] == {"raw": "raw/", "cases": "cases.csv"}
+    assert "circuits" not in index
     assert (output / "cases.csv").read_text().count("\n") == 2
-    assert json.loads((output / "summary.json").read_text())["cases"][0][
-        "execution_seconds"
-    ]["median"] == 0.5
+    assert not (output / "summary.json").exists()
 
 
 def test_qv_curated_result_is_traceable_and_exploratory(tmp_path) -> None:
-    campaign, circuit_dir, raw_path = _small_result(tmp_path)
+    campaign, raw_path = _small_result(tmp_path)
     result = json.loads(raw_path.read_text())
     result["curation"] = {
         "source_result_commit": "b" * 40,
@@ -291,12 +287,8 @@ def test_qv_curated_result_is_traceable_and_exploratory(tmp_path) -> None:
         campaign,
         execution_id="qv-test",
         raw_paths=[raw_path],
-        circuit_dir=circuit_dir,
         output_dir=output,
     )
 
     assert index["classification"] == "exploratory"
     assert index["curation"] == result["curation"]
-    summary = json.loads((output / "summary.json").read_text())
-    assert summary["classification"] == "exploratory"
-    assert summary["curation"] == result["curation"]

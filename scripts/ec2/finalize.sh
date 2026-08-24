@@ -48,12 +48,9 @@ cp "${raw_paths[@]}" "$stage/raw/"
 
 staged_raw=("$stage"/raw/*-raw.json)
 if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
-  [[ -d "$execution_dir/circuits" ]] || fail "execution spool is missing QV circuits"
-  cp -R "$execution_dir/circuits" "$stage/circuits"
   .venv/bin/clifft-bench qv-finalize \
     --campaign "$campaign_path" \
     --execution-id "$execution_id" \
-    --circuit-dir "$stage/circuits" \
     --output-dir "$stage" \
     "${staged_raw[@]}"
 else

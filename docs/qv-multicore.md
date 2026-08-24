@@ -111,23 +111,24 @@ After placement 1, finalize and push exactly as in the main manual playbook:
   "$CLIFFT_BENCH_EXECUTION"
 ```
 
-Finalization commits the byte-identical QASM corpus, raw JSON, a long-form
-`cases.csv`, and a compact summary. Plotting can compare isolated tool runs by
-`run_id`, width, seed, thread count, placement, and hardware epoch without
-changing how measurements are collected.
+Finalization commits raw JSON, a compact execution index, and long-form
+`cases.csv`. Generated QASM remains in the external execution spool; its seeds,
+generator dependencies, and fingerprints remain in raw provenance. Plotting
+can compare isolated tool runs by `run_id`, width, seed, thread count,
+placement, and hardware epoch without changing how measurements are collected.
 
 ## Collected result
 
 ![QV current-tool latency and Clifft strong scaling](../figures/qv-multicore-v1-2026082.png)
 
-[Publication PDF](../figures/qv-multicore-v1-2026082.pdf)
-
 The left panel retains the original paper's log-scale latency comparison. The
 right panel keeps the Clifft thread-scaling cases separate and reports paired
 per-seed speedup over one physical core. The figure is labeled exploratory
 because it uses the curated execution described in its raw provenance.
-Regenerate both the publication PDF and the GitHub-preview PNG with:
+Regenerate the GitHub-preview PNG with:
 
 ```bash
 uv run --extra plot python scripts/plot_qv.py
 ```
+
+Pass `--pdf` to also generate an untracked publication PDF.

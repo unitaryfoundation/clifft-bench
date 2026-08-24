@@ -59,8 +59,9 @@ def _parser() -> argparse.ArgumentParser:
         "--output-base",
         type=Path,
         default=ROOT / "figures/qv-multicore-v1-2026082",
-        help="Output path without an extension; writes PDF and PNG",
+        help="Output path without an extension; writes PNG by default",
     )
+    parser.add_argument("--pdf", action="store_true", help="Also write a publication PDF")
     return parser
 
 
@@ -170,7 +171,7 @@ def _plot_strong_scaling(axis: Axes, rows: list[dict[str, str]]) -> None:
     axis.legend(loc="upper left", ncols=2, fontsize=8)
 
 
-def plot(input_path: Path, output_base: Path) -> tuple[Path, Path]:
+def plot(input_path: Path, output_base: Path, *, write_pdf: bool = False) -> list[Path]:
     rows = _read_successes(input_path)
     plt.rcParams.update(
         {
@@ -196,28 +197,31 @@ def plot(input_path: Path, output_base: Path) -> tuple[Path, Path]:
     )
 
     output_base.parent.mkdir(parents=True, exist_ok=True)
-    pdf_path = output_base.with_suffix(".pdf")
     png_path = output_base.with_suffix(".png")
-    figure.savefig(
-        pdf_path,
-        bbox_inches="tight",
-        metadata={
-            "Title": "QV multicore performance",
-            "Author": "Unitary Foundation",
-            "CreationDate": None,
-            "ModDate": None,
-        },
-    )
+    outputs = [png_path]
+    if write_pdf:
+        pdf_path = output_base.with_suffix(".pdf")
+        figure.savefig(
+            pdf_path,
+            bbox_inches="tight",
+            metadata={
+                "Title": "QV multicore performance",
+                "Author": "Unitary Foundation",
+                "CreationDate": None,
+                "ModDate": None,
+            },
+        )
+        outputs.append(pdf_path)
     figure.savefig(png_path, bbox_inches="tight", dpi=200)
     plt.close(figure)
-    return pdf_path, png_path
+    return outputs
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    pdf_path, png_path = plot(args.input.resolve(), args.output_base.resolve())
-    print(pdf_path)
-    print(png_path)
+    paths = plot(args.input.resolve(), args.output_base.resolve(), write_pdf=args.pdf)
+    for path in paths:
+        print(path)
     return 0
 
 
