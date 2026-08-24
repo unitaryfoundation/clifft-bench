@@ -1,0 +1,242 @@
+{
+  "campaign_id": "qv-multicore-v1",
+  "case_rows": 342,
+  "circuits": [
+    {
+      "path": "qv-q6-seed42.qasm",
+      "qubits": 6,
+      "seed": 42,
+      "sha256": "497cad9f2b40346559c726ef8a10e7e7cce3d119bf6d7a7077adf84451b672cf"
+    },
+    {
+      "path": "qv-q6-seed43.qasm",
+      "qubits": 6,
+      "seed": 43,
+      "sha256": "3cf347920deb2b63b4fa668d13968f4ecb4d3e4fcf9802c566198bd4a8a7cc52"
+    },
+    {
+      "path": "qv-q6-seed44.qasm",
+      "qubits": 6,
+      "seed": 44,
+      "sha256": "1bbb42a129f7a173112237c02cb44a033bd43bcdbe197560941de584bbfe1ee3"
+    },
+    {
+      "path": "qv-q8-seed42.qasm",
+      "qubits": 8,
+      "seed": 42,
+      "sha256": "fa322ba50c730cc96e1cba4bc979efc4a3510290eed41d5cb31f6fc7117ef061"
+    },
+    {
+      "path": "qv-q8-seed43.qasm",
+      "qubits": 8,
+      "seed": 43,
+      "sha256": "2ee09d3ca4860216d7fd81e16b24e7a40ab07e2e924db2107d807f7bb3a6a87b"
+    },
+    {
+      "path": "qv-q8-seed44.qasm",
+      "qubits": 8,
+      "seed": 44,
+      "sha256": "3c6fb0bf92a465655996ef6ccd8b5bf07bce3947250de4e1762e9c447f46aace"
+    },
+    {
+      "path": "qv-q10-seed42.qasm",
+      "qubits": 10,
+      "seed": 42,
+      "sha256": "70b4801820b269c5b160ee6fc0316fb17d11d589e9e84a491bc662ca0f3cbc54"
+    },
+    {
+      "path": "qv-q10-seed43.qasm",
+      "qubits": 10,
+      "seed": 43,
+      "sha256": "2d727c4f2d88c1b6ec22f046d027e36318adcb008ba1465bb1bb74f45282f884"
+    },
+    {
+      "path": "qv-q10-seed44.qasm",
+      "qubits": 10,
+      "seed": 44,
+      "sha256": "7e1534984e1ce4672609a6c635371b33d743de8b4ce9e4161133a72555f0ac91"
+    },
+    {
+      "path": "qv-q12-seed42.qasm",
+      "qubits": 12,
+      "seed": 42,
+      "sha256": "d3062d30716d459431719f887d2924824063cadcba8152e938cc880d318fd370"
+    },
+    {
+      "path": "qv-q12-seed43.qasm",
+      "qubits": 12,
+      "seed": 43,
+      "sha256": "e1cd10786485ea3b4e9e6627d1fb9a63756f46c8241a0b1ac52bd4b27d1f7f70"
+    },
+    {
+      "path": "qv-q12-seed44.qasm",
+      "qubits": 12,
+      "seed": 44,
+      "sha256": "8da8c04510cd396ab7c3f75f92702b174fb467e130c10a54a8e4b977389093e7"
+    },
+    {
+      "path": "qv-q14-seed42.qasm",
+      "qubits": 14,
+      "seed": 42,
+      "sha256": "0045451ec65579d6e8a3f34fb918c80ba0b6db00c03dc14c34ea021ee73cfea8"
+    },
+    {
+      "path": "qv-q14-seed43.qasm",
+      "qubits": 14,
+      "seed": 43,
+      "sha256": "b44ba3e315e5bf698e26f4a791750ae0524650f92733a9e13df47d2e351bd6f3"
+    },
+    {
+      "path": "qv-q14-seed44.qasm",
+      "qubits": 14,
+      "seed": 44,
+      "sha256": "84415d157d4534b502c039cf8c48c6bdcd4f0018244310d2b3b15ef32b82c8b5"
+    },
+    {
+      "path": "qv-q16-seed42.qasm",
+      "qubits": 16,
+      "seed": 42,
+      "sha256": "503e15ea4bd95365cac2a81302b3bad70dadb79fa8ebfb63df9004ced4023833"
+    },
+    {
+      "path": "qv-q16-seed43.qasm",
+      "qubits": 16,
+      "seed": 43,
+      "sha256": "536b2b26fd4d2d7ea6b629ff6f7cd102fec18bb2e4ae852a96f5ed0addabaf94"
+    },
+    {
+      "path": "qv-q16-seed44.qasm",
+      "qubits": 16,
+      "seed": 44,
+      "sha256": "e18ebfe05642dd6c6a7dfa05bd73c967ca634431dd1cc1b816aaaf73d23c5636"
+    },
+    {
+      "path": "qv-q18-seed42.qasm",
+      "qubits": 18,
+      "seed": 42,
+      "sha256": "b5b8f8e1f8f58545a2ff4a25e681491186fbfb444644d8f3bca91bd8b30bb11f"
+    },
+    {
+      "path": "qv-q18-seed43.qasm",
+      "qubits": 18,
+      "seed": 43,
+      "sha256": "6df2bb6e973271f0b8eb7a9a0fea320cdd8e168dda785e64a019e0477c4a9770"
+    },
+    {
+      "path": "qv-q18-seed44.qasm",
+      "qubits": 18,
+      "seed": 44,
+      "sha256": "edfc26afc232860426f3bb03215f4fc1ada3be4ba8b56ccef02c3e3e82315b90"
+    },
+    {
+      "path": "qv-q20-seed42.qasm",
+      "qubits": 20,
+      "seed": 42,
+      "sha256": "984eb4b42c188e98e5b882a1e133f0c3e06b97dda244137ce8efe1c8d98acad2"
+    },
+    {
+      "path": "qv-q20-seed43.qasm",
+      "qubits": 20,
+      "seed": 43,
+      "sha256": "1e93ac493bdc9a7fff50b8174381df19a5668a8d842bff532d644c1bbb3deaf7"
+    },
+    {
+      "path": "qv-q20-seed44.qasm",
+      "qubits": 20,
+      "seed": 44,
+      "sha256": "c70743ba0f28d211bbab8188802f49e0127f033d85f4136d5418564f30830d01"
+    },
+    {
+      "path": "qv-q22-seed42.qasm",
+      "qubits": 22,
+      "seed": 42,
+      "sha256": "6105cd2768f3111c7528f81f5e960819a1662a90a0e1112175ed9b3b01ea8ce9"
+    },
+    {
+      "path": "qv-q22-seed43.qasm",
+      "qubits": 22,
+      "seed": 43,
+      "sha256": "b7d7b18f17d3d535010a77a209179777a3bef52f8c7fcdb85b68adac2d577e19"
+    },
+    {
+      "path": "qv-q22-seed44.qasm",
+      "qubits": 22,
+      "seed": 44,
+      "sha256": "00d331c92d52a799991189a52865d5b76591a2cf404ec6ddbf7d29a711bf9c63"
+    },
+    {
+      "path": "qv-q24-seed42.qasm",
+      "qubits": 24,
+      "seed": 42,
+      "sha256": "cba009a6cfe017408783d4ea889d0a156e4d4bda79f17735d507bd8607c01f25"
+    },
+    {
+      "path": "qv-q24-seed43.qasm",
+      "qubits": 24,
+      "seed": 43,
+      "sha256": "05d6abdb5da2233f05b7794218861a6ca3e08c4f965ac917feda73f5266d141d"
+    },
+    {
+      "path": "qv-q24-seed44.qasm",
+      "qubits": 24,
+      "seed": 44,
+      "sha256": "f6db51dbd3caecab15579c8a08d824d77d82d1d4b9015f733d4e0adad291b75c"
+    },
+    {
+      "path": "qv-q26-seed42.qasm",
+      "qubits": 26,
+      "seed": 42,
+      "sha256": "6ecab6f0ed2746161133a88a7afc38d61a37bb82f320d77b173c97295e1cd9da"
+    },
+    {
+      "path": "qv-q26-seed43.qasm",
+      "qubits": 26,
+      "seed": 43,
+      "sha256": "2a7f9ba99e326716085291b2c0e6acad91d456379f10593997755a1c3f608090"
+    },
+    {
+      "path": "qv-q26-seed44.qasm",
+      "qubits": 26,
+      "seed": 44,
+      "sha256": "48c6c7d7a0a787ca17e722906eb9518199a9c41b238990e41ef817fbd0fd0cbb"
+    },
+    {
+      "path": "qv-q28-seed42.qasm",
+      "qubits": 28,
+      "seed": 42,
+      "sha256": "dd17728f1259eb94593e9f577c9ee900f3817b523c6b188d0a18b5ed903977bb"
+    },
+    {
+      "path": "qv-q28-seed43.qasm",
+      "qubits": 28,
+      "seed": 43,
+      "sha256": "632796c08a7872ad0ba24bd34ea17e6d2986bc201e071510c13d719dd27352b0"
+    },
+    {
+      "path": "qv-q28-seed44.qasm",
+      "qubits": 28,
+      "seed": 44,
+      "sha256": "aba4d0711b772ec50786ac1765645737febedf32d6a35c74bea78c58059eee59"
+    }
+  ],
+  "classification": "exploratory",
+  "collection": {
+    "complete": false,
+    "completed_placements": [
+      1
+    ],
+    "planned_placements": 3,
+    "replicas_per_placement": 1,
+    "source_manifest_sha256": "9b640356b66d9b1d8ff25a5f8178fc9a2c45c5cb65cb0e79a1c4419b991d8a47"
+  },
+  "execution_id": "qv-multicore-v1-2026082",
+  "files": {
+    "cases": "cases.csv",
+    "circuits": "circuits/",
+    "raw": "raw/",
+    "summary": "summary.json"
+  },
+  "hardware_epoch": "aws-c8i-8xlarge-ubuntu2404-v1",
+  "index_format": "clifft-bench/qv-execution/v1",
+  "result_count": 1
+}
