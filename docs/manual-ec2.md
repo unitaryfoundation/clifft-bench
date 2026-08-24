@@ -23,8 +23,9 @@ For `clifft-history-v1` and `current-tools-v1`, use these fixed choices:
 - no S3 Files, EFS, FSx, extra volume, or IAM role;
 - SSH restricted to your current IP or an equivalent console connection.
 
-Record the exact AMI ID, region, and availability zone. Before cloning, expect
-Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`:
+The scripts record the exact instance, AMI, region, and availability zone from
+IMDS and require them to remain fixed across placements. Before cloning,
+expect Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`:
 
 ```bash
 grep '^\(NAME\|VERSION_ID\)=' /etc/os-release
@@ -78,17 +79,14 @@ turn an impractical circuit into a throughput number.
 
 ## 4. Collect a placement
 
-Choose a unique execution ID and substitute the exact launch values:
+Choose a unique execution ID:
 
 ```bash
 export CLIFFT_BENCH_EXECUTION=current-tools-v1-202608
 ./scripts/ec2/run-placement.sh \
   "$CLIFFT_BENCH_CAMPAIGN" \
   "$CLIFFT_BENCH_EXECUTION" \
-  1 \
-  ami-0123456789abcdef0 \
-  us-east-1 \
-  us-east-1c
+  1
 ```
 
 Run inside `tmux` if the SSH connection may close. The collector executes each
@@ -102,7 +100,7 @@ silently promoted to a completed placement.
 When the command succeeds, stop the instance in the console. For a campaign
 with additional placements, start the same EBS-backed instance again and run
 the command with placement 2, then 3. The collector requires a distinct Linux
-boot ID and one unchanged AMI/AZ/source identity.
+boot ID and one unchanged instance/AMI/region/AZ/source identity.
 
 ## 5. Finalize and push
 

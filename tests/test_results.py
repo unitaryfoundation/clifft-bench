@@ -107,6 +107,17 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
     assert comparisons[0]["candidate_batch_size_effective"] == "32"
     assert comparisons[0]["candidate_shots_per_call"] == "64"
 
+    changed = json.loads(raw_paths[1].read_text())
+    changed["runner"]["cloud"]["instance_id"] = "i-different"
+    raw_paths[1].write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="fixed launch configuration"):
+        finalize_execution(
+            campaign,
+            execution_id="test-execution",
+            raw_paths=raw_paths,
+            output_dir=tmp_path / "rejected",
+        )
+
 
 def test_comparison_rejects_multiple_successful_cases_for_one_run_and_workload() -> None:
     campaign = Campaign(

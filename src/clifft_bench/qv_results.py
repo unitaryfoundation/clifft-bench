@@ -124,6 +124,7 @@ def _validate_execution(
     attempts: set[tuple[int, int]] = set()
     source_commits: set[str] = set()
     images: set[str] = set()
+    instance_ids: set[str] = set()
     regions: set[str] = set()
     zones: set[str] = set()
     cpu_models: set[str] = set()
@@ -171,6 +172,7 @@ def _validate_execution(
         if runner["suite_source"]["dirty"] is not False:
             raise SchemaValidationError("QV collection requires a clean source checkout")
         source_commits.add(str(runner["suite_source"]["commit"]))
+        instance_ids.add(str(cloud["instance_id"]))
         images.add(str(cloud["image_id"]))
         regions.add(str(cloud["region"]))
         zones.add(str(cloud["availability_zone"]))
@@ -190,6 +192,7 @@ def _validate_execution(
         raise SchemaValidationError("QV placement/replica coverage does not match the campaign")
     stable_identities = (
         source_commits,
+        instance_ids,
         images,
         regions,
         zones,
@@ -198,7 +201,7 @@ def _validate_execution(
     )
     if any(len(values) != 1 for values in stable_identities):
         raise SchemaValidationError(
-            "QV placements must share source, generator, CPU model, AMI, region, and AZ"
+            "QV placements must share source, instance, generator, CPU model, AMI, region, and AZ"
         )
     if any(len(boots) != 1 for boots in boots_by_placement.values()):
         raise SchemaValidationError("replicas in one placement must share one boot ID")

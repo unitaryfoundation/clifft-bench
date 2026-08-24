@@ -109,10 +109,7 @@ export CLIFFT_BENCH_EXECUTION=qv-multicore-v1-YYYYMM
 ./scripts/ec2/run-placement.sh \
   "$CLIFFT_BENCH_CAMPAIGN" \
   "$CLIFFT_BENCH_EXECUTION" \
-  1 \
-  ami-0123456789abcdef0 \
-  us-east-1 \
-  us-east-1c
+  1
 ```
 
 Each case has a 10 GiB address-space limit and a 10-minute timeout. The whole

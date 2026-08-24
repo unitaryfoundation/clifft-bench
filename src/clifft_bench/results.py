@@ -455,6 +455,7 @@ def _validate_execution(
                 cloud[key]
                 for key in (
                     "provider",
+                    "instance_id",
                     "instance_type",
                     "image_id",
                     "region",

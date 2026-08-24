@@ -14,6 +14,9 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "Amazon EC2" in common
     assert "sanitize_remote_url" in common
     assert "git remote get-url origin" in placement
+    assert "usage: $0 CAMPAIGN_ID EXECUTION_ID PLACEMENT" in placement
+    assert "existing execution instance ID" in placement
+    assert "AMI_ID REGION AVAILABILITY_ZONE" not in placement
     assert "require_clean_checkout" in bootstrap
     assert '"${VERSION_ID:-}" == "24.04"' in bootstrap
     assert "python3.12-dev" in bootstrap
