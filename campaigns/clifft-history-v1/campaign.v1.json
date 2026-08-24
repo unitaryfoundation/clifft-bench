@@ -1,7 +1,7 @@
 {
   "schema_version": "clifft-bench/campaign/v1",
   "id": "clifft-history-v1",
-  "title": "Clifft release history from 0.1.0 through 0.8.0",
+  "title": "Clifft release history from 0.1.0 through 0.9.0",
   "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
   "runs": [
     {
@@ -35,6 +35,10 @@
     {
       "id": "clifft-0.8.0",
       "run_manifest": "clifft-0.8.0.run.json"
+    },
+    {
+      "id": "clifft-0.9.0",
+      "run_manifest": "clifft-0.9.0.run.json"
     }
   ],
   "reference_host": {
@@ -97,6 +101,12 @@
       "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_8_0_PYTHON",
       "requirements": "../../environments/clifft-0.8.0.txt",
       "import_modules": ["clifft"]
+    },
+    {
+      "id": "clifft-0.9.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_9_0_PYTHON",
+      "requirements": "../../environments/clifft-0.9.0.txt",
+      "import_modules": ["clifft"]
     }
   ],
   "comparisons": [
@@ -110,7 +120,8 @@
         "clifft-0.5.0",
         "clifft-0.6.0",
         "clifft-0.7.0",
-        "clifft-0.8.0"
+        "clifft-0.8.0",
+        "clifft-0.9.0"
       ]
     }
   ]

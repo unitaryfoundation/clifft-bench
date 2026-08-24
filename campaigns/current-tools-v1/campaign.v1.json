@@ -5,12 +5,12 @@
   "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
   "runs": [
     {
-      "id": "clifft-0.7.0",
-      "run_manifest": "clifft-0.7.0.run.json"
-    },
-    {
       "id": "clifft-0.8.0",
       "run_manifest": "clifft-0.8.0.run.json"
+    },
+    {
+      "id": "clifft-0.9.0",
+      "run_manifest": "clifft-0.9.0.run.json"
     },
     {
       "id": "symft-single",
@@ -43,15 +43,15 @@
   },
   "environments": [
     {
-      "id": "clifft-0.7.0",
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_7_0_PYTHON",
-      "requirements": "../../environments/clifft-0.7.0.txt",
-      "import_modules": ["clifft"]
-    },
-    {
       "id": "clifft-0.8.0",
       "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_8_0_PYTHON",
       "requirements": "../../environments/clifft-0.8.0.txt",
+      "import_modules": ["clifft"]
+    },
+    {
+      "id": "clifft-0.9.0",
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_9_0_PYTHON",
+      "requirements": "../../environments/clifft-0.9.0.txt",
       "import_modules": ["clifft"]
     },
     {
@@ -73,15 +73,15 @@
   ],
   "comparisons": [
     {
-      "id": "clifft-0.8-vs-0.7",
-      "baseline_run": "clifft-0.7.0",
+      "id": "clifft-0.9-vs-0.8",
+      "baseline_run": "clifft-0.8.0",
       "candidate_runs": [
-        "clifft-0.8.0"
+        "clifft-0.9.0"
       ]
     },
     {
-      "id": "current-tools-vs-clifft-0.8",
-      "baseline_run": "clifft-0.8.0",
+      "id": "current-tools-vs-clifft-0.9",
+      "baseline_run": "clifft-0.9.0",
       "candidate_runs": [
         "symft-single",
         "symft-batch-2048",

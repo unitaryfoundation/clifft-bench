@@ -1,0 +1,71 @@
+{
+  "schema_version": "clifft-bench/run/v1",
+  "suite_version": "0.2.1",
+  "profile_id": "current-tools-v1",
+  "run_id": "clifft-0.9.0",
+  "classification": "official",
+  "seed": 20260819,
+  "workloads_manifest": "../../manifests/workloads.v1.json",
+  "software_manifest": "../../manifests/software.v1.json",
+  "resources": {
+    "logical_cpu": null,
+    "concurrent_cases": 1,
+    "threads_per_case": 1
+  },
+  "measurement": {
+    "setup_timeout_seconds": 1800,
+    "request_timeout_seconds": 1800,
+    "warmup_shots": 1,
+    "correctness_shots": 8,
+    "min_sample_seconds": 30,
+    "repetitions": 5
+  },
+  "matrix": {
+    "workloads": [
+      {
+        "workload_id": "msc-d3-inject-cultivate-p1e-3",
+        "shots_per_call": 100000
+      },
+      {
+        "workload_id": "msc-d5-inject-cultivate-p1e-3",
+        "shots_per_call": 20000
+      },
+      {
+        "workload_id": "distillation-color-code-85q-p5e-2",
+        "shots_per_call": 100000
+      },
+      {
+        "workload_id": "surface-code-d7-r7-p1e-3",
+        "shots_per_call": 100000
+      },
+      {
+        "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+        "shots_per_call": 100000
+      },
+      {
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "shots_per_call": 100000
+      },
+      {
+        "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2",
+        "shots_per_call": 10000
+      },
+      {
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "shots_per_call": 1
+      }
+    ],
+    "variants": [
+      {
+        "id": "clifft-0.9.0",
+        "implementation_id": "clifft-0.9.0",
+        "execution": {
+          "mode": "throughput",
+          "batch_enabled": false,
+          "batch_size": 1,
+          "sample_chunk_shots": 0
+        }
+      }
+    ]
+  }
+}
