@@ -25,7 +25,7 @@
       "id": "msc-d3-smoke-clifft",
       "pair_id": "msc-d3-smoke-current",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
-      "implementation_id": "clifft-0.8.0",
+      "implementation_id": "clifft-0.9.0",
       "shots_per_call": 64,
       "execution": {
         "mode": "throughput",
@@ -51,7 +51,7 @@
       "id": "distillation-85q-smoke-clifft",
       "pair_id": "distillation-85q-smoke-current",
       "workload_id": "distillation-color-code-85q-p5e-2",
-      "implementation_id": "clifft-0.8.0",
+      "implementation_id": "clifft-0.9.0",
       "shots_per_call": 8,
       "execution": {
         "mode": "throughput",
@@ -77,7 +77,7 @@
       "id": "qv10-smoke-clifft",
       "pair_id": "qv10-smoke-current",
       "workload_id": "quantum-volume-q10-seed42",
-      "implementation_id": "clifft-0.8.0",
+      "implementation_id": "clifft-0.9.0",
       "shots_per_call": 1,
       "execution": {
         "mode": "latency",

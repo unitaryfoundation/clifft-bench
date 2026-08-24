@@ -48,6 +48,23 @@ def test_checked_in_campaigns_resolve_all_runs(campaign_id: str) -> None:
     }
 
 
+def test_qec_campaigns_target_clifft_0_9_0() -> None:
+    history = load_campaign(ROOT / "campaigns/clifft-history-v1/campaign.v1.json")
+    current = load_campaign(ROOT / "campaigns/current-tools-v1/campaign.v1.json")
+    smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
+
+    assert "clifft-0.9.0" in {run["id"] for run in history.document["runs"]}
+    assert {run["id"] for run in current.document["runs"] if run["id"].startswith("clifft-")} == {
+        "clifft-0.8.0",
+        "clifft-0.9.0",
+    }
+    assert {
+        case.implementation.id
+        for case in smoke.cases
+        if case.implementation.definition["adapter"] == "clifft"
+    } == {"clifft-0.9.0"}
+
+
 def test_campaign_environment_locks_pin_every_requirement() -> None:
     for requirements_path in sorted((ROOT / "environments").glob("*.txt")):
         requirements = [

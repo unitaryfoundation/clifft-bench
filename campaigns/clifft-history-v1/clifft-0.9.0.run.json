@@ -1,8 +1,8 @@
 {
   "schema_version": "clifft-bench/run/v1",
   "suite_version": "0.2.1",
-  "profile_id": "current-tools-v1",
-  "run_id": "clifft-0.7.0",
+  "profile_id": "clifft-history-v1",
+  "run_id": "clifft-0.9.0",
   "classification": "official",
   "seed": 20260819,
   "workloads_manifest": "../../manifests/workloads.v1.json",
@@ -13,12 +13,12 @@
     "threads_per_case": 1
   },
   "measurement": {
-    "setup_timeout_seconds": 1800,
-    "request_timeout_seconds": 1800,
+    "setup_timeout_seconds": 900,
+    "request_timeout_seconds": 900,
     "warmup_shots": 1,
     "correctness_shots": 8,
-    "min_sample_seconds": 30,
-    "repetitions": 5
+    "min_sample_seconds": 10,
+    "repetitions": 3
   },
   "matrix": {
     "workloads": [
@@ -57,8 +57,8 @@
     ],
     "variants": [
       {
-        "id": "clifft-0.7.0",
-        "implementation_id": "clifft-0.7.0",
+        "id": "clifft-0.9.0",
+        "implementation_id": "clifft-0.9.0",
         "execution": {
           "mode": "throughput",
           "batch_enabled": false,

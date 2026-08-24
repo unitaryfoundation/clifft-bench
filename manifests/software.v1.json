@@ -147,6 +147,29 @@
       }
     },
     {
+      "id": "clifft-0.9.0",
+      "name": "Clifft",
+      "adapter": "clifft",
+      "distribution": "clifft",
+      "version": "0.9.0",
+      "commit_sha": "87175b513b8d944955102230b9c7931be1570ef2",
+      "commit_datetime": "2026-08-24T13:44:37Z",
+      "release_datetime": "2026-08-24T14:24:24Z",
+      "source_url": "https://github.com/unitaryfoundation/clifft",
+      "dependency_distributions": ["numpy"],
+      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_9_0_PYTHON",
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [],
+        "features": [
+          "CPU-only",
+          "symbolic-coordinate sampler",
+          "OpenMP intra-shot parallelism",
+          "PyPI release wheel"
+        ]
+      }
+    },
+    {
       "id": "symft-0.1.0-9ec5790",
       "name": "SymFT",
       "adapter": "symft",

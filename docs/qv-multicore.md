@@ -16,7 +16,7 @@ conversion, imports, and process startup are outside the timed region.
 
 ## Initial matrix
 
-The exploratory manifest contains 342 serial cases per placement:
+The official manifest contains 342 serial cases per placement:
 
 - 180 current-tool cases: five tools, QV6 through QV28 in steps of two, three
   deterministic circuit seeds, and 16 physical cores;
@@ -27,19 +27,16 @@ The exploratory manifest contains 342 serial cases per placement:
 - 36 Clifft 0.8.0 bridge cases: the six wide circuits, three seeds, and 1 and
   16 physical cores.
 
-The current candidate is the exact Clifft commit that introduced OpenMP. The
-campaign is marked `exploratory`; replace that environment/run identity with
-the official 0.9.0 release and change the classification to `official` before
-collecting release evidence. The 0.8.0 bridge remains unchanged.
+The current Clifft run is built from the exact 0.9.0 release commit with
+OpenMP enabled. The 0.8.0 bridge remains unchanged.
 The 0.1.0 run keeps the original source revision and 64-qubit build setting so
 the current hardware epoch can be joined explicitly to the published curve.
 
-When 0.9.0 is tagged, the preparation PR is intentionally small: replace the
-exploratory Clifft requirement with the exact release commit, update the two
-OpenMP run identities and expected distribution version, and set the campaign
-classification to `official`. Keep the 0.1.0/0.8.0 anchors, circuits, other
-tools, host epoch, and measurement policy unchanged. A later external-tool
-release similarly changes only that tool's isolated lock and run identity.
+For a later Clifft release, update only the current release environment and the
+two current Clifft run identities. Keep the 0.1.0/0.8.0 anchors, circuits,
+other tools, host epoch, and measurement policy unchanged. A later
+external-tool release similarly changes only that tool's isolated lock and run
+identity.
 
 Each `(tool, width, seed, thread count)` case runs in a fresh subprocess. One
 logical CPU is selected from each physical core, the process is bound to that
@@ -100,9 +97,9 @@ export CLIFFT_BENCH_CAMPAIGN=qv-multicore-v1
 ./scripts/ec2/bootstrap.sh "$CLIFFT_BENCH_CAMPAIGN"
 ```
 
-Bootstrap compiles the three Clifft environments with a 64-qubit build limit; the
-OpenMP candidate is built with `CLIFFT_OPENMP=ON`, so missing compiler support
-fails immediately rather than silently producing a serial build.
+Bootstrap compiles the three Clifft environments with a 64-qubit build limit;
+the 0.9.0 release source is built with `CLIFFT_OPENMP=ON`, so missing compiler
+support fails immediately rather than silently producing a serial build.
 
 Then collect each placement, stopping and starting the same QV instance in
 between:

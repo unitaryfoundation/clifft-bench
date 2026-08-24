@@ -24,6 +24,14 @@ def test_qv_campaign_has_deliberately_bounded_matrix() -> None:
     campaign = load_qv_campaign(CAMPAIGN_PATH)
     cases = scheduled_cases(campaign)
 
+    current_clifft = [
+        run
+        for run in campaign.document["runs"]
+        if run["adapter"] == "clifft" and run["phase"] != "historical-anchor"
+    ]
+    assert campaign.document["classification"] == "official"
+    assert {run["version"] for run in current_clifft} == {"0.9.0"}
+    assert {run["expected_distribution_version"] for run in current_clifft} == {"0.9.0"}
     assert len(cases) == 342
     assert sum(case["run"]["phase"] == "current-tools" for case in cases) == 180
     assert sum(case["run"]["phase"] == "clifft-scaling" for case in cases) == 90
