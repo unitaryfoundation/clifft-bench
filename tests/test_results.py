@@ -35,6 +35,8 @@ def _result(tmp_path: Path, *, run_id: str, case_id: str, rate: float) -> Path:
     case = document["cases"][0]
     case["case_id"] = case_id
     case["simulator"]["implementation_id"] = run_id
+    case["execution"]["memory_limit_bytes"] = 1 << 30
+    case["setup"]["runtime_metadata"]["address_space_limit_bytes"] = 1 << 30
     if run_id == "candidate":
         case["execution"]["batch_enabled"] = True
         case["execution"]["batch_size"] = 32
@@ -61,6 +63,7 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
                 "placements": 1,
                 "replicas_per_placement": 1,
                 "run_timeout_minutes": 1,
+                "memory_limit_gib": 1,
             },
             "comparisons": [
                 {
@@ -106,6 +109,41 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
     assert comparisons[0]["candidate_batch_enabled"] == "true"
     assert comparisons[0]["candidate_batch_size_effective"] == "32"
     assert comparisons[0]["candidate_shots_per_call"] == "64"
+
+    changed = json.loads(raw_paths[1].read_text())
+    changed["runner"]["cloud"]["instance_id"] = "i-different"
+    raw_paths[1].write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="fixed launch configuration"):
+        finalize_execution(
+            campaign,
+            execution_id="test-execution",
+            raw_paths=raw_paths,
+            output_dir=tmp_path / "rejected",
+        )
+
+    changed["runner"]["cloud"]["instance_id"] = "i-example"
+    changed["cases"][0]["execution"]["memory_limit_bytes"] = None
+    raw_paths[1].write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="memory limit does not match"):
+        finalize_execution(
+            campaign,
+            execution_id="test-execution",
+            raw_paths=raw_paths,
+            output_dir=tmp_path / "rejected-memory-limit",
+        )
+
+    changed["cases"][0]["execution"]["memory_limit_bytes"] = 1 << 30
+    changed["cases"][0]["setup"]["runtime_metadata"][
+        "address_space_limit_bytes"
+    ] = None
+    raw_paths[1].write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="worker memory limit does not match"):
+        finalize_execution(
+            campaign,
+            execution_id="test-execution",
+            raw_paths=raw_paths,
+            output_dir=tmp_path / "rejected-worker-memory-limit",
+        )
 
 
 def test_comparison_rejects_multiple_successful_cases_for_one_run_and_workload() -> None:

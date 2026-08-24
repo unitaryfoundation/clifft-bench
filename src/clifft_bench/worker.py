@@ -16,7 +16,7 @@ from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
-from clifft_bench.system import apply_affinity, utc_now
+from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
 
 
 class WorkerTimeout(TimeoutError):
@@ -136,6 +136,9 @@ def main() -> int:
             if command == "prepare":
                 workload = request["workload"]
                 affinity = apply_affinity(request.get("logical_cpu"))
+                address_space_limit = apply_address_space_limit(
+                    request.get("memory_limit_gib")
+                )
                 adapter = load_adapter(request["adapter"])
                 started = time.perf_counter()
                 with deadline(float(request["timeout_seconds"])):
@@ -153,13 +156,17 @@ def main() -> int:
                         f"runtime version {runtime_version!r} does not match manifest "
                         f"version {expected_version!r}"
                     )
+                runtime_metadata = {
+                    **prepared.runtime_metadata,
+                    "address_space_limit_bytes": address_space_limit,
+                }
                 emit(
                     {
                         "ok": True,
                         "duration_seconds": duration,
                         "affinity": affinity,
                         "adapter_version": adapter.adapter_version,
-                        "runtime_metadata": prepared.runtime_metadata,
+                        "runtime_metadata": runtime_metadata,
                         "dependencies": {
                             name: _package_version(name)
                             for name in request["dependency_distributions"]

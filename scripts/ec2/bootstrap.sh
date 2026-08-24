@@ -29,7 +29,7 @@ python_version="$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.
   fail "Canonical Ubuntu Server 24.04 must provide Python 3.12 (found $python_version)"
 
 sudo apt-get update
-sudo apt-get install --yes build-essential curl jq python3.12-venv tmux
+sudo apt-get install --yes build-essential curl jq python3.12-dev python3.12-venv tmux
 
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip

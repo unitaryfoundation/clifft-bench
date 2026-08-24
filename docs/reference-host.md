@@ -17,6 +17,7 @@ Use these rules until real campaigns provide enough evidence to revise them:
 - treat paired changes at or below 1.1% as inconclusive;
 - use one placement for broad historical trends where small drift is acceptable;
 - use three stop/start placements for current absolute throughput;
+- cap each single-core worker at 12 GiB of address space, leaving host headroom;
 - record exact AMI, region/AZ, CPU model, kernel, dependencies, and boot ID;
 - never combine absolute numbers from different hardware epochs without an
   explicit boundary or a bridge measurement.

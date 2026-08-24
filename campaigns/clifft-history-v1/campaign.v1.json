@@ -51,7 +51,8 @@
   "collection": {
     "placements": 1,
     "replicas_per_placement": 1,
-    "run_timeout_minutes": 120
+    "run_timeout_minutes": 120,
+    "memory_limit_gib": 12
   },
   "environments": [
     {

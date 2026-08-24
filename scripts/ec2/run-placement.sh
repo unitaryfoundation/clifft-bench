@@ -8,17 +8,14 @@ cd "$repo_root"
 require_ec2_linux
 arm_shutdown_guard
 
-if (( $# != 6 )); then
-  echo "usage: $0 CAMPAIGN_ID EXECUTION_ID PLACEMENT AMI_ID REGION AVAILABILITY_ZONE" >&2
+if (( $# != 3 )); then
+  echo "usage: $0 CAMPAIGN_ID EXECUTION_ID PLACEMENT" >&2
   exit 2
 fi
 
 campaign_id="$1"
 execution_id="$2"
 placement="$3"
-expected_image_id="$4"
-expected_region="$5"
-expected_zone="$6"
 validate_identifier "campaign id" "$campaign_id"
 validate_identifier "execution id" "$execution_id"
 [[ "$placement" =~ ^[0-9]+$ ]] || fail "placement must be a positive integer"
@@ -29,6 +26,7 @@ expected_instance_type="$(jq -er '.reference_host.instance_type' "$campaign_path
 placement_count="$(jq -er '.collection.placements' "$campaign_path")"
 replicas="$(jq -er '.collection.replicas_per_placement' "$campaign_path")"
 timeout_minutes="$(jq -er '.collection.run_timeout_minutes' "$campaign_path")"
+memory_limit_gib="$(jq -er '.collection.memory_limit_gib' "$campaign_path")"
 (( placement >= 1 && placement <= placement_count )) || \
   fail "placement must be between 1 and $placement_count"
 
@@ -71,9 +69,6 @@ check_value() {
 }
 
 check_value "instance type" "$expected_instance_type" "$instance_type"
-check_value "AMI" "$expected_image_id" "$image_id"
-check_value "region" "$expected_region" "$region"
-check_value "availability zone" "$expected_zone" "$availability_zone"
 check_value "lifecycle" "on-demand" "$lifecycle"
 
 source_commit="$(git rev-parse HEAD)"
@@ -91,6 +86,8 @@ for path in "${existing_raw[@]}"; do
     "$(jq -er '.runner.suite_source.dirty' "$path")"
   check_value "existing execution instance type" "$instance_type" \
     "$(jq -er '.runner.cloud.instance_type' "$path")"
+  check_value "existing execution instance ID" "$instance_id" \
+    "$(jq -er '.runner.cloud.instance_id' "$path")"
   check_value "existing execution AMI" "$image_id" \
     "$(jq -er '.runner.cloud.image_id' "$path")"
   check_value "existing execution region" "$region" \
@@ -173,8 +170,10 @@ else
       export CLIFFT_BENCH_RUN_ATTEMPT="$placement.$replica"
       echo "Running $label"
       set +e
-      timeout --signal=TERM "${timeout_minutes}m" .venv/bin/clifft-bench run \
+      timeout --signal=TERM --kill-after=30s "${timeout_minutes}m" \
+        .venv/bin/clifft-bench run \
         --run-manifest "$run_manifest" \
+        --memory-limit-gib "$memory_limit_gib" \
         --output "$output"
       run_status=$?
       set -e

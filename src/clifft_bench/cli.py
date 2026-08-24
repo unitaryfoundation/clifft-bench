@@ -38,6 +38,7 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--output", type=Path)
     run.add_argument("--case", help="regular expression matched against case IDs")
     run.add_argument("--cpu", type=int, help="logical CPU to request on affinity-capable systems")
+    run.add_argument("--memory-limit-gib", type=float)
     run.add_argument("--min-sample-seconds", type=float)
     run.add_argument("--repetitions", type=int)
 
@@ -142,6 +143,7 @@ def _run(args: argparse.Namespace) -> int:
         output_path=output.resolve(),
         case_pattern=args.case,
         cpu=args.cpu,
+        memory_limit_gib=args.memory_limit_gib,
         min_sample_seconds=args.min_sample_seconds,
         repetitions=args.repetitions,
     )

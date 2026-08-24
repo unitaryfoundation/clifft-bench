@@ -131,7 +131,7 @@ def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> 
         tmp_path, parameters={"write_native_stdout": True}
     )
     output = tmp_path / "result.json"
-    result = run_suite(load_suite(run_path), output_path=output)
+    result = run_suite(load_suite(run_path), output_path=output, memory_limit_gib=1)
     validate_document(result)
     assert [case["status"] for case in result["cases"]] == ["success", "success"]
     sequences = [
@@ -140,6 +140,11 @@ def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> 
     assert sequences == [[0, 3], [1, 2]]
     assert all(case["correctness"]["status"] == "passed" for case in result["cases"])
     for case in result["cases"]:
+        assert case["execution"]["memory_limit_bytes"] == 1 << 30
+        assert case["setup"]["runtime_metadata"]["address_space_limit_bytes"] in {
+            None,
+            1 << 30,
+        }
         samples = sorted(case["samples"], key=lambda sample: sample["repetition"])
         assert samples[1]["seed_first"] - samples[0]["seed_first"] == (
             SEED_REPETITION_STRIDE

@@ -23,8 +23,9 @@ For `clifft-history-v1` and `current-tools-v1`, use these fixed choices:
 - no S3 Files, EFS, FSx, extra volume, or IAM role;
 - SSH restricted to your current IP or an equivalent console connection.
 
-Record the exact AMI ID, region, and availability zone. Before cloning, expect
-Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`:
+The scripts record the exact instance, AMI, region, and availability zone from
+IMDS and require them to remain fixed across placements. Before cloning,
+expect Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`:
 
 ```bash
 grep '^\(NAME\|VERSION_ID\)=' /etc/os-release
@@ -71,25 +72,29 @@ Inspect the declared number of placements before starting:
 jq '.collection' campaigns/"$CLIFFT_BENCH_CAMPAIGN"/*campaign.v1.json
 ```
 
-The current-tools campaign gives each Tsim setup or request five minutes and
-caps each complete tool run at 90 minutes. A Tsim timeout is retained as a
-structured result: the campaign does not spend unbounded EC2 time trying to
-turn an impractical circuit into a throughput number.
+The single-core QEC campaigns give every worker a declared 12 GiB Linux
+address-space ceiling. The request is embedded in each raw case and the
+applied ceiling is recorded after setup. Each complete run also has a campaign
+wall-clock timeout with a 30-second forced-kill fallback. These bounds protect
+the 16 GiB host while leaving memory for the controller and operating system.
+The separate QV campaign retains its own 10 GiB per-worker ceiling.
 
 ## 4. Collect a placement
 
-Choose a unique execution ID and substitute the exact launch values:
+Choose a unique execution ID:
 
 ```bash
 export CLIFFT_BENCH_EXECUTION=current-tools-v1-202608
 ./scripts/ec2/run-placement.sh \
   "$CLIFFT_BENCH_CAMPAIGN" \
   "$CLIFFT_BENCH_EXECUTION" \
-  1 \
-  ami-0123456789abcdef0 \
-  us-east-1 \
-  us-east-1c
+  1
 ```
+
+Always start a new execution ID after changing the campaign or harness. Tool
+environments from an earlier attempt can be reused after bootstrap verifies
+them, but incomplete raw results from a different source commit cannot be
+mixed into the new execution.
 
 Run inside `tmux` if the SSH connection may close. The collector executes each
 campaign run and replica serially, pins every worker to one logical CPU, and
@@ -102,7 +107,7 @@ silently promoted to a completed placement.
 When the command succeeds, stop the instance in the console. For a campaign
 with additional placements, start the same EBS-backed instance again and run
 the command with placement 2, then 3. The collector requires a distinct Linux
-boot ID and one unchanged AMI/AZ/source identity.
+boot ID and one unchanged instance/AMI/region/AZ/source identity.
 
 ## 5. Finalize and push
 
