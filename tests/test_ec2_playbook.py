@@ -16,6 +16,7 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "git remote get-url origin" in placement
     assert "require_clean_checkout" in bootstrap
     assert '"${VERSION_ID:-}" == "24.04"' in bootstrap
+    assert "python3.12-dev" in bootstrap
     assert ".environments[]" in bootstrap
     assert "pip install --no-deps" in bootstrap
     assert "pip check" in bootstrap
