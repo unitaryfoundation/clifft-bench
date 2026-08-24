@@ -176,7 +176,9 @@ def collect_cloud_metadata() -> dict[str, str] | None:
     return {key: str(value) for key, value in values.items()}
 
 
-def collect_runner_metadata(root: Path) -> dict[str, Any]:
+def collect_runner_metadata(
+    root: Path, *, thread_environment: dict[str, str] | None = None
+) -> dict[str, Any]:
     uname = platform.uname()
     try:
         load_average = list(os.getloadavg())
@@ -196,7 +198,7 @@ def collect_runner_metadata(root: Path) -> dict[str, Any]:
         "allowed_logical_cpus": _allowed_cpus(),
         "memory_bytes": _memory_bytes(),
         "load_average_at_start": load_average,
-        "thread_environment": THREAD_LIMIT_ENVIRONMENT.copy(),
+        "thread_environment": (thread_environment or THREAD_LIMIT_ENVIRONMENT).copy(),
         "accelerator": None,
         "cloud": collect_cloud_metadata(),
         "suite_source": _git_metadata(root),

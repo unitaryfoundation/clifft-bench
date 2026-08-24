@@ -13,6 +13,7 @@ fi
 campaign_id="$1"
 validate_identifier "campaign id" "$campaign_id"
 campaign_path="$(campaign_manifest "$campaign_id")"
+campaign_schema="$(jq -er '.schema_version' "$campaign_path")"
 
 require_ec2_linux
 arm_shutdown_guard
@@ -51,8 +52,26 @@ while IFS=$'\t' read -r environment_id requirements_relative; do
       '.environments[] | select(.id == $id) | (.install_environment // {}) | to_entries[] | [.key,.value] | @tsv' \
       "$campaign_path"
   )
+  install_options=()
+  while IFS= read -r setting; do
+    install_options+=(--config-settings "$setting")
+  done < <(
+    jq -r --arg id "$environment_id" \
+      '.environments[] | select(.id == $id) | (.pip_config_settings // [])[]' \
+      "$campaign_path"
+  )
   env "${install_environment[@]}" \
-    "$environment_path/bin/python" -m pip install --no-deps -r "$requirements_path"
+    "$environment_path/bin/python" -m pip install --no-deps \
+      "${install_options[@]}" -r "$requirements_path"
+  while IFS= read -r requirement; do
+    env "${install_environment[@]}" \
+      "$environment_path/bin/python" -m pip install \
+        --force-reinstall --no-deps "$requirement"
+  done < <(
+    jq -r --arg id "$environment_id" \
+      '.environments[] | select(.id == $id) | (.reinstall_requirements // [])[]' \
+      "$campaign_path"
+  )
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip check
 
@@ -67,6 +86,24 @@ while IFS=$'\t' read -r environment_id requirements_relative; do
       '.environments[] | select(.id == $id) | .import_modules[]' \
       "$campaign_path"
   )
+
+  if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
+    while IFS=$'\t' read -r distribution expected_version; do
+      actual_version="$(
+        "$environment_path/bin/python" -c \
+          'from importlib.metadata import version; import sys; print(version(sys.argv[1]))' \
+          "$distribution"
+      )"
+      [[ "$actual_version" == "$expected_version" ]] || \
+        fail "$environment_id expected $distribution $expected_version, found $actual_version"
+    done < <(
+      jq -r --arg id "$environment_id" \
+        '.runs[] | select(.environment_id == $id) | \
+         select(.expected_distribution_version != null) | \
+         [.distribution,.expected_distribution_version] | @tsv' \
+        "$campaign_path" | sort -u
+    )
+  fi
 done < <(jq -r '.environments[] | [.id,.requirements] | @tsv' "$campaign_path")
 
 echo

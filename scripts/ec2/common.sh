@@ -31,9 +31,16 @@ require_clean_checkout() {
 
 campaign_manifest() {
   local campaign_id="$1"
-  local path="$repo_root/campaigns/$campaign_id/campaign.v1.json"
-  [[ -f "$path" ]] || fail "unknown campaign: $campaign_id"
-  printf '%s\n' "$path"
+  local standard="$repo_root/campaigns/$campaign_id/campaign.v1.json"
+  local qv="$repo_root/campaigns/$campaign_id/qv-campaign.v1.json"
+  if [[ -f "$standard" ]]; then
+    [[ ! -f "$qv" ]] || fail "campaign has both standard and QV manifests: $campaign_id"
+    printf '%s\n' "$standard"
+  elif [[ -f "$qv" ]]; then
+    printf '%s\n' "$qv"
+  else
+    fail "unknown campaign: $campaign_id"
+  fi
 }
 
 validate_identifier() {

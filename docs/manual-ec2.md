@@ -12,7 +12,7 @@ instance promptly after each placement.
 
 ## 1. Launch the reference host
 
-Use these fixed choices:
+For `clifft-history-v1` and `current-tools-v1`, use these fixed choices:
 
 - verified Canonical **Ubuntu Server 24.04 LTS (HVM), SSD Volume Type**;
 - **64-bit (x86)**, not Arm, Ubuntu Pro, Marketplace, or a community image;
@@ -31,6 +31,12 @@ grep '^\(NAME\|VERSION_ID\)=' /etc/os-release
 python3 --version
 ```
 
+The less-frequent `qv-multicore-v1` campaign has a separate 16-core host and
+launch checklist in [`qv-multicore.md`](qv-multicore.md). Keeping two stopped,
+EBS-backed instances is preferred to changing one instance between CPU
+families: it preserves each native build and makes accidental use of the wrong
+host easier to detect.
+
 ## 2. Clone and choose a data branch
 
 ```bash
@@ -43,7 +49,7 @@ Do not pull, edit tracked files, or change commits between placements.
 
 ## 3. Bootstrap one campaign
 
-Choose `clifft-history-v1` or `current-tools-v1`:
+Choose `clifft-history-v1`, `current-tools-v1`, or `qv-multicore-v1`:
 
 ```bash
 export CLIFFT_BENCH_CAMPAIGN=current-tools-v1
@@ -55,10 +61,14 @@ tool/version is installed into a separate ignored environment under
 `.campaign-envs/` using its checked-in resolved lock. Installation and import
 are outside the timed region. SymFT is compiled natively on this fixed host.
 
+The QV bootstrap takes longer because it builds three Clifft revisions and
+installs the five isolated simulator environments. This setup is outside every
+timed case and persists while the QV instance is stopped.
+
 Inspect the declared number of placements before starting:
 
 ```bash
-jq '.collection' "campaigns/$CLIFFT_BENCH_CAMPAIGN/campaign.v1.json"
+jq '.collection' campaigns/"$CLIFFT_BENCH_CAMPAIGN"/*campaign.v1.json
 ```
 
 The current-tools campaign gives each Tsim setup or request five minutes and

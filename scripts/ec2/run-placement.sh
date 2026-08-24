@@ -24,6 +24,7 @@ validate_identifier "execution id" "$execution_id"
 [[ "$placement" =~ ^[0-9]+$ ]] || fail "placement must be a positive integer"
 
 campaign_path="$(campaign_manifest "$campaign_id")"
+campaign_schema="$(jq -er '.schema_version' "$campaign_path")"
 expected_instance_type="$(jq -er '.reference_host.instance_type' "$campaign_path")"
 placement_count="$(jq -er '.collection.placements' "$campaign_path")"
 replicas="$(jq -er '.collection.replicas_per_placement' "$campaign_path")"
@@ -121,11 +122,13 @@ export CLIFFT_BENCH_RUNNER_OS=Linux
 export CLIFFT_BENCH_IMAGE_OS="$ID-$VERSION_ID"
 export CLIFFT_BENCH_IMAGE_VERSION="$image_id"
 
-while IFS=$'\t' read -r variable environment_id; do
-  environment_python="$repo_root/.campaign-envs/$campaign_id/$environment_id/bin/python"
-  [[ -x "$environment_python" ]] || fail "missing environment $environment_id; bootstrap again"
-  export "$variable=$environment_python"
-done < <(jq -r '.environments[] | [.python_executable_env,.id] | @tsv' "$campaign_path")
+if [[ "$campaign_schema" == "clifft-bench/campaign/v1" ]]; then
+  while IFS=$'\t' read -r variable environment_id; do
+    environment_python="$repo_root/.campaign-envs/$campaign_id/$environment_id/bin/python"
+    [[ -x "$environment_python" ]] || fail "missing environment $environment_id; bootstrap again"
+    export "$variable=$environment_python"
+  done < <(jq -r '.environments[] | [.python_executable_env,.id] | @tsv' "$campaign_path")
+fi
 
 work_dir="$execution_dir/.incomplete-p$(printf '%02d' "$placement")-${boot_id:0:8}"
 [[ ! -e "$work_dir" ]] || fail "incomplete placement directory already exists: $work_dir"
@@ -133,18 +136,23 @@ mkdir -p "$work_dir/raw"
 mkdir -p "$execution_dir"
 printf '%s\n' "$campaign_id" > "$execution_dir/campaign-id"
 
-while IFS=$'\t' read -r run_id manifest_relative; do
-  run_manifest="$(dirname "$campaign_path")/$manifest_relative"
+if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
   for (( replica = 1; replica <= replicas; replica++ )); do
-    label="${run_id}-p$(printf '%02d' "$placement")-r$(printf '%02d' "$replica")"
+    label="${campaign_id}-p$(printf '%02d' "$placement")-r$(printf '%02d' "$replica")"
     output="$work_dir/raw/$label-raw.json"
     export CLIFFT_BENCH_RUN_ID="$execution_id/$label"
     export CLIFFT_BENCH_RUN_ATTEMPT="$placement.$replica"
     echo "Running $label"
     set +e
-    timeout --signal=TERM "${timeout_minutes}m" .venv/bin/clifft-bench run \
-      --run-manifest "$run_manifest" \
-      --output "$output"
+    timeout --signal=INT --kill-after=30s "${timeout_minutes}m" \
+      .venv/bin/clifft-bench qv-run \
+        --campaign "$campaign_path" \
+        --environment-root "$repo_root/.campaign-envs/$campaign_id" \
+        --circuit-dir "$execution_dir/circuits" \
+        --output "$output" \
+        --execution-id "$execution_id" \
+        --placement "$placement" \
+        --replica "$replica"
     run_status=$?
     set -e
     if (( run_status != 0 && run_status != 1 )); then
@@ -155,7 +163,31 @@ while IFS=$'\t' read -r run_id manifest_relative; do
       echo "Recorded one or more structured case failures in $label; continuing."
     fi
   done
-done < <(jq -r '.runs[] | [.id,.run_manifest] | @tsv' "$campaign_path")
+else
+  while IFS=$'\t' read -r run_id manifest_relative; do
+    run_manifest="$(dirname "$campaign_path")/$manifest_relative"
+    for (( replica = 1; replica <= replicas; replica++ )); do
+      label="${run_id}-p$(printf '%02d' "$placement")-r$(printf '%02d' "$replica")"
+      output="$work_dir/raw/$label-raw.json"
+      export CLIFFT_BENCH_RUN_ID="$execution_id/$label"
+      export CLIFFT_BENCH_RUN_ATTEMPT="$placement.$replica"
+      echo "Running $label"
+      set +e
+      timeout --signal=TERM "${timeout_minutes}m" .venv/bin/clifft-bench run \
+        --run-manifest "$run_manifest" \
+        --output "$output"
+      run_status=$?
+      set -e
+      if (( run_status != 0 && run_status != 1 )); then
+        fail "$label terminated without a complete structured result (exit $run_status)"
+      fi
+      .venv/bin/clifft-bench validate "$output"
+      if (( run_status == 1 )); then
+        echo "Recorded one or more structured case failures in $label; continuing."
+      fi
+    done
+  done < <(jq -r '.runs[] | [.id,.run_manifest] | @tsv' "$campaign_path")
+fi
 
 touch "$work_dir/COMPLETE"
 mv "$work_dir" "$complete_dir"
