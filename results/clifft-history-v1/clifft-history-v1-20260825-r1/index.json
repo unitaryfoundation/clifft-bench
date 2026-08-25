@@ -1,0 +1,53 @@
+{
+  "campaign_id": "clifft-history-v1",
+  "campaign_manifest": "campaigns/clifft-history-v1/campaign.v1.json",
+  "cloud": {
+    "availability_zone": "us-east-1c",
+    "image_id": "ami-0f8a61b66d1accaee",
+    "instance_type": "m7a.xlarge",
+    "lifecycle": "on-demand",
+    "provider": "aws",
+    "region": "us-east-1"
+  },
+  "created_at": "2026-08-25T13:52:15.751808Z",
+  "derived": {
+    "cases": "cases.csv",
+    "comparisons": "comparisons.csv"
+  },
+  "execution_id": "clifft-history-v1-20260825-r1",
+  "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+  "placements": [
+    {
+      "boot_id": "459354a4-c002-4feb-a542-95befe0c2e78",
+      "instance_id": "i-0b559eec365c2acb7",
+      "number": 1,
+      "raw_results": [
+        "raw/clifft-0.1.0-p01-r01-raw.json",
+        "raw/clifft-0.2.0-p01-r01-raw.json",
+        "raw/clifft-0.3.0-p01-r01-raw.json",
+        "raw/clifft-0.4.1-p01-r01-raw.json",
+        "raw/clifft-0.5.0-p01-r01-raw.json",
+        "raw/clifft-0.6.0-p01-r01-raw.json",
+        "raw/clifft-0.7.0-p01-r01-raw.json",
+        "raw/clifft-0.8.0-p01-r01-raw.json",
+        "raw/clifft-0.9.0-p01-r01-raw.json"
+      ]
+    }
+  ],
+  "run_manifests": [
+    "campaigns/clifft-history-v1/clifft-0.1.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.2.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.3.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.4.1.run.json",
+    "campaigns/clifft-history-v1/clifft-0.5.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.6.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.7.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.8.0.run.json",
+    "campaigns/clifft-history-v1/clifft-0.9.0.run.json"
+  ],
+  "schema_version": "clifft-bench/execution/v1",
+  "source": {
+    "commit": "5e845fd12e06d36e468d561b7fd8ad660c744d3e",
+    "dirty": false
+  }
+}
