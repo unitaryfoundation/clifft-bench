@@ -3,8 +3,8 @@
 This occasional campaign answers two questions that do not fit the single-core
 QEC throughput suite:
 
-1. How does Clifft 0.9.0 single-shot latency compare with Qiskit Aer, Qulacs,
-   and qsim at a fixed 16-physical-core budget?
+1. How does Clifft 0.9.0 single-shot execution time compare with Qiskit Aer,
+   Qulacs, and qsim at a fixed 16-physical-core budget?
 2. How does Clifft's intra-shot OpenMP implementation scale from 1 to 16
    physical cores on wide Quantum Volume circuits?
 
@@ -119,13 +119,25 @@ placement, and hardware epoch without changing how measurements are collected.
 
 ## Collected result
 
-![QV current-tool latency and Clifft strong scaling](../figures/qv-multicore-v1-2026082.png)
+### Current-tool execution time
 
-The left panel retains the original paper's log-scale latency comparison. The
-right panel keeps the Clifft thread-scaling cases separate and reports paired
-per-seed speedup over one physical core. The figure is labeled exploratory
-because it uses the curated execution described in its raw provenance.
-Regenerate the GitHub-preview PNG with:
+![QV current-tool execution time](../figures/qv-multicore-v1-2026082-current-tools.png)
+
+At 16 physical cores, Clifft 0.9.0 has the shortest median single-shot
+execution time of the four measured tools at QV20 and QV22. The log scale also
+makes clear that the relative ordering changes with circuit width. This is an
+exploratory, curated comparison, not an exhaustive tool study.
+
+### Clifft strong scaling
+
+![Clifft QV strong scaling](../figures/qv-multicore-v1-2026082-clifft-scaling.png)
+
+The scaling campaign reports paired per-seed speedup over one physical core;
+whiskers show the range across the three deterministic seeds. At QV24, the
+paired median speedup is 10.17x from 1 to 16 physical cores.
+
+Both figures use the curated execution described in the raw provenance.
+Regenerate the GitHub-preview PNGs with:
 
 ```bash
 uv run --extra plot python scripts/plot_qv.py
