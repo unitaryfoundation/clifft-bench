@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import csv
 import json
-import os
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
 from clifft_bench.qv import QVCampaign, scheduled_cases
-from clifft_bench.schema import SchemaValidationError, validate_path
+from clifft_bench.schema import SchemaValidationError, validate_path, write_json
 
 CASE_FIELDS = [
     "execution_id",
@@ -48,24 +47,13 @@ CASE_FIELDS = [
 ]
 
 
-def _atomic_text(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(content)
-    os.replace(temporary, path)
-
-
-def _write_json(path: Path, document: dict[str, Any]) -> None:
-    _atomic_text(path, json.dumps(document, indent=2, sort_keys=True) + "\n")
-
-
 def _write_csv(path: Path, rows: Iterable[dict[str, Any]]) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     with temporary.open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=CASE_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
-    os.replace(temporary, path)
+    temporary.replace(path)
 
 
 def _expected_case_ids(campaign: QVCampaign) -> set[str]:
@@ -263,5 +251,5 @@ def finalize_qv_execution(
     if curation is not None:
         index["curation"] = curation
     _write_csv(output_dir / "cases.csv", rows)
-    _write_json(output_dir / "index.json", index)
+    write_json(output_dir / "index.json", index)
     return index

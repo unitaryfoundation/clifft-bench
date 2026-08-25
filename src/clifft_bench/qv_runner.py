@@ -12,15 +12,8 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.qv import QVCampaign, scheduled_cases, select_physical_cpus
-from clifft_bench.schema import repository_root, validate_document
+from clifft_bench.schema import repository_root, validate_document, write_json
 from clifft_bench.system import collect_runner_metadata, collect_workflow_metadata, utc_now
-
-
-def _atomic_write(path: Path, document: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
-    os.replace(temporary, path)
 
 
 def _source_environment() -> dict[str, str]:
@@ -325,7 +318,7 @@ def run_qv_campaign(
         "runner": runner,
         "cases": cases,
     }
-    _atomic_write(output_path, document)
+    write_json(output_path, document)
 
     interrupted = False
     previous_handler = signal.getsignal(signal.SIGINT)
@@ -345,7 +338,7 @@ def run_qv_campaign(
             except Exception as error:  # noqa: BLE001
                 case["status"] = "error"
                 case["error"] = {"type": type(error).__name__, "message": str(error)}
-            _atomic_write(output_path, document)
+            write_json(output_path, document)
     except KeyboardInterrupt:
         interrupted = True
         for case in cases:
@@ -358,7 +351,7 @@ def run_qv_campaign(
     finally:
         signal.signal(signal.SIGINT, previous_handler)
         document["run"]["finished_at"] = utc_now()
-        _atomic_write(output_path, document)
+        write_json(output_path, document)
 
     validate_document(document)
     if interrupted:

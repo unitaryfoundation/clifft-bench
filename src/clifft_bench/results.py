@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import csv
 import json
-import os
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
@@ -15,6 +14,7 @@ from clifft_bench.schema import (
     repository_root,
     validate_document,
     validate_path,
+    write_json,
 )
 
 CASE_FIELDS = [
@@ -87,17 +87,6 @@ COMPARISON_FIELDS = [
 ]
 
 
-def _atomic_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(text)
-    os.replace(temporary, path)
-
-
-def _write_json(path: Path, document: dict[str, Any]) -> None:
-    _atomic_text(path, json.dumps(document, indent=2, sort_keys=True) + "\n")
-
-
 def _write_csv(path: Path, fields: list[str], rows: Iterable[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -105,7 +94,7 @@ def _write_csv(path: Path, fields: list[str], rows: Iterable[dict[str, Any]]) ->
         writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
-    os.replace(temporary, path)
+    temporary.replace(path)
 
 
 def _placement_and_replica(result: dict[str, Any]) -> tuple[int, int]:
@@ -470,5 +459,5 @@ def finalize_execution(
         },
     }
     validate_document(index)
-    _write_json(output_dir / "index.json", index)
+    write_json(output_dir / "index.json", index)
     return index

@@ -11,5 +11,6 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+*.tmp
+figures/*.pdf
 results/*.json
-!results/.gitkeep
