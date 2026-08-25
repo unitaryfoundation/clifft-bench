@@ -1,3 +1,1 @@
-"""Version metadata for the benchmark harness."""
-
-__version__ = "0.1.0"
+"""Benchmark harness for reproducible near-Clifford simulator comparisons."""

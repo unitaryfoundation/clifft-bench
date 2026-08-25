@@ -15,7 +15,7 @@ from typing import Any
 
 from clifft_bench.manifest import Case, Suite
 from clifft_bench.schedule import balanced_schedule
-from clifft_bench.schema import repository_root, validate_document
+from clifft_bench.schema import repository_root, validate_document, write_json
 from clifft_bench.system import (
     choose_cpu,
     collect_runner_metadata,
@@ -213,13 +213,6 @@ def _new_case_result(
     }
 
 
-def _atomic_write(path: Path, document: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
-    os.replace(temporary, path)
-
-
 def _summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     rates = [float(sample["throughput_attempted_shots_per_second"]) for sample in samples]
     median = statistics.median(rates)
@@ -313,7 +306,7 @@ def run_suite(
         ],
     }
     case_results = {item["case_id"]: item for item in document["cases"]}
-    _atomic_write(output_path, document)
+    write_json(output_path, document)
 
     try:
         preparation_index = 0
@@ -348,7 +341,7 @@ def run_suite(
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "setup")
-                        _atomic_write(output_path, document)
+                        write_json(output_path, document)
                         continue
 
                     try:
@@ -366,7 +359,7 @@ def run_suite(
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "warmup")
-                        _atomic_write(output_path, document)
+                        write_json(output_path, document)
                         continue
 
                     try:
@@ -392,7 +385,7 @@ def run_suite(
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "correctness")
-                    _atomic_write(output_path, document)
+                    write_json(output_path, document)
 
                 runnable = [
                     case.id for case in group if case_results[case.id]["status"] == "running"
@@ -429,14 +422,14 @@ def run_suite(
                         result["status"] = "error"
                         result["error"] = _error_record(error, "sampling")
                     sequence_index += 1
-                    _atomic_write(output_path, document)
+                    write_json(output_path, document)
 
                 for case in group:
                     result = case_results[case.id]
                     if result["status"] == "running":
                         result["summary"] = _summary(result["samples"])
                         result["status"] = "success"
-                _atomic_write(output_path, document)
+                write_json(output_path, document)
             finally:
                 for client in clients.values():
                     client.close()
@@ -452,8 +445,8 @@ def run_suite(
         raise
     finally:
         document["run"]["finished_at"] = utc_now()
-        _atomic_write(output_path, document)
+        write_json(output_path, document)
 
     validate_document(document, source=str(output_path))
-    _atomic_write(output_path, document)
+    write_json(output_path, document)
     return document

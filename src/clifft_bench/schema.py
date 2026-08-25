@@ -1,4 +1,4 @@
-"""JSON Schema loading and validation."""
+"""Deterministic JSON I/O and schema validation."""
 
 from __future__ import annotations
 
@@ -46,6 +46,14 @@ def read_json(path: Path) -> dict[str, Any]:
     if not isinstance(document, dict):
         raise SchemaValidationError(f"{path}: the document root must be an object")
     return document
+
+
+def write_json(path: Path, document: dict[str, Any]) -> None:
+    """Atomically replace a JSON file with a deterministic representation."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
+    temporary.replace(path)
 
 
 def schema_path(schema_version: str, schema_dir: Path | None = None) -> Path:
