@@ -12,9 +12,7 @@
   "created_at": "2026-08-25T12:09:57.178401Z",
   "derived": {
     "cases": "cases.csv",
-    "comparisons": "comparisons.csv",
-    "samples": "samples.csv",
-    "summary": "summary.json"
+    "comparisons": "comparisons.csv"
   },
   "execution_id": "current-tools-v1-20260824-r1",
   "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",

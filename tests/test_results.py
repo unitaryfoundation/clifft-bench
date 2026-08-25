@@ -98,9 +98,6 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
         "raw/baseline-raw.json",
         "raw/candidate-raw.json",
     ]
-    with (output_dir / "samples.csv").open(newline="") as stream:
-        samples = list(csv.DictReader(stream))
-    assert {row["campaign_run_id"] for row in samples} == {"baseline", "candidate"}
     with (output_dir / "comparisons.csv").open(newline="") as stream:
         comparisons = list(csv.DictReader(stream))
     assert len(comparisons) == 1
@@ -109,6 +106,8 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
     assert comparisons[0]["candidate_batch_enabled"] == "true"
     assert comparisons[0]["candidate_batch_size_effective"] == "32"
     assert comparisons[0]["candidate_shots_per_call"] == "64"
+    assert not (output_dir / "samples.csv").exists()
+    assert not (output_dir / "summary.json").exists()
 
     changed = json.loads(raw_paths[1].read_text())
     changed["runner"]["cloud"]["instance_id"] = "i-different"
