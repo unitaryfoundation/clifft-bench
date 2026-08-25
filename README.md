@@ -41,7 +41,7 @@ workloads; Clifft leads on distance-5 cultivation.
 | [Cultivation d5][play-cultivation-d5] | 182k | +33% | batch 32 | **1.33x** |
 | [Surface-code memory d7, r7][play-surface-d7-r7] | 484k | +4% | batch 2048 | 0.14x |
 
-![Clifft 0.9 throughput versus the fastest measured SymFT mode](figures/current-tools-v1-20260824-r1.png)
+![QEC workload throughput ratio between Clifft and the fastest measured SymFT mode](figures/current-tools-v1-20260824-r1.png)
 
 These are medians over three fresh placements on one pinned core of an AWS
 `m7a.xlarge` (`AMD EPYC 9R14`, Ubuntu 24.04). The fastest SymFT mode is selected
@@ -111,8 +111,9 @@ ranking.
 Clifft's paired median QV24 speedup is 10.17x from 1 to 16 physical cores.
 
 This is an exploratory curated execution on an AWS `c8i.8xlarge` (`Intel Xeon
-6975P-C`, Ubuntu 24.04), using three deterministic circuit seeds per point. See
-the [campaign details and methodology](docs/qv-multicore.md) and the
+6975P-C`, Ubuntu 24.04), using three deterministic circuit seeds per point.
+Lines connect seed medians; scaling whiskers show the seed range. See the
+[campaign details and methodology](docs/qv-multicore.md) and the
 [`cases.csv`](results/qv-multicore-v1/qv-multicore-v1-2026082/cases.csv).
 
 ### How to read these results

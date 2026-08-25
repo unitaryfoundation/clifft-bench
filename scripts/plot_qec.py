@@ -16,7 +16,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.axes import Axes  # noqa: E402
 from matplotlib.figure import Figure  # noqa: E402
-from matplotlib.ticker import FuncFormatter  # noqa: E402
+from matplotlib.ticker import FixedLocator, FuncFormatter  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 CURRENT_EXECUTION = ROOT / "results/current-tools-v1/current-tools-v1-20260824-r1"
@@ -34,19 +34,14 @@ WORKLOAD_ORDER = [
 ]
 
 WORKLOAD_LABELS = {
-    "coherent-surface-d3-r1-p1e-3-rz2e-2": "coherent d3, r1",
-    "coherent-surface-d3-r3-p1e-3-rz2e-2": "coherent d3, r3",
-    "coherent-surface-d5-r1-p1e-3-rz2e-2": "coherent d5, r1",
-    "coherent-surface-d5-r5-p1e-3-rz2e-2": "coherent d5, r5",
+    "coherent-surface-d3-r1-p1e-3-rz2e-2": "Coherent d3, r1",
+    "coherent-surface-d3-r3-p1e-3-rz2e-2": "Coherent d3, r3",
+    "coherent-surface-d5-r1-p1e-3-rz2e-2": "Coherent d5, r1",
+    "coherent-surface-d5-r5-p1e-3-rz2e-2": "Coherent d5, r5",
     "distillation-color-code-85q-p5e-2": "85q distillation",
-    "msc-d3-inject-cultivate-p1e-3": "cultivation d3",
-    "msc-d5-inject-cultivate-p1e-3": "cultivation d5",
-    "surface-code-d7-r7-p1e-3": "surface code d7, r7",
-}
-
-ANNOTATIONS = {
-    "coherent-surface-d5-r5-p1e-3-rz2e-2": (8, -2),
-    "msc-d5-inject-cultivate-p1e-3": (8, 8),
+    "msc-d3-inject-cultivate-p1e-3": "Cultivation d3",
+    "msc-d5-inject-cultivate-p1e-3": "Cultivation d5",
+    "surface-code-d7-r7-p1e-3": "Surface code d7, r7",
 }
 
 SYMFT_STYLES = {
@@ -109,17 +104,13 @@ def _median_rates(rows: list[dict[str, str]]) -> dict[tuple[str, str], float]:
     return {key: statistics.median(values) for key, values in grouped.items()}
 
 
-def _rate_tick(value: float, _position: float) -> str:
-    if value >= 1_000_000:
-        return f"{value / 1_000_000:g}M"
-    if value >= 1_000:
-        return f"{value / 1_000:g}k"
-    return f"{value:g}"
+def _ratio_tick(value: float, _position: float) -> str:
+    return f"{value:g}x"
 
 
 def _plot_current_tools(axis: Axes, rows: list[dict[str, str]]) -> None:
     rates = _median_rates(rows)
-    points: list[tuple[str, float, float, str]] = []
+    points: list[tuple[str, float, str]] = []
     for workload in WORKLOAD_ORDER:
         clifft_rate = rates[(workload, "clifft-0.9.0")]
         symft_rate, symft_run = max(
@@ -127,66 +118,82 @@ def _plot_current_tools(axis: Axes, rows: list[dict[str, str]]) -> None:
             for (candidate_workload, run), rate in rates.items()
             if candidate_workload == workload and run.startswith("symft-")
         )
-        points.append((workload, symft_rate, clifft_rate, symft_run))
+        points.append((workload, clifft_rate / symft_rate, symft_run))
+    points.sort(key=lambda point: point[1])
 
-    all_rates = [value for _, x, y, _ in points for value in (x, y)]
-    lower = min(all_rates) / 1.8
-    upper = max(all_rates) * 1.8
-    axis.plot([lower, upper], [lower, upper], color="0.35", linestyle="--", label="equal")
+    axis.axvline(1, color="0.35", linestyle="--", linewidth=1.4, zorder=1)
+    for y_position, (_workload, ratio, _symft_run) in enumerate(points):
+        axis.plot(
+            [min(ratio, 1), max(ratio, 1)],
+            [y_position, y_position],
+            color="0.78",
+            linewidth=1.4,
+            zorder=1,
+        )
 
     for run_id, style in SYMFT_STYLES.items():
-        selected = [point for point in points if point[3] == run_id]
+        selected = [(index, point) for index, point in enumerate(points) if point[2] == run_id]
         axis.scatter(
-            [point[1] for point in selected],
-            [point[2] for point in selected],
+            [point[1] for _index, point in selected],
+            [index for index, _point in selected],
             color=str(style["color"]),
             edgecolor="white",
-            linewidth=0.5,
-            label=f"SymFT {style['label']}",
+            linewidth=0.7,
+            label=str(style["label"]),
             marker=str(style["marker"]),
-            s=48,
+            s=82,
             zorder=3,
         )
 
-    for workload, symft_rate, clifft_rate, _run_id in points:
-        if workload not in ANNOTATIONS:
-            continue
+    for y_position, (_workload, ratio, _symft_run) in enumerate(points):
+        left_of_point = ratio > 1
         axis.annotate(
-            WORKLOAD_LABELS[workload],
-            (symft_rate, clifft_rate),
+            f"{ratio:.2f}x",
+            (ratio, y_position),
             textcoords="offset points",
-            xytext=ANNOTATIONS[workload],
-            fontsize=8,
+            xytext=(-8 if left_of_point else 8, 0),
+            ha="right" if left_of_point else "left",
+            va="center",
+            fontsize=11,
+            fontweight="bold",
         )
 
     axis.set_xscale("log")
-    axis.set_yscale("log")
-    axis.set_xlim(lower, upper)
-    axis.set_ylim(lower, upper)
-    axis.set_box_aspect(1)
-    axis.xaxis.set_major_formatter(FuncFormatter(_rate_tick))
-    axis.yaxis.set_major_formatter(FuncFormatter(_rate_tick))
-    axis.set_xlabel("Fastest measured SymFT attempted shots/s")
-    axis.set_ylabel("Clifft 0.9 attempted shots/s")
-    axis.set_title("Current single-core QEC throughput")
+    axis.set_xlim(0.075, 2.0)
+    axis.set_ylim(-0.65, len(points) - 0.35)
+    axis.set_yticks(
+        range(len(points)),
+        labels=[WORKLOAD_LABELS[workload] for workload, _ratio, _run in points],
+    )
+    ratio_ticks = [0.1, 0.2, 0.5, 1.0, 2.0]
+    axis.xaxis.set_major_locator(FixedLocator(ratio_ticks))
+    axis.xaxis.set_major_formatter(FuncFormatter(_ratio_tick))
+    axis.set_xlabel("Throughput ratio (Clifft / fastest SymFT)")
+    axis.set_title("QEC Workload Throughput Comparison")
     axis.text(
-        0.04,
-        0.96,
-        "Above line: Clifft faster",
+        0.02,
+        0.97,
+        "SymFT faster",
         transform=axis.transAxes,
         va="top",
-        fontsize=8,
+        fontsize=10.5,
     )
     axis.text(
-        0.96,
-        0.31,
-        "Below line: SymFT faster",
+        0.98,
+        0.97,
+        "Clifft faster",
         transform=axis.transAxes,
         ha="right",
-        va="bottom",
-        fontsize=8,
+        va="top",
+        fontsize=10.5,
     )
-    axis.legend(loc="lower right", title="Fastest SymFT mode", fontsize=8, title_fontsize=8)
+    axis.legend(
+        loc="lower right",
+        title="Fastest SymFT mode",
+        fontsize=10.5,
+        title_fontsize=10.5,
+    )
+    axis.grid(axis="x", which="major")
 
 
 def _plot_history(axis: Axes, rows: list[dict[str, str]]) -> None:
@@ -201,12 +208,10 @@ def _plot_history(axis: Axes, rows: list[dict[str, str]]) -> None:
         axis.plot(
             releases,
             values,
-            color="0.55",
-            linewidth=1.0,
-            marker="o",
-            markersize=2.5,
-            alpha=0.65,
-            label="Individual workload" if index == 0 else None,
+            color="0.52",
+            linewidth=1.1,
+            alpha=0.32,
+            label="Workloads" if index == 0 else None,
         )
 
     medians = [
@@ -217,19 +222,30 @@ def _plot_history(axis: Axes, rows: list[dict[str, str]]) -> None:
         releases,
         medians,
         color="#0072B2",
-        linewidth=2.0,
+        linewidth=3.0,
         marker="o",
-        markersize=4,
+        markersize=5.5,
         label="Median",
         zorder=3,
     )
 
     axis.axhline(1, color="0.35", linestyle="--", linewidth=1)
     axis.set_yscale("log")
-    axis.set_xlabel("Clifft release")
-    axis.set_ylabel("Speedup over Clifft 0.1.0")
-    axis.set_title("Clifft throughput across releases")
-    axis.legend(loc="upper left", fontsize=8)
+    axis.annotate(
+        f"{medians[-1]:.2f}x median",
+        (releases[-1], medians[-1]),
+        textcoords="offset points",
+        xytext=(-8, 10),
+        ha="right",
+        color="#0072B2",
+        fontsize=11,
+        fontweight="bold",
+    )
+    axis.set_xlabel("Release")
+    axis.set_ylabel("Speedup vs 0.1")
+    axis.set_title("Clifft Throughput Across Releases")
+    axis.legend(loc="upper left", fontsize=11)
+    axis.grid(which="major")
 
 
 def _save_figure(
@@ -269,36 +285,24 @@ def plot(
 ) -> list[Path]:
     plt.rcParams.update(
         {
-            "axes.grid": True,
-            "axes.titlesize": 11,
-            "axes.labelsize": 9,
-            "font.size": 9,
-            "grid.alpha": 0.25,
+            "axes.grid": False,
+            "axes.titlesize": 16,
+            "axes.labelsize": 13,
+            "font.size": 11,
+            "grid.alpha": 0.15,
+            "grid.linewidth": 0.8,
             "legend.framealpha": 0.9,
             "pdf.fonttype": 42,
+            "xtick.labelsize": 11,
+            "ytick.labelsize": 11,
         }
     )
 
-    current_figure, current_axis = plt.subplots(figsize=(6.0, 5.4), constrained_layout=True)
+    current_figure, current_axis = plt.subplots(figsize=(7.2, 5.2), constrained_layout=True)
     _plot_current_tools(current_axis, _read_successes(current_path))
-    current_figure.text(
-        0.5,
-        -0.01,
-        "Medians of 3 placements on one pinned AWS m7a.xlarge core; marker shows the "
-        "fastest applicable SymFT mode.",
-        ha="center",
-        fontsize=8,
-    )
 
-    history_figure, history_axis = plt.subplots(figsize=(6.4, 4.4), constrained_layout=True)
+    history_figure, history_axis = plt.subplots(figsize=(7.2, 4.8), constrained_layout=True)
     _plot_history(history_axis, _read_successes(history_path))
-    history_figure.text(
-        0.5,
-        -0.01,
-        "One placement on the single-core AWS m7a.xlarge hardware epoch.",
-        ha="center",
-        fontsize=8,
-    )
 
     outputs = _save_figure(
         current_figure,
