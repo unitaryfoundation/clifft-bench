@@ -107,7 +107,7 @@ host decision is summarized in [`docs/reference-host.md`](docs/reference-host.md
 
 ## Results
 
-Raw result JSON is authoritative. Finalization also creates stable long-form
-CSV tables and a compact summary for review and future plots. Derived files
+Raw result JSON is authoritative. Finalization also creates two stable
+long-form CSV tables for review and future plots. Derived files
 must be reproducible from the raw files; no database, dashboard, Git LFS, or
 Parquet layer is required at the current data volume.

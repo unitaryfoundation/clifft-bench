@@ -67,12 +67,10 @@
     "derived": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["samples", "cases", "comparisons", "summary"],
+      "required": ["cases", "comparisons"],
       "properties": {
-        "samples": {"const": "samples.csv"},
         "cases": {"const": "cases.csv"},
-        "comparisons": {"const": "comparisons.csv"},
-        "summary": {"const": "summary.json"}
+        "comparisons": {"const": "comparisons.csv"}
       }
     }
   }

@@ -5,8 +5,7 @@ from __future__ import annotations
 import csv
 import json
 import os
-import statistics
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -17,42 +16,6 @@ from clifft_bench.schema import (
     validate_document,
     validate_path,
 )
-
-SAMPLE_FIELDS = [
-    "execution_id",
-    "campaign_id",
-    "hardware_epoch",
-    "campaign_run_id",
-    "result_id",
-    "placement",
-    "replica",
-    "case_id",
-    "pair_id",
-    "workload_id",
-    "workload_family",
-    "implementation_id",
-    "simulator_name",
-    "simulator_version",
-    "adapter",
-    "mode",
-    "batch_enabled",
-    "batch_size_effective",
-    "shots_per_call",
-    "cpu_model",
-    "instance_type",
-    "image_id",
-    "boot_id",
-    "repetition",
-    "sequence_index",
-    "started_at",
-    "duration_seconds",
-    "api_calls",
-    "attempted_shots",
-    "accepted_shots",
-    "discarded_shots",
-    "logical_errors",
-    "throughput_attempted_shots_per_second",
-]
 
 CASE_FIELDS = [
     "execution_id",
@@ -193,12 +156,11 @@ def _common_row(
     }
 
 
-def _rows(
+def _case_rows(
     campaign: Campaign,
     execution_id: str,
     results: list[dict[str, Any]],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    sample_rows: list[dict[str, Any]] = []
+) -> list[dict[str, Any]]:
     case_rows: list[dict[str, Any]] = []
     for result in results:
         for case in result["cases"]:
@@ -230,14 +192,7 @@ def _rows(
                     "total_duration_seconds": summary.get("total_duration_seconds", ""),
                 }
             )
-            for sample in case["samples"]:
-                sample_rows.append(
-                    {
-                        **common,
-                        **{field: sample[field] for field in SAMPLE_FIELDS if field in sample},
-                    }
-                )
-    return sample_rows, case_rows
+    return case_rows
 
 
 def _comparison_rows(
@@ -339,78 +294,6 @@ def _comparison_rows(
                             }
                         )
     return comparisons
-
-
-def _distribution(values: list[float]) -> dict[str, Any] | None:
-    if not values:
-        return None
-    return {
-        "count": len(values),
-        "median": statistics.median(values),
-        "min": min(values),
-        "max": max(values),
-    }
-
-
-def _summary(
-    campaign: Campaign,
-    execution_id: str,
-    case_rows: list[dict[str, Any]],
-    comparison_rows: list[dict[str, Any]],
-) -> dict[str, Any]:
-    cases: list[dict[str, Any]] = []
-    grouped_cases: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for row in case_rows:
-        grouped_cases[str(row["case_id"])].append(row)
-    for case_id, rows in grouped_cases.items():
-        rates = [
-            float(row["median_attempted_shots_per_second"])
-            for row in rows
-            if row["status"] == "success"
-        ]
-        first = rows[0]
-        cases.append(
-            {
-                "case_id": case_id,
-                "workload_id": first["workload_id"],
-                "implementation_id": first["implementation_id"],
-                "statuses": dict(sorted(Counter(row["status"] for row in rows).items())),
-                "result_median_throughput": _distribution(rates),
-            }
-        )
-
-    comparisons: list[dict[str, Any]] = []
-    grouped_comparisons: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
-    for row in comparison_rows:
-        key = (
-            str(row["comparison_id"]),
-            str(row["baseline_case_id"]),
-            str(row["candidate_case_id"]),
-        )
-        grouped_comparisons[key].append(row)
-    for (comparison_id, baseline, candidate), rows in grouped_comparisons.items():
-        comparisons.append(
-            {
-                "comparison_id": comparison_id,
-                "baseline_case_id": baseline,
-                "candidate_case_id": candidate,
-                "ratio_candidate_over_baseline": _distribution(
-                    [float(row["ratio_candidate_over_baseline"]) for row in rows]
-                ),
-                "symmetric_delta_percent": _distribution(
-                    [float(row["symmetric_delta_percent"]) for row in rows]
-                ),
-            }
-        )
-    return {
-        "report_format": "clifft-bench/campaign-summary/v1",
-        "execution_id": execution_id,
-        "campaign_id": campaign.id,
-        "hardware_epoch": campaign.document["hardware_epoch"],
-        "result_count": len({row["result_id"] for row in case_rows}),
-        "cases": cases,
-        "comparisons": comparisons,
-    }
 
 
 def _validate_execution(
@@ -537,15 +420,10 @@ def finalize_execution(
 ) -> dict[str, Any]:
     resolved_paths = sorted(path.resolve() for path in raw_paths)
     results = _validate_execution(campaign, resolved_paths)
-    sample_rows, case_rows = _rows(campaign, execution_id, results)
+    case_rows = _case_rows(campaign, execution_id, results)
     comparison_rows = _comparison_rows(campaign, execution_id, case_rows)
-    _write_csv(output_dir / "samples.csv", SAMPLE_FIELDS, sample_rows)
     _write_csv(output_dir / "cases.csv", CASE_FIELDS, case_rows)
     _write_csv(output_dir / "comparisons.csv", COMPARISON_FIELDS, comparison_rows)
-    _write_json(
-        output_dir / "summary.json",
-        _summary(campaign, execution_id, case_rows, comparison_rows),
-    )
 
     placements: dict[int, list[tuple[Path, dict[str, Any]]]] = defaultdict(list)
     for path, result in zip(resolved_paths, results, strict=True):
@@ -587,10 +465,8 @@ def finalize_execution(
             for number, items in sorted(placements.items())
         ],
         "derived": {
-            "samples": "samples.csv",
             "cases": "cases.csv",
             "comparisons": "comparisons.csv",
-            "summary": "summary.json",
         },
     }
     validate_document(index)
