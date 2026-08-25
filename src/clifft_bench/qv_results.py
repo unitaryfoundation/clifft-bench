@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 import os
-import statistics
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -77,43 +75,11 @@ def _expected_case_ids(campaign: QVCampaign) -> set[str]:
     }
 
 
-def _validate_circuit_artifacts(
-    results: list[dict[str, Any]], circuit_dir: Path
-) -> list[dict[str, Any]]:
-    artifacts: dict[str, dict[str, Any]] = {}
-    for result in results:
-        for case in result["cases"]:
-            circuit = case["circuit"]
-            path = circuit_dir / circuit["path"]
-            if not path.is_file():
-                raise SchemaValidationError(f"missing generated circuit artifact: {path}")
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
-            if digest != circuit["sha256"]:
-                raise SchemaValidationError(
-                    f"circuit artifact digest mismatch for {circuit['path']!r}"
-                )
-            previous = artifacts.setdefault(
-                str(circuit["path"]),
-                {
-                    "path": circuit["path"],
-                    "sha256": digest,
-                    "qubits": circuit["qubits"],
-                    "seed": circuit["seed"],
-                },
-            )
-            if previous["sha256"] != digest:
-                raise SchemaValidationError(
-                    f"raw results disagree on circuit artifact {circuit['path']!r}"
-                )
-    return sorted(artifacts.values(), key=lambda item: (item["qubits"], item["seed"]))
-
-
 def _validate_execution(
-    campaign: QVCampaign, execution_id: str, raw_paths: list[Path], circuit_dir: Path
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    expected_results = (
-        int(campaign.document["collection"]["placements"])
-        * int(campaign.document["collection"]["replicas_per_placement"])
+    campaign: QVCampaign, execution_id: str, raw_paths: list[Path]
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+    expected_results = int(campaign.document["collection"]["placements"]) * int(
+        campaign.document["collection"]["replicas_per_placement"]
     )
     if len(raw_paths) != expected_results:
         raise SchemaValidationError(
@@ -130,6 +96,7 @@ def _validate_execution(
     cpu_models: set[str] = set()
     generator_dependencies: set[str] = set()
     boots_by_placement: dict[int, set[str]] = defaultdict(set)
+    curations: set[str] = set()
     reference = campaign.document["reference_host"]
     for result in results:
         if result["campaign"]["id"] != campaign.id:
@@ -180,7 +147,11 @@ def _validate_execution(
         generator_dependencies.add(
             json.dumps(result["campaign"]["circuit_generator_dependencies"], sort_keys=True)
         )
+        curations.add(json.dumps(result.get("curation"), sort_keys=True))
         boots_by_placement[attempt[0]].add(str(cloud["boot_id"]))
+    if len(curations) != 1:
+        raise SchemaValidationError("QV results use different curation provenance")
+    curation = json.loads(next(iter(curations)))
     placements = int(campaign.document["collection"]["placements"])
     replicas = int(campaign.document["collection"]["replicas_per_placement"])
     expected_attempts = {
@@ -208,8 +179,7 @@ def _validate_execution(
     placement_boots = {next(iter(boots)) for boots in boots_by_placement.values()}
     if len(placement_boots) != len(boots_by_placement):
         raise SchemaValidationError("each QV placement requires a distinct stop/start boot")
-    circuits = _validate_circuit_artifacts(results, circuit_dir)
-    return results, circuits
+    return results, curation
 
 
 def _case_rows(
@@ -265,78 +235,33 @@ def _case_rows(
     return rows
 
 
-def _distribution(values: list[float]) -> dict[str, Any] | None:
-    if not values:
-        return None
-    return {
-        "count": len(values),
-        "median": statistics.median(values),
-        "min": min(values),
-        "max": max(values),
-    }
-
-
-def _summary(campaign: QVCampaign, execution_id: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for row in rows:
-        grouped[str(row["case_id"])].append(row)
-    cases = []
-    for case_id, group in sorted(grouped.items()):
-        first = group[0]
-        durations = [
-            float(row["execution_seconds"])
-            for row in group
-            if row["status"] == "success"
-        ]
-        cases.append(
-            {
-                "case_id": case_id,
-                "phase": first["phase"],
-                "run_id": first["run_id"],
-                "qubits": first["qubits"],
-                "seed": first["seed"],
-                "threads_requested": first["threads_requested"],
-                "statuses": dict(sorted(Counter(row["status"] for row in group).items())),
-                "execution_seconds": _distribution(durations),
-            }
-        )
-    return {
-        "report_format": "clifft-bench/qv-summary/v1",
-        "execution_id": execution_id,
-        "campaign_id": campaign.id,
-        "hardware_epoch": campaign.document["hardware_epoch"],
-        "cases": cases,
-    }
-
-
 def finalize_qv_execution(
     campaign: QVCampaign,
     *,
     execution_id: str,
     raw_paths: list[Path],
-    circuit_dir: Path,
     output_dir: Path,
 ) -> dict[str, Any]:
-    results, circuits = _validate_execution(campaign, execution_id, raw_paths, circuit_dir)
+    results, curation = _validate_execution(campaign, execution_id, raw_paths)
     rows = _case_rows(campaign, execution_id, results)
-    summary = _summary(campaign, execution_id, rows)
+    classification = campaign.document["classification"]
+    if curation is not None and classification != "smoke":
+        classification = "exploratory"
     index = {
         "index_format": "clifft-bench/qv-execution/v1",
         "execution_id": execution_id,
         "campaign_id": campaign.id,
         "hardware_epoch": campaign.document["hardware_epoch"],
-        "classification": campaign.document["classification"],
+        "classification": classification,
         "result_count": len(results),
         "case_rows": len(rows),
-        "circuits": circuits,
         "files": {
             "raw": "raw/",
-            "circuits": "circuits/",
             "cases": "cases.csv",
-            "summary": "summary.json",
         },
     }
+    if curation is not None:
+        index["curation"] = curation
     _write_csv(output_dir / "cases.csv", rows)
-    _write_json(output_dir / "summary.json", summary)
     _write_json(output_dir / "index.json", index)
     return index

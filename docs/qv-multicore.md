@@ -3,8 +3,8 @@
 This occasional campaign answers two questions that do not fit the single-core
 QEC throughput suite:
 
-1. How does current Clifft single-shot latency compare with Qiskit Aer,
-   Qulacs, qsim, and Qrack at a fixed 16-physical-core budget?
+1. How does Clifft 0.9.0 single-shot latency compare with Qiskit Aer, Qulacs,
+   and qsim at a fixed 16-physical-core budget?
 2. How does Clifft's intra-shot OpenMP implementation scale from 1 to 16
    physical cores on wide Quantum Volume circuits?
 
@@ -14,29 +14,22 @@ Clifft compilation plus one sample is timed; the other adapters retain their
 original backend-execution timing boundaries. Circuit generation, QASM
 conversion, imports, and process startup are outside the timed region.
 
-## Initial matrix
+## Campaign matrix
 
-The official manifest contains 342 serial cases per placement:
+The official manifest contains 234 serial cases in one placement:
 
-- 180 current-tool cases: five tools, QV6 through QV28 in steps of two, three
+- 144 current-tool cases: four tools, QV6 through QV28 in steps of two, three
   deterministic circuit seeds, and 16 physical cores;
 - 90 Clifft scaling cases: QV18 through QV28, three seeds, and 1/2/4/8/16
-  physical cores;
-- 36 Clifft 0.1.0 paper-anchor cases: the full corpus, three seeds, and the
-  original fixed 16-core budget;
-- 36 Clifft 0.8.0 bridge cases: the six wide circuits, three seeds, and 1 and
-  16 physical cores.
+  physical cores.
 
 The current Clifft run is built from the exact 0.9.0 release commit with
-OpenMP enabled. The 0.8.0 bridge remains unchanged.
-The 0.1.0 run keeps the original source revision and 64-qubit build setting so
-the current hardware epoch can be joined explicitly to the published curve.
+OpenMP enabled.
 
 For a later Clifft release, update only the current release environment and the
-two current Clifft run identities. Keep the 0.1.0/0.8.0 anchors, circuits,
-other tools, host epoch, and measurement policy unchanged. A later
-external-tool release similarly changes only that tool's isolated lock and run
-identity.
+two Clifft run identities. Keep the circuits, other tools, host epoch, and
+measurement policy unchanged. A later external-tool release similarly changes
+only that tool's isolated lock and run identity.
 
 Each `(tool, width, seed, thread count)` case runs in a fresh subprocess. One
 logical CPU is selected from each physical core, the process is bound to that
@@ -59,12 +52,6 @@ Create and retain a second stopped instance rather than resizing the QEC host:
 - no additional file system, IAM role, Elastic IP, or other persistent public
   IPv4 allocation;
 - SSH limited to your current IP or an equivalent console connection.
-
-Qrack uses its official `pyqrack-cpu` distribution. The provider metadata
-requires the generic `pyqrack` distribution, so the complete lock retains that
-metadata dependency and bootstrap force-reinstalls the same-version CPU wheel
-last. The imported runtime is therefore the CPU build and cannot silently use
-an accelerator or depend on a host OpenCL installation.
 
 The account needs at least 32 Standard On-Demand vCPUs available in the chosen
 region. The campaign verifies the instance type, 16 physical/32 logical CPUs,
@@ -97,12 +84,11 @@ export CLIFFT_BENCH_CAMPAIGN=qv-multicore-v1
 ./scripts/ec2/bootstrap.sh "$CLIFFT_BENCH_CAMPAIGN"
 ```
 
-Bootstrap compiles the three Clifft environments with a 64-qubit build limit;
-the 0.9.0 release source is built with `CLIFFT_OPENMP=ON`, so missing compiler
+Bootstrap compiles Clifft 0.9.0 with a 64-qubit build limit and
+`CLIFFT_OPENMP=ON`, so missing compiler
 support fails immediately rather than silently producing a serial build.
 
-Then collect each placement, stopping and starting the same QV instance in
-between:
+Then collect the single placement:
 
 ```bash
 export CLIFFT_BENCH_EXECUTION=qv-multicore-v1-YYYYMM
@@ -117,7 +103,7 @@ placement has a 150-minute launcher ceiling, while the existing eight-hour
 shutdown guard remains the final cost backstop. Timeouts and tool failures are
 retained as structured case evidence.
 
-After placement 3, finalize and push exactly as in the main manual playbook:
+After placement 1, finalize and push exactly as in the main manual playbook:
 
 ```bash
 ./scripts/ec2/finalize.sh \
@@ -125,7 +111,24 @@ After placement 3, finalize and push exactly as in the main manual playbook:
   "$CLIFFT_BENCH_EXECUTION"
 ```
 
-Finalization commits the byte-identical QASM corpus, raw JSON, a long-form
-`cases.csv`, and a compact summary. Plotting can compare isolated tool runs by
-`run_id`, width, seed, thread count, placement, and hardware epoch without
-changing how measurements are collected.
+Finalization commits raw JSON, a compact execution index, and long-form
+`cases.csv`. Generated QASM remains in the external execution spool; its seeds,
+generator dependencies, and fingerprints remain in raw provenance. Plotting
+can compare isolated tool runs by `run_id`, width, seed, thread count,
+placement, and hardware epoch without changing how measurements are collected.
+
+## Collected result
+
+![QV current-tool latency and Clifft strong scaling](../figures/qv-multicore-v1-2026082.png)
+
+The left panel retains the original paper's log-scale latency comparison. The
+right panel keeps the Clifft thread-scaling cases separate and reports paired
+per-seed speedup over one physical core. The figure is labeled exploratory
+because it uses the curated execution described in its raw provenance.
+Regenerate the GitHub-preview PNG with:
+
+```bash
+uv run --extra plot python scripts/plot_qv.py
+```
+
+Pass `--pdf` to also generate an untracked publication PDF.

@@ -1,0 +1,24 @@
+{
+  "campaign_id": "qv-multicore-v1",
+  "case_rows": 234,
+  "classification": "exploratory",
+  "curation": {
+    "excluded_run_ids": [
+      "clifft-0.1.0-paper-anchor",
+      "clifft-0.8.0-anchor",
+      "qrack-current"
+    ],
+    "reason": "Retain only the final Clifft 0.9.0 comparison and scaling matrix.",
+    "source_manifest_sha256": "9b640356b66d9b1d8ff25a5f8178fc9a2c45c5cb65cb0e79a1c4419b991d8a47",
+    "source_result_commit": "674724ff917094f44578c836533482a480a08040",
+    "source_result_sha256": "d78fb61b508d307494545caa4893955d95346edfc05ae73f56b62583ffcd73a6"
+  },
+  "execution_id": "qv-multicore-v1-2026082",
+  "files": {
+    "cases": "cases.csv",
+    "raw": "raw/"
+  },
+  "hardware_epoch": "aws-c8i-8xlarge-ubuntu2404-v1",
+  "index_format": "clifft-bench/qv-execution/v1",
+  "result_count": 1
+}

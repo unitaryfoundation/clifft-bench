@@ -64,7 +64,6 @@ def _parser() -> argparse.ArgumentParser:
     )
     qv_finalize.add_argument("--campaign", required=True, type=Path)
     qv_finalize.add_argument("--execution-id", required=True)
-    qv_finalize.add_argument("--circuit-dir", required=True, type=Path)
     qv_finalize.add_argument("--output-dir", required=True, type=Path)
     qv_finalize.add_argument("results", nargs="+", type=Path)
     return parser
@@ -197,7 +196,6 @@ def _qv_finalize(args: argparse.Namespace) -> int:
         campaign,
         execution_id=args.execution_id,
         raw_paths=[_resolve(path) for path in args.results],
-        circuit_dir=args.circuit_dir.resolve(),
         output_dir=args.output_dir.resolve(),
     )
     print(json.dumps(index, indent=2, sort_keys=True))

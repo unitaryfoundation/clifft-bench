@@ -24,28 +24,30 @@ def test_qv_campaign_has_deliberately_bounded_matrix() -> None:
     campaign = load_qv_campaign(CAMPAIGN_PATH)
     cases = scheduled_cases(campaign)
 
-    current_clifft = [
-        run
-        for run in campaign.document["runs"]
-        if run["adapter"] == "clifft" and run["phase"] != "historical-anchor"
-    ]
+    current_clifft = [run for run in campaign.document["runs"] if run["adapter"] == "clifft"]
     assert campaign.document["classification"] == "official"
     assert {run["version"] for run in current_clifft} == {"0.9.0"}
     assert {run["expected_distribution_version"] for run in current_clifft} == {"0.9.0"}
-    assert len(cases) == 342
-    assert sum(case["run"]["phase"] == "current-tools" for case in cases) == 180
+    assert {run["adapter"] for run in campaign.document["runs"]} == {
+        "clifft",
+        "qiskit",
+        "qulacs",
+        "qsim",
+    }
+    assert campaign.document["collection"]["placements"] == 1
+    assert len(cases) == 234
+    assert sum(case["run"]["phase"] == "current-tools" for case in cases) == 144
     assert sum(case["run"]["phase"] == "clifft-scaling" for case in cases) == 90
-    assert sum(case["run"]["phase"] == "historical-anchor" for case in cases) == 72
 
 
 def test_qv_schedule_reverses_tool_order_between_seeds() -> None:
     cases = scheduled_cases(load_qv_campaign(CAMPAIGN_PATH))
-    first = [case["run"]["id"] for case in cases[:5]]
-    second = [case["run"]["id"] for case in cases[5:10]]
+    first = [case["run"]["id"] for case in cases[:4]]
+    second = [case["run"]["id"] for case in cases[4:8]]
 
     assert second == list(reversed(first))
-    assert {case["qubits"] for case in cases[:10]} == {6}
-    assert [case["seed"] for case in cases[:10]] == [42] * 5 + [43] * 5
+    assert {case["qubits"] for case in cases[:8]} == {6}
+    assert [case["seed"] for case in cases[:8]] == [42] * 4 + [43] * 4
 
 
 def test_physical_cpu_selection_uses_one_sibling_per_core() -> None:
@@ -154,13 +156,10 @@ def _small_campaign(tmp_path: Path):  # type: ignore[no-untyped-def]
     return load_qv_campaign(path), run
 
 
-def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> None:
+def _small_result(tmp_path: Path):  # type: ignore[no-untyped-def]
     campaign, run = _small_campaign(tmp_path)
-    circuit_dir = tmp_path / "circuits"
-    circuit_dir.mkdir()
-    circuit_path = circuit_dir / "qv-q6-seed42.qasm"
-    circuit_path.write_text("OPENQASM 2.0;\nqreg q[6];\n")
-    digest = hashlib.sha256(circuit_path.read_bytes()).hexdigest()
+    circuit_name = "qv-q6-seed42.qasm"
+    digest = hashlib.sha256(b"OPENQASM 2.0;\nqreg q[6];\n").hexdigest()
     runner = collect_runner_metadata(ROOT)
     runner["physical_cores"] = 1
     runner["logical_cpus"] = 1
@@ -214,7 +213,7 @@ def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> Non
                     "source_url": run["source_url"],
                     "adapter": run["adapter"],
                     "environment_id": run["environment_id"],
-                    "dependencies": {"clifft": "0.8.1.dev22"},
+                    "dependencies": {"clifft": "0.9.0"},
                 },
                 "circuit": {
                     "family": "quantum-volume",
@@ -222,7 +221,7 @@ def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> Non
                     "depth": 6,
                     "seed": 42,
                     "basis_gates": ["cx", "u3"],
-                    "path": circuit_path.name,
+                    "path": circuit_name,
                     "sha256": digest,
                 },
                 "threads": {
@@ -246,6 +245,11 @@ def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> Non
     validate_document(result)
     raw_path = tmp_path / "raw.json"
     raw_path.write_text(json.dumps(result))
+    return campaign, raw_path
+
+
+def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> None:
+    campaign, raw_path = _small_result(tmp_path)
     output = tmp_path / "derived"
     output.mkdir()
 
@@ -253,12 +257,38 @@ def test_qv_finalization_validates_and_creates_plot_ready_table(tmp_path) -> Non
         campaign,
         execution_id="qv-test",
         raw_paths=[raw_path],
-        circuit_dir=circuit_dir,
         output_dir=output,
     )
 
     assert index["case_rows"] == 1
+    assert index["classification"] == "official"
+    assert index["files"] == {"raw": "raw/", "cases": "cases.csv"}
+    assert "circuits" not in index
     assert (output / "cases.csv").read_text().count("\n") == 2
-    assert json.loads((output / "summary.json").read_text())["cases"][0][
-        "execution_seconds"
-    ]["median"] == 0.5
+    assert not (output / "summary.json").exists()
+
+
+def test_qv_curated_result_is_traceable_and_exploratory(tmp_path) -> None:
+    campaign, raw_path = _small_result(tmp_path)
+    result = json.loads(raw_path.read_text())
+    result["curation"] = {
+        "source_result_commit": "b" * 40,
+        "source_result_sha256": "c" * 64,
+        "source_manifest_sha256": "d" * 64,
+        "excluded_run_ids": ["removed-run"],
+        "reason": "Keep only the final comparison matrix.",
+    }
+    validate_document(result)
+    raw_path.write_text(json.dumps(result))
+    output = tmp_path / "derived"
+    output.mkdir()
+
+    index = finalize_qv_execution(
+        campaign,
+        execution_id="qv-test",
+        raw_paths=[raw_path],
+        output_dir=output,
+    )
+
+    assert index["classification"] == "exploratory"
+    assert index["curation"] == result["curation"]

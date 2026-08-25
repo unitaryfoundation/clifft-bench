@@ -51,16 +51,17 @@ results/qv-multicore-v1/<execution-id>/
 ├── index.json
 ├── raw/
 │   └── *-raw.json
-├── circuits/
-│   └── *.qasm
-├── cases.csv
-└── summary.json
+└── cases.csv
 ```
 
-The generated QASM files are retained once per execution. Every case records
-their digest, seed, width, requested physical-core set, tool environment, peak
-RSS, and timing components. `cases.csv` is long-form: comparisons and speedups
-remain plot/post-processing decisions rather than additional collection modes.
+Generated QASM is an execution-spool input rather than checked-in evidence. The
+raw result retains its seed, width, generator dependency closure, and circuit
+fingerprint. `cases.csv` is long-form: comparisons and speedups remain
+plot/post-processing decisions rather than additional collection modes.
+If a checked-in QV result was curated from a broader collected matrix, the raw
+result and index record the source commit and file digests plus the excluded run
+IDs. Curated results are classified as exploratory; the original raw result
+remains recoverable from the recorded Git commit.
 
 ## Hardware changes
 

@@ -19,14 +19,6 @@ DEPENDENCIES = {
     "qiskit": ["qiskit", "qiskit-aer", "numpy"],
     "qulacs": ["qulacs", "numpy"],
     "qsim": ["qsimcirq", "cirq-core", "numpy", "ply"],
-    "qrack": [
-        "qiskit-qrack-provider",
-        "pyqrack",
-        "pyqrack-cpu",
-        "qiskit",
-        "qiskit-aer",
-        "numpy",
-    ],
 }
 GENERATOR_DEPENDENCIES = [
     "dill",
@@ -186,24 +178,11 @@ def _run_qsim(qasm: str, threads: int) -> tuple[dict[str, float], int, dict[str,
     )
 
 
-def _run_qrack(qasm: str, _threads: int) -> tuple[dict[str, float], None, dict[str, Any]]:
-    from qiskit.circuit import QuantumCircuit
-    from qiskit.providers.qrack import QasmSimulator
-
-    circuit = QuantumCircuit.from_qasm_str(qasm)
-    simulator = QasmSimulator(shots=1)
-    started = time.perf_counter()
-    simulator.run(circuit, shots=1).result()
-    elapsed = time.perf_counter() - started
-    return ({"execution_seconds": elapsed, "compile_seconds": 0.0, "sample_seconds": 0.0}, None, {})
-
-
 RUNNERS: dict[str, Callable[[str, int], tuple[dict[str, float], int | None, dict[str, Any]]]] = {
     "clifft": _run_clifft,
     "qiskit": _run_qiskit,
     "qulacs": _run_qulacs,
     "qsim": _run_qsim,
-    "qrack": _run_qrack,
 }
 
 
