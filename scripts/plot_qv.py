@@ -89,26 +89,21 @@ def _plot_current_tools(axis: Axes, rows: list[dict[str, str]]) -> None:
         points = []
         for candidate_run, qubits in sorted(grouped):
             if candidate_run == run_id:
-                median, minimum, maximum = _range_stats(grouped[(candidate_run, qubits)])
-                points.append((qubits, median, minimum, maximum))
+                median = statistics.median(grouped[(candidate_run, qubits)])
+                points.append((qubits, median))
         if not points:
             raise ValueError(f"missing current-tool results for {run_id}")
         x = [point[0] for point in points]
         y = [point[1] for point in points]
-        lower = [point[1] - point[2] for point in points]
-        upper = [point[3] - point[1] for point in points]
-        axis.errorbar(
+        axis.plot(
             x,
             y,
-            yerr=[lower, upper],
             color=str(style["color"]),
             label=str(style["label"]),
             linestyle=str(style["linestyle"]),
             marker=str(style["marker"]),
             linewidth=1.4,
             markersize=4,
-            capsize=2,
-            elinewidth=0.7,
         )
 
     axis.set_yscale("log")
@@ -191,7 +186,8 @@ def plot(input_path: Path, output_base: Path, *, write_pdf: bool = False) -> lis
     figure.text(
         0.5,
         -0.01,
-        "Exploratory curated execution; median of 3 seeds; whiskers show the seed range.",
+        "Exploratory curated execution; lines show medians of 3 seeds; right-panel whiskers "
+        "show the seed range.",
         ha="center",
         fontsize=8,
     )
