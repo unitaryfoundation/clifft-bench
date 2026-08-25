@@ -32,19 +32,33 @@ workloads; Clifft leads on distance-5 cultivation.
 
 | Workload | Clifft 0.9 attempted shots/s | vs 0.8 | Fastest measured SymFT mode | Clifft / SymFT |
 |---|---:|---:|---|---:|
-| Coherent surface code d3, r1 | 1.88M | +37% | batch 2048 | 0.71x |
-| Coherent surface code d3, r3 | 461k | +42% | batch 2048 | 0.93x |
-| Coherent surface code d5, r1 | 14.6k | +1% | batch 32 | 0.48x |
-| Coherent surface code d5, r5 | 7.0 | +10% | single | 0.11x |
-| 85-qubit distillation | 576k | +6% | batch 2048 | 0.32x |
-| Cultivation d3 | 1.20M | +8% | batch 2048 | 0.45x |
-| Cultivation d5 | 182k | +33% | batch 32 | **1.33x** |
-| Surface-code memory d7, r7 | 484k | +4% | batch 2048 | 0.14x |
+| [Coherent surface code d3, r1][play-coherent-d3-r1] | 1.88M | +37% | batch 2048 | 0.71x |
+| [Coherent surface code d3, r3][play-coherent-d3-r3] | 461k | +42% | batch 2048 | 0.93x |
+| [Coherent surface code d5, r1][play-coherent-d5-r1] | 14.6k | +1% | batch 32 | 0.48x |
+| [Coherent surface code d5, r5][play-coherent-d5-r5] | 7.0 | +10% | single | 0.11x |
+| [85-qubit distillation][play-distillation] | 576k | +6% | batch 2048 | 0.32x |
+| [Cultivation d3][play-cultivation-d3] | 1.20M | +8% | batch 2048 | 0.45x |
+| [Cultivation d5][play-cultivation-d5] | 182k | +33% | batch 32 | **1.33x** |
+| [Surface-code memory d7, r7][play-surface-d7-r7] | 484k | +4% | batch 2048 | 0.14x |
+
+![Clifft 0.9 throughput versus the fastest measured SymFT mode](figures/current-tools-v1-20260824-r1.png)
 
 These are medians over three fresh placements on one pinned core of an AWS
 `m7a.xlarge` (`AMD EPYC 9R14`, Ubuntu 24.04). The fastest SymFT mode is selected
 independently for each workload from the applicable single, batch-32, and
 batch-2048 cases. A Clifft/SymFT ratio above 1 means Clifft is faster.
+Workload names open the exact measured circuit in the
+[Clifft playground](https://unitaryfoundation.github.io/clifft/playground/);
+the wider circuits may take longer to simulate interactively.
+
+[play-coherent-d3-r1]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d3_r1.stim
+[play-coherent-d3-r3]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d3_r3.stim
+[play-coherent-d5-r1]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d5_r1.stim
+[play-coherent-d5-r5]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d5_r5.stim
+[play-distillation]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fdistillation.stim
+[play-cultivation-d3]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fmsc_d3_inject_cultivate_p1e-3.stim
+[play-cultivation-d5]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fmsc_d5_inject_cultivate_p1e-3.stim
+[play-surface-d7-r7]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fpure_surface_d7_r7_p1e-3.stim
 
 [Browse the execution index and raw results](results/current-tools-v1/current-tools-v1-20260824-r1/)
 or use the complete derived
@@ -57,6 +71,8 @@ and
 The largest broad improvement arrived in 0.8.0. On the shared corpus, 0.9.0 is
 faster than 0.1.0 on all eight workloads, with a median per-workload speedup of
 1.93x and a range of 1.18x to 16.89x.
+
+![Clifft throughput across releases](figures/clifft-history-v1-20260825-r1.png)
 
 | Release | Median speedup vs 0.1 | Range across workloads | Workloads faster than 0.1 |
 |---|---:|---:|---:|
@@ -79,12 +95,20 @@ for every workload and release.
 
 ### Quantum Volume multicore results
 
-![QV current-tool latency and Clifft strong scaling](figures/qv-multicore-v1-2026082.png)
+#### Current-tool latency
+
+![QV current-tool latency](figures/qv-multicore-v1-2026082-current-tools.png)
 
 At 16 physical cores, Clifft 0.9.0 has the lowest median single-shot latency of
-the four measured tools at QV20 and QV22. Its paired median QV24 speedup is
-10.17x from 1 to 16 physical cores. The relative ordering changes with circuit
-width, so the full curve is more informative than one aggregate ranking.
+the four measured tools at QV20 and QV22. The relative ordering changes with
+circuit width, so the full curve is more informative than one aggregate
+ranking.
+
+#### Clifft strong scaling
+
+![Clifft QV strong scaling](figures/qv-multicore-v1-2026082-clifft-scaling.png)
+
+Clifft's paired median QV24 speedup is 10.17x from 1 to 16 physical cores.
 
 This is an exploratory curated execution on an AWS `c8i.8xlarge` (`Intel Xeon
 6975P-C`, Ubuntu 24.04), using three deterministic circuit seeds per point. See

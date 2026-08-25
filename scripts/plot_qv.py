@@ -15,6 +15,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.axes import Axes  # noqa: E402
+from matplotlib.figure import Figure  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXECUTION = ROOT / "results/qv-multicore-v1/qv-multicore-v1-2026082"
@@ -110,7 +111,7 @@ def _plot_current_tools(axis: Axes, rows: list[dict[str, str]]) -> None:
     axis.set_xticks(range(6, 29, 2))
     axis.set_xlabel("Number of qubits")
     axis.set_ylabel("Execution time (s)")
-    axis.set_title("(a) Current tools at 16 physical cores", loc="left")
+    axis.set_title("Current-tool Quantum Volume latency at 16 physical cores")
     axis.legend(loc="upper left", ncols=2, fontsize=8)
 
 
@@ -162,8 +163,36 @@ def _plot_strong_scaling(axis: Axes, rows: list[dict[str, str]]) -> None:
     axis.set_ylim(0.5, 16.7)
     axis.set_xlabel("Physical cores")
     axis.set_ylabel("Speedup over 1 core")
-    axis.set_title("(b) Clifft 0.9.0 strong scaling", loc="left")
+    axis.set_title("Clifft 0.9.0 Quantum Volume strong scaling")
     axis.legend(loc="upper left", ncols=2, fontsize=8)
+
+
+def _save_figure(
+    figure: Figure,
+    output_base: Path,
+    *,
+    title: str,
+    write_pdf: bool,
+) -> list[Path]:
+    output_base.parent.mkdir(parents=True, exist_ok=True)
+    png_path = output_base.with_suffix(".png")
+    outputs = [png_path]
+    figure.savefig(png_path, bbox_inches="tight", dpi=200)
+    if write_pdf:
+        pdf_path = output_base.with_suffix(".pdf")
+        figure.savefig(
+            pdf_path,
+            bbox_inches="tight",
+            metadata={
+                "Title": title,
+                "Author": "Unitary Foundation",
+                "CreationDate": None,
+                "ModDate": None,
+            },
+        )
+        outputs.append(pdf_path)
+    plt.close(figure)
+    return outputs
 
 
 def plot(input_path: Path, output_base: Path, *, write_pdf: bool = False) -> list[Path]:
@@ -179,37 +208,40 @@ def plot(input_path: Path, output_base: Path, *, write_pdf: bool = False) -> lis
             "pdf.fonttype": 42,
         }
     )
-    figure, axes = plt.subplots(1, 2, figsize=(9.2, 3.8), constrained_layout=True)
-    _plot_current_tools(axes[0], rows)
-    _plot_strong_scaling(axes[1], rows)
-    figure.suptitle("Single-shot Quantum Volume performance on AWS c8i.8xlarge", fontsize=11)
-    figure.text(
+    current_figure, current_axis = plt.subplots(figsize=(6.4, 4.6), constrained_layout=True)
+    _plot_current_tools(current_axis, rows)
+    current_figure.text(
         0.5,
         -0.01,
-        "Exploratory curated execution; lines show medians of 3 seeds; right-panel whiskers "
-        "show the seed range.",
+        "Exploratory curated execution on AWS c8i.8xlarge; lines show medians of 3 seeds.",
         ha="center",
         fontsize=8,
     )
 
-    output_base.parent.mkdir(parents=True, exist_ok=True)
-    png_path = output_base.with_suffix(".png")
-    outputs = [png_path]
-    if write_pdf:
-        pdf_path = output_base.with_suffix(".pdf")
-        figure.savefig(
-            pdf_path,
-            bbox_inches="tight",
-            metadata={
-                "Title": "QV multicore performance",
-                "Author": "Unitary Foundation",
-                "CreationDate": None,
-                "ModDate": None,
-            },
+    scaling_figure, scaling_axis = plt.subplots(figsize=(6.2, 4.5), constrained_layout=True)
+    _plot_strong_scaling(scaling_axis, rows)
+    scaling_figure.text(
+        0.5,
+        -0.01,
+        "AWS c8i.8xlarge; points are paired medians of 3 seeds and whiskers show the range.",
+        ha="center",
+        fontsize=8,
+    )
+
+    outputs = _save_figure(
+        current_figure,
+        output_base.parent / f"{output_base.name}-current-tools",
+        title="Current-tool Quantum Volume latency",
+        write_pdf=write_pdf,
+    )
+    outputs.extend(
+        _save_figure(
+            scaling_figure,
+            output_base.parent / f"{output_base.name}-clifft-scaling",
+            title="Clifft Quantum Volume strong scaling",
+            write_pdf=write_pdf,
         )
-        outputs.append(pdf_path)
-    figure.savefig(png_path, bbox_inches="tight", dpi=200)
-    plt.close(figure)
+    )
     return outputs
 
 
