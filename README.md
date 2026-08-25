@@ -6,8 +6,8 @@ near-Clifford circuit simulators.
 
 > [!NOTE]
 > This is an evolving benchmark. We plan to add circuits, tools, and hardware
-> backends, including GPU campaigns. Results from different hardware epochs or
-> measurement contracts should not be compared directly.
+> backends, including GPU campaigns. Results collected on different hardware
+> or under different measurement rules should not be compared directly.
 
 This repository is both a benchmark harness and an evidence archive. Official
 performance data is collected on named reference hosts and checked in with its
@@ -18,10 +18,18 @@ raw provenance and reproducible derived tables.
 1. [Did a new Clifft release improve performance?](#current-single-core-qec-results)
 2. [How does current Clifft compare with current alternatives?](#current-single-core-qec-results)
 3. [How has Clifft changed across its release history?](#clifft-release-history)
-4. [What absolute throughput was observed on a named hardware epoch?](#current-single-core-qec-results)
-5. [How does Clifft compare and scale on wide, multicore circuits?](#quantum-volume-multicore-results)
+4. [How does Clifft perform on non-Clifford workloads compared with general-purpose state-vector simulators?](#quantum-volume-multicore-results)
 
 ## Current answers (August 2026)
+
+[SymFT](https://arxiv.org/abs/2607.28600) is another CPU simulator targeting
+near-Clifford circuits. We benchmark its
+[recorded implementation](https://github.com/haoliri0/SymFT_Test), which has
+separate single-shot and batched backends, using single-shot execution plus
+batch sizes 32 and 2048 on the same pinned core. This separates native
+single-shot performance from the additional throughput available by processing
+independent shots together; comparisons use the fastest applicable SymFT mode
+per workload.
 
 ### Current single-core QEC results
 
@@ -68,9 +76,14 @@ and
 
 ### Clifft release history
 
-The largest broad improvement arrived in 0.8.0. On the shared corpus, 0.9.0 is
-faster than 0.1.0 on all eight workloads, with a median per-workload speedup of
-1.93x and a range of 1.18x to 16.89x.
+The largest broad improvement arrived in 0.8.0, when Clifft replaced its
+localized-Pauli virtual machine with a symbolic-coordinate compiler that moves
+frame and dependency work into planning and applies active-Pauli operations
+directly. Version 0.9.0 then removed global-phase bookkeeping, absorbed more
+Clifford-valued rotations during compilation, and vectorized important active
+measurement kernels. On the shared corpus, 0.9.0 is faster than 0.1.0 on all
+eight workloads, with a median per-workload speedup of 1.93x and a range of
+1.18x to 16.89x.
 
 ![Clifft throughput across releases](figures/clifft-history-v1-20260825-r1.png)
 
@@ -86,7 +99,7 @@ faster than 0.1.0 on all eight workloads, with a median per-workload speedup of
 | 0.8.0 | 1.59x | 1.14x-15.43x | 8/8 |
 | 0.9.0 | **1.93x** | **1.18x-16.89x** | **8/8** |
 
-This campaign uses one placement on the same single-core QEC hardware epoch as
+This campaign uses one placement with the same single-core QEC host setup as
 the current-tools campaign. See the
 [`cases.csv`](results/clifft-history-v1/clifft-history-v1-20260825-r1/cases.csv)
 and
@@ -95,14 +108,19 @@ for every workload and release.
 
 ### Quantum Volume multicore results
 
-#### Current-tool latency
+Clifft targets near-Clifford circuits, but dense non-Clifford Quantum Volume
+circuits drive its active width to all qubits and require carrying the full
+`2^n` state vector. This campaign probes that dense limit against Qiskit Aer,
+Qulacs, and qsim, and measures how one wide Clifft shot scales across cores.
 
-![QV current-tool latency](figures/qv-multicore-v1-2026082-current-tools.png)
+#### Current-tool execution time
 
-At 16 physical cores, Clifft 0.9.0 has the lowest median single-shot latency of
-the four measured tools at QV20 and QV22. The relative ordering changes with
-circuit width, so the full curve is more informative than one aggregate
-ranking.
+![QV current-tool execution time](figures/qv-multicore-v1-2026082-current-tools.png)
+
+At 16 physical cores, Clifft 0.9.0 has the shortest median single-shot
+execution time of the four measured tools at QV20 and QV22. The relative
+ordering changes with circuit width, so the full curve is more informative
+than one aggregate ranking.
 
 #### Clifft strong scaling
 
@@ -121,10 +139,10 @@ Lines connect seed medians; scaling whiskers show the seed range. See the
 - QEC throughput counts attempted shots, including shots discarded by detector
   postselection.
 - QEC campaigns are single-core throughput measurements. The QV campaign is a
-  separate single-shot, multicore latency experiment.
+  separate single-shot, multicore execution-time experiment.
 - Raw JSON is authoritative. CSV tables and figures are derived views.
-- Absolute values belong to their named hardware epoch; use an anchor run when
-  moving to new hardware.
+- Absolute values are tied to their recorded hardware; rerun an anchor version
+  when moving to a new host.
 
 The eight shared QEC workloads are the comparison core. QV10 and QV20 remain as
 historical appendix workloads but are not part of the current cross-tool QEC

@@ -44,7 +44,7 @@ creating plot-specific checked-in data layouts.
 ## QV multicore executions
 
 `qv-multicore-v1` uses the same top-level execution directory but has a smaller
-derived surface suited to latency and strong-scaling plots:
+derived surface suited to execution-time and strong-scaling plots:
 
 ```text
 results/qv-multicore-v1/<execution-id>/

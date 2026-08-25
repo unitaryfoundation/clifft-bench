@@ -139,8 +139,8 @@ def _plot_current_tools(axis: Axes, rows: list[dict[str, str]]) -> None:
     axis.set_xticks(range(6, 29, 2))
     axis.set_xlim(5.0, 31.0)
     axis.set_xlabel("Qubits")
-    axis.set_ylabel("Latency (s)")
-    axis.set_title("Quantum Volume Latency by Simulator")
+    axis.set_ylabel("Execution time (s)")
+    axis.set_title("Quantum Volume Execution Time by Simulator")
     axis.grid(which="major")
 
 
@@ -281,7 +281,7 @@ def plot(input_path: Path, output_base: Path, *, write_pdf: bool = False) -> lis
     outputs = _save_figure(
         current_figure,
         output_base.parent / f"{output_base.name}-current-tools",
-        title="Current-tool Quantum Volume latency",
+        title="Current-tool Quantum Volume execution time",
         write_pdf=write_pdf,
     )
     outputs.extend(
