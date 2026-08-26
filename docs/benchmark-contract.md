@@ -53,7 +53,10 @@ counts remains inside the timed boundary.
 Each implementation records its version, source commit SHA, source commit
 datetime, and release datetime. `release_datetime` is the first published PyPI
 artifact timestamp when the version has a PyPI release, and `null` for a pinned
-unreleased commit such as the current SymFT baseline.
+unreleased commit such as the current SymFT baseline or a Clifft release
+candidate. Candidate results retain their candidate version and source identity
+after release; reports may state that the candidate became a final release only
+when the executable code and build configuration are unchanged.
 
 ## Timed boundaries
 

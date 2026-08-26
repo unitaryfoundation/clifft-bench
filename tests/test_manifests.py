@@ -89,9 +89,15 @@ def test_campaign_environment_locks_pin_every_requirement() -> None:
         ]
         assert requirements
         for requirement in requirements:
-            assert "==" in requirement or " @ git+https://" in requirement
             if " @ git+https://" in requirement:
                 assert re.search(r"@[0-9a-f]{40}(?:#|$)", requirement)
+            elif " @ https://" in requirement:
+                assert re.fullmatch(
+                    r"[A-Za-z0-9_.-]+ @ https://\S+#sha256=[0-9a-f]{64}",
+                    requirement,
+                )
+            else:
+                assert "==" in requirement
 
 
 def test_campaign_matrix_expands_to_unique_cases() -> None:

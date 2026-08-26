@@ -79,6 +79,30 @@ wall-clock timeout with a 30-second forced-kill fallback. These bounds protect
 the 16 GiB host while leaving memory for the controller and operating system.
 The separate QV campaign retains its own 10 GiB per-worker ceiling.
 
+### Benchmark a Clifft release candidate
+
+Use the final candidate campaign as a release gate rather than waiting for the
+stable package. Development pilots remain `exploratory`; the frozen candidate
+may be `official` because that classification describes collection quality,
+not publication status.
+
+1. Freeze an immutable Clifft candidate tag such as `v0.10.0rc1` and build it
+   with the release wheel workflow.
+2. Add a distinct implementation ID, exact candidate version and source SHA to
+   `manifests/software.v1.json`, with `release_datetime` set to `null`.
+3. Pin the exact candidate wheel URL and SHA-256 fragment in its environment
+   lock, for example `clifft @ https://...whl#sha256=<digest>`. Add isolated
+   single-shot and batched runs as applicable.
+4. Collect the complete campaign from one unchanged clifft-bench commit and
+   leave its results PR in draft during release review.
+5. If executable code or build configuration changes, assign the next
+   candidate a new implementation ID and start a new execution; never combine
+   placements from different candidates.
+6. After publishing the accepted code as the stable release, run a focused
+   confirmation against the PyPI wheel before presenting the candidate results
+   as representative of that release. Preserve the candidate identity in the
+   raw evidence.
+
 ## 4. Collect a placement
 
 Choose a unique execution ID:

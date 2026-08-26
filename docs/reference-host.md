@@ -8,15 +8,23 @@ The commissioning evidence was merged in
 [PR #19](https://github.com/unitaryfoundation/clifft-bench/pull/19). Across
 three stop/start placements, paired identical-software differences stayed
 below 0.72%. Placement-level absolute throughput spanned 0.36% for the short
-workload and 2.60% for the slow workload. The latter completed few public calls
-per sample, so absolute results must report the median and range across
-placements rather than one over-precise scalar.
+workload and 2.60% for the slow workload.
+
+The first full current-tools execution provided a stronger reason to retain
+three placements. Its eight headline Clifft/fastest-SymFT ratios had a median
+placement span of 2.09% and a maximum of 8.70%, measured as
+`(maximum - minimum) / median`; no winner changed, but one placement would have
+hidden that uncertainty. Across all individual tool/workload modes, the maximum
+absolute span was 31.69%. Three placements provide a median that tolerates one
+unusually slow placement, which is especially useful when a release candidate
+is near parity with its baseline or another tool.
 
 Use these rules until real campaigns provide enough evidence to revise them:
 
 - treat paired changes at or below 1.1% as inconclusive;
-- use one placement for broad historical trends where small drift is acceptable;
-- use three stop/start placements for current absolute throughput;
+- use one placement for exploratory work and broad historical trends where
+  small drift is acceptable;
+- use three stop/start placements for current release and cross-tool throughput;
 - cap each single-core worker at 12 GiB of address space, leaving host headroom;
 - record exact AMI, region/AZ, CPU model, kernel, dependencies, and boot ID;
 - never combine absolute numbers from different hardware epochs without an
