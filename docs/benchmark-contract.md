@@ -56,9 +56,9 @@ was first published in its package channel: PyPI for a stable release and the
 candidate channel, such as TestPyPI, for a release candidate. It is `null` only
 for a pinned source commit that was not published as an artifact, such as the
 current SymFT baseline. Candidate results retain their candidate version,
-publication time, and source identity after release; reports may state that the
-candidate became a final release only when the executable code and build
-configuration are unchanged.
+publication time, and source identity after release. Once that candidate is
+released, README prose, tables, and figures use the final release version as
+their simple public label.
 
 ## Timed boundaries
 

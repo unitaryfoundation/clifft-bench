@@ -101,10 +101,9 @@ not publication status.
 5. If executable code or build configuration changes, assign the next
    candidate a new implementation ID and start a new execution; never combine
    placements from different candidates.
-6. After publishing the accepted code as the stable release, run a focused
-   confirmation against the PyPI wheel before presenting the candidate results
-   as representative of that release. Preserve the candidate identity in the
-   raw evidence.
+6. After publishing the accepted candidate as the stable release, use the
+   stable version in README prose, tables, and figures. Preserve the candidate
+   version and provenance in the raw evidence.
 
 ## 4. Collect a placement
 
