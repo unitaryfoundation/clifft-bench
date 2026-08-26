@@ -132,6 +132,7 @@ work_dir="$execution_dir/.incomplete-p$(printf '%02d' "$placement")-${boot_id:0:
 mkdir -p "$work_dir/raw"
 mkdir -p "$execution_dir"
 printf '%s\n' "$campaign_id" > "$execution_dir/campaign-id"
+had_case_failures=false
 
 if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
   for (( replica = 1; replica <= replicas; replica++ )); do
@@ -158,6 +159,7 @@ if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
     .venv/bin/clifft-bench validate "$output"
     if (( run_status == 1 )); then
       echo "Recorded one or more structured case failures in $label; continuing."
+      had_case_failures=true
     fi
   done
 else
@@ -183,6 +185,7 @@ else
       .venv/bin/clifft-bench validate "$output"
       if (( run_status == 1 )); then
         echo "Recorded one or more structured case failures in $label; continuing."
+        had_case_failures=true
       fi
     done
   done < <(jq -r '.runs[] | [.id,.run_manifest] | @tsv' "$campaign_path")
@@ -191,3 +194,8 @@ fi
 touch "$work_dir/COMPLETE"
 mv "$work_dir" "$complete_dir"
 echo "Completed $campaign_id placement $placement at $complete_dir"
+if [[ "$had_case_failures" == true ]]; then
+  echo "Placement contains structured case failures; leaving the instance running for inspection."
+else
+  stop_instance_after_success
+fi

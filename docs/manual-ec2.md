@@ -7,8 +7,10 @@ tool environments, spool results outside the checkout, and prepare a normal
 reviewable results commit.
 
 Every script arms an eight-hour operating-system shutdown guard. This is a
-backstop: set instance-initiated shutdown behavior to **Stop** and stop the
-instance promptly after each placement.
+backstop: set instance-initiated shutdown behavior to **Stop**. A fully
+successful placement requests an immediate poweroff, which stops the instance;
+an unexpected termination or structured case failure leaves it running for
+inspection under the guard.
 
 ## 1. Launch the reference host
 
@@ -89,7 +91,8 @@ not publication status.
 1. Freeze an immutable Clifft candidate tag such as `v0.10.0rc1` and build it
    with the release wheel workflow.
 2. Add a distinct implementation ID, exact candidate version and source SHA to
-   `manifests/software.v1.json`, with `release_datetime` set to `null`.
+   `manifests/software.v1.json`. Set `release_datetime` to the candidate
+   package publication time, for example its TestPyPI upload time.
 3. Pin the exact candidate wheel URL and SHA-256 fragment in its environment
    lock, for example `clifft @ https://...whl#sha256=<digest>`. Add isolated
    single-shot and batched runs as applicable.
@@ -128,10 +131,20 @@ the other cases from running. A launcher-level timeout, interruption, or
 invalid result leaves an `.incomplete-*` directory for diagnosis and is never
 silently promoted to a completed placement.
 
-When the command succeeds, stop the instance in the console. For a campaign
-with additional placements, start the same EBS-backed instance again and run
-the command with placement 2, then 3. The collector requires a distinct Linux
-boot ID and one unchanged instance/AMI/region/AZ/source identity.
+When the command completes without case failures, it marks the placement
+complete and requests a poweroff. With instance-initiated shutdown behavior set
+to **Stop**, wait for AWS to report that the instance has stopped. For a
+campaign with additional placements, start the same EBS-backed instance again
+and run the command with placement 2, then 3. The collector requires a distinct
+Linux boot ID and one unchanged instance/AMI/region/AZ/source identity.
+
+If the launcher crashes, times out without a structured result, or records a
+structured case failure, it leaves the instance running so logs and the
+external spool can be inspected; the eight-hour shutdown guard remains armed.
+Set `CLIFFT_BENCH_AUTO_STOP=0` before running a placement to keep the instance
+up after success during deliberate debugging. After the final successful
+placement, start the stopped instance once more to finalize and push the
+results.
 
 ## 5. Finalize and push
 

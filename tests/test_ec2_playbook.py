@@ -11,6 +11,8 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     finalize = (root / "scripts/ec2/finalize.sh").read_text()
 
     assert "shutdown -h +480" in common
+    assert "stop_instance_after_success" in common
+    assert "systemctl poweroff" in common
     assert "Amazon EC2" in common
     assert "sanitize_remote_url" in common
     assert "git remote get-url origin" in placement
@@ -28,6 +30,8 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert ".runs[]" in placement
     assert "clifft-bench/qv-campaign/v1" in placement
     assert "clifft-bench qv-run" in placement
+    assert "had_case_failures" in placement
+    assert "stop_instance_after_success" in placement
     assert "--memory-limit-gib" in placement
     assert placement.count("--kill-after=30s") == 2
     assert "clifft-bench qv-finalize" in finalize

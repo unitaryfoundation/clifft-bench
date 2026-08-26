@@ -103,7 +103,8 @@ placement has a 150-minute launcher ceiling, while the existing eight-hour
 shutdown guard remains the final cost backstop. Timeouts and tool failures are
 retained as structured case evidence.
 
-After placement 1, finalize and push exactly as in the main manual playbook:
+After the successful placement automatically stops the instance, start it once
+more and finalize and push exactly as in the main manual playbook:
 
 ```bash
 ./scripts/ec2/finalize.sh \

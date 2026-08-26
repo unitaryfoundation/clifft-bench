@@ -24,6 +24,21 @@ arm_shutdown_guard() {
   sudo shutdown -h +480
 }
 
+stop_instance_after_success() {
+  case "${CLIFFT_BENCH_AUTO_STOP:-1}" in
+    1|true)
+      echo "Placement completed successfully; requesting instance stop."
+      sudo systemctl poweroff
+      ;;
+    0|false)
+      echo "Automatic instance stop disabled by CLIFFT_BENCH_AUTO_STOP."
+      ;;
+    *)
+      fail "CLIFFT_BENCH_AUTO_STOP must be 0, 1, false, or true"
+      ;;
+  esac
+}
+
 require_clean_checkout() {
   [[ -z "$(git status --porcelain --untracked-files=all)" ]] || \
     fail "the benchmark checkout must be clean"
