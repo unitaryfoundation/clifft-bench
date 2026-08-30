@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import time
 from pathlib import Path
 from typing import Any
@@ -16,19 +17,19 @@ class _PreparedClifft(PreparedAdapter):
         program: Any,
         observable_index: int,
         runtime_metadata: dict[str, Any],
+        batch_size: str | None = None,
     ) -> None:
         self._clifft = clifft
         self._program = program
         self._observable_index = observable_index
+        self._batch_size = batch_size
         self.runtime_metadata = runtime_metadata
 
     def sample(self, shots: int, seed: int) -> Counts:
-        result = self._clifft.sample_survivors(
-            self._program,
-            shots,
-            seed=seed,
-            keep_records=False,
-        )
+        kwargs = {"seed": seed, "keep_records": False}
+        if self._batch_size is not None:
+            kwargs["batch_size"] = self._batch_size
+        result = self._clifft.sample_survivors(self._program, shots, **kwargs)
         return Counts(
             attempted_shots=int(result.total_shots),
             accepted_shots=int(result.passed_shots),
@@ -53,12 +54,37 @@ class ClifftAdapter(Adapter):
                 f"Clifft adapter does not support reference convention "
                 f"{reference_convention!r}"
             )
-        if execution["batch_size"] != 1 or execution["batch_enabled"]:
-            raise ValueError(
-                "Clifft does not expose an internal shot-batch setting; use batch_size=1"
-            )
-
         import clifft
+
+        batch_enabled = bool(execution["batch_enabled"])
+        requested_batch_size = execution["batch_size"]
+        postselect = bool(workload["semantics"]["postselect_all_detectors"])
+        call_batch_size: str | None = None
+        if not batch_enabled and requested_batch_size == 1:
+            effective_batch_size = 1
+        elif batch_enabled and requested_batch_size == "auto":
+            if not postselect:
+                raise ValueError(
+                    "Clifft automatic batching is only supported for postselected "
+                    "workloads until Clifft reports its resolved batch size"
+                )
+            try:
+                parameters = inspect.signature(clifft.sample_survivors).parameters
+            except (TypeError, ValueError):
+                parameters = {}
+            documentation = str(getattr(clifft.sample_survivors, "__doc__", ""))
+            if "batch_size" not in parameters and "batch_size" not in documentation:
+                raise RuntimeError(
+                    "installed Clifft does not support batch_size='auto'"
+                )
+            call_batch_size = "auto"
+            # Clifft's current automatic policy keeps postselected plans scalar.
+            effective_batch_size = 1
+        else:
+            raise ValueError(
+                "Clifft supports batch_size=1 with batching disabled or "
+                "batch_size='auto' with batching enabled"
+            )
 
         if hasattr(clifft, "set_num_threads"):
             clifft.set_num_threads(1)
@@ -73,7 +99,6 @@ class ClifftAdapter(Adapter):
         compile_started = time.perf_counter()
         hir = clifft.trace(circuit)
         clifft.default_hir_pass_manager().run(hir)
-        postselect = bool(workload["semantics"]["postselect_all_detectors"])
         mask = [1] * int(hir.num_detectors) if postselect else []
         program = clifft.lower(hir, postselection_mask=mask)
         if hasattr(clifft, "default_bytecode_pass_manager"):
@@ -99,8 +124,8 @@ class ClifftAdapter(Adapter):
             else 1,
             "precision": "complex-fp64",
             "reference_convention": reference_convention,
-            "batch_enabled": False,
-            "effective_batch_size": 1,
+            "batch_enabled": batch_enabled,
+            "effective_batch_size": effective_batch_size,
             "num_qubits": circuit_size("num_qubits"),
             "num_measurements": circuit_size("num_measurements"),
             "num_detectors": circuit_size("num_detectors"),
@@ -118,4 +143,5 @@ class ClifftAdapter(Adapter):
             program,
             int(workload["semantics"]["observable_index"]),
             metadata,
+            call_batch_size,
         )

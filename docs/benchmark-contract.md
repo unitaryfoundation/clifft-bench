@@ -119,15 +119,22 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-Two distinct quantities are recorded:
+Three distinct quantities are recorded:
 
-- `batch_size`: the simulator's internal number of shots processed together;
+- `batch_size`: the requested batch policy or explicit size;
+- `batch_size_effective`: the concrete number of shots the simulator selected;
 - `shots_per_call`: attempted shots requested by one public API call.
 
-Clifft exposes no internal shot-batch choice in this API, so its batch size is
-1. SymFT batch sizes are explicit manifest values, never hidden automatic
-choices. A large-batch throughput result is not a single-circuit execution-time
-result.
+Normal throughput comparisons request `batch_size: "auto"` and use each
+simulator's native automatic policy. The adapters pass that request explicitly
+and record the resolved integer as `batch_size_effective`; SymFT reports its
+choice in sampler metadata. Clifft's current automatic policy keeps
+postselected plans scalar, so the QEC corpus records an effective size of 1.
+Clifft 0.9.0 and earlier predate that API and retain their historical scalar
+manifests. Published explicit single, 32, and 2048 results are unchanged as
+historical evidence.
+
+A large-batch throughput result is not a single-circuit execution-time result.
 Cross-mode tool comparisons are intentional end-to-end configuration
 comparisons, not claims of equal public-call granularity. Derived comparison
 rows therefore carry both sides' mode, effective batch size, and shots per
