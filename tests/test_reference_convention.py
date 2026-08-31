@@ -108,6 +108,7 @@ def test_tsim_runs_through_the_isolated_worker_with_x64(tmp_path: Path) -> None:
     )
     case = Case(
         definition={
+            "shots_per_call": 32,
             "execution": {
                 "batch_enabled": True,
                 "batch_size": 32,
