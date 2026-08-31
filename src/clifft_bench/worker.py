@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import signal
+import statistics
 import sys
 import time
 import traceback
@@ -17,6 +18,13 @@ from typing import Any, Iterator, TextIO
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
 from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
+
+BATCH_CALIBRATION_CANDIDATES = (1, 32, 256, 1024, 2048)
+BATCH_CALIBRATION_REPETITIONS = 3
+BATCH_CALIBRATION_SECONDS = 1.0
+BATCH_CALIBRATION_MAX_API_CALLS = 1_000_000
+BATCH_CALIBRATION_SEED_RESERVE = 4_000_000
+SEED_MAX_EXCLUSIVE = 2**32
 
 
 class WorkerTimeout(TimeoutError):
@@ -118,6 +126,130 @@ def aggregate_sample(
     }
 
 
+def _calibration_seed(seed: int, repetition: int) -> int:
+    if seed < 0 or seed + BATCH_CALIBRATION_SEED_RESERVE > SEED_MAX_EXCLUSIVE:
+        raise ValueError("batch calibration seed range exceeds unsigned 32-bit space")
+    return seed + repetition * BATCH_CALIBRATION_MAX_API_CALLS
+
+
+def _candidate_execution(execution: dict[str, Any], batch_size: int) -> dict[str, Any]:
+    return {
+        **execution,
+        "batch_enabled": batch_size > 1,
+        "batch_size": batch_size,
+    }
+
+
+def calibrate_batch_size(
+    adapter: Any,
+    *,
+    artifact_path: Path,
+    workload: dict[str, Any],
+    execution: dict[str, Any],
+    shots_per_call: int,
+    seed: int,
+) -> Any:
+    candidates = [
+        candidate for candidate in BATCH_CALIBRATION_CANDIDATES if candidate <= shots_per_call
+    ]
+    postselect = bool(workload["semantics"]["postselect_all_detectors"])
+    calibration_started = time.perf_counter()
+    results = []
+    successful: list[tuple[float, int]] = []
+
+    for candidate in candidates:
+        candidate_started = time.perf_counter()
+        candidate_execution = _candidate_execution(execution, candidate)
+        try:
+            prepared = adapter.prepare(
+                artifact_path=artifact_path,
+                workload=workload,
+                execution=candidate_execution,
+            )
+            warm_counts, _ = timed_sample(
+                prepared,
+                shots_per_call,
+                _calibration_seed(seed, BATCH_CALIBRATION_REPETITIONS),
+            )
+            warm_errors = validate_counts(warm_counts, postselect=postselect)
+            if warm_errors:
+                raise RuntimeError("invalid warmup counts: " + "; ".join(warm_errors))
+
+            samples = []
+            for repetition in range(BATCH_CALIBRATION_REPETITIONS):
+                sample = aggregate_sample(
+                    prepared,
+                    shots_per_call=shots_per_call,
+                    min_seconds=BATCH_CALIBRATION_SECONDS,
+                    seed=_calibration_seed(seed, repetition),
+                    postselect=postselect,
+                    max_api_calls=BATCH_CALIBRATION_MAX_API_CALLS,
+                )
+                samples.append(
+                    {
+                        "repetition": repetition,
+                        "duration_seconds": sample["duration_seconds"],
+                        "api_calls": sample["api_calls"],
+                        "attempted_shots": sample["attempted_shots"],
+                        "seed_first": sample["seed_first"],
+                        "seed_last": sample["seed_last"],
+                        "throughput_attempted_shots_per_second": sample[
+                            "throughput_attempted_shots_per_second"
+                        ],
+                    }
+                )
+            median_rate = statistics.median(
+                sample["throughput_attempted_shots_per_second"] for sample in samples
+            )
+            results.append(
+                {
+                    "batch_size": candidate,
+                    "status": "success",
+                    "effective_batch_size": min(
+                        int(prepared.runtime_metadata["effective_batch_size"]),
+                        shots_per_call,
+                    ),
+                    "median_attempted_shots_per_second": median_rate,
+                    "duration_seconds": time.perf_counter() - candidate_started,
+                    "samples": samples,
+                    "error": None,
+                }
+            )
+            successful.append((median_rate, candidate))
+        except Exception as error:  # noqa: BLE001
+            results.append(
+                {
+                    "batch_size": candidate,
+                    "status": "error",
+                    "effective_batch_size": None,
+                    "median_attempted_shots_per_second": None,
+                    "duration_seconds": time.perf_counter() - candidate_started,
+                    "samples": [],
+                    "error": {"type": type(error).__name__, "message": str(error)},
+                }
+            )
+
+    if not successful:
+        raise RuntimeError("batch calibration failed for every candidate")
+    selected_batch_size = max(successful, key=lambda item: (item[0], -item[1]))[1]
+    prepared = adapter.prepare(
+        artifact_path=artifact_path,
+        workload=workload,
+        execution=_candidate_execution(execution, selected_batch_size),
+    )
+    prepared.runtime_metadata["batch_calibration"] = {
+        "candidates": candidates,
+        "probe_seconds": BATCH_CALIBRATION_SECONDS,
+        "repetitions": BATCH_CALIBRATION_REPETITIONS,
+        "selection_statistic": "median_attempted_shots_per_second",
+        "tie_break": "smaller_batch_size",
+        "selected_batch_size": selected_batch_size,
+        "duration_seconds": time.perf_counter() - calibration_started,
+        "results": results,
+    }
+    return prepared
+
+
 def _package_version(distribution: str) -> str:
     try:
         return version(distribution)
@@ -143,11 +275,23 @@ def main() -> int:
                 started = time.perf_counter()
                 with deadline(float(request["timeout_seconds"])):
                     with redirect_stdout(sys.stderr):
-                        prepared = adapter.prepare(
-                            artifact_path=Path(request["artifact_path"]),
-                            workload=workload,
-                            execution=request["execution"],
-                        )
+                        artifact_path = Path(request["artifact_path"])
+                        execution = request["execution"]
+                        if execution["batch_size"] == "calibrate":
+                            prepared = calibrate_batch_size(
+                                adapter,
+                                artifact_path=artifact_path,
+                                workload=workload,
+                                execution=execution,
+                                shots_per_call=int(request["shots_per_call"]),
+                                seed=int(request["seed"]),
+                            )
+                        else:
+                            prepared = adapter.prepare(
+                                artifact_path=artifact_path,
+                                workload=workload,
+                                execution=execution,
+                            )
                 duration = time.perf_counter() - started
                 expected_version = str(request["expected_version"])
                 runtime_version = str(prepared.runtime_metadata["version"])

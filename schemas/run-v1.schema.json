@@ -63,7 +63,12 @@
             "properties": {
               "mode": {"enum": ["latency", "throughput"]},
               "batch_enabled": {"type": "boolean"},
-              "batch_size": {"type": "integer", "minimum": 1},
+              "batch_size": {
+                "oneOf": [
+                  {"type": "integer", "minimum": 1},
+                  {"const": "calibrate"}
+                ]
+              },
               "sample_chunk_shots": {"type": "integer", "minimum": 0}
             }
           }
@@ -105,7 +110,12 @@
                 "properties": {
                   "mode": {"enum": ["latency", "throughput"]},
                   "batch_enabled": {"type": "boolean"},
-                  "batch_size": {"type": "integer", "minimum": 1},
+                  "batch_size": {
+                    "oneOf": [
+                      {"type": "integer", "minimum": 1},
+                      {"const": "calibrate"}
+                    ]
+                  },
                   "sample_chunk_shots": {"type": "integer", "minimum": 0}
                 }
               }

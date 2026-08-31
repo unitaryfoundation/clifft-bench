@@ -112,6 +112,10 @@ repetition counts whose reserved ranges exceed the unsigned 32-bit seed space.
 These non-overlapping ranges keep every phase deterministic for adapters that
 expose per-call streams.
 
+Batch calibration uses the next four million stream identifiers after the
+timed repetition ranges, divided into one range for each probe repetition and
+one for candidate warmup.
+
 These fixed streams exist only to make performance runs replayable and
 auditable. They are not a seeding recommendation for scientific simulation or
 statistical inference, where independent seeds should be drawn from operating-
@@ -119,46 +123,26 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-Three distinct quantities are recorded:
+New cross-tool throughput cases set `batch_size` to `"calibrate"`. During each
+case's setup on the benchmark host, the worker:
 
-- `batch_size`: the configured internal lane capacity;
-- `batch_size_effective`: the maximum lanes used by one public call, capped by
-  `shots_per_call`;
-- `shots_per_call`: attempted shots requested by one public API call.
+1. keeps the candidates from `1`, `32`, `256`, `1024`, and `2048` that do not
+   exceed `shots_per_call`, treating `1` as scalar execution;
+2. prepares and warms each candidate;
+3. runs three one-second probes and computes median attempted-shot throughput;
+4. selects the highest median, breaking an exact tie toward the smaller size;
+5. freshly prepares the selected configuration and uses it for all timed
+   repetitions.
 
-Official throughput configurations use a fixed explicit numeric batch size for
-each simulator and workload. Before the first campaign using a tool's batching
-API, a few short spot checks on the reference host compare practical sizes such
-as `1`, `32`, `256`, `1024`, and `2048`. The fastest observed size is committed
-to the run manifest and reused without retuning for later runs or releases on
-the same corpus and hardware epoch. These spot checks are a one-time engineering
-choice, not a separate benchmark campaign or automatic tuning system. Final
-results retain the configured `batch_size` and record the per-call effective
-size separately as `batch_size_effective`.
+Clifft and SymFT use this same procedure. Calibration is setup work and is not
+included in final throughput samples. Raw results record the candidate probes,
+failures, selected size, and total calibration duration in
+`setup.runtime_metadata.batch_calibration`.
 
-Clifft 0.9.0 and earlier predate its batching API and retain their historical
-scalar manifests. Existing SymFT measurements supply its fixed per-workload
-choices; the Clifft choices are made once when a release containing batching is
-available. Published results remain unchanged as historical evidence.
-
-The provisional Clifft choices for the first batching-capable campaign are:
-
-| Workload | Shots per call | Batch size |
-|---|---:|---:|
-| Cultivation d3 | 100,000 | 2048 |
-| Cultivation d5 | 20,000 | 1 |
-| Distillation | 100,000 | 1024 |
-| Surface d7/r7 | 100,000 | 2048 |
-| Coherent d3/r1 | 100,000 | 256 |
-| Coherent d3/r3 | 100,000 | 256 |
-| Coherent d5/r1 | 10,000 | 1 |
-| Coherent d5/r5 | 1 | 1 |
-
-These values came from one-core postselected aggregate-count spot checks at
-Clifft commit `8ae0f5dc` on an AMD EPYC 9554P. A short confirmation using the
-final Clifft build on the named AWS reference host is required before the values
-are copied into an official run manifest; after that they remain fixed for the
-corpus and hardware epoch.
+Successful results replace `"calibrate"` with the selected numeric `batch_size`.
+They also record `batch_size_effective`, the maximum lanes available to one
+public call after capping the selected capacity by `shots_per_call`. A fixed
+numeric batch size remains supported for cases that do not request calibration.
 
 A large-batch throughput result is not a single-circuit execution-time result.
 Cross-mode tool comparisons are intentional end-to-end configuration

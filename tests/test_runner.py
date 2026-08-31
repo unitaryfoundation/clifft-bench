@@ -8,7 +8,12 @@ from typing import Any
 import pytest
 
 from clifft_bench.manifest import load_suite
-from clifft_bench.runner import SEED_REPETITION_STRIDE, _effective_batch_size, run_suite
+from clifft_bench.runner import (
+    SEED_REPETITION_STRIDE,
+    _effective_batch_size,
+    _record_runtime_execution,
+    run_suite,
+)
 from clifft_bench.schema import validate_document
 
 
@@ -130,6 +135,25 @@ def test_effective_batch_size_is_capped_by_shots_per_call() -> None:
     metadata = {"effective_batch_size": 2048}
     assert _effective_batch_size(metadata, 8) == 8
     assert _effective_batch_size(metadata, 4096) == 2048
+
+
+def test_calibrated_result_records_selected_numeric_batch_size() -> None:
+    execution = {"batch_enabled": True, "batch_size": "calibrate"}
+    metadata = {
+        "threads": 1,
+        "batch_enabled": False,
+        "effective_batch_size": 1,
+        "batch_calibration": {"selected_batch_size": 1},
+    }
+
+    _record_runtime_execution(execution, metadata, shots_per_call=8)
+
+    assert execution == {
+        "batch_enabled": False,
+        "batch_size": 1,
+        "threads_effective": 1,
+        "batch_size_effective": 1,
+    }
 
 
 def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> None:

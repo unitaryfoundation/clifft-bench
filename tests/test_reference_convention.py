@@ -119,7 +119,7 @@ def test_tsim_runs_through_the_isolated_worker_with_x64(tmp_path: Path) -> None:
     )
     client = WorkerClient(case, cpu=None)
     try:
-        setup = client.prepare(timeout_seconds=60)
+        setup = client.prepare(timeout_seconds=60, seed=1)
         sample = client.request(
             {
                 "command": "sample",
