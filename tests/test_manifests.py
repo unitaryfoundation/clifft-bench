@@ -65,6 +65,40 @@ def test_qec_campaigns_target_clifft_0_9_0() -> None:
     } == {"clifft-0.9.0"}
 
 
+def test_smoke_suite_exercises_symft_batch_calibration() -> None:
+    smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    calibrated = [
+        case
+        for case in smoke.cases
+        if case.implementation.definition["adapter"] == "symft"
+        and case.definition["execution"]["mode"] == "throughput"
+    ]
+
+    assert calibrated
+    assert all(
+        case.definition["execution"]["batch_size"] == "calibrate"
+        for case in calibrated
+    )
+
+
+def test_batch_calibration_requires_batch_enabled_throughput_case(tmp_path: Path) -> None:
+    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    run = copy.deepcopy(suite.run)
+    target = next(
+        case
+        for case in run["cases"]
+        if case["execution"]["batch_size"] == "calibrate"
+    )
+    target["execution"]["batch_enabled"] = False
+    run["workloads_manifest"] = str(suite.workloads_path)
+    run["software_manifest"] = str(suite.software_path)
+    run_path = tmp_path / "run.json"
+    run_path.write_text(json.dumps(run))
+
+    with pytest.raises(SchemaValidationError, match="batching disabled"):
+        load_suite(run_path)
+
+
 def test_current_cpu_campaign_contains_only_clifft_and_symft() -> None:
     campaign = load_campaign(ROOT / "campaigns/current-tools-v1/campaign.v1.json")
 

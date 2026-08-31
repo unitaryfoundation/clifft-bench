@@ -112,6 +112,10 @@ repetition counts whose reserved ranges exceed the unsigned 32-bit seed space.
 These non-overlapping ranges keep every phase deterministic for adapters that
 expose per-call streams.
 
+Batch calibration uses the next four million stream identifiers after the
+timed repetition ranges, divided into one range for each probe repetition and
+one for candidate warmup.
+
 These fixed streams exist only to make performance runs replayable and
 auditable. They are not a seeding recommendation for scientific simulation or
 statistical inference, where independent seeds should be drawn from operating-
@@ -119,15 +123,28 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-Two distinct quantities are recorded:
+New cross-tool throughput cases set `batch_size` to `"calibrate"`. During each
+case's setup on the benchmark host, the worker:
 
-- `batch_size`: the simulator's internal number of shots processed together;
-- `shots_per_call`: attempted shots requested by one public API call.
+1. keeps the candidates from `1`, `32`, `256`, `1024`, and `2048` that do not
+   exceed `shots_per_call`, treating `1` as scalar execution;
+2. prepares and warms each candidate;
+3. runs three one-second probes and computes median attempted-shot throughput;
+4. selects the highest median, breaking an exact tie toward the smaller size;
+5. freshly prepares the selected configuration and uses it for all timed
+   repetitions.
 
-Clifft exposes no internal shot-batch choice in this API, so its batch size is
-1. SymFT batch sizes are explicit manifest values, never hidden automatic
-choices. A large-batch throughput result is not a single-circuit execution-time
-result.
+Clifft and SymFT use this same procedure. Calibration is setup work and is not
+included in final throughput samples. Raw results record the candidate probes,
+failures, selected size, and total calibration duration in
+`setup.runtime_metadata.batch_calibration`.
+
+Successful results replace `"calibrate"` with the selected numeric `batch_size`.
+They also record `batch_size_effective`, the maximum lanes available to one
+public call after capping the selected capacity by `shots_per_call`. A fixed
+numeric batch size remains supported for cases that do not request calibration.
+
+A large-batch throughput result is not a single-circuit execution-time result.
 Cross-mode tool comparisons are intentional end-to-end configuration
 comparisons, not claims of equal public-call granularity. Derived comparison
 rows therefore carry both sides' mode, effective batch size, and shots per

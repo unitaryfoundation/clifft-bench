@@ -109,6 +109,77 @@ def test_clifft_counts_the_selected_observable() -> None:
     assert counts.logical_errors == 7
 
 
+def test_clifft_explicit_batch_is_forwarded_and_recorded(
+    tmp_path: Path, monkeypatch
+) -> None:
+    artifact = tmp_path / "circuit.stim"
+    artifact.write_text("M 0\n")
+    hir = SimpleNamespace(
+        num_qubits=1,
+        num_measurements=1,
+        num_detectors=1,
+        num_observables=1,
+    )
+    program = SimpleNamespace(
+        num_qubits=1,
+        num_measurements=1,
+        num_detectors=1,
+        num_observables=1,
+        peak_active_width=3,
+    )
+
+    def sample_survivors(
+        actual_program, shots, *, seed, keep_records, batch_size
+    ):
+        assert (actual_program, shots, seed, keep_records, batch_size) == (
+            program,
+            10,
+            7,
+            False,
+            256,
+        )
+        return SimpleNamespace(
+            total_shots=10,
+            passed_shots=8,
+            discards=2,
+            observable_ones=[1],
+        )
+
+    manager = SimpleNamespace(run=lambda value: None)
+    fake_clifft = SimpleNamespace(
+        sample_survivors=sample_survivors,
+        set_num_threads=lambda threads: None,
+        get_num_threads=lambda: 1,
+        parse=lambda text: text,
+        trace=lambda circuit: hir,
+        default_hir_pass_manager=lambda: manager,
+        lower=lambda actual_hir, postselection_mask: program,
+        version=lambda: "0.10.0",
+        svm_backend=lambda: "test",
+    )
+    monkeypatch.setitem(sys.modules, "clifft", fake_clifft)
+
+    prepared = ClifftAdapter().prepare(
+        artifact_path=artifact,
+        workload={
+            "semantics": {
+                "observable_index": 0,
+                "postselect_all_detectors": True,
+                "reference_convention": "raw-record-parity",
+            }
+        },
+        execution={
+            "batch_enabled": True,
+            "batch_size": 256,
+            "sample_chunk_shots": 0,
+        },
+    )
+
+    assert prepared.runtime_metadata["batch_enabled"] is True
+    assert prepared.runtime_metadata["effective_batch_size"] == 256
+    assert prepared.sample(10, 7).attempted_shots == 10
+
+
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(
     tmp_path: Path, monkeypatch
 ) -> None:

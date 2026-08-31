@@ -26,6 +26,7 @@ from clifft_bench.system import (
 
 SEED_REPETITION_STRIDE = 100_000_000
 SEED_MAX_EXCLUSIVE = 2**32
+BATCH_CALIBRATION_SEED_RESERVE = 4_000_000
 
 
 class WorkerError(RuntimeError):
@@ -102,7 +103,11 @@ class WorkerClient:
         return response
 
     def prepare(
-        self, timeout_seconds: float, memory_limit_gib: float | None = None
+        self,
+        timeout_seconds: float,
+        memory_limit_gib: float | None = None,
+        *,
+        seed: int,
     ) -> dict[str, Any]:
         definition = self.case.implementation.definition
         return self.request(
@@ -112,6 +117,8 @@ class WorkerClient:
                 "artifact_path": str(self.case.workload.artifact_path),
                 "workload": self.case.workload.definition,
                 "execution": self.case.definition["execution"],
+                "shots_per_call": self.case.definition["shots_per_call"],
+                "seed": seed,
                 "expected_version": definition["version"],
                 "dependency_distributions": definition["dependency_distributions"],
                 "logical_cpu": self.cpu,
@@ -228,6 +235,26 @@ def _summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _effective_batch_size(
+    runtime_metadata: dict[str, Any], shots_per_call: int
+) -> int:
+    capacity = int(runtime_metadata["effective_batch_size"])
+    return min(capacity, shots_per_call)
+
+
+def _record_runtime_execution(
+    execution: dict[str, Any], runtime_metadata: dict[str, Any], shots_per_call: int
+) -> None:
+    execution["threads_effective"] = int(runtime_metadata["threads"])
+    calibration = runtime_metadata.get("batch_calibration")
+    if calibration is not None:
+        execution["batch_size"] = int(calibration["selected_batch_size"])
+        execution["batch_enabled"] = bool(runtime_metadata["batch_enabled"])
+    execution["batch_size_effective"] = _effective_batch_size(
+        runtime_metadata, shots_per_call
+    )
+
+
 def _select_cases(suite: Suite, pattern: str | None) -> list[Case]:
     if pattern is None:
         return list(suite.cases)
@@ -263,11 +290,20 @@ def run_suite(
         raise ValueError("measurement overrides must be positive")
     if memory_limit_gib is not None and memory_limit_gib <= 0:
         raise ValueError("memory limit must be positive")
+    cases = _select_cases(suite, case_pattern)
+    if not cases:
+        raise ValueError("no cases matched the selection")
     seed_range_end = (
         int(suite.run["seed"])
         + 10_000
         + int(measurement["repetitions"]) * SEED_REPETITION_STRIDE
     )
+    calibration_seed = seed_range_end
+    if any(
+        case.definition["execution"]["batch_size"] == "calibrate"
+        for case in cases
+    ):
+        seed_range_end += BATCH_CALIBRATION_SEED_RESERVE
     if seed_range_end > SEED_MAX_EXCLUSIVE:
         raise ValueError(
             "declared repetitions exceed the unsigned 32-bit benchmark seed space"
@@ -278,9 +314,6 @@ def run_suite(
             "request_timeout_seconds must be greater than min_sample_seconds"
         )
 
-    cases = _select_cases(suite, case_pattern)
-    if not cases:
-        raise ValueError("no cases matched the selection")
     logical_cpu = choose_cpu(cpu if cpu is not None else suite.run["resources"]["logical_cpu"])
     started_at = utc_now()
     document: dict[str, Any] = {
@@ -324,6 +357,7 @@ def run_suite(
                         setup = client.prepare(
                             float(measurement["setup_timeout_seconds"]),
                             memory_limit_gib,
+                            seed=calibration_seed,
                         )
                         result["setup"] = {
                             "duration_seconds": setup["duration_seconds"],
@@ -331,12 +365,11 @@ def run_suite(
                             "adapter_version": setup["adapter_version"],
                             "runtime_metadata": setup["runtime_metadata"],
                         }
-                        result["execution"]["threads_effective"] = setup["runtime_metadata"][
-                            "threads"
-                        ]
-                        result["execution"]["batch_size_effective"] = setup["runtime_metadata"][
-                            "effective_batch_size"
-                        ]
+                        _record_runtime_execution(
+                            result["execution"],
+                            setup["runtime_metadata"],
+                            int(case.definition["shots_per_call"]),
+                        )
                         result["simulator"]["dependencies"] = setup["dependencies"]
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
