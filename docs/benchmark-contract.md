@@ -124,18 +124,20 @@ Two distinct quantities are recorded:
 - `batch_size`: the simulator's internal number of shots processed together;
 - `shots_per_call`: attempted shots requested by one public API call.
 
-Official throughput configurations use explicit numeric batch sizes selected
-by a short pilot sweep on the reference host. The candidate set is declared
-before the sweep; the initial set is `1`, `32`, `256`, `1024`, and `2048` for
-both tools. For each simulator and workload, the candidate with the highest
-pilot median attempted-shots throughput is frozen in the official run manifest.
-Pilot timings are selection data, not final benchmark samples. Final results
-record the selected size as `batch_size_effective` and always identify the
-public-call granularity separately as `shots_per_call`.
+Official throughput configurations use a fixed explicit numeric batch size for
+each simulator and workload. Before the first campaign using a tool's batching
+API, a few short spot checks on the reference host compare practical sizes such
+as `1`, `32`, `256`, `1024`, and `2048`. The fastest observed size is committed
+to the run manifest and reused without retuning for later runs or releases on
+the same corpus and hardware epoch. These spot checks are a one-time engineering
+choice, not a separate benchmark campaign or automatic tuning system. Final
+results record the fixed size as `batch_size_effective` and identify the public
+call granularity separately as `shots_per_call`.
 
 Clifft 0.9.0 and earlier predate its batching API and retain their historical
-scalar manifests. Existing published explicit SymFT results are also unchanged
-as historical evidence.
+scalar manifests. Existing SymFT measurements supply its fixed per-workload
+choices; the Clifft choices are made once when a release containing batching is
+available. Published results remain unchanged as historical evidence.
 
 A large-batch throughput result is not a single-circuit execution-time result.
 Cross-mode tool comparisons are intentional end-to-end configuration
