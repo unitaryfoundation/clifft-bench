@@ -109,7 +109,7 @@ def test_clifft_counts_the_selected_observable() -> None:
     assert counts.logical_errors == 7
 
 
-def test_clifft_auto_is_forwarded_and_records_effective_scalar_batch(
+def test_clifft_explicit_batch_is_forwarded_and_recorded(
     tmp_path: Path, monkeypatch
 ) -> None:
     artifact = tmp_path / "circuit.stim"
@@ -136,7 +136,7 @@ def test_clifft_auto_is_forwarded_and_records_effective_scalar_batch(
             10,
             7,
             False,
-            "auto",
+            256,
         )
         return SimpleNamespace(
             total_shots=10,
@@ -170,75 +170,14 @@ def test_clifft_auto_is_forwarded_and_records_effective_scalar_batch(
         },
         execution={
             "batch_enabled": True,
-            "batch_size": "auto",
+            "batch_size": 256,
             "sample_chunk_shots": 0,
         },
     )
 
     assert prepared.runtime_metadata["batch_enabled"] is True
-    assert prepared.runtime_metadata["effective_batch_size"] == 1
-    assert prepared.sample(10, 7).attempted_shots == 10
-
-
-def test_clifft_auto_rejects_unresolved_nonpostselected_batch(
-    tmp_path: Path, monkeypatch
-) -> None:
-    monkeypatch.setitem(sys.modules, "clifft", SimpleNamespace())
-    with pytest.raises(ValueError, match="only supported for postselected workloads"):
-        ClifftAdapter().prepare(
-            artifact_path=tmp_path / "unused.stim",
-            workload={
-                "semantics": {
-                    "observable_index": 0,
-                    "postselect_all_detectors": False,
-                    "reference_convention": "raw-record-parity",
-                }
-            },
-            execution={
-                "batch_enabled": True,
-                "batch_size": "auto",
-                "sample_chunk_shots": 0,
-            },
-        )
-
-
-def test_symft_auto_uses_native_sentinel_and_records_selected_batch(
-    tmp_path: Path, monkeypatch
-) -> None:
-    class AutoCircuit(_Circuit):
-        def compile_counts_sampler(self, **kwargs):
-            assert kwargs["batch"] is True
-            assert kwargs["batch_size"] == 0
-            assert kwargs["sample_chunk_shots"] == 0
-            return _Sampler(batch_size=256, sample_chunk_shots=4096)
-
-    monkeypatch.setitem(
-        sys.modules,
-        "symft",
-        SimpleNamespace(
-            Circuit=AutoCircuit,
-            __version__="0.1.0",
-            simd_backend=lambda: "test",
-        ),
-    )
-    prepared = SymftAdapter().prepare(
-        artifact_path=tmp_path / "unused.stim",
-        workload={
-            "semantics": {
-                "observable_index": 0,
-                "postselect_all_detectors": True,
-                "reference_convention": "raw-record-parity",
-            }
-        },
-        execution={
-            "batch_enabled": True,
-            "batch_size": "auto",
-            "sample_chunk_shots": 0,
-        },
-    )
-
     assert prepared.runtime_metadata["effective_batch_size"] == 256
-    assert prepared.runtime_metadata["sample_chunk_shots"] == 4096
+    assert prepared.sample(10, 7).attempted_shots == 10
 
 
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(

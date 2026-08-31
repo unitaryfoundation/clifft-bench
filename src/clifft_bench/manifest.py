@@ -181,11 +181,6 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"case {identifier!r} forces incomparable adapter {adapter!r} onto "
                 f"workload {workload_id!r}"
             )
-        execution = definition["execution"]
-        if execution["batch_size"] == "auto" and not execution["batch_enabled"]:
-            raise SchemaValidationError(
-                f"case {identifier!r} requests automatic batching with batching disabled"
-            )
         cases.append(Case(definition, workload, implementation))
 
     return Suite(

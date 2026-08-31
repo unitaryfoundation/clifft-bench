@@ -35,7 +35,7 @@
       }
     },
     {
-      "id": "msc-d3-smoke-symft-auto",
+      "id": "msc-d3-smoke-symft-b2048",
       "pair_id": "msc-d3-smoke-current",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "symft-0.1.0-9ec5790",
@@ -43,8 +43,8 @@
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,
-        "batch_size": "auto",
-        "sample_chunk_shots": 0
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
       }
     },
     {
@@ -61,7 +61,7 @@
       }
     },
     {
-      "id": "distillation-85q-smoke-symft-auto",
+      "id": "distillation-85q-smoke-symft-b2048",
       "pair_id": "distillation-85q-smoke-current",
       "workload_id": "distillation-color-code-85q-p5e-2",
       "implementation_id": "symft-0.1.0-9ec5790",
@@ -69,8 +69,8 @@
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,
-        "batch_size": "auto",
-        "sample_chunk_shots": 0
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048
       }
     },
     {

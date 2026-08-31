@@ -38,36 +38,6 @@ def test_checked_in_suites_resolve_and_verify_artifacts(relative: str) -> None:
     assert all(case.workload.artifact_path.is_file() for case in suite.cases)
 
 
-def test_smoke_suite_uses_symft_automatic_batching() -> None:
-    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
-    symft_cases = [
-        case
-        for case in suite.cases
-        if case.implementation.definition["adapter"] == "symft"
-        and case.definition["execution"]["batch_enabled"]
-    ]
-    assert symft_cases
-    assert {
-        case.definition["execution"]["batch_size"] for case in symft_cases
-    } == {"auto"}
-
-
-def test_automatic_batch_size_requires_batching_enabled(tmp_path: Path) -> None:
-    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
-    run = copy.deepcopy(suite.run)
-    auto_case = next(
-        case for case in run["cases"] if case["execution"]["batch_size"] == "auto"
-    )
-    auto_case["execution"]["batch_enabled"] = False
-    run["workloads_manifest"] = str(suite.workloads_path)
-    run["software_manifest"] = str(suite.software_path)
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
-
-    with pytest.raises(SchemaValidationError, match="with batching disabled"):
-        load_suite(run_path)
-
-
 @pytest.mark.parametrize("campaign_id", ["clifft-history-v1", "current-tools-v1"])
 def test_checked_in_campaigns_resolve_all_runs(campaign_id: str) -> None:
     campaign = load_campaign(ROOT / "campaigns" / campaign_id / "campaign.v1.json")

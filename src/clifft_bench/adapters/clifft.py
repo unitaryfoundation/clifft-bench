@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import inspect
 import time
 from pathlib import Path
 from typing import Any
@@ -17,7 +16,7 @@ class _PreparedClifft(PreparedAdapter):
         program: Any,
         observable_index: int,
         runtime_metadata: dict[str, Any],
-        batch_size: str | None = None,
+        batch_size: int | None = None,
     ) -> None:
         self._clifft = clifft
         self._program = program
@@ -59,31 +58,20 @@ class ClifftAdapter(Adapter):
         batch_enabled = bool(execution["batch_enabled"])
         requested_batch_size = execution["batch_size"]
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
-        call_batch_size: str | None = None
+        call_batch_size: int | None = None
         if not batch_enabled and requested_batch_size == 1:
             effective_batch_size = 1
-        elif batch_enabled and requested_batch_size == "auto":
-            if not postselect:
-                raise ValueError(
-                    "Clifft automatic batching is only supported for postselected "
-                    "workloads until Clifft reports its resolved batch size"
-                )
-            try:
-                parameters = inspect.signature(clifft.sample_survivors).parameters
-            except (TypeError, ValueError):
-                parameters = {}
-            documentation = str(getattr(clifft.sample_survivors, "__doc__", ""))
-            if "batch_size" not in parameters and "batch_size" not in documentation:
-                raise RuntimeError(
-                    "installed Clifft does not support batch_size='auto'"
-                )
-            call_batch_size = "auto"
-            # Clifft's current automatic policy keeps postselected plans scalar.
-            effective_batch_size = 1
+        elif (
+            batch_enabled
+            and type(requested_batch_size) is int
+            and requested_batch_size >= 1
+        ):
+            call_batch_size = requested_batch_size
+            effective_batch_size = requested_batch_size
         else:
             raise ValueError(
                 "Clifft supports batch_size=1 with batching disabled or "
-                "batch_size='auto' with batching enabled"
+                "a positive integer batch size with batching enabled"
             )
 
         if hasattr(clifft, "set_num_threads"):

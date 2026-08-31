@@ -39,7 +39,7 @@ def _result(tmp_path: Path, *, run_id: str, case_id: str, rate: float) -> Path:
     case["setup"]["runtime_metadata"]["address_space_limit_bytes"] = 1 << 30
     if run_id == "candidate":
         case["execution"]["batch_enabled"] = True
-        case["execution"]["batch_size"] = "auto"
+        case["execution"]["batch_size"] = 32
         case["execution"]["batch_size_effective"] = 32
         case["execution"]["shots_per_call"] = 64
     case["samples"][0]["throughput_attempted_shots_per_second"] = rate

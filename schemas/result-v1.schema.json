@@ -167,12 +167,7 @@
           "properties": {
             "mode": {"enum": ["latency", "throughput"]},
             "batch_enabled": {"type": "boolean"},
-            "batch_size": {
-              "oneOf": [
-                {"type": "integer", "minimum": 1},
-                {"const": "auto"}
-              ]
-            },
+            "batch_size": {"type": "integer", "minimum": 1},
             "sample_chunk_shots": {"type": "integer", "minimum": 0},
             "threads_requested": {"const": 1},
             "memory_limit_bytes": {"type": ["integer", "null"], "minimum": 1},
