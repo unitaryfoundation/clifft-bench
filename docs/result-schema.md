@@ -6,7 +6,7 @@ JSON is the source result format. The current schema identifier is
 
 A result contains one run envelope, one runner snapshot, and one record per
 selected case. The envelope records both the campaign ID and the isolated run
-ID within that campaign. Successful cases include setup provenance, affinity outcome,
+identity. Successful cases include setup provenance, affinity outcome,
 warmup counts, an out-of-band correctness check, every raw timing sample, and a
 robust summary. The effective request deadline is recorded with the execution
 configuration. The single-core campaign's requested memory ceiling is recorded
@@ -15,9 +15,8 @@ metadata. Error cases preserve their exact failure phase and message without
 fabricating throughput.
 
 Per-call adapter timing dictionaries are summed into
-`adapter_timing_totals` for each sample. The legacy `adapter_call_timings`
-array remains empty for result-v1 compatibility, preventing fast single-shot
-loops from producing unbounded raw files.
+`adapter_timing_totals` for each sample, preventing fast single-shot loops from
+producing unbounded raw files.
 
 When an external launcher supplies a complete cloud identity, the runner
 snapshot also records provider, instance and image IDs, instance type,

@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.manifest import Case, Suite
-from clifft_bench.schedule import balanced_schedule
 from clifft_bench.schema import repository_root, validate_document, write_json
 from clifft_bench.system import (
     choose_cpu,
@@ -27,7 +26,6 @@ from clifft_bench.system import (
 SEED_REPETITION_STRIDE = 100_000_000
 SEED_MAX_EXCLUSIVE = 2**32
 BATCH_CALIBRATION_SEED_RESERVE = 4_000_000
-
 
 class WorkerError(RuntimeError):
     def __init__(self, error: dict[str, Any]) -> None:
@@ -206,7 +204,7 @@ def _new_case_result(
     )
     return {
         "case_id": case.id,
-        "pair_id": case.definition.get("pair_id"),
+        "variant_id": case.definition["variant_id"],
         "status": "running",
         "workload": _workload_record(case),
         "simulator": _simulator_record(case),
@@ -262,15 +260,6 @@ def _select_cases(suite: Suite, pattern: str | None) -> list[Case]:
     return [case for case in suite.cases if expression.search(case.id)]
 
 
-def _case_groups(cases: list[Case]) -> list[list[Case]]:
-    """Keep declared comparison pairs resident together, one pair at a time."""
-    groups: dict[str, list[Case]] = {}
-    for case in cases:
-        group_id = str(case.definition.get("pair_id", case.id))
-        groups.setdefault(group_id, []).append(case)
-    return list(groups.values())
-
-
 def run_suite(
     suite: Suite,
     *,
@@ -322,7 +311,6 @@ def run_suite(
         "run": {
             "id": str(uuid.uuid4()),
             "profile_id": suite.run["profile_id"],
-            "campaign_run_id": suite.run["run_id"],
             "classification": suite.run["classification"],
             "started_at": started_at,
             "finished_at": None,
@@ -330,7 +318,7 @@ def run_suite(
             "workloads_manifest": str(suite.workloads_path),
             "software_manifest": str(suite.software_path),
             "selection": case_pattern,
-            "schedule_policy": "serial-alternating-forward-reverse",
+            "schedule_policy": "serial-manifest-order",
             "workflow": collect_workflow_metadata(),
         },
         "runner": collect_runner_metadata(repository_root()),
@@ -338,45 +326,40 @@ def run_suite(
             _new_case_result(case, measurement, memory_limit_gib) for case in cases
         ],
     }
-    case_results = {item["case_id"]: item for item in document["cases"]}
     write_json(output_path, document)
 
     try:
-        preparation_index = 0
         sequence_index = 0
-        for group in _case_groups(cases):
-            clients: dict[str, WorkerClient] = {}
+        for case_index, (case, result) in enumerate(
+            zip(cases, document["cases"], strict=True), start=1
+        ):
+            client: WorkerClient | None = None
             try:
-                for case in group:
-                    preparation_index += 1
-                    result = case_results[case.id]
-                    print(f"[{preparation_index}/{len(cases)}] preparing {case.id}", flush=True)
-                    try:
-                        client = WorkerClient(case, logical_cpu)
-                        clients[case.id] = client
-                        setup = client.prepare(
-                            float(measurement["setup_timeout_seconds"]),
-                            memory_limit_gib,
-                            seed=calibration_seed,
-                        )
-                        result["setup"] = {
-                            "duration_seconds": setup["duration_seconds"],
-                            "affinity": setup["affinity"],
-                            "adapter_version": setup["adapter_version"],
-                            "runtime_metadata": setup["runtime_metadata"],
-                        }
-                        _record_runtime_execution(
-                            result["execution"],
-                            setup["runtime_metadata"],
-                            int(case.definition["shots_per_call"]),
-                        )
-                        result["simulator"]["dependencies"] = setup["dependencies"]
-                    except Exception as error:  # noqa: BLE001
-                        result["status"] = "error"
-                        result["error"] = _error_record(error, "setup")
-                        write_json(output_path, document)
-                        continue
+                print(f"[{case_index}/{len(cases)}] preparing {case.id}", flush=True)
+                client = WorkerClient(case, logical_cpu)
+                try:
+                    setup = client.prepare(
+                        float(measurement["setup_timeout_seconds"]),
+                        memory_limit_gib,
+                        seed=calibration_seed,
+                    )
+                    result["setup"] = {
+                        "duration_seconds": setup["duration_seconds"],
+                        "affinity": setup["affinity"],
+                        "adapter_version": setup["adapter_version"],
+                        "runtime_metadata": setup["runtime_metadata"],
+                    }
+                    _record_runtime_execution(
+                        result["execution"],
+                        setup["runtime_metadata"],
+                        int(case.definition["shots_per_call"]),
+                    )
+                    result["simulator"]["dependencies"] = setup["dependencies"]
+                except Exception as error:  # noqa: BLE001
+                    result["status"] = "error"
+                    result["error"] = _error_record(error, "setup")
 
+                if result["status"] == "running":
                     try:
                         warmup = client.request(
                             {
@@ -392,9 +375,8 @@ def run_suite(
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "warmup")
-                        write_json(output_path, document)
-                        continue
 
+                if result["status"] == "running":
                     try:
                         correctness = client.request(
                             {
@@ -418,37 +400,30 @@ def run_suite(
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "correctness")
-                    write_json(output_path, document)
 
-                runnable = [
-                    case.id for case in group if case_results[case.id]["status"] == "running"
-                ]
-                local_schedule = balanced_schedule(runnable, int(measurement["repetitions"]))
-                for scheduled in local_schedule:
-                    result = case_results[scheduled.case_id]
+                for repetition in range(int(measurement["repetitions"])):
                     if result["status"] != "running":
-                        continue
-                    case = next(item for item in group if item.id == scheduled.case_id)
+                        break
                     print(
-                        f"sampling {case.id} (repetition {scheduled.repetition + 1}, "
+                        f"sampling {case.id} (repetition {repetition + 1}, "
                         f"sequence {sequence_index})",
                         flush=True,
                     )
                     try:
-                        sample = clients[case.id].request(
+                        sample = client.request(
                             {
                                 "command": "sample",
                                 "shots_per_call": case.definition["shots_per_call"],
                                 "min_seconds": measurement["min_sample_seconds"],
                                 "seed": suite.run["seed"]
                                 + 10_000
-                                + scheduled.repetition * SEED_REPETITION_STRIDE,
+                                + repetition * SEED_REPETITION_STRIDE,
                                 "max_api_calls": SEED_REPETITION_STRIDE,
                             },
                             timeout_seconds=request_timeout,
                         )
                         sample.pop("ok", None)
-                        sample["repetition"] = scheduled.repetition
+                        sample["repetition"] = repetition
                         sample["sequence_index"] = sequence_index
                         result["samples"].append(sample)
                     except Exception as error:  # noqa: BLE001
@@ -457,14 +432,12 @@ def run_suite(
                     sequence_index += 1
                     write_json(output_path, document)
 
-                for case in group:
-                    result = case_results[case.id]
-                    if result["status"] == "running":
-                        result["summary"] = _summary(result["samples"])
-                        result["status"] = "success"
+                if result["status"] == "running":
+                    result["summary"] = _summary(result["samples"])
+                    result["status"] = "success"
                 write_json(output_path, document)
             finally:
-                for client in clients.values():
+                if client is not None:
                     client.close()
     except KeyboardInterrupt:
         for result in document["cases"]:

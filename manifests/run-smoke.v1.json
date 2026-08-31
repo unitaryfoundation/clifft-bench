@@ -2,15 +2,12 @@
   "schema_version": "clifft-bench/run/v1",
   "suite_version": "0.2.1",
   "profile_id": "adapter-smoke",
-  "run_id": "smoke",
   "classification": "smoke",
   "seed": 20260808,
   "workloads_manifest": "workloads.v1.json",
   "software_manifest": "software.v1.json",
   "resources": {
-    "logical_cpu": null,
-    "concurrent_cases": 1,
-    "threads_per_case": 1
+    "logical_cpu": null
   },
   "measurement": {
     "setup_timeout_seconds": 300,
@@ -23,7 +20,7 @@
   "cases": [
     {
       "id": "msc-d3-smoke-clifft",
-      "pair_id": "msc-d3-smoke-current",
+      "variant_id": "clifft-current",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "clifft-0.9.0",
       "shots_per_call": 64,
@@ -36,7 +33,7 @@
     },
     {
       "id": "msc-d3-smoke-symft-calibrated",
-      "pair_id": "msc-d3-smoke-current",
+      "variant_id": "symft-calibrated",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "symft-0.1.0-9ec5790",
       "shots_per_call": 64,
@@ -49,7 +46,7 @@
     },
     {
       "id": "distillation-85q-smoke-clifft",
-      "pair_id": "distillation-85q-smoke-current",
+      "variant_id": "clifft-current",
       "workload_id": "distillation-color-code-85q-p5e-2",
       "implementation_id": "clifft-0.9.0",
       "shots_per_call": 8,
@@ -62,7 +59,7 @@
     },
     {
       "id": "distillation-85q-smoke-symft-calibrated",
-      "pair_id": "distillation-85q-smoke-current",
+      "variant_id": "symft-calibrated",
       "workload_id": "distillation-color-code-85q-p5e-2",
       "implementation_id": "symft-0.1.0-9ec5790",
       "shots_per_call": 8,
@@ -70,32 +67,6 @@
         "mode": "throughput",
         "batch_enabled": true,
         "batch_size": "calibrate",
-        "sample_chunk_shots": 2048
-      }
-    },
-    {
-      "id": "qv10-smoke-clifft",
-      "pair_id": "qv10-smoke-current",
-      "workload_id": "quantum-volume-q10-seed42",
-      "implementation_id": "clifft-0.9.0",
-      "shots_per_call": 1,
-      "execution": {
-        "mode": "latency",
-        "batch_enabled": false,
-        "batch_size": 1,
-        "sample_chunk_shots": 0
-      }
-    },
-    {
-      "id": "qv10-smoke-symft-single",
-      "pair_id": "qv10-smoke-current",
-      "workload_id": "quantum-volume-q10-seed42",
-      "implementation_id": "symft-0.1.0-9ec5790",
-      "shots_per_call": 1,
-      "execution": {
-        "mode": "latency",
-        "batch_enabled": false,
-        "batch_size": 1,
         "sample_chunk_shots": 2048
       }
     }

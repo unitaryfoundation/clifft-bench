@@ -5,26 +5,66 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schema_version", "suite_version", "profile_id", "run_id", "classification", "seed",
+    "schema_version", "suite_version", "profile_id", "classification", "seed",
     "workloads_manifest", "software_manifest", "resources", "measurement"
   ],
   "properties": {
     "schema_version": {"const": "clifft-bench/run/v1"},
     "suite_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
-    "run_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
-    "classification": {"enum": ["smoke", "exploratory", "official"]},
+    "title": {"type": "string", "minLength": 1},
+    "classification": {"enum": ["smoke", "official"]},
     "seed": {"type": "integer", "minimum": 1},
     "workloads_manifest": {"type": "string", "minLength": 1},
     "software_manifest": {"type": "string", "minLength": 1},
+    "hardware_epoch": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "reference_host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "instance_type", "architecture", "os_id", "os_version"],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1},
+        "instance_type": {"type": "string", "minLength": 1},
+        "architecture": {"type": "string", "minLength": 1},
+        "os_id": {"type": "string", "minLength": 1},
+        "os_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "placements", "replicas_per_placement", "run_timeout_minutes", "memory_limit_gib"
+      ],
+      "properties": {
+        "placements": {"type": "integer", "minimum": 1},
+        "replicas_per_placement": {"type": "integer", "minimum": 1},
+        "run_timeout_minutes": {"type": "integer", "minimum": 1},
+        "memory_limit_gib": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "baseline_variant", "candidate_variants"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "baseline_variant": {"type": "string", "minLength": 1},
+          "candidate_variants": {
+            "type": "array", "minItems": 1, "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
     "resources": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["logical_cpu", "concurrent_cases", "threads_per_case"],
+      "required": ["logical_cpu"],
       "properties": {
-        "logical_cpu": {"type": ["integer", "null"], "minimum": 0},
-        "concurrent_cases": {"const": 1},
-        "threads_per_case": {"const": 1}
+        "logical_cpu": {"type": ["integer", "null"], "minimum": 0}
       }
     },
     "measurement": {
@@ -46,87 +86,84 @@
     "cases": {
       "type": "array",
       "minItems": 1,
+      "items": {"$ref": "#/$defs/case"}
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "workload_id", "implementation_id", "shots_per_call", "execution"],
+        "required": ["id", "implementation_id", "execution", "workloads"],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
-          "pair_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
-          "workload_id": {"type": "string", "minLength": 1},
           "implementation_id": {"type": "string", "minLength": 1},
-          "shots_per_call": {"type": "integer", "minimum": 1},
-          "execution": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["mode", "batch_enabled", "batch_size", "sample_chunk_shots"],
-            "properties": {
-              "mode": {"enum": ["latency", "throughput"]},
-              "batch_enabled": {"type": "boolean"},
-              "batch_size": {
-                "oneOf": [
-                  {"type": "integer", "minimum": 1},
-                  {"const": "calibrate"}
-                ]
-              },
-              "sample_chunk_shots": {"type": "integer", "minimum": 0}
-            }
-          }
-        }
-      }
-    },
-    "matrix": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["workloads", "variants"],
-      "properties": {
-        "workloads": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["workload_id", "shots_per_call"],
-            "properties": {
-              "workload_id": {"type": "string", "minLength": 1},
-              "shots_per_call": {"type": "integer", "minimum": 1}
-            }
-          }
-        },
-        "variants": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["id", "implementation_id", "execution"],
-            "properties": {
-              "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
-              "implementation_id": {"type": "string", "minLength": 1},
-              "execution": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": ["mode", "batch_enabled", "batch_size", "sample_chunk_shots"],
-                "properties": {
-                  "mode": {"enum": ["latency", "throughput"]},
-                  "batch_enabled": {"type": "boolean"},
-                  "batch_size": {
-                    "oneOf": [
-                      {"type": "integer", "minimum": 1},
-                      {"const": "calibrate"}
-                    ]
-                  },
-                  "sample_chunk_shots": {"type": "integer", "minimum": 0}
-                }
-              }
-            }
+          "execution": {"$ref": "#/$defs/execution"},
+          "workloads": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"$ref": "#/$defs/workloadSelection"}
           }
         }
       }
     }
   },
-  "oneOf": [
-    {"required": ["cases"], "not": {"required": ["matrix"]}},
-    {"required": ["matrix"], "not": {"required": ["cases"]}}
+  "$defs": {
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "batch_enabled", "batch_size", "sample_chunk_shots"],
+      "properties": {
+        "mode": {"enum": ["latency", "throughput"]},
+        "batch_enabled": {"type": "boolean"},
+        "batch_size": {
+          "oneOf": [
+            {"type": "integer", "minimum": 1},
+            {"const": "calibrate"}
+          ]
+        },
+        "sample_chunk_shots": {"type": "integer", "minimum": 0}
+      }
+    },
+    "workloadSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workload_id", "shots_per_call"],
+      "properties": {
+        "workload_id": {"type": "string", "minLength": 1},
+        "shots_per_call": {"type": "integer", "minimum": 1}
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "variant_id", "workload_id", "implementation_id", "shots_per_call", "execution"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+        "variant_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+        "workload_id": {"type": "string", "minLength": 1},
+        "implementation_id": {"type": "string", "minLength": 1},
+        "shots_per_call": {"type": "integer", "minimum": 1},
+        "execution": {"$ref": "#/$defs/execution"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "oneOf": [
+        {"required": ["cases"], "not": {"required": ["variants"]}},
+        {"required": ["variants"], "not": {"required": ["cases"]}}
+      ]
+    },
+    {
+      "if": {"properties": {"classification": {"const": "official"}}},
+      "then": {
+        "required": [
+          "title", "hardware_epoch", "reference_host", "collection", "comparisons", "variants"
+        ]
+      }
+    }
   ]
 }

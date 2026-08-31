@@ -31,11 +31,10 @@
         "threads_effective": 1,
         "threads_requested": 1
       },
-      "pair_id": "msc-d3-smoke-current",
+      "variant_id": "clifft-current",
       "samples": [
         {
           "accepted_shots": 7732,
-          "adapter_call_timings": [],
           "adapter_timing_totals": {},
           "api_calls": 175,
           "attempted_shots": 11200,
@@ -160,9 +159,8 @@
     "finished_at": "2026-08-08T00:00:01Z",
     "id": "00000000-0000-4000-8000-000000000001",
     "profile_id": "adapter-smoke",
-    "campaign_run_id": "smoke",
     "run_manifest": "manifests/run-smoke.v1.json",
-    "schedule_policy": "serial-alternating-forward-reverse",
+    "schedule_policy": "serial-manifest-order",
     "selection": "^msc-d3-smoke-clifft$",
     "software_manifest": "manifests/software.v1.json",
     "started_at": "2026-08-08T00:00:00Z",

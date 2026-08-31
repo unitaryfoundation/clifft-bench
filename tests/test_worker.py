@@ -24,12 +24,10 @@ def test_aggregate_sample_sums_adapter_timings_without_retaining_each_call(
         min_seconds=0.25,
         seed=10,
         postselect=False,
-        max_api_calls=10,
     )
 
     assert sample["api_calls"] == 3
     assert sample["adapter_timing_totals"]["native_seconds"] == pytest.approx(0.075)
-    assert sample["adapter_call_timings"] == []
 
 
 def test_aggregate_sample_stops_before_reusing_the_next_repetition_seed(monkeypatch) -> None:

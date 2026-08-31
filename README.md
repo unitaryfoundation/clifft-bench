@@ -1,171 +1,85 @@
 # clifft-bench
 
-Reproducible CPU benchmarks for
+Reproducible single-core CPU benchmarks for
 [Clifft](https://github.com/unitaryfoundation/clifft) and comparable
 near-Clifford circuit simulators.
 
-> [!NOTE]
-> This is an evolving benchmark. We plan to add circuits, tools, and hardware
-> backends, including GPU campaigns. Results collected on different hardware
-> or under different measurement rules should not be compared directly.
+The repository is both a small benchmark harness and an evidence archive.
+Official results are collected on a named reference host, checked in as raw
+JSON, and summarized in derived CSV tables.
 
-This repository is both a benchmark harness and an evidence archive. Official
-performance data is collected on named reference hosts and checked in with its
-raw provenance and reproducible derived tables.
+## Regular release questions
 
-## Questions this repository answers
+The recurring release campaign answers three questions:
 
-1. [Did a new Clifft release improve performance?](#current-single-core-qec-results)
-2. [How does current Clifft compare with current alternatives?](#current-single-core-qec-results)
-3. [How has Clifft changed across its release history?](#clifft-release-history)
-4. [How does Clifft perform on non-Clifford workloads compared with general-purpose state-vector simulators?](#quantum-volume-multicore-results)
+1. Did the new Clifft release improve performance over the previous release?
+2. How does current Clifft compare with current near-Clifford alternatives?
+3. How has Clifft's workload-by-workload performance changed since the 1.x
+   benchmark baseline?
 
-## Current answers (August 2026)
+The first two are answered on every release. The third accumulates from those
+same executions; it does not require a separate history campaign.
 
-[SymFT](https://arxiv.org/abs/2607.28600) is another CPU simulator targeting
-near-Clifford circuits. We benchmark its
-[recorded implementation](https://github.com/haoliri0/SymFT_Test), which has
-separate single-shot and batched backends, using single-shot execution plus
-batch sizes 32 and 2048 on the same pinned core. This separates native
-single-shot performance from the additional throughput available by processing
-independent shots together; comparisons use the fastest applicable SymFT mode
-per workload.
+### Current status
 
-### Current single-core QEC results
+The previous 0.x executions were removed when the harness was simplified. The
+next official execution will establish the 1.x baseline. Until then this
+repository intentionally publishes methodology and a tested release manifest,
+but no current performance claims.
 
-Clifft 0.9.0 has a higher median throughput than 0.8.0 on all eight workloads
-in the current campaign. Across the 24 individual placement/workload pairs,
-0.9.0 is faster in 23. SymFT's best measured mode is faster on seven
-workloads; Clifft leads on distance-5 cultivation.
+[`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
+single recurring campaign definition. It currently retains the last known
+Clifft and SymFT versions as a working template; update its `clifft-current`
+and `clifft-previous` variants before the next collection.
 
-| Workload | Clifft 0.9 attempted shots/s | vs 0.8 | Fastest measured SymFT mode | Clifft / SymFT |
-|---|---:|---:|---|---:|
-| [Coherent surface code d3, r1][play-coherent-d3-r1] | 1.88M | +37% | batch 2048 | 0.71x |
-| [Coherent surface code d3, r3][play-coherent-d3-r3] | 461k | +42% | batch 2048 | 0.93x |
-| [Coherent surface code d5, r1][play-coherent-d5-r1] | 14.6k | +1% | batch 32 | 0.48x |
-| [Coherent surface code d5, r5][play-coherent-d5-r5] | 7.0 | +10% | single | 0.11x |
-| [85-qubit distillation][play-distillation] | 576k | +6% | batch 2048 | 0.32x |
-| [Cultivation d3][play-cultivation-d3] | 1.20M | +8% | batch 2048 | 0.45x |
-| [Cultivation d5][play-cultivation-d5] | 182k | +33% | batch 32 | **1.33x** |
-| [Surface-code memory d7, r7][play-surface-d7-r7] | 484k | +4% | batch 2048 | 0.14x |
+## Other questions and experiments
 
-![QEC workload throughput ratio between Clifft and the fastest measured SymFT mode](figures/current-tools-v1-20260824-r1.png)
+Less-frequent questions do not extend the recurring campaign format or core
+CLI. Examples include:
 
-These are medians over three fresh placements on one pinned core of an AWS
-`m7a.xlarge` (`AMD EPYC 9R14`, Ubuntu 24.04). The fastest SymFT mode is selected
-independently for each workload from the applicable single, batch-32, and
-batch-2048 cases. A Clifft/SymFT ratio above 1 means Clifft is faster.
-Workload names open the exact measured circuit in the
-[Clifft playground](https://unitaryfoundation.github.io/clifft/playground/);
-the wider circuits may take longer to simulate interactively.
+- dense non-Clifford Quantum Volume comparisons,
+- multicore strong scaling,
+- GPU simulator comparisons, and
+- focused checks of a proposed optimization or hardware backend.
 
-[play-coherent-d3-r1]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d3_r1.stim
-[play-coherent-d3-r3]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d3_r3.stim
-[play-coherent-d5-r1]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d5_r1.stim
-[play-coherent-d5-r5]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fcoherent_d5_r5.stim
-[play-distillation]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fdistillation.stim
-[play-cultivation-d3]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fmsc_d3_inject_cultivate_p1e-3.stim
-[play-cultivation-d5]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fmsc_d5_inject_cultivate_p1e-3.stim
-[play-surface-d7-r7]: https://unitaryfoundation.github.io/clifft/playground/?url=https%3A%2F%2Fraw.githubusercontent.com%2Funitaryfoundation%2Fclifft-bench%2F23d527173511b2546a2f51eb330cdfdfd660f08e%2Fworkloads%2Fcircuits%2Fpure_surface_d7_r7_p1e-3.stim
+These belong under [`experiments/`](experiments/) as self-contained,
+purpose-built studies. They may reuse workloads or small harness utilities,
+but they should carry their own execution contract and only become shared
+infrastructure after repeated use demonstrates a common shape.
 
-[Browse the execution index and raw results](results/current-tools-v1/current-tools-v1-20260824-r1/)
-or use the complete derived
-[`cases.csv`](results/current-tools-v1/current-tools-v1-20260824-r1/cases.csv)
-and
-[`comparisons.csv`](results/current-tools-v1/current-tools-v1-20260824-r1/comparisons.csv).
+## Measurement contract
 
-### Clifft release history
+The release campaign measures attempted shots per second for one complete
+circuit execution on one pinned logical CPU. It records setup, warmup, and
+correctness separately from the timed samples. Each case runs in its own
+Python process and may use its own locked environment, allowing incompatible
+simulator versions to be measured in one serial execution.
 
-The largest broad improvement arrived in 0.8.0, when Clifft replaced its
-localized-Pauli virtual machine with a symbolic-coordinate compiler that moves
-frame and dependency work into planning and applies active-Pauli operations
-directly. Version 0.9.0 then removed global-phase bookkeeping, absorbed more
-Clifford-valued rotations during compilation, and vectorized important active
-measurement kernels. On the shared corpus, 0.9.0 is faster than 0.1.0 on all
-eight workloads, with a median per-workload speedup of 1.93x and a range of
-1.18x to 16.89x.
+Important comparison rules:
 
-![Clifft throughput across releases](figures/clifft-history-v1-20260825-r1.png)
+- QEC throughput counts attempted shots, including postselected discards.
+- Raw JSON is authoritative; CSV tables are derived views.
+- Absolute rates are comparable only within one hardware epoch.
+- Internal batch size and public shots per call remain visible in comparisons.
+- Cases run serially in manifest order; three fresh host boots capture placement
+  variation.
 
-| Release | Median speedup vs 0.1 | Range across workloads | Workloads faster than 0.1 |
-|---|---:|---:|---:|
-| 0.1.0 | 1.00x | 1.00x | baseline |
-| 0.2.0 | 1.00x | 1.00x-1.03x | 6/8 |
-| 0.3.0 | 0.98x | 0.92x-1.01x | 1/8 |
-| 0.4.1 | 0.91x | 0.74x-1.01x | 1/8 |
-| 0.5.0 | 0.97x | 0.82x-1.02x | 2/8 |
-| 0.6.0 | 0.98x | 0.85x-1.02x | 2/8 |
-| 0.7.0 | 0.94x | 0.84x-1.01x | 2/8 |
-| 0.8.0 | 1.59x | 1.14x-15.43x | 8/8 |
-| 0.9.0 | **1.93x** | **1.18x-16.89x** | **8/8** |
-
-This campaign uses one placement with the same single-core QEC host setup as
-the current-tools campaign. See the
-[`cases.csv`](results/clifft-history-v1/clifft-history-v1-20260825-r1/cases.csv)
-and
-[`comparisons.csv`](results/clifft-history-v1/clifft-history-v1-20260825-r1/comparisons.csv)
-for every workload and release.
-
-### Quantum Volume multicore results
-
-Clifft targets near-Clifford circuits, but dense non-Clifford Quantum Volume
-circuits drive its active width to all qubits and require carrying the full
-`2^n` state vector. This campaign probes that dense limit against Qiskit Aer,
-Qulacs, and qsim, and measures how one wide Clifft shot scales across cores.
-
-#### Current-tool execution time
-
-![QV current-tool execution time](figures/qv-multicore-v1-2026082-current-tools.png)
-
-At 16 physical cores, Clifft 0.9.0 has the shortest median single-shot
-execution time of the four measured tools at QV20 and QV22. The relative
-ordering changes with circuit width, so the full curve is more informative
-than one aggregate ranking.
-
-#### Clifft strong scaling
-
-![Clifft QV strong scaling](figures/qv-multicore-v1-2026082-clifft-scaling.png)
-
-Clifft's paired median QV24 speedup is 10.17x from 1 to 16 physical cores.
-
-This is an exploratory curated execution on an AWS `c8i.8xlarge` (`Intel Xeon
-6975P-C`, Ubuntu 24.04), using three deterministic circuit seeds per point.
-Lines connect seed medians; scaling whiskers show the seed range. See the
-[campaign details and methodology](docs/qv-multicore.md) and the
-[`cases.csv`](results/qv-multicore-v1/qv-multicore-v1-2026082/cases.csv).
-
-### How to read these results
-
-- QEC throughput counts attempted shots, including shots discarded by detector
-  postselection.
-- QEC campaigns are single-core throughput measurements. The QV campaign is a
-  separate single-shot, multicore execution-time experiment.
-- Raw JSON is authoritative. CSV tables and figures are derived views.
-- Absolute values are tied to their recorded hardware; rerun an anchor version
-  when moving to a new host.
-
-The eight shared QEC workloads are the comparison core. QV10 and QV20 remain as
-historical appendix workloads but are not part of the current cross-tool QEC
-campaigns. Tsim performance is deferred to a future GPU campaign on its
-intended hardware.
+See the full [benchmark contract](docs/benchmark-contract.md),
+[data format](docs/data-format.md), and
+[manual EC2 procedure](docs/manual-ec2.md).
 
 ## Repository layout
 
 | Path | Purpose |
 |---|---|
-| `campaigns/` | Collection plans and tool/version run manifests |
+| `campaigns/release-v1/` | The single recurring release campaign |
+| `manifests/` | Software identities, workloads, and the developer smoke run |
 | `environments/` | Direct requirements and resolved Linux locks |
-| `manifests/` | Software, workload, and CI smoke manifests |
 | `workloads/circuits/` | Immutable circuit artifacts and licenses |
-| `schemas/` | Schemas for manifests and results |
-| `src/clifft_bench/` | CLI, schedulers, adapters, and finalization |
+| `src/clifft_bench/` | Serial runner, adapters, validation, and finalization |
 | `scripts/ec2/` | Manual reference-host collection workflow |
 | `results/` | Reviewed raw executions and derived tables |
-| `figures/` | Reproducible result figures for quick review |
-
-See the [measurement contract](docs/benchmark-contract.md),
-[manual EC2 procedure](docs/manual-ec2.md), [data format](docs/data-format.md),
-and [QV multicore procedure](docs/qv-multicore.md).
+| `experiments/` | Infrequent, self-contained performance studies |
 
 ## Local development
 
@@ -178,42 +92,38 @@ uv run pytest
 uv run ruff check .
 ```
 
-List the short smoke cases without importing a simulator:
+List smoke cases without importing a simulator:
 
 ```bash
 uv run clifft-bench list
 ```
 
-This is a source checkout, not a distributed Python package. CI tests the
-harness and adapter contracts; official performance collection remains a
-manual, reviewed workflow.
+CI tests the harness and adapter contracts. Official performance collection is
+a manual, reviewed workflow.
 
-## Extending the benchmark
+## Preparing a release campaign
 
-### Add a circuit
+For a new Clifft release:
+
+1. Add its identity and install environment to
+   `manifests/software.v1.json`.
+2. Add its direct requirement and resolved lock under `environments/`.
+3. Point `clifft-current` at the new implementation and
+   `clifft-previous` at the prior release in the release manifest.
+4. Update alternative tool versions or workload call sizes only when needed.
+5. Validate locally, then follow `docs/manual-ec2.md`.
+
+One placement now produces one raw result containing every variant. The
+finalizer checks placement coverage and writes `cases.csv`, `comparisons.csv`,
+and `index.json` beside the raw evidence.
+
+## Adding a workload
 
 1. Add the immutable circuit under `workloads/circuits/` with its license.
-2. Add its digest, provenance, expected metadata, compatible adapters, and
-   semantic contract to `manifests/workloads.v1.json`.
-3. Add the workload ID to the relevant run manifests.
+2. Record its digest, provenance, expected metadata, compatible adapters, and
+   semantic contract in `manifests/workloads.v1.json`.
+3. Add it to the applicable variants in the release manifest.
 4. Run validation and adapter correctness tests.
 
-Changing a circuit creates a new workload identity so historical results keep
-pointing to the old digest.
-
-### Add a tool or release
-
-1. Add the implementation to `manifests/software.v1.json`.
-2. Add direct and resolved Linux requirements under `environments/`.
-3. Add adapter and correctness coverage if the API is new.
-4. Add an isolated run manifest and campaign environment.
-5. Validate locally, then use the manual EC2 playbook.
-
-Each campaign run has its own Python environment, allowing incompatible tool
-versions to be collected independently on the same placement.
-
-### Change hardware
-
-Create a new `hardware_epoch` and run at least one prior anchor version on both
-epochs. Do not append unlike absolute measurements to an existing series. See
-the [reference-host policy](docs/reference-host.md).
+Changing a circuit creates a new workload identity so checked-in results never
+silently change meaning.

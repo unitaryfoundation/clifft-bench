@@ -8,10 +8,7 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
-from clifft_bench.manifest import load_campaign, load_suite
-from clifft_bench.qv import load_qv_campaign
-from clifft_bench.qv_results import finalize_qv_execution
-from clifft_bench.qv_runner import run_qv_campaign
+from clifft_bench.manifest import load_suite
 from clifft_bench.results import finalize_execution
 from clifft_bench.runner import run_suite
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
@@ -45,27 +42,11 @@ def _parser() -> argparse.ArgumentParser:
     finalize = commands.add_parser(
         "finalize", help="generate an execution index and plot-ready tables"
     )
-    finalize.add_argument("--campaign", required=True, type=Path)
+    finalize.add_argument("--run-manifest", required=True, type=Path)
     finalize.add_argument("--execution-id", required=True)
     finalize.add_argument("--output-dir", required=True, type=Path)
     finalize.add_argument("results", nargs="+", type=Path)
 
-    qv_run = commands.add_parser("qv-run", help="execute a QV multicore campaign")
-    qv_run.add_argument("--campaign", required=True, type=Path)
-    qv_run.add_argument("--environment-root", required=True, type=Path)
-    qv_run.add_argument("--circuit-dir", required=True, type=Path)
-    qv_run.add_argument("--output", required=True, type=Path)
-    qv_run.add_argument("--execution-id", required=True)
-    qv_run.add_argument("--placement", required=True, type=int)
-    qv_run.add_argument("--replica", required=True, type=int)
-
-    qv_finalize = commands.add_parser(
-        "qv-finalize", help="validate and derive tables from a QV multicore execution"
-    )
-    qv_finalize.add_argument("--campaign", required=True, type=Path)
-    qv_finalize.add_argument("--execution-id", required=True)
-    qv_finalize.add_argument("--output-dir", required=True, type=Path)
-    qv_finalize.add_argument("results", nargs="+", type=Path)
     return parser
 
 
@@ -85,8 +66,7 @@ def _default_validation_paths() -> list[Path]:
         root / "manifests/software.v1.json",
         root / "manifests/run-smoke.v1.json",
         root / "examples/result.v1.json",
-        *sorted(root.glob("campaigns/*/campaign.v1.json")),
-        *sorted(root.glob("campaigns/*/qv-campaign.v1.json")),
+        *sorted(root.glob("campaigns/*/run.v1.json")),
     ]
 
 
@@ -97,10 +77,6 @@ def _validate(paths: list[Path]) -> int:
         document = validate_path(resolved)
         if document["schema_version"] == "clifft-bench/run/v1":
             load_suite(resolved)
-        if document["schema_version"] == "clifft-bench/campaign/v1":
-            load_campaign(resolved)
-        if document["schema_version"] == "clifft-bench/qv-campaign/v1":
-            load_qv_campaign(resolved)
         print(f"valid: {resolved}")
     return 0
 
@@ -112,6 +88,7 @@ def _list(run_manifest: Path, as_json: bool) -> int:
         rows.append(
             {
                 "case_id": case.id,
+                "variant": case.definition["variant_id"],
                 "workload": case.workload.id,
                 "implementation": case.implementation.id,
                 "adapter": case.implementation.definition["adapter"],
@@ -161,39 +138,9 @@ def _run(args: argparse.Namespace) -> int:
 
 
 def _finalize(args: argparse.Namespace) -> int:
-    campaign = load_campaign(_resolve(args.campaign))
+    suite = load_suite(_resolve(args.run_manifest))
     index = finalize_execution(
-        campaign,
-        execution_id=args.execution_id,
-        raw_paths=[_resolve(path) for path in args.results],
-        output_dir=args.output_dir.resolve(),
-    )
-    print(json.dumps(index, indent=2, sort_keys=True))
-    return 0
-
-
-def _qv_run(args: argparse.Namespace) -> int:
-    campaign = load_qv_campaign(_resolve(args.campaign))
-    document = run_qv_campaign(
-        campaign,
-        environment_root=args.environment_root.resolve(),
-        circuit_dir=args.circuit_dir.resolve(),
-        output_path=args.output.resolve(),
-        execution_id=args.execution_id,
-        placement=args.placement,
-        replica=args.replica,
-    )
-    successes = sum(case["status"] == "success" for case in document["cases"])
-    print(
-        f"Result: {args.output.resolve()} ({successes}/{len(document['cases'])} successful)"
-    )
-    return 0 if successes == len(document["cases"]) else 1
-
-
-def _qv_finalize(args: argparse.Namespace) -> int:
-    campaign = load_qv_campaign(_resolve(args.campaign))
-    index = finalize_qv_execution(
-        campaign,
+        suite,
         execution_id=args.execution_id,
         raw_paths=[_resolve(path) for path in args.results],
         output_dir=args.output_dir.resolve(),
@@ -213,10 +160,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _run(args)
         if args.command == "finalize":
             return _finalize(args)
-        if args.command == "qv-run":
-            return _qv_run(args)
-        if args.command == "qv-finalize":
-            return _qv_finalize(args)
         raise AssertionError(f"unhandled command {args.command!r}")
     except (SchemaValidationError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)

@@ -29,21 +29,20 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "id", "profile_id", "campaign_run_id", "classification", "started_at", "finished_at", "run_manifest",
+        "id", "profile_id", "classification", "started_at", "finished_at", "run_manifest",
         "workloads_manifest", "software_manifest", "selection", "schedule_policy", "workflow"
       ],
       "properties": {
         "id": {"type": "string", "format": "uuid"},
         "profile_id": {"type": "string"},
-        "campaign_run_id": {"type": "string"},
-        "classification": {"enum": ["smoke", "exploratory", "official"]},
+        "classification": {"enum": ["smoke", "official"]},
         "started_at": {"type": "string", "format": "date-time"},
         "finished_at": {"type": ["string", "null"], "format": "date-time"},
         "run_manifest": {"type": "string"},
         "workloads_manifest": {"type": "string"},
         "software_manifest": {"type": "string"},
         "selection": {"$ref": "#/$defs/nullableString"},
-        "schedule_policy": {"const": "serial-alternating-forward-reverse"},
+        "schedule_policy": {"const": "serial-manifest-order"},
         "workflow": {
           "type": "object",
           "additionalProperties": false,
@@ -148,12 +147,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "case_id", "pair_id", "status", "workload", "simulator", "execution", "setup",
+        "case_id", "variant_id", "status", "workload", "simulator", "execution", "setup",
         "warmup", "correctness", "samples", "summary", "error"
       ],
       "properties": {
         "case_id": {"type": "string"},
-        "pair_id": {"$ref": "#/$defs/nullableString"},
+        "variant_id": {"type": "string", "minLength": 1},
         "status": {"enum": ["running", "success", "error", "interrupted"]},
         "workload": {"$ref": "#/$defs/workload"},
         "simulator": {"$ref": "#/$defs/simulator"},
@@ -235,7 +234,7 @@
                 "required": [
                   "started_at", "duration_seconds", "api_calls",
                   "throughput_attempted_shots_per_second", "seed_first", "seed_last",
-                  "adapter_call_timings", "repetition", "sequence_index"
+                  "repetition", "sequence_index"
                 ],
                 "properties": {
                   "started_at": {"type": "string", "format": "date-time"},
@@ -244,7 +243,6 @@
                   "throughput_attempted_shots_per_second": {"type": "number", "exclusiveMinimum": 0},
                   "seed_first": {"type": "integer", "minimum": 0},
                   "seed_last": {"type": "integer", "minimum": 0},
-                  "adapter_call_timings": {"type": "array", "items": {"type": "object"}},
                   "adapter_timing_totals": {
                     "type": "object",
                     "additionalProperties": {"type": "number", "minimum": 0}

@@ -86,7 +86,7 @@ def aggregate_sample(
     min_seconds: float,
     seed: int,
     postselect: bool,
-    max_api_calls: int,
+    max_api_calls: int = 100_000_000,
 ) -> dict[str, Any]:
     total = Counts(0, 0, 0, 0)
     calls = 0
@@ -121,7 +121,6 @@ def aggregate_sample(
         "throughput_attempted_shots_per_second": total.attempted_shots / elapsed,
         "seed_first": seed,
         "seed_last": seed + calls - 1,
-        "adapter_call_timings": [],
         "adapter_timing_totals": dict(sorted(adapter_timing_totals.items())),
     }
 

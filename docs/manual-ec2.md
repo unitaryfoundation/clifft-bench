@@ -1,117 +1,82 @@
-# Manual EC2 campaign playbook
+# Manual EC2 release collection
 
-You launch, stop, and restart the instance in the AWS console. The scripts do
-not install a persistent GitHub runner and require no IAM role or AWS
-credentials. They verify the launch identity through IMDSv2, install isolated
-tool environments, spool results outside the checkout, and prepare a normal
-reviewable results commit.
+You launch, stop, and restart the reference instance in the AWS console. The
+scripts require no IAM role or AWS credentials. They verify launch identity
+through IMDSv2, install isolated tool environments, spool results outside the
+checkout, and prepare a normal reviewable results change.
 
-Every script arms an eight-hour operating-system shutdown guard. This is a
-backstop: set instance-initiated shutdown behavior to **Stop** and stop the
-instance promptly after each placement.
+Every script arms an eight-hour shutdown guard. Set instance-initiated shutdown
+behavior to **Stop** and stop the instance promptly after each placement.
 
 ## 1. Launch the reference host
 
-For `clifft-history-v1` and `current-tools-v1`, use these fixed choices:
+Use these fixed choices:
 
 - verified Canonical **Ubuntu Server 24.04 LTS (HVM), SSD Volume Type**;
 - **64-bit (x86)**, not Arm, Ubuntu Pro, Marketplace, or a community image;
 - `m7a.xlarge`, shared tenancy, and On-Demand purchasing;
-- one fixed region and availability zone for the entire execution;
+- one fixed region and availability zone for the execution;
 - IMDS enabled with IMDSv2 required;
-- one 16 GiB `gp3` root EBS volume at its default 3,000 IOPS;
-- no S3 Files, EFS, FSx, extra volume, or IAM role;
+- one 16 GiB `gp3` root EBS volume at the default 3,000 IOPS;
+- no S3 Files, EFS, FSx, extra volume, or IAM role; and
 - SSH restricted to your current IP or an equivalent console connection.
 
-The scripts record the exact instance, AMI, region, and availability zone from
-IMDS and require them to remain fixed across placements. Before cloning,
-expect Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`:
-
-```bash
-grep '^\(NAME\|VERSION_ID\)=' /etc/os-release
-python3 --version
-```
-
-The less-frequent `qv-multicore-v1` campaign has a separate 16-core host and
-launch checklist in [`qv-multicore.md`](qv-multicore.md). Keeping two stopped,
-EBS-backed instances is preferred to changing one instance between CPU
-families: it preserves each native build and makes accidental use of the wrong
-host easier to detect.
+The scripts record the exact instance, AMI, region, availability zone, and boot
+ID. Before cloning, expect Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`.
 
 ## 2. Clone and choose a data branch
 
 ```bash
 git clone https://github.com/unitaryfoundation/clifft-bench.git
 cd clifft-bench
-git switch -c data/current-tools-$(date -u +%Y%m%d)
+git switch -c data/release-$(date -u +%Y%m%d)
 ```
 
 Do not pull, edit tracked files, or change commits between placements.
 
-## 3. Bootstrap one campaign
-
-Choose `clifft-history-v1`, `current-tools-v1`, or `qv-multicore-v1`:
+## 3. Bootstrap the release campaign
 
 ```bash
-export CLIFFT_BENCH_CAMPAIGN=current-tools-v1
+export CLIFFT_BENCH_CAMPAIGN=release-v1
 ./scripts/ec2/bootstrap.sh "$CLIFFT_BENCH_CAMPAIGN"
 ```
 
-Bootstrap installs only the controller into `.venv`. Every declared
-tool/version is installed into a separate ignored environment under
-`.campaign-envs/` using its checked-in resolved lock. Installation and import
-are outside the timed region. SymFT is compiled natively on this fixed host.
+Bootstrap installs the controller into `.venv`. Each implementation used by
+the release manifest is installed into a separate ignored environment under
+`.campaign-envs/` using the lock recorded with its software identity.
+Installation and import checks are outside the timed region.
 
-The QV bootstrap builds Clifft 0.9.0 and installs the generator plus three
-isolated external-simulator environments. This setup is outside every timed
-case and persists while the QV instance is stopped.
-
-Inspect the declared number of placements before starting:
+Inspect the collection settings before starting:
 
 ```bash
-jq '.collection' campaigns/"$CLIFFT_BENCH_CAMPAIGN"/*campaign.v1.json
+jq '.collection' campaigns/release-v1/run.v1.json
 ```
 
-The single-core QEC campaigns give every worker a declared 12 GiB Linux
-address-space ceiling. The request is embedded in each raw case and the
-applied ceiling is recorded after setup. Each complete run also has a campaign
-wall-clock timeout with a 30-second forced-kill fallback. These bounds protect
-the 16 GiB host while leaving memory for the controller and operating system.
-The separate QV campaign retains its own 10 GiB per-worker ceiling.
+Every worker receives the manifest's 12 GiB Linux address-space ceiling. The
+complete placement also has a wall-clock timeout with a 30-second forced-kill
+fallback.
 
-## 4. Collect a placement
+## 4. Collect each placement
 
 Choose a unique execution ID:
 
 ```bash
-export CLIFFT_BENCH_EXECUTION=current-tools-v1-202608
+export CLIFFT_BENCH_EXECUTION=release-v1-$(date -u +%Y%m%d)
 ./scripts/ec2/run-placement.sh \
   "$CLIFFT_BENCH_CAMPAIGN" \
   "$CLIFFT_BENCH_EXECUTION" \
   1
 ```
 
-Always start a new execution ID after changing the campaign or harness. Tool
-environments from an earlier attempt can be reused after bootstrap verifies
-them, but incomplete raw results from a different source commit cannot be
-mixed into the new execution.
+Run inside `tmux` if the SSH connection may close. The collector runs all cases
+serially on one logical CPU and writes one raw file under
+`~/clifft-bench-ec2-results/`. A case failure remains in that raw result; a
+launcher timeout or invalid result leaves an `.incomplete-*` directory.
 
-Run inside `tmux` if the SSH connection may close. The collector executes each
-campaign run and replica serially, pins every worker to one logical CPU, and
-spools completed raw files under `~/clifft-bench-ec2-results/`. A failed case
-or worker timeout remains in its schema-valid raw result and does not prevent
-the other cases from running. A launcher-level timeout, interruption, or
-invalid result leaves an `.incomplete-*` directory for diagnosis and is never
-silently promoted to a completed placement.
-
-When the command succeeds, stop the instance in the console. For a campaign
-with additional placements, start the same EBS-backed instance again and run
-the command with placement 2, then 3. The collector requires a distinct Linux
-boot ID and one unchanged instance/AMI/region/AZ/source identity.
+After success, stop the instance. Start the same EBS-backed instance again and
+collect placements 2 and 3. Each placement must have a distinct Linux boot ID.
 
 ## 5. Finalize and push
-
-After the last placement succeeds:
 
 ```bash
 ./scripts/ec2/finalize.sh \
@@ -119,9 +84,8 @@ After the last placement succeeds:
   "$CLIFFT_BENCH_EXECUTION"
 ```
 
-Finalization validates the complete execution, copies raw files into the
-repository, and generates the index, tables, and summary described in
-[`data-format.md`](data-format.md). Review the result before committing:
+Finalization copies raw files into the repository and generates the index and
+tables described in [data-format.md](data-format.md). Review before committing:
 
 ```bash
 git diff --stat
@@ -131,8 +95,6 @@ git commit --no-gpg-sign -m \
 git push -u origin HEAD
 ```
 
-A fine-grained GitHub token only needs repository contents write access for
-the push. The collector strips HTTP credentials from the Git remote before
-writing result metadata. Do not place AWS credentials on the benchmark
-instance. Stop the instance immediately after confirming the branch is visible
-on GitHub.
+A fine-grained GitHub token only needs repository contents write access. The
+collector strips HTTP credentials from the recorded Git remote. Stop the
+instance after confirming the branch is visible on GitHub.
