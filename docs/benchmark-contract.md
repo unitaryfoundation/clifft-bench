@@ -119,9 +119,11 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-Two distinct quantities are recorded:
+Three distinct quantities are recorded:
 
-- `batch_size`: the simulator's internal number of shots processed together;
+- `batch_size`: the configured internal lane capacity;
+- `batch_size_effective`: the maximum lanes used by one public call, capped by
+  `shots_per_call`;
 - `shots_per_call`: attempted shots requested by one public API call.
 
 Official throughput configurations use a fixed explicit numeric batch size for
@@ -131,13 +133,32 @@ as `1`, `32`, `256`, `1024`, and `2048`. The fastest observed size is committed
 to the run manifest and reused without retuning for later runs or releases on
 the same corpus and hardware epoch. These spot checks are a one-time engineering
 choice, not a separate benchmark campaign or automatic tuning system. Final
-results record the fixed size as `batch_size_effective` and identify the public
-call granularity separately as `shots_per_call`.
+results retain the configured `batch_size` and record the per-call effective
+size separately as `batch_size_effective`.
 
 Clifft 0.9.0 and earlier predate its batching API and retain their historical
 scalar manifests. Existing SymFT measurements supply its fixed per-workload
 choices; the Clifft choices are made once when a release containing batching is
 available. Published results remain unchanged as historical evidence.
+
+The provisional Clifft choices for the first batching-capable campaign are:
+
+| Workload | Shots per call | Batch size |
+|---|---:|---:|
+| Cultivation d3 | 100,000 | 2048 |
+| Cultivation d5 | 20,000 | 1 |
+| Distillation | 100,000 | 1024 |
+| Surface d7/r7 | 100,000 | 2048 |
+| Coherent d3/r1 | 100,000 | 256 |
+| Coherent d3/r3 | 100,000 | 256 |
+| Coherent d5/r1 | 10,000 | 1 |
+| Coherent d5/r5 | 1 | 1 |
+
+These values came from one-core postselected aggregate-count spot checks at
+Clifft commit `8ae0f5dc` on an AMD EPYC 9554P. A short confirmation using the
+final Clifft build on the named AWS reference host is required before the values
+are copied into an official run manifest; after that they remain fixed for the
+corpus and hardware epoch.
 
 A large-batch throughput result is not a single-circuit execution-time result.
 Cross-mode tool comparisons are intentional end-to-end configuration

@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 
 from clifft_bench.manifest import load_suite
-from clifft_bench.runner import SEED_REPETITION_STRIDE, run_suite
+from clifft_bench.runner import SEED_REPETITION_STRIDE, _effective_batch_size, run_suite
 from clifft_bench.schema import validate_document
 
 
@@ -124,6 +124,12 @@ def _write_fixture_suite(
     run_path = tmp_path / "run.json"
     _write(run_path, run)
     return run_path, run, software
+
+
+def test_effective_batch_size_is_capped_by_shots_per_call() -> None:
+    metadata = {"effective_batch_size": 2048}
+    assert _effective_batch_size(metadata, 8) == 8
+    assert _effective_batch_size(metadata, 4096) == 2048
 
 
 def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> None:

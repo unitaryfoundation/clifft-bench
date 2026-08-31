@@ -228,6 +228,13 @@ def _summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _effective_batch_size(
+    runtime_metadata: dict[str, Any], shots_per_call: int
+) -> int:
+    capacity = int(runtime_metadata["effective_batch_size"])
+    return min(capacity, shots_per_call)
+
+
 def _select_cases(suite: Suite, pattern: str | None) -> list[Case]:
     if pattern is None:
         return list(suite.cases)
@@ -334,9 +341,12 @@ def run_suite(
                         result["execution"]["threads_effective"] = setup["runtime_metadata"][
                             "threads"
                         ]
-                        result["execution"]["batch_size_effective"] = setup["runtime_metadata"][
-                            "effective_batch_size"
-                        ]
+                        result["execution"]["batch_size_effective"] = (
+                            _effective_batch_size(
+                                setup["runtime_metadata"],
+                                int(case.definition["shots_per_call"]),
+                            )
+                        )
                         result["simulator"]["dependencies"] = setup["dependencies"]
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
