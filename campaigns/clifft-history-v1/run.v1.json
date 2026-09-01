@@ -59,7 +59,7 @@
     "request_timeout_seconds": 1800,
     "warmup_shots": 1,
     "correctness_shots": 8,
-    "min_sample_seconds": 10,
+    "min_sample_seconds": 30,
     "repetitions": 3
   },
   "variants": [

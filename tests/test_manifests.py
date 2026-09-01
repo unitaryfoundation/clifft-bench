@@ -43,7 +43,7 @@ def test_release_manifest_expands_named_variants() -> None:
     }
 
 
-def test_history_manifest_runs_each_release_on_the_same_workloads() -> None:
+def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:
     suite = load_suite(ROOT / "campaigns/clifft-history-v1/run.v1.json")
 
     versions = {
@@ -59,15 +59,19 @@ def test_history_manifest_runs_each_release_on_the_same_workloads() -> None:
     }
     assert len(suite.cases) == 72
     assert {case.implementation.definition["version"] for case in suite.cases} == versions
-    workload_sets = {
+    case_signatures = {
         case.definition["variant_id"]: {
-            member.workload.id
+            (
+                member.workload.id,
+                member.definition["shots_per_call"],
+                tuple(sorted(member.definition["execution"].items())),
+            )
             for member in suite.cases
             if member.definition["variant_id"] == case.definition["variant_id"]
         }
         for case in suite.cases
     }
-    assert len({frozenset(items) for items in workload_sets.values()}) == 1
+    assert len({frozenset(items) for items in case_signatures.values()}) == 1
 
 
 def test_smoke_suite_exercises_symft_batch_calibration() -> None:
