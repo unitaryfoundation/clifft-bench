@@ -178,6 +178,113 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
     assert prepared.sample(10, 7).attempted_shots == 10
 
 
+def test_clifft_legacy_interface_shims_threads_passes_and_peak_width(
+    tmp_path: Path, monkeypatch
+) -> None:
+    artifact = tmp_path / "circuit.stim"
+    artifact.write_text("M 0\n")
+    hir = SimpleNamespace(
+        num_qubits=1,
+        num_measurements=1,
+        num_detectors=0,
+        num_observables=1,
+    )
+    program = SimpleNamespace(
+        num_qubits=1,
+        num_measurements=1,
+        num_detectors=0,
+        num_observables=1,
+        active_k_history=[1, 4, 2],
+    )
+    calls = []
+
+    def manager(label):
+        return SimpleNamespace(run=lambda value: calls.append((label, value)))
+
+    fake_clifft = SimpleNamespace(
+        set_num_threads=lambda threads: calls.append(("threads", threads)),
+        get_num_threads=lambda: 1,
+        parse=lambda text: text,
+        trace=lambda circuit: hir,
+        default_hir_pass_manager=lambda: manager("hir"),
+        default_bytecode_pass_manager=lambda: manager("bytecode"),
+        lower=lambda actual_hir, postselection_mask: program,
+        version=lambda: "0.1.0",
+        svm_backend=lambda: "scalar",
+    )
+    monkeypatch.setitem(sys.modules, "clifft", fake_clifft)
+
+    prepared = ClifftAdapter().prepare(
+        artifact_path=artifact,
+        workload={
+            "semantics": {
+                "observable_index": 0,
+                "postselect_all_detectors": False,
+                "reference_convention": "raw-record-parity",
+            }
+        },
+        execution={
+            "batch_enabled": False,
+            "batch_size": 1,
+            "sample_chunk_shots": 0,
+        },
+    )
+
+    assert ("threads", 1) in calls
+    assert ("hir", hir) in calls
+    assert ("bytecode", program) in calls
+    assert prepared.runtime_metadata["peak_active_width"] == 4
+    assert prepared.runtime_metadata["sampling_backend"] == "scalar"
+
+
+def test_clifft_symbolic_interface_needs_no_legacy_module_hooks(
+    tmp_path: Path, monkeypatch
+) -> None:
+    artifact = tmp_path / "circuit.stim"
+    artifact.write_text("M 0\n")
+    hir = SimpleNamespace(
+        num_qubits=1,
+        num_measurements=1,
+        num_detectors=0,
+        num_observables=1,
+    )
+    program = SimpleNamespace(
+        num_qubits=1,
+        num_measurements=1,
+        num_detectors=0,
+        num_observables=1,
+        peak_active_width=3,
+    )
+    fake_clifft = SimpleNamespace(
+        parse=lambda text: text,
+        trace=lambda circuit: hir,
+        default_hir_pass_manager=lambda: SimpleNamespace(run=lambda value: None),
+        lower=lambda actual_hir, postselection_mask: program,
+        version=lambda: "0.9.0",
+    )
+    monkeypatch.setitem(sys.modules, "clifft", fake_clifft)
+
+    prepared = ClifftAdapter().prepare(
+        artifact_path=artifact,
+        workload={
+            "semantics": {
+                "observable_index": 0,
+                "postselect_all_detectors": False,
+                "reference_convention": "raw-record-parity",
+            }
+        },
+        execution={
+            "batch_enabled": False,
+            "batch_size": 1,
+            "sample_chunk_shots": 0,
+        },
+    )
+
+    assert prepared.runtime_metadata["threads"] == 1
+    assert prepared.runtime_metadata["peak_active_width"] == 3
+    assert prepared.runtime_metadata["sampling_backend"] == "symbolic-coordinate"
+
+
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(
     tmp_path: Path, monkeypatch
 ) -> None:

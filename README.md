@@ -32,6 +32,10 @@ single recurring campaign definition. It currently retains the last known
 Clifft and SymFT versions as a working template; update its `clifft-current`
 and `clifft-previous` variants before the next collection.
 
+[`campaigns/clifft-history-v1/`](campaigns/clifft-history-v1/) is an optional,
+one-off backfill that reruns representative 0.x releases together under the
+current contract. It does not change the 1.x baseline or recurring campaign.
+
 ## Other questions and experiments
 
 Less-frequent questions do not extend the recurring campaign format or core
@@ -73,6 +77,7 @@ See the full [benchmark contract](docs/benchmark-contract.md),
 | Path | Purpose |
 |---|---|
 | `campaigns/release-v1/` | The single recurring release campaign |
+| `campaigns/clifft-history-v1/` | Optional one-off 0.x history backfill |
 | `manifests/` | Software identities, workloads, and the developer smoke run |
 | `environments/` | Direct requirements and resolved Linux locks |
 | `workloads/circuits/` | Immutable circuit artifacts and licenses |

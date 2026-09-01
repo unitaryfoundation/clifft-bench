@@ -18,6 +18,7 @@ ROOT = repository_root()
         "manifests/software.v1.json",
         "manifests/run-smoke.v1.json",
         "campaigns/release-v1/run.v1.json",
+        "campaigns/clifft-history-v1/run.v1.json",
     ],
 )
 def test_checked_in_manifests_validate(relative: str) -> None:
@@ -40,6 +41,37 @@ def test_release_manifest_expands_named_variants() -> None:
         "clifft",
         "symft",
     }
+
+
+def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:
+    suite = load_suite(ROOT / "campaigns/clifft-history-v1/run.v1.json")
+
+    versions = {
+        "0.1.0",
+        "0.2.0",
+        "0.3.0",
+        "0.4.1",
+        "0.5.0",
+        "0.6.0",
+        "0.7.0",
+        "0.8.0",
+        "0.9.0",
+    }
+    assert len(suite.cases) == 72
+    assert {case.implementation.definition["version"] for case in suite.cases} == versions
+    case_signatures = {
+        case.definition["variant_id"]: {
+            (
+                member.workload.id,
+                member.definition["shots_per_call"],
+                tuple(sorted(member.definition["execution"].items())),
+            )
+            for member in suite.cases
+            if member.definition["variant_id"] == case.definition["variant_id"]
+        }
+        for case in suite.cases
+    }
+    assert len({frozenset(items) for items in case_signatures.values()}) == 1
 
 
 def test_smoke_suite_exercises_symft_batch_calibration() -> None:

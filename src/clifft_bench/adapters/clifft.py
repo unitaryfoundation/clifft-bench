@@ -74,6 +74,8 @@ class ClifftAdapter(Adapter):
                 "a positive integer batch size with batching enabled"
             )
 
+        # Clifft 0.1-0.7 use module-level thread controls. They were removed
+        # in 0.8; later releases are scalar unless a per-call budget is passed.
         if hasattr(clifft, "set_num_threads"):
             clifft.set_num_threads(1)
             if int(clifft.get_num_threads()) != 1:
@@ -89,10 +91,14 @@ class ClifftAdapter(Adapter):
         clifft.default_hir_pass_manager().run(hir)
         mask = [1] * int(hir.num_detectors) if postselect else []
         program = clifft.lower(hir, postselection_mask=mask)
+        # The bytecode pass API exists through 0.7. Clifft 0.8 replaced that
+        # backend with a symbolic program optimized during HIR lowering.
         if hasattr(clifft, "default_bytecode_pass_manager"):
             clifft.default_bytecode_pass_manager().run(program)
         compile_seconds = time.perf_counter() - compile_started
 
+        # The symbolic backend reports the peak directly; older bytecode
+        # programs expose the full active-width history instead.
         active_history = list(getattr(program, "active_k_history", []))
         peak_active_width = getattr(program, "peak_active_width", None)
         if peak_active_width is None:

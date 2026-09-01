@@ -1,7 +1,7 @@
 # Benchmark contract
 
-This contract governs the recurring single-core QEC release campaign.
-One-off studies under `experiments/` define their own contracts.
+This contract governs the official single-core QEC campaigns under
+`campaigns/`. One-off studies under `experiments/` define their own contracts.
 
 ## Question and logical work
 
