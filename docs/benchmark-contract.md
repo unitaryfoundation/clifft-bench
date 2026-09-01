@@ -50,7 +50,8 @@ worker requests one logical CPU and receives a single-thread environment:
 Linux affinity is applied with `sched_setaffinity` and the outcome is recorded.
 Official workers receive the campaign's 12 GiB address-space ceiling, leaving
 headroom on the 16 GiB reference host. The requested ceiling is embedded in the
-raw result.
+raw result, the applied `RLIMIT_AS` is recorded after setup, and finalization
+rejects a mismatch.
 
 The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
 `seed`, and execution repetition `r` begins at

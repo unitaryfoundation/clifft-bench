@@ -24,6 +24,7 @@ def test_aggregate_sample_sums_adapter_timings_without_retaining_each_call(
         min_seconds=0.25,
         seed=10,
         postselect=False,
+        max_api_calls=100,
     )
 
     assert sample["api_calls"] == 3

@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+import re
+import shutil
+import subprocess
+
+import pytest
+
 from clifft_bench.schema import repository_root
 
 
@@ -16,6 +22,7 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "git remote get-url origin" in placement
     assert "usage: $0 CAMPAIGN_ID EXECUTION_ID PLACEMENT" in placement
     assert "this boot ID is already represented" in placement
+    assert "existing execution instance ID" in placement
     assert "AMI_ID REGION AVAILABILITY_ZONE" not in placement
     assert "require_clean_checkout" in bootstrap
     assert '"${VERSION_ID:-}" == "24.04"' in bootstrap
@@ -37,6 +44,34 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "results/$campaign_id/$execution_id" in finalize
     assert "run_status == 1" in placement
     assert "runner-study" not in bootstrap + placement + finalize
+
+
+def test_bootstrap_extracts_the_declared_symft_install_environment() -> None:
+    if shutil.which("jq") is None:
+        pytest.skip("jq is not installed")
+    root = repository_root()
+    bootstrap = (root / "scripts/ec2/bootstrap.sh").read_text()
+    match = re.search(r"^install_environment_query='([^']+)'$", bootstrap, re.MULTILINE)
+    assert match is not None
+
+    completed = subprocess.run(
+        [
+            "jq",
+            "-r",
+            "--arg",
+            "id",
+            "symft-0.1.0-9ec5790",
+            match.group(1),
+            str(root / "manifests/software.v1.json"),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert set(completed.stdout.splitlines()) == {
+        "SYMFT_PY_ENABLE_CUDA\t0",
+        "SYMFT_PY_NATIVE\t1",
+    }
 
 
 def test_ec2_playbook_documents_storage_security_and_manual_control() -> None:

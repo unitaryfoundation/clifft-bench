@@ -11,8 +11,8 @@ warmup counts, an out-of-band correctness check, every raw timing sample, and a
 robust summary. The effective request deadline is recorded with the execution
 configuration. The single-core campaign's requested memory ceiling is recorded
 in the same block, and the worker reports the applied ceiling in setup runtime
-metadata. Error cases preserve their exact failure phase and message without
-fabricating throughput.
+metadata. Official finalization verifies both values. Error cases preserve
+their exact failure phase and message without fabricating throughput.
 
 Per-call adapter timing dictionaries are summed into
 `adapter_timing_totals` for each sample, preventing fast single-shot loops from

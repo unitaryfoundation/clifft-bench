@@ -76,6 +76,34 @@ def test_batch_calibration_requires_batch_enabled_throughput_case(tmp_path: Path
         load_suite(run_path)
 
 
+def test_official_implementations_require_unique_python_variables(
+    tmp_path: Path,
+) -> None:
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    software = copy.deepcopy(suite.software_document)
+    implementations = {item["id"]: item for item in software["implementations"]}
+    implementations["clifft-0.8.0"]["python_executable_env"] = implementations[
+        "clifft-0.9.0"
+    ]["python_executable_env"]
+    for implementation in implementations.values():
+        environment = implementation.get("environment")
+        if environment is not None:
+            environment["requirements"] = str(
+                (suite.software_path.parent / environment["requirements"]).resolve()
+            )
+    software_path = tmp_path / "software.json"
+    software_path.write_text(json.dumps(software))
+
+    run = copy.deepcopy(suite.run)
+    run["workloads_manifest"] = str(suite.workloads_path)
+    run["software_manifest"] = str(software_path)
+    run_path = tmp_path / "run.json"
+    run_path.write_text(json.dumps(run))
+
+    with pytest.raises(SchemaValidationError, match="share python executable variable"):
+        load_suite(run_path)
+
+
 def test_environment_locks_pin_every_requirement() -> None:
     for requirements_path in sorted((ROOT / "environments").glob("*.txt")):
         requirements = [

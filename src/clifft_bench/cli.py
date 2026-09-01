@@ -102,7 +102,7 @@ def _list(run_manifest: Path, as_json: bool) -> int:
     else:
         for row in rows:
             print(
-                f"{row['case_id']}: workload={row['workload']} "
+                f"{row['case_id']}: variant={row['variant']} workload={row['workload']} "
                 f"implementation={row['implementation']} mode={row['mode']} "
                 f"batch={row['batch_size']} shots/call={row['shots_per_call']}"
             )

@@ -22,6 +22,7 @@ def _suite():
         ),
         run={
             "profile_id": "test-campaign",
+            "classification": "official",
             "hardware_epoch": "test-epoch",
             "reference_host": {"instance_type": "m7a.xlarge"},
             "collection": {
@@ -47,6 +48,7 @@ def _case(template: dict, *, variant: str, rate: float) -> dict:
     case["variant_id"] = variant
     case["simulator"]["implementation_id"] = variant
     case["execution"]["memory_limit_bytes"] = 1 << 30
+    case["setup"]["runtime_metadata"]["address_space_limit_bytes"] = 1 << 30
     if variant == "candidate":
         case["execution"]["batch_enabled"] = True
         case["execution"]["batch_size"] = 32
@@ -129,6 +131,32 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
             execution_id="test-execution",
             raw_paths=[raw_path],
             output_dir=tmp_path / "rejected-memory-limit",
+        )
+
+    changed["cases"][0]["execution"]["memory_limit_bytes"] = 1 << 30
+    changed["cases"][0]["setup"]["runtime_metadata"][
+        "address_space_limit_bytes"
+    ] = None
+    raw_path.write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="worker memory limit does not match"):
+        finalize_execution(
+            _suite(),
+            execution_id="test-execution",
+            raw_paths=[raw_path],
+            output_dir=tmp_path / "rejected-applied-memory-limit",
+        )
+
+
+def test_finalize_rejects_smoke_manifest(tmp_path: Path) -> None:
+    suite = _suite()
+    suite.run["classification"] = "smoke"
+
+    with pytest.raises(ValueError, match="only official run manifests"):
+        finalize_execution(
+            suite,
+            execution_id="test-execution",
+            raw_paths=[],
+            output_dir=tmp_path,
         )
 
 

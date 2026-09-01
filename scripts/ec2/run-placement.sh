@@ -77,6 +77,24 @@ source_repository="$(sanitize_remote_url "$(git remote get-url origin)")"
 shopt -s nullglob
 existing_raw=("$execution_dir"/placement-*/raw/*-raw.json)
 for path in "${existing_raw[@]}"; do
+  check_value "existing execution campaign" "$campaign_id" \
+    "$(jq -er '.run.profile_id' "$path")"
+  check_value "existing execution source commit" "$source_commit" \
+    "$(jq -er '.runner.suite_source.commit' "$path")"
+  check_value "existing execution clean source" "false" \
+    "$(jq -er '.runner.suite_source.dirty' "$path")"
+  check_value "existing execution instance type" "$instance_type" \
+    "$(jq -er '.runner.cloud.instance_type' "$path")"
+  check_value "existing execution instance ID" "$instance_id" \
+    "$(jq -er '.runner.cloud.instance_id' "$path")"
+  check_value "existing execution AMI" "$image_id" \
+    "$(jq -er '.runner.cloud.image_id' "$path")"
+  check_value "existing execution region" "$region" \
+    "$(jq -er '.runner.cloud.region' "$path")"
+  check_value "existing execution availability zone" "$availability_zone" \
+    "$(jq -er '.runner.cloud.availability_zone' "$path")"
+  check_value "existing execution lifecycle" "$lifecycle" \
+    "$(jq -er '.runner.cloud.lifecycle' "$path")"
   [[ "$(jq -er '.runner.cloud.boot_id' "$path")" != "$boot_id" ]] || \
     fail "this boot ID is already represented; stop/start before a new placement"
 done

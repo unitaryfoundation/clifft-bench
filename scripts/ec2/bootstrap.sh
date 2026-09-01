@@ -38,6 +38,7 @@ python3 -m venv .venv
 environment_root="$repo_root/.campaign-envs/$campaign_id"
 software_relative="$(jq -er '.software_manifest' "$campaign_path")"
 software_path="$(cd "$(dirname "$campaign_path")" && realpath "$software_relative")"
+install_environment_query='.implementations[] | select(.id == $id) | (.environment.install_environment // {}) | to_entries[] | [.key,.value] | @tsv'
 while IFS= read -r implementation_id; do
   environment_path="$environment_root/$implementation_id"
   requirements_relative="$(jq -er --arg id "$implementation_id" \
@@ -47,15 +48,16 @@ while IFS= read -r implementation_id; do
   python3 -m venv "$environment_path"
   "$environment_path/bin/python" -m pip install --upgrade pip
 
+  install_environment_tsv="$(
+    jq -r --arg id "$implementation_id" \
+      "$install_environment_query" \
+      "$software_path"
+  )"
   install_environment=()
   while IFS=$'\t' read -r key value; do
+    [[ -n "$key" ]] || continue
     install_environment+=("$key=$value")
-  done < <(
-    jq -r --arg id "$implementation_id" \
-      '.implementations[] | select(.id == $id) | \
-       (.environment.install_environment // {}) | to_entries[] | [.key,.value] | @tsv' \
-      "$software_path"
-  )
+  done <<<"$install_environment_tsv"
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip install --no-deps \
       -r "$requirements_path"

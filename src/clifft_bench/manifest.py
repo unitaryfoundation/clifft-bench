@@ -205,6 +205,7 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
 
     if run["classification"] == "official":
         used_implementations = {case.implementation.id: case.implementation for case in cases}
+        environment_variables: dict[str, str] = {}
         for implementation in used_implementations.values():
             environment = implementation.definition.get("environment")
             variable = implementation.definition.get("python_executable_env")
@@ -212,6 +213,13 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 raise SchemaValidationError(
                     f"official implementation {implementation.id!r} has no install environment"
                 )
+            variable = str(variable)
+            if variable in environment_variables:
+                raise SchemaValidationError(
+                    f"official implementations {environment_variables[variable]!r} and "
+                    f"{implementation.id!r} share python executable variable {variable!r}"
+                )
+            environment_variables[variable] = implementation.id
             requirements = (software_path.parent / environment["requirements"]).resolve()
             if not requirements.is_file():
                 raise SchemaValidationError(

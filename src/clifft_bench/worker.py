@@ -86,7 +86,7 @@ def aggregate_sample(
     min_seconds: float,
     seed: int,
     postselect: bool,
-    max_api_calls: int = 100_000_000,
+    max_api_calls: int,
 ) -> dict[str, Any]:
     total = Counts(0, 0, 0, 0)
     calls = 0

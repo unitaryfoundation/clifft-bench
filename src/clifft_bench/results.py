@@ -331,6 +331,17 @@ def _validate_execution(
                     f"expected {expected_memory_limit_bytes}, received "
                     f"{observed_memory_limit!r}"
                 )
+            setup = case.get("setup")
+            if setup is not None:
+                applied_memory_limit = setup["runtime_metadata"].get(
+                    "address_space_limit_bytes"
+                )
+                if applied_memory_limit != expected_memory_limit_bytes:
+                    raise ValueError(
+                        "worker memory limit does not match the campaign: "
+                        f"expected {expected_memory_limit_bytes}, received "
+                        f"{applied_memory_limit!r}"
+                    )
         placement, _ = _placement_and_replica(result)
         placements[placement].append(result)
 
@@ -367,6 +378,8 @@ def finalize_execution(
     raw_paths: list[Path],
     output_dir: Path,
 ) -> dict[str, Any]:
+    if suite.run["classification"] != "official":
+        raise ValueError("only official run manifests can be finalized")
     resolved_paths = sorted(path.resolve() for path in raw_paths)
     results = _validate_execution(suite, resolved_paths)
     case_rows = _case_rows(suite, execution_id, results)
