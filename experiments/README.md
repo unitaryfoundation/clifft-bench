@@ -6,12 +6,15 @@ with its own environment, measurement notes, raw output, and plotting code.
 It should not add commands, schemas, or branches to the recurring release
 workflow unless at least two real experiments need the same mechanism.
 
+[`qv/`](qv/) contains the standalone Quantum Volume paper refresh. It carries
+its own locked environment, runner, validator, results directory, plotter, and
+EC2 instructions without adding experiment concepts to the core CLI.
+
 ## Quantum Volume and multicore scaling
 
 The former integrated Quantum Volume campaign was removed with the 0.x result
-archive. A future rerun should be built here around the question being asked at
-that time, rather than preserving a general QV subsystem between infrequent
-runs.
+archive. The replacement under [`qv/`](qv/) is deliberately a purpose-built
+refresh of the paper experiment rather than a general QV subsystem.
 
 A QV study should record at least:
 
