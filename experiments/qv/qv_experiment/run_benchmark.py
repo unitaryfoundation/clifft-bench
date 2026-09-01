@@ -32,9 +32,11 @@ PAPER_SOURCE = {
     "commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
 }
 CLIFFT_SOURCE = {
-    "version": "0.9.0",
+    "release_version": "0.9.0",
+    "artifact_version": "0.9.0",
+    "artifact_kind": "release",
     "commit": "87175b513b8d944955102230b9c7931be1570ef2",
-    "build": {
+    "requested_build": {
         "CLIFFT_MAX_QUBITS": "64",
         "CLIFFT_OPENMP": "ON",
         "CLIFFT_CPU_BASELINE": "native",
@@ -80,6 +82,30 @@ def package_versions() -> dict[str, str]:
         except PackageNotFoundError:
             versions[distribution] = "missing"
     return versions
+
+
+def clifft_runtime_identity() -> dict[str, str]:
+    import clifft
+
+    return {
+        "distribution_version": version("clifft"),
+        "runtime_version": str(clifft.version()),
+        "cpu_baseline": str(getattr(clifft, "CPU_BASELINE", "unknown")),
+    }
+
+
+def validate_official_clifft(identity: dict[str, str]) -> None:
+    expected_version = str(CLIFFT_SOURCE["artifact_version"])
+    errors = []
+    for key in ("distribution_version", "runtime_version"):
+        if identity[key] != expected_version:
+            errors.append(f"{key} is {identity[key]!r}, expected {expected_version!r}")
+    if identity["cpu_baseline"] != "native":
+        errors.append(
+            f"cpu_baseline is {identity['cpu_baseline']!r}, expected 'native'"
+        )
+    if errors:
+        raise ValueError("official QV collection has the wrong Clifft build: " + "; ".join(errors))
 
 
 def parse_integers(value: str) -> list[int]:
@@ -133,7 +159,7 @@ def worker_environment(threads: int) -> dict[str, str]:
     return environment
 
 
-def parse_worker_output(stdout: str) -> dict[str, Any]:
+def parse_worker_output(stdout: str, *, returncode: int) -> dict[str, Any]:
     for line in reversed(stdout.splitlines()):
         try:
             document = json.loads(line)
@@ -145,9 +171,17 @@ def parse_worker_output(stdout: str) -> dict[str, Any]:
         "status": "error",
         "error": {
             "type": "WorkerOutputError",
-            "message": "worker produced no JSON result",
+            "message": f"worker produced no JSON result (exit code {returncode})",
         },
     }
+
+
+def output_tail(output: str | bytes | None) -> list[str]:
+    if output is None:
+        return []
+    if isinstance(output, bytes):
+        output = output.decode(errors="replace")
+    return output.strip().splitlines()[-10:]
 
 
 def write_json(path: Path, document: dict[str, Any]) -> None:
@@ -186,13 +220,22 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]+", args.execution_id):
-        raise SystemExit("execution id must contain only letters, digits, dots, dashes, or underscores")
+        raise SystemExit(
+            "execution id must contain only letters, digits, dots, dashes, or underscores"
+        )
     if args.threads < 1 or args.memory_limit_gib <= 0 or args.timeout_seconds < 1:
         raise SystemExit("threads, memory limit, and timeout must be positive")
 
     source = git_metadata(REPOSITORY_ROOT)
     if args.require_clean and source["dirty"]:
         raise SystemExit("official collection requires a clean checkout")
+
+    clifft_identity = clifft_runtime_identity()
+    if args.require_ec2:
+        try:
+            validate_official_clifft(clifft_identity)
+        except ValueError as error:
+            raise SystemExit(str(error)) from error
 
     cloud = ec2_identity(required=args.require_ec2)
     if args.require_ec2 and cloud.get("instanceType") != "c8i.8xlarge":
@@ -224,7 +267,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "started_at": utc_now(),
         "finished_at": None,
         "paper_source": PAPER_SOURCE,
-        "clifft_source": CLIFFT_SOURCE,
+        "clifft_source": {**CLIFFT_SOURCE, "observed": clifft_identity},
         "packages": package_versions(),
         "git": source,
         "system": system_metadata(),
@@ -279,7 +322,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     timeout=args.timeout_seconds,
                     env=worker_environment(args.threads),
                 )
-                response = parse_worker_output(completed.stdout)
+                response = parse_worker_output(
+                    completed.stdout,
+                    returncode=completed.returncode,
+                )
                 if completed.returncode != 0 and response["status"] == "success":
                     response = {
                         "status": "error",
@@ -288,14 +334,18 @@ def main(argv: Sequence[str] | None = None) -> int:
                             "message": f"worker exited with code {completed.returncode}",
                         },
                     }
-                response["stderr_tail"] = completed.stderr.strip().splitlines()[-10:]
-            except subprocess.TimeoutExpired:
+                response["worker_returncode"] = completed.returncode
+                response["stderr_tail"] = output_tail(completed.stderr)
+            except subprocess.TimeoutExpired as error:
                 response = {
                     "status": "timeout",
                     "error": {
                         "type": "WorkerTimeout",
                         "message": f"case exceeded {args.timeout_seconds} seconds",
                     },
+                    "worker_returncode": None,
+                    "stdout_tail": output_tail(error.stdout),
+                    "stderr_tail": output_tail(error.stderr),
                 }
 
             raw = {

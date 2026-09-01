@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import time
 from collections.abc import Callable
@@ -165,6 +166,15 @@ RUNNERS: dict[
 }
 
 
+def validate_timings(timings: dict[str, float]) -> None:
+    execution_seconds = float(timings["execution_seconds"])
+    if not math.isfinite(execution_seconds) or execution_seconds <= 0:
+        raise ValueError(
+            "simulator returned a non-positive or non-finite execution time: "
+            f"{execution_seconds!r}"
+        )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("simulator", choices=sorted(RUNNERS))
@@ -186,6 +196,7 @@ def main() -> int:
             args.threads,
             args.seed,
         )
+        validate_timings(timings)
         print(
             json.dumps(
                 {

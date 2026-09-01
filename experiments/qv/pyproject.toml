@@ -26,7 +26,3 @@ extra-build-variables = { clifft = { CLIFFT_CPU_BASELINE = "native" } }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-
-[tool.ruff]
-line-length = 88
-target-version = "py312"

@@ -4,18 +4,48 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
+import math
 import statistics
 from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
 
 STYLES = {
-    "clifft": ("Clifft", "o", "-"),
-    "qiskit": ("Qiskit Aer", "s", "--"),
-    "qulacs": ("Qulacs", "^", "-."),
-    "qsim": ("qsim", "D", ":"),
-    "qrack": ("Qrack", "P", (0, (3, 1, 1, 1))),
+    "clifft": ("o", "-"),
+    "qiskit": ("s", "--"),
+    "qulacs": ("^", "-."),
+    "qsim": ("D", ":"),
+    "qrack": ("P", (0, (3, 1, 1, 1))),
 }
+DISPLAY_NAMES = {
+    "qiskit": "Qiskit Aer",
+    "qulacs": "Qulacs",
+    "qsim": "qsim",
+    "qrack": "Qrack",
+}
+
+
+def load_samples(execution_dir: Path) -> dict[tuple[str, int], list[float]]:
+    samples: dict[tuple[str, int], list[float]] = defaultdict(list)
+    with (execution_dir / "cases.csv").open(newline="") as stream:
+        for row in csv.DictReader(stream):
+            if row["status"] != "success":
+                continue
+            value = float(row["execution_seconds"])
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError(
+                    f"successful case {row['case_id']!r} has invalid execution time "
+                    f"{value!r}"
+                )
+            samples[(row["simulator"], int(row["qubits"]))].append(value)
+    return samples
+
+
+def clifft_display_name(execution_dir: Path) -> str:
+    metadata = json.loads((execution_dir / "metadata.json").read_text())
+    release_version = metadata["clifft_source"]["release_version"]
+    return f"Clifft {release_version}"
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -24,13 +54,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 
-    samples: dict[tuple[str, int], list[float]] = defaultdict(list)
-    with (args.execution_dir / "cases.csv").open(newline="") as stream:
-        for row in csv.DictReader(stream):
-            if row["status"] == "success":
-                samples[(row["simulator"], int(row["qubits"]))].append(
-                    float(row["execution_seconds"])
-                )
+    try:
+        samples = load_samples(args.execution_dir)
+    except ValueError as error:
+        raise SystemExit(str(error)) from error
     if not samples:
         raise SystemExit("execution contains no successful cases")
 
@@ -46,9 +73,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         medians = [
             statistics.median(samples[(simulator, width)]) for width in widths
         ]
-        label, marker, line_style = STYLES.get(
-            simulator,
-            (simulator, "x", "-"),
+        marker, line_style = STYLES.get(simulator, ("x", "-"))
+        label = (
+            clifft_display_name(args.execution_dir)
+            if simulator == "clifft"
+            else DISPLAY_NAMES.get(simulator, simulator)
         )
         axis.plot(
             widths,

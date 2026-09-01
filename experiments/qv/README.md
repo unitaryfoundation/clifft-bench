@@ -22,16 +22,27 @@ The implementation preserves the paper question and timed regions:
   other simulators; and
 - median single-shot execution time plotted by width.
 
+These are intentionally the paper's asymmetric timing boundaries: Clifft is
+charged for compilation, while Qiskit transpilation and the Qulacs, qsim, and
+Qrack circuit preparation steps occur before their timers. The plot is not an
+equal end-to-end timing comparison.
+
 The default matrix has 180 serial cases. Qrack runs CPU-only with OpenCL
 disabled. This is simulator runtime scaling on QV circuits, not a measurement
 of a quantum device's Quantum Volume score.
 
 ## Provenance and outputs
 
-The paper source commit, exact dependency versions, Clifft build settings,
-source commit, system identity, EC2 identity, CPU set, boot ID, circuit digests,
-memory ceiling, worker metadata, and timing boundary are stored with every
-execution.
+The paper source commit, target Clifft release, exact measured Clifft artifact,
+source commit, requested build settings, observed runtime version and CPU
+baseline, dependency versions, system identity, EC2 identity, CPU set, boot ID,
+circuit digests, address-space ceiling, worker metadata, and timing boundary
+are stored with every execution.
+
+For release-candidate measurements, raw metadata retains the candidate version
+and commit while plots use the target release version. Present the data as a
+final release only when its tag points to the measured candidate commit;
+otherwise rerun or label the result as release-candidate evidence.
 
 Each run creates a new, non-overwriting directory:
 
@@ -44,11 +55,12 @@ results/EXECUTION_ID/
   qv-scaling.png
 ```
 
-A failed or timed-out case is retained in `cases.csv` and its raw JSON. A
-future Clifft refresh should update the pinned Clifft source and other current
-tool pins as appropriate, then collect a new execution directory. Existing
-results remain immutable; this experiment does not need to carry old Clifft
-versions in the same run.
+A failed or timed-out case is retained in `cases.csv` and its raw JSON. If the
+controller is interrupted, `metadata.json` remains at `status: "running"` and
+the directory is incomplete evidence. A future Clifft refresh should update
+the pinned Clifft source and other current tool pins as appropriate, then
+collect a new execution directory. Existing results remain immutable; this
+experiment does not need to carry old Clifft versions in the same run.
 
 ## Local validation
 
@@ -59,6 +71,9 @@ uv sync --locked --extra test --extra plot
 uv run python -m qv_experiment.validate
 uv run pytest
 ```
+
+The validator compares the Clifft, Qulacs, and qsim statevectors with Qiskit's
+reference statevector before any performance collection.
 
 A small local smoke run can use fewer widths, seeds, tools, and threads:
 
@@ -123,11 +138,36 @@ uv run python -c \
 uv run python -m qv_experiment.validate
 ```
 
-The expected Clifft values are version `0.9.0` and a native CPU baseline. The
-locked project builds the pinned source commit with a 64-qubit limit and
-OpenMP enabled; those settings are also recorded in every execution's metadata.
+The expected Clifft values are version `0.9.0` and a native CPU baseline until
+this experiment is updated to the intended release candidate. Official
+collection checks both values before creating its output directory. The locked
+project requests a 64-qubit limit and OpenMP from the pinned source build;
+those requested settings and the observable runtime identity are recorded
+separately.
 
-### 3. Collect the experiment
+### 3. Pilot the largest case
+
+Before the official matrix, run one QV28 seed across all tools with the same
+16 cores and 10 GiB virtual-address-space ceiling:
+
+```bash
+uv run python -m qv_experiment \
+  --execution-id qv28-pilot \
+  --output-root /tmp/clifft-qv-pilot \
+  --qubits 28 \
+  --seeds 42 \
+  --require-ec2 \
+  --require-clean \
+  --threads 16 \
+  --memory-limit-gib 10 \
+  --timeout-seconds 600
+```
+
+Inspect every raw result and its `peak_rss_bytes`. If a tool fails because of
+virtual address-space reservations despite adequate resident-memory headroom,
+stop and revise the declared ceiling before collecting official evidence.
+
+### 4. Collect the experiment
 
 Run inside `tmux` so a dropped SSH connection does not stop collection:
 
@@ -146,7 +186,7 @@ The run is serial and writes each raw case immediately. It returns nonzero
 after completing the matrix if any simulator failed or timed out; inspect the
 stored evidence instead of deleting it.
 
-### 4. Plot, review, and publish
+### 5. Plot, review, and publish
 
 ```bash
 uv run python -m qv_experiment.plot "results/$CLIFFT_QV_EXECUTION"
@@ -157,6 +197,8 @@ git commit --no-gpg-sign -m "data: add QV execution $CLIFFT_QV_EXECUTION"
 git push -u origin HEAD
 ```
 
-Review `metadata.json`, every non-successful row in `cases.csv`, the raw
-worker records, circuit digests, and the plot before opening the data PR. Stop
-the instance after the branch is visible on GitHub.
+Require `metadata.json` to say `complete` or `complete-with-failures`, never
+`running`. Review every non-successful row in `cases.csv`, worker exit codes and
+stderr tails, raw worker records, circuit digests, peak RSS values, and the plot
+before opening the data PR. Stop the instance after the branch is visible on
+GitHub.
