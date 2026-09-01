@@ -9,17 +9,62 @@ from types import SimpleNamespace
 
 import pytest
 
-from clifft_bench.manifest import Campaign
 from clifft_bench.results import _comparison_rows, finalize_execution
 from clifft_bench.schema import repository_root, validate_path
 
 
-def _result(tmp_path: Path, *, run_id: str, case_id: str, rate: float) -> Path:
-    document = validate_path(repository_root() / "examples/result.v1.json")
-    document = copy.deepcopy(document)
-    document["run"]["id"] = str(uuid.uuid5(uuid.NAMESPACE_URL, run_id))
+def _suite():
+    return SimpleNamespace(
+        run_path=repository_root() / "campaigns/release-v1/run.v1.json",
+        cases=(
+            SimpleNamespace(id="workload--baseline"),
+            SimpleNamespace(id="workload--candidate"),
+        ),
+        run={
+            "profile_id": "test-campaign",
+            "classification": "official",
+            "hardware_epoch": "test-epoch",
+            "reference_host": {"instance_type": "m7a.xlarge"},
+            "collection": {
+                "placements": 1,
+                "replicas_per_placement": 1,
+                "run_timeout_minutes": 1,
+                "memory_limit_gib": 1,
+            },
+            "comparisons": [
+                {
+                    "id": "candidate-vs-baseline",
+                    "baseline_variant": "baseline",
+                    "candidate_variants": ["candidate"],
+                }
+            ],
+        },
+    )
+
+
+def _case(template: dict, *, variant: str, rate: float) -> dict:
+    case = copy.deepcopy(template)
+    case["case_id"] = f"workload--{variant}"
+    case["variant_id"] = variant
+    case["simulator"]["implementation_id"] = variant
+    case["execution"]["memory_limit_bytes"] = 1 << 30
+    case["setup"]["runtime_metadata"]["address_space_limit_bytes"] = 1 << 30
+    if variant == "candidate":
+        case["execution"]["batch_enabled"] = True
+        case["execution"]["batch_size"] = 32
+        case["execution"]["batch_size_effective"] = 32
+        case["execution"]["shots_per_call"] = 64
+    case["samples"][0]["throughput_attempted_shots_per_second"] = rate
+    case["summary"]["median_attempted_shots_per_second"] = rate
+    case["summary"]["min_attempted_shots_per_second"] = rate
+    case["summary"]["max_attempted_shots_per_second"] = rate
+    return case
+
+
+def _result(tmp_path: Path) -> Path:
+    document = copy.deepcopy(validate_path(repository_root() / "examples/result.v1.json"))
+    document["run"]["id"] = str(uuid.uuid4())
     document["run"]["profile_id"] = "test-campaign"
-    document["run"]["campaign_run_id"] = run_id
     document["run"]["workflow"]["run_attempt"] = "1.1"
     document["runner"]["suite_source"] = {"commit": "1" * 40, "dirty": False}
     document["runner"]["cloud"] = {
@@ -32,102 +77,59 @@ def _result(tmp_path: Path, *, run_id: str, case_id: str, rate: float) -> Path:
         "lifecycle": "on-demand",
         "boot_id": "boot-example",
     }
-    case = document["cases"][0]
-    case["case_id"] = case_id
-    case["simulator"]["implementation_id"] = run_id
-    case["execution"]["memory_limit_bytes"] = 1 << 30
-    case["setup"]["runtime_metadata"]["address_space_limit_bytes"] = 1 << 30
-    if run_id == "candidate":
-        case["execution"]["batch_enabled"] = True
-        case["execution"]["batch_size"] = 32
-        case["execution"]["batch_size_effective"] = 32
-        case["execution"]["shots_per_call"] = 64
-    case["samples"][0]["throughput_attempted_shots_per_second"] = rate
-    case["summary"]["median_attempted_shots_per_second"] = rate
-    case["summary"]["min_attempted_shots_per_second"] = rate
-    case["summary"]["max_attempted_shots_per_second"] = rate
-    path = tmp_path / f"{run_id}-raw.json"
+    template = document["cases"][0]
+    document["cases"] = [
+        _case(template, variant="baseline", rate=100.0),
+        _case(template, variant="candidate", rate=125.0),
+    ]
+    path = tmp_path / "release-p01-r01-raw.json"
     path.write_text(json.dumps(document))
     return path
 
 
 def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) -> None:
-    root = repository_root()
-    run_path = root / "manifests/run-smoke.v1.json"
-    campaign = Campaign(
-        path=root / "campaigns/current-tools-v1/campaign.v1.json",
-        document={
-            "id": "test-campaign",
-            "hardware_epoch": "test-epoch",
-            "collection": {
-                "placements": 1,
-                "replicas_per_placement": 1,
-                "run_timeout_minutes": 1,
-                "memory_limit_gib": 1,
-            },
-            "comparisons": [
-                {
-                    "id": "candidate-vs-baseline",
-                    "baseline_run": "baseline",
-                    "candidate_runs": ["candidate"],
-                }
-            ],
-            "runs": [
-                {"id": "baseline", "run_manifest": "baseline.json"},
-                {"id": "candidate", "run_manifest": "candidate.json"},
-            ],
-        },
-        suites=(SimpleNamespace(run_path=run_path), SimpleNamespace(run_path=run_path)),
-    )
-    raw_paths = [
-        _result(tmp_path, run_id="baseline", case_id="workload--baseline", rate=100.0),
-        _result(tmp_path, run_id="candidate", case_id="workload--candidate", rate=125.0),
-    ]
+    raw_path = _result(tmp_path)
     output_dir = tmp_path / "finalized"
 
     index = finalize_execution(
-        campaign,
+        _suite(),
         execution_id="test-execution",
-        raw_paths=raw_paths,
+        raw_paths=[raw_path],
         output_dir=output_dir,
     )
 
     validate_path(output_dir / "index.json")
     assert index["campaign_id"] == "test-campaign"
     assert index["placements"][0]["raw_results"] == [
-        "raw/baseline-raw.json",
-        "raw/candidate-raw.json",
+        "raw/release-p01-r01-raw.json"
     ]
     with (output_dir / "comparisons.csv").open(newline="") as stream:
         comparisons = list(csv.DictReader(stream))
     assert len(comparisons) == 1
     assert float(comparisons[0]["ratio_candidate_over_baseline"]) == 1.25
-    assert comparisons[0]["baseline_batch_enabled"] == "false"
-    assert comparisons[0]["candidate_batch_enabled"] == "true"
+    assert comparisons[0]["baseline_variant_id"] == "baseline"
+    assert comparisons[0]["candidate_variant_id"] == "candidate"
     assert comparisons[0]["candidate_batch_size_effective"] == "32"
-    assert comparisons[0]["candidate_shots_per_call"] == "64"
-    assert not (output_dir / "samples.csv").exists()
-    assert not (output_dir / "summary.json").exists()
 
-    changed = json.loads(raw_paths[1].read_text())
-    changed["runner"]["cloud"]["instance_id"] = "i-different"
-    raw_paths[1].write_text(json.dumps(changed))
-    with pytest.raises(ValueError, match="fixed launch configuration"):
+    changed = json.loads(raw_path.read_text())
+    changed["runner"]["cloud"]["instance_type"] = "c8i.8xlarge"
+    raw_path.write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="expected instance type"):
         finalize_execution(
-            campaign,
+            _suite(),
             execution_id="test-execution",
-            raw_paths=raw_paths,
-            output_dir=tmp_path / "rejected",
+            raw_paths=[raw_path],
+            output_dir=tmp_path / "rejected-instance",
         )
 
-    changed["runner"]["cloud"]["instance_id"] = "i-example"
+    changed["runner"]["cloud"]["instance_type"] = "m7a.xlarge"
     changed["cases"][0]["execution"]["memory_limit_bytes"] = None
-    raw_paths[1].write_text(json.dumps(changed))
+    raw_path.write_text(json.dumps(changed))
     with pytest.raises(ValueError, match="memory limit does not match"):
         finalize_execution(
-            campaign,
+            _suite(),
             execution_id="test-execution",
-            raw_paths=raw_paths,
+            raw_paths=[raw_path],
             output_dir=tmp_path / "rejected-memory-limit",
         )
 
@@ -135,43 +137,40 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
     changed["cases"][0]["setup"]["runtime_metadata"][
         "address_space_limit_bytes"
     ] = None
-    raw_paths[1].write_text(json.dumps(changed))
+    raw_path.write_text(json.dumps(changed))
     with pytest.raises(ValueError, match="worker memory limit does not match"):
         finalize_execution(
-            campaign,
+            _suite(),
             execution_id="test-execution",
-            raw_paths=raw_paths,
-            output_dir=tmp_path / "rejected-worker-memory-limit",
+            raw_paths=[raw_path],
+            output_dir=tmp_path / "rejected-applied-memory-limit",
         )
 
 
-def test_comparison_rejects_multiple_successful_cases_for_one_run_and_workload() -> None:
-    campaign = Campaign(
-        path=repository_root() / "campaigns/current-tools-v1/campaign.v1.json",
-        document={
-            "id": "test-campaign",
-            "hardware_epoch": "test-epoch",
-            "collection": {"placements": 1, "replicas_per_placement": 1},
-            "comparisons": [
-                {
-                    "id": "candidate-vs-baseline",
-                    "baseline_run": "baseline",
-                    "candidate_runs": ["candidate"],
-                }
-            ],
-        },
-        suites=(),
-    )
+def test_finalize_rejects_smoke_manifest(tmp_path: Path) -> None:
+    suite = _suite()
+    suite.run["classification"] = "smoke"
+
+    with pytest.raises(ValueError, match="only official run manifests"):
+        finalize_execution(
+            suite,
+            execution_id="test-execution",
+            raw_paths=[],
+            output_dir=tmp_path,
+        )
+
+
+def test_comparison_rejects_duplicate_variant_and_workload() -> None:
     rows = [
         {
             "status": "success",
-            "campaign_run_id": run_id,
+            "variant_id": variant,
             "placement": 1,
             "replica": 1,
             "workload_id": "workload",
         }
-        for run_id in ["baseline", "baseline", "candidate"]
+        for variant in ["baseline", "baseline", "candidate"]
     ]
 
     with pytest.raises(ValueError, match="multiple successful baseline cases"):
-        _comparison_rows(campaign, "execution", rows)
+        _comparison_rows(_suite(), "execution", rows)

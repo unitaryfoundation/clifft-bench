@@ -14,10 +14,6 @@ def load_adapter(name: str) -> Adapter:
         from clifft_bench.adapters.symft import SymftAdapter
 
         return SymftAdapter()
-    if name == "tsim":
-        from clifft_bench.adapters.tsim import TsimAdapter
-
-        return TsimAdapter()
     if name == "fixture":
         from clifft_bench.adapters.fixture import FixtureAdapter
 

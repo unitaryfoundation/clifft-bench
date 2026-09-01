@@ -15,25 +15,13 @@ placements rather than one over-precise scalar.
 Use these rules until real campaigns provide enough evidence to revise them:
 
 - treat paired changes at or below 1.1% as inconclusive;
-- use one placement for broad historical trends where small drift is acceptable;
 - use three stop/start placements for current absolute throughput;
 - cap each single-core worker at 12 GiB of address space, leaving host headroom;
 - record exact AMI, region/AZ, CPU model, kernel, dependencies, and boot ID;
 - never combine absolute numbers from different hardware epochs without an
   explicit boundary or a bridge measurement.
 
-GitHub-hosted, GitHub larger, and Ubicloud runners remain suitable for
-correctness CI or exploratory work, but were not stable enough to define the
-absolute-throughput reference series. Their raw commissioning files remain
-available in repository history rather than the active tree.
-
-## QV multicore host
-
-The less-frequent single-shot QV campaign uses a separate `c8i.8xlarge`
-hardware epoch with 16 physical cores, 32 logical CPUs, and 64 GiB RAM. It does
-not replace the `m7a.xlarge` QEC reference or make their absolute numbers
-comparable. It uses one placement, matching the original paper's single-host
-collection with three deterministic circuit seeds; the three-placement QEC
-absolute-throughput rule above does not apply to it. The QV launch settings,
-physical-core affinity policy, matrix, and two-stopped-instance convention are
-documented in [`qv-multicore.md`](qv-multicore.md).
+GitHub-hosted and other shared CI runners remain suitable for correctness or
+exploratory work, but do not define the absolute-throughput reference series.
+Their commissioning data remains available in repository history rather than
+the active tree.

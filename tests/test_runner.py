@@ -91,7 +91,7 @@ def _write_fixture_suite(
     cases = [
         {
             "id": identifier,
-            "pair_id": "fixture-pair",
+            "variant_id": identifier,
             "workload_id": "tiny-fixture",
             "implementation_id": identifier,
             "shots_per_call": 8,
@@ -108,12 +108,11 @@ def _write_fixture_suite(
         "schema_version": "clifft-bench/run/v1",
         "suite_version": "0.1.0",
         "profile_id": "fixture",
-        "run_id": "fixture",
         "classification": "smoke",
         "seed": 10,
         "workloads_manifest": "workloads.json",
         "software_manifest": "software.json",
-        "resources": {"logical_cpu": None, "concurrent_cases": 1, "threads_per_case": 1},
+        "resources": {"logical_cpu": None},
         "measurement": {
             "setup_timeout_seconds": 5,
             "request_timeout_seconds": request_timeout_seconds,
@@ -156,7 +155,7 @@ def test_calibrated_result_records_selected_numeric_batch_size() -> None:
     }
 
 
-def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> None:
+def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     run_path, run, software = _write_fixture_suite(
         tmp_path, parameters={"write_native_stdout": True}
     )
@@ -167,7 +166,7 @@ def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> 
     sequences = [
         [sample["sequence_index"] for sample in case["samples"]] for case in result["cases"]
     ]
-    assert sequences == [[0, 3], [1, 2]]
+    assert sequences == [[0, 1], [2, 3]]
     assert all(case["correctness"]["status"] == "passed" for case in result["cases"])
     for case in result["cases"]:
         assert case["execution"]["memory_limit_bytes"] == 1 << 30
@@ -176,8 +175,9 @@ def test_isolated_workers_emit_valid_interleaved_raw_results(tmp_path: Path) -> 
             1 << 30,
         }
         samples = sorted(case["samples"], key=lambda sample: sample["repetition"])
-        assert samples[1]["seed_first"] - samples[0]["seed_first"] == (
-            SEED_REPETITION_STRIDE
+        assert (
+            samples[1]["seed_first"] - samples[0]["seed_first"]
+            == SEED_REPETITION_STRIDE
         )
 
     bad_software = json.loads(json.dumps(software))
@@ -226,12 +226,3 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
             output_path=tmp_path / "invalid-timeout.json",
             min_sample_seconds=5,
         )
-
-
-def test_repetition_seed_ranges_must_fit_unsigned_32_bit_space(tmp_path: Path) -> None:
-    run_path, run, _ = _write_fixture_suite(tmp_path)
-    run["measurement"]["repetitions"] = 50
-    _write(run_path, run)
-
-    with pytest.raises(ValueError, match="unsigned 32-bit benchmark seed space"):
-        run_suite(load_suite(run_path), output_path=tmp_path / "invalid-seeds.json")

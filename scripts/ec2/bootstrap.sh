@@ -13,7 +13,6 @@ fi
 campaign_id="$1"
 validate_identifier "campaign id" "$campaign_id"
 campaign_path="$(campaign_manifest "$campaign_id")"
-campaign_schema="$(jq -er '.schema_version' "$campaign_path")"
 
 require_ec2_linux
 arm_shutdown_guard
@@ -37,32 +36,31 @@ python3 -m venv .venv
 .venv/bin/clifft-bench validate "$campaign_path"
 
 environment_root="$repo_root/.campaign-envs/$campaign_id"
-while IFS=$'\t' read -r environment_id requirements_relative; do
-  environment_path="$environment_root/$environment_id"
-  requirements_path="$(dirname "$campaign_path")/$requirements_relative"
-  echo "Installing isolated environment: $environment_id"
+software_relative="$(jq -er '.software_manifest' "$campaign_path")"
+software_path="$(cd "$(dirname "$campaign_path")" && realpath "$software_relative")"
+install_environment_query='.implementations[] | select(.id == $id) | (.environment.install_environment // {}) | to_entries[] | [.key,.value] | @tsv'
+while IFS= read -r implementation_id; do
+  environment_path="$environment_root/$implementation_id"
+  requirements_relative="$(jq -er --arg id "$implementation_id" \
+    '.implementations[] | select(.id == $id) | .environment.requirements' "$software_path")"
+  requirements_path="$(dirname "$software_path")/$requirements_relative"
+  echo "Installing isolated environment: $implementation_id"
   python3 -m venv "$environment_path"
   "$environment_path/bin/python" -m pip install --upgrade pip
 
+  install_environment_tsv="$(
+    jq -r --arg id "$implementation_id" \
+      "$install_environment_query" \
+      "$software_path"
+  )"
   install_environment=()
   while IFS=$'\t' read -r key value; do
+    [[ -n "$key" ]] || continue
     install_environment+=("$key=$value")
-  done < <(
-    jq -r --arg id "$environment_id" \
-      '.environments[] | select(.id == $id) | (.install_environment // {}) | to_entries[] | [.key,.value] | @tsv' \
-      "$campaign_path"
-  )
-  install_options=()
-  while IFS= read -r setting; do
-    install_options+=(--config-settings "$setting")
-  done < <(
-    jq -r --arg id "$environment_id" \
-      '.environments[] | select(.id == $id) | (.pip_config_settings // [])[]' \
-      "$campaign_path"
-  )
+  done <<<"$install_environment_tsv"
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip install --no-deps \
-      "${install_options[@]}" -r "$requirements_path"
+      -r "$requirements_path"
   env "${install_environment[@]}" \
     "$environment_path/bin/python" -m pip check
 
@@ -73,29 +71,11 @@ while IFS=$'\t' read -r environment_id requirements_relative; do
       'import importlib, sys; importlib.import_module(sys.argv[1])' \
       "$import_module"
   done < <(
-    jq -r --arg id "$environment_id" \
-      '.environments[] | select(.id == $id) | .import_modules[]' \
-      "$campaign_path"
+    jq -r --arg id "$implementation_id" \
+      '.implementations[] | select(.id == $id) | .environment.import_modules[]' \
+      "$software_path"
   )
-
-  if [[ "$campaign_schema" == "clifft-bench/qv-campaign/v1" ]]; then
-    while IFS=$'\t' read -r distribution expected_version; do
-      actual_version="$(
-        "$environment_path/bin/python" -c \
-          'from importlib.metadata import version; import sys; print(version(sys.argv[1]))' \
-          "$distribution"
-      )"
-      [[ "$actual_version" == "$expected_version" ]] || \
-        fail "$environment_id expected $distribution $expected_version, found $actual_version"
-    done < <(
-      jq -r --arg id "$environment_id" \
-        '.runs[] | select(.environment_id == $id) | \
-         select(.expected_distribution_version != null) | \
-         [.distribution,.expected_distribution_version] | @tsv' \
-        "$campaign_path" | sort -u
-    )
-  fi
-done < <(jq -r '.environments[] | [.id,.requirements] | @tsv' "$campaign_path")
+done < <(jq -r '[.variants[].implementation_id] | unique[]' "$campaign_path")
 
 echo
 echo "Bootstrap complete for $campaign_id. The shutdown guard remains armed."

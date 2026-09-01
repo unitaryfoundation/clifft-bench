@@ -121,7 +121,6 @@ def aggregate_sample(
         "throughput_attempted_shots_per_second": total.attempted_shots / elapsed,
         "seed_first": seed,
         "seed_last": seed + calls - 1,
-        "adapter_call_timings": [],
         "adapter_timing_totals": dict(sorted(adapter_timing_totals.items())),
     }
 

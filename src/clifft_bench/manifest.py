@@ -62,17 +62,6 @@ class Suite:
     cases: tuple[Case, ...]
 
 
-@dataclass(frozen=True)
-class Campaign:
-    path: Path
-    document: dict[str, Any]
-    suites: tuple[Suite, ...]
-
-    @property
-    def id(self) -> str:
-        return str(self.document["id"])
-
-
 def _unique_by_id(items: list[dict[str, Any]], label: str) -> dict[str, dict[str, Any]]:
     indexed: dict[str, dict[str, Any]] = {}
     for item in items:
@@ -95,11 +84,12 @@ def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
     if "cases" in run:
         return list(run["cases"])
     definitions = []
-    for workload in run["matrix"]["workloads"]:
-        for variant in run["matrix"]["variants"]:
+    for variant in _unique_by_id(run["variants"], "variant").values():
+        for workload in variant["workloads"]:
             definitions.append(
                 {
                     "id": f"{workload['workload_id']}--{variant['id']}",
+                    "variant_id": variant["id"],
                     "workload_id": workload["workload_id"],
                     "implementation_id": variant["implementation_id"],
                     "shots_per_call": workload["shots_per_call"],
@@ -198,6 +188,45 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 )
         cases.append(Case(definition, workload, implementation))
 
+    variants = {str(case.definition["variant_id"]) for case in cases}
+    for comparison in _unique_by_id(run.get("comparisons", []), "comparison").values():
+        baseline = str(comparison["baseline_variant"])
+        candidates = {str(item) for item in comparison["candidate_variants"]}
+        if baseline in candidates:
+            raise SchemaValidationError(
+                f"comparison {comparison['id']!r} repeats its baseline as a candidate"
+            )
+        unknown = sorted({baseline, *candidates} - variants)
+        if unknown:
+            raise SchemaValidationError(
+                f"comparison {comparison['id']!r} references unknown variants: "
+                + ", ".join(unknown)
+            )
+
+    if run["classification"] == "official":
+        used_implementations = {case.implementation.id: case.implementation for case in cases}
+        environment_variables: dict[str, str] = {}
+        for implementation in used_implementations.values():
+            environment = implementation.definition.get("environment")
+            variable = implementation.definition.get("python_executable_env")
+            if environment is None or variable is None:
+                raise SchemaValidationError(
+                    f"official implementation {implementation.id!r} has no install environment"
+                )
+            variable = str(variable)
+            if variable in environment_variables:
+                raise SchemaValidationError(
+                    f"official implementations {environment_variables[variable]!r} and "
+                    f"{implementation.id!r} share python executable variable {variable!r}"
+                )
+            environment_variables[variable] = implementation.id
+            requirements = (software_path.parent / environment["requirements"]).resolve()
+            if not requirements.is_file():
+                raise SchemaValidationError(
+                    f"implementation {implementation.id!r} requirements do not exist: "
+                    f"{requirements}"
+                )
+
     return Suite(
         run_path=run_path,
         run=run,
@@ -207,81 +236,3 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
         software_document=software_document,
         cases=tuple(cases),
     )
-
-
-def load_campaign(path: Path, *, verify_artifacts: bool = True) -> Campaign:
-    path = path.resolve()
-    document = validate_path(path)
-    run_definitions = _unique_by_id(document["runs"], "campaign run")
-    suites = tuple(
-        load_suite(
-            (path.parent / str(definition["run_manifest"])).resolve(),
-            verify_artifacts=verify_artifacts,
-        )
-        for definition in run_definitions.values()
-    )
-    for suite in suites:
-        if document["id"] != suite.run["profile_id"]:
-            raise SchemaValidationError(
-                f"campaign id {document['id']!r} does not match run profile "
-                f"{suite.run['profile_id']!r}"
-            )
-    declared_run_ids = set(run_definitions)
-    manifest_run_ids = {str(suite.run["run_id"]) for suite in suites}
-    if declared_run_ids != manifest_run_ids:
-        raise SchemaValidationError(
-            "campaign run ids do not match their run manifests: "
-            f"declared {sorted(declared_run_ids)}, manifests {sorted(manifest_run_ids)}"
-        )
-    suite_versions = {str(suite.run["suite_version"]) for suite in suites}
-    if len(suite_versions) != 1:
-        raise SchemaValidationError("campaign run manifests must share one suite_version")
-    comparisons = _unique_by_id(document["comparisons"], "campaign comparison")
-    for comparison in comparisons.values():
-        if comparison["baseline_run"] in comparison["candidate_runs"]:
-            raise SchemaValidationError(
-                f"comparison {comparison['id']!r} repeats its baseline as a candidate"
-            )
-        referenced = {str(comparison["baseline_run"]), *comparison["candidate_runs"]}
-        unknown = sorted(referenced - declared_run_ids)
-        if unknown:
-            raise SchemaValidationError(
-                f"comparison {comparison['id']!r} references unknown runs: "
-                + ", ".join(unknown)
-            )
-
-    environments = _unique_by_id(document["environments"], "campaign environment")
-    variables: dict[str, str] = {}
-    for identifier, environment in environments.items():
-        variable = str(environment["python_executable_env"])
-        if variable in variables:
-            raise SchemaValidationError(
-                f"campaign environments {variables[variable]!r} and {identifier!r} "
-                f"share python executable variable {variable!r}"
-            )
-        variables[variable] = identifier
-        requirements = (path.parent / str(environment["requirements"])).resolve()
-        if not requirements.is_file():
-            raise SchemaValidationError(
-                f"campaign environment {identifier!r} requirements do not exist: "
-                f"{requirements}"
-            )
-
-    required_variables = {
-        str(case.implementation.definition["python_executable_env"])
-        for suite in suites
-        for case in suite.cases
-        if case.implementation.definition.get("python_executable_env")
-    }
-    missing = sorted(required_variables - set(variables))
-    if missing:
-        raise SchemaValidationError(
-            "campaign does not define environments for: " + ", ".join(missing)
-        )
-    unused = sorted(set(variables) - required_variables)
-    if unused:
-        raise SchemaValidationError(
-            "campaign defines unused environment variables for: " + ", ".join(unused)
-        )
-
-    return Campaign(path=path, document=document, suites=suites)
