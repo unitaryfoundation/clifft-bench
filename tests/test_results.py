@@ -238,7 +238,7 @@ def test_finalize_requires_complete_calibration_evidence(tmp_path: Path) -> None
 
     candidate["execution"]["batch_size"] = 1
     raw_path.write_text(json.dumps(document))
-    with pytest.raises(ValueError, match="execution.batch_size does not match"):
+    with pytest.raises(ValueError, match="does not record selected numeric batch_size"):
         finalize_execution(
             _suite(calibrated_candidate=True),
             execution_id="test-execution",

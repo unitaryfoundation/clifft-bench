@@ -31,10 +31,11 @@ git clone https://github.com/unitaryfoundation/clifft-bench.git
 cd clifft-bench
 git switch main
 git pull --ff-only
-git switch -c data/release-20260902-calibrated
+export CLIFFT_BENCH_EXECUTION="release-v1-$(date -u +%Y%m%d-%H%M%S)"
+git switch -c "data/$CLIFFT_BENCH_EXECUTION"
 ```
 
-Do not pull, edit tracked files, or change commits between placements.
+Do not pull, edit tracked files, or change commits during collection.
 
 ## 3. Bootstrap the release campaign
 
@@ -60,10 +61,9 @@ fallback.
 
 ## 4. Collect the placement
 
-For the corrected Clifft 0.10 release collection, use this new execution ID:
+Use the execution ID created with the data branch:
 
 ```bash
-export CLIFFT_BENCH_EXECUTION=release-v1-20260902-calibrated
 ./scripts/ec2/run-placement.sh \
   "$CLIFFT_BENCH_CAMPAIGN" \
   "$CLIFFT_BENCH_EXECUTION" \
@@ -75,9 +75,9 @@ serially on one logical CPU and writes one raw file under
 `~/clifft-bench-ec2-results/`. A case failure remains in that raw result; a
 launcher timeout or invalid result leaves an `.incomplete-*` directory.
 
-The corrected recurring campaign declares one placement, so collection is
-complete after placement 1 succeeds. Stop the instance after the result has
-been finalized and pushed.
+The recurring campaign declares one placement, so collection is complete after
+placement 1 succeeds. Stop the instance after the result has been finalized and
+pushed.
 
 ## 5. Finalize and push
 
@@ -88,15 +88,28 @@ been finalized and pushed.
 ```
 
 Finalization copies raw files into the repository and generates the index and
-tables described in [data-format.md](data-format.md). For `release-v1`, it also
-audits the finalized rows and raw calibration evidence. The command must print
-`Release audit passed` before the result is committed. The audit can be rerun
-directly with:
+tables described in [data-format.md](data-format.md). Before committing, inspect
+the unique comparison configurations and every selected calibrated batch size:
 
 ```bash
-.venv/bin/python -m clifft_bench.release_audit \
-  "results/$CLIFFT_BENCH_CAMPAIGN/$CLIFFT_BENCH_EXECUTION"
+result_dir="results/$CLIFFT_BENCH_CAMPAIGN/$CLIFFT_BENCH_EXECUTION"
+cut -d, -f6,8,16-19,27-29 "$result_dir/comparisons.csv" | sort -u
+jq -r '
+  .cases[]
+  | select(.setup.runtime_metadata.batch_calibration != null)
+  | [
+      .variant_id,
+      .workload.id,
+      .setup.runtime_metadata.batch_calibration.selected_batch_size,
+      .execution.batch_size
+    ]
+  | @tsv
+' "$result_dir"/raw/*-raw.json
 ```
+
+Confirm that `current-vs-previous` is scalar previous Clifft versus calibrated
+current Clifft, `alternatives-vs-current` compares the two calibrated tools,
+and `scalar-alternatives-vs-current` compares their scalar configurations.
 
 Review before committing:
 

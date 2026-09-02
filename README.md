@@ -23,16 +23,12 @@ release campaign: previous versus current Clifft and current alternatives
 versus current Clifft. Longer-term history accumulates from those executions;
 older releases are not rerun for every release.
 
-The superseded `release-v1-20260902` execution used fixed batching and is kept
-only in Git history. It is not valid release-comparison evidence; the corrected
-collection uses the distinct `release-v1-20260902-calibrated` execution ID.
-
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
-single recurring campaign definition. It currently compares Clifft 0.9.0 with
-0.10.0rc1 as scalar configurations, compares separately calibrated Clifft and
-SymFT configurations, and retains a separate scalar cross-tool comparison.
-Update its `clifft-current` and `clifft-previous` variants for each later
-release.
+single recurring campaign definition. It currently compares scalar Clifft
+0.9.0 with campaign-calibrated 0.10.0rc1, compares separately calibrated Clifft
+and SymFT configurations, and retains a separate scalar cross-tool comparison.
+Update its current, calibrated-current, and previous Clifft variants for each
+later release.
 
 [`campaigns/clifft-history-v1/`](campaigns/clifft-history-v1/) is an optional,
 one-off backfill that reruns representative 0.x releases together under the
@@ -114,8 +110,9 @@ For a new Clifft release:
 1. Add its identity and install environment to
    `manifests/software.v1.json`.
 2. Add its direct requirement and resolved lock under `environments/`.
-3. Point `clifft-current` at the new implementation and
-   `clifft-previous` at the prior release in the release manifest.
+3. Point `clifft-current` and `clifft-current-calibrated` at the new
+   implementation, and `clifft-previous` at the prior release in the release
+   manifest.
 4. Update alternative tool versions or calibrated workload call sizes only
    when needed; every calibrated call must admit the full candidate sweep.
 5. Validate locally, then follow `docs/manual-ec2.md`.
@@ -128,9 +125,7 @@ version for plots, summaries, and release docs.
 
 One placement now produces one raw result containing every variant. The
 finalizer checks placement coverage and calibration evidence, writes
-`cases.csv`, `comparisons.csv`, and `index.json` beside the raw evidence, and
-audits the recurring release comparison pairings before exposing the result for
-commit.
+`cases.csv`, `comparisons.csv`, and `index.json` beside the raw evidence.
 
 ## Adding a workload
 

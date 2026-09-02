@@ -101,6 +101,12 @@ Cross-mode comparisons are configured-throughput comparisons, not claims of
 equal public-call granularity. Derived rows therefore carry both sides' mode,
 effective batch size, and shots per call.
 
+The recurring `current-vs-previous` comparison asks whether Clifft improved
+using the capabilities available in each release. It therefore compares the
+previous release's scalar configuration with the current release's calibrated
+configuration at the same `shots_per_call`. A separate scalar cross-tool
+comparison retains visibility into non-batched behavior.
+
 ## Correctness and identity
 
 Before timing, the worker checks circuit qubit, measurement, detector, and

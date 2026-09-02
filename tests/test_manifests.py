@@ -74,7 +74,7 @@ def test_release_manifest_expands_named_variants() -> None:
         "current-vs-previous": {
             "id": "current-vs-previous",
             "baseline_variant": "clifft-previous",
-            "candidate_variants": ["clifft-current"],
+            "candidate_variants": ["clifft-current-calibrated"],
         },
         "alternatives-vs-current": {
             "id": "alternatives-vs-current",
@@ -125,6 +125,12 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id, cases in calibrated_by_variant.items()
     }
     assert signatures["clifft-current-calibrated"] == signatures["symft-calibrated"]
+    previous_signature = {
+        (case.workload.id, case.definition["shots_per_call"])
+        for case in suite.cases
+        if case.definition["variant_id"] == "clifft-previous"
+    }
+    assert previous_signature == signatures["clifft-current-calibrated"]
 
 
 def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:

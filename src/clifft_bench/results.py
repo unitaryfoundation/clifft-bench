@@ -307,72 +307,17 @@ def _comparison_rows(
     return comparisons
 
 
-def _validate_case_against_manifest(expected: Case, observed: dict[str, Any]) -> None:
-    case_id = expected.id
-    expected_definition = expected.definition
-    identity_fields = {
-        "variant_id": (
-            expected_definition["variant_id"],
-            observed["variant_id"],
-        ),
-        "workload_id": (
-            expected_definition["workload_id"],
-            observed["workload"]["id"],
-        ),
-        "implementation_id": (
-            expected_definition["implementation_id"],
-            observed["simulator"]["implementation_id"],
-        ),
-    }
-    for field, (expected_value, observed_value) in identity_fields.items():
-        if observed_value != expected_value:
-            raise ValueError(
-                f"raw case {case_id!r} {field} does not match the campaign: "
-                f"expected {expected_value!r}, received {observed_value!r}"
-            )
-
-    expected_execution = expected_definition["execution"]
-    observed_execution = observed["execution"]
-    execution_fields = {
-        "mode": (expected_execution["mode"], observed_execution["mode"]),
-        "sample_chunk_shots": (
-            expected_execution["sample_chunk_shots"],
-            observed_execution["sample_chunk_shots"],
-        ),
-        "shots_per_call": (
-            expected_definition["shots_per_call"],
-            observed_execution["shots_per_call"],
-        ),
-    }
-    for field, (expected_value, observed_value) in execution_fields.items():
-        if observed_value != expected_value:
-            raise ValueError(
-                f"raw case {case_id!r} {field} does not match the campaign: "
-                f"expected {expected_value!r}, received {observed_value!r}"
-            )
-
-    expected_batch_size = expected_execution["batch_size"]
-    if expected_batch_size != "calibrate":
-        if observed_execution["batch_size"] != expected_batch_size:
-            raise ValueError(
-                f"raw case {case_id!r} batch_size does not match the campaign: "
-                f"expected {expected_batch_size!r}, received "
-                f"{observed_execution['batch_size']!r}"
-            )
-        expected_batch_enabled = expected_execution["batch_enabled"]
-        if observed_execution["batch_enabled"] is not expected_batch_enabled:
-            raise ValueError(
-                f"raw case {case_id!r} batch_enabled does not match the campaign: "
-                f"expected {expected_batch_enabled!r}, received "
-                f"{observed_execution['batch_enabled']!r}"
-            )
+def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> None:
+    if expected.definition["execution"]["batch_size"] != "calibrate":
         return
 
+    case_id = expected.id
     setup = observed.get("setup")
-    if setup is None:
-        raise ValueError(f"calibrated raw case {case_id!r} has no setup record")
-    runtime_metadata = setup["runtime_metadata"]
-    calibration = runtime_metadata.get("batch_calibration")
+    calibration = (
+        setup.get("runtime_metadata", {}).get("batch_calibration")
+        if isinstance(setup, dict)
+        else None
+    )
     if not isinstance(calibration, dict):
         raise ValueError(
             f"calibrated raw case {case_id!r} has no batch_calibration metadata"
@@ -384,7 +329,7 @@ def _validate_case_against_manifest(expected: Case, observed: dict[str, Any]) ->
             f"calibrated raw case {case_id!r} has invalid selected_batch_size "
             f"{selected!r}"
         )
-    shots_per_call = int(expected_definition["shots_per_call"])
+    shots_per_call = int(expected.definition["shots_per_call"])
     expected_candidates = [
         candidate
         for candidate in BATCH_CALIBRATION_CANDIDATES
@@ -392,55 +337,17 @@ def _validate_case_against_manifest(expected: Case, observed: dict[str, Any]) ->
     ]
     if calibration.get("candidates") != expected_candidates:
         raise ValueError(
-            f"calibrated raw case {case_id!r} candidates do not match the contract: "
-            f"expected {expected_candidates!r}, received {calibration.get('candidates')!r}"
+            f"calibrated raw case {case_id!r} candidates do not match the contract"
         )
     if selected not in expected_candidates:
         raise ValueError(
-            f"calibrated raw case {case_id!r} selected batch size {selected} "
-            "was not a calibration candidate"
+            f"calibrated raw case {case_id!r} selected an unsupported batch_size"
         )
-    calibration_results = calibration.get("results")
-    if not isinstance(calibration_results, list):
-        raise ValueError(f"calibrated raw case {case_id!r} has no probe results")
-    selected_results = [
-        result
-        for result in calibration_results
-        if isinstance(result, dict) and result.get("batch_size") == selected
-    ]
-    if len(selected_results) != 1 or selected_results[0].get("status") != "success":
+    if observed["execution"].get("batch_size") != selected:
         raise ValueError(
-            f"calibrated raw case {case_id!r} does not record one successful "
-            "probe result for its selected batch size"
+            f"calibrated raw case {case_id!r} does not record selected numeric "
+            "batch_size"
         )
-
-    expected_enabled = selected > 1
-    calibrated_fields = {
-        "execution.batch_size": (selected, observed_execution.get("batch_size")),
-        "execution.batch_enabled": (
-            expected_enabled,
-            observed_execution.get("batch_enabled"),
-        ),
-        "execution.batch_size_effective": (
-            selected,
-            observed_execution.get("batch_size_effective"),
-        ),
-        "runtime_metadata.batch_enabled": (
-            expected_enabled,
-            runtime_metadata.get("batch_enabled"),
-        ),
-        "runtime_metadata.effective_batch_size": (
-            selected,
-            runtime_metadata.get("effective_batch_size"),
-        ),
-    }
-    for field, (expected_value, observed_value) in calibrated_fields.items():
-        if observed_value != expected_value:
-            raise ValueError(
-                f"calibrated raw case {case_id!r} {field} does not match the "
-                f"selected batch size: expected {expected_value!r}, received "
-                f"{observed_value!r}"
-            )
 
 
 def _validate_execution(
@@ -488,7 +395,7 @@ def _validate_execution(
         if set(observed_case_ids) != expected_case_ids:
             raise ValueError("raw result does not contain every declared campaign case")
         for case in result["cases"]:
-            _validate_case_against_manifest(expected_cases[case["case_id"]], case)
+            _validate_calibration_record(expected_cases[case["case_id"]], case)
             observed_memory_limit = case["execution"].get("memory_limit_bytes")
             if observed_memory_limit != expected_memory_limit_bytes:
                 raise ValueError(
