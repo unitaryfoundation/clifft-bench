@@ -17,7 +17,7 @@ current cross-tool comparisons.
 
 The general reference-host requirements and safety checks are documented in
 [`docs/manual-ec2.md`](../../docs/manual-ec2.md). Use the same
-`m7a.xlarge` instance and keep one checkout commit fixed across all placements.
+`m7a.xlarge` instance and keep the checkout commit fixed through collection.
 
 ## Collect on EC2
 
@@ -45,12 +45,10 @@ verifies that every Clifft release imports. Run the first placement inside
   1
 ```
 
-Stop the instance after a successful placement, start the same EBS-backed
-instance again, and repeat for placements 2 and 3. Do not pull, edit tracked
-files, or change commits between placements. Each placement must record a
-different boot ID.
+This broad historical backfill uses one placement. Do not pull, edit tracked
+files, or change commits while it is running.
 
-Finalize after all three placements:
+Finalize after placement 1:
 
 ```bash
 ./scripts/ec2/finalize.sh \
