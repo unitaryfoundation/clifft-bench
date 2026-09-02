@@ -1,0 +1,28 @@
+[project]
+name = "clifft-qv-experiment"
+version = "0.1.0"
+description = "Standalone Quantum Volume paper refresh for Clifft"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "clifft @ git+https://github.com/unitaryfoundation/clifft.git@4440ecb71ab9b4922ba2f543e392fbab640cd248",
+    "numpy==2.5.2",
+    "ply==3.11",
+    "pyqrack==2.19.3",
+    "qiskit==2.5.2",
+    "qiskit-aer==0.17.2",
+    "qiskit-qrack-provider==1.12.0",
+    "qsimcirq==0.22.1",
+    "qulacs==0.6.14",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib==3.11.1"]
+test = ["pytest==9.1.1"]
+
+[tool.uv]
+package = false
+config-settings-package = { clifft = { "cmake.define.CLIFFT_MAX_QUBITS" = "64", "cmake.define.CLIFFT_OPENMP" = "ON" } }
+extra-build-variables = { clifft = { CLIFFT_CPU_BASELINE = "native" } }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
