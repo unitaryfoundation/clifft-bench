@@ -16,13 +16,11 @@ STYLES = {
     "qiskit": ("s", "--"),
     "qulacs": ("^", "-."),
     "qsim": ("D", ":"),
-    "qrack": ("P", (0, (3, 1, 1, 1))),
 }
 DISPLAY_NAMES = {
     "qiskit": "Qiskit Aer",
     "qulacs": "Qulacs",
     "qsim": "qsim",
-    "qrack": "Qrack",
 }
 
 

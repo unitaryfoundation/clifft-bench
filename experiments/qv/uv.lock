@@ -60,10 +60,8 @@ dependencies = [
     { name = "clifft" },
     { name = "numpy" },
     { name = "ply" },
-    { name = "pyqrack" },
     { name = "qiskit" },
     { name = "qiskit-aer" },
-    { name = "qiskit-qrack-provider" },
     { name = "qsimcirq" },
     { name = "qulacs" },
 ]
@@ -82,11 +80,9 @@ requires-dist = [
     { name = "matplotlib", marker = "extra == 'plot'", specifier = "==3.11.1" },
     { name = "numpy", specifier = "==2.5.2" },
     { name = "ply", specifier = "==3.11" },
-    { name = "pyqrack", specifier = "==2.19.3" },
     { name = "pytest", marker = "extra == 'test'", specifier = "==9.1.1" },
     { name = "qiskit", specifier = "==2.5.2" },
     { name = "qiskit-aer", specifier = "==0.17.2" },
-    { name = "qiskit-qrack-provider", specifier = "==1.12.0" },
     { name = "qsimcirq", specifier = "==0.22.1" },
     { name = "qulacs", specifier = "==0.6.14" },
 ]
@@ -485,21 +481,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pyqrack"
-version = "2.19.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/00/c0/d389c8d553c8dd8f3cd7b747245739143e170fb4cc193135b80db9bac2c7/pyqrack-2.19.3.tar.gz", hash = "sha256:ea13e352d64785c27ca3b439d699d351847882ffb56707a2d518a65205babe7b", size = 81269, upload-time = "2026-08-29T01:30:44.585Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/96/8beaf6a872a5a564d9ba87d9b0a45c11261a47528dc5e478c90fe2bb1487/pyqrack-2.19.3-py3-none-macosx_14_0_arm64.whl", hash = "sha256:f1b3710eaa89e3d7743d730604c34f7ecfdc6faa01aa42cabecdb377fb6fcdd4", size = 1961859, upload-time = "2026-08-29T01:29:51.855Z" },
-    { url = "https://files.pythonhosted.org/packages/31/a5/08dee72bc1f5c8c4fd508953b9fa32a36204cf6ce5903a1c9630a076e3dc/pyqrack-2.19.3-py3-none-macosx_15_0_arm64.whl", hash = "sha256:cc19df65423216a82370408d35721c738eb09994894df69494305d88d1f53317", size = 1940113, upload-time = "2026-08-29T01:29:53.794Z" },
-    { url = "https://files.pythonhosted.org/packages/de/15/9147215277003cfbe6d4910f26f26a019e53aa558067e20ca82360216e19/pyqrack-2.19.3-py3-none-macosx_15_0_x86_64.whl", hash = "sha256:6045975be5de884c169d83c9768c35cb70a74254a3a1b90f61830c67461609c8", size = 2133961, upload-time = "2026-08-29T01:29:55.916Z" },
-    { url = "https://files.pythonhosted.org/packages/99/ee/4134f0eb0db313938c5c978b9f0ed58b4b0649629a36e4e4de555faa630c/pyqrack-2.19.3-py3-none-manylinux_2_35_x86_64.whl", hash = "sha256:6b9dcf2ad8ed5c48b325e014d7787a48335436448148c652058d6074d0174529", size = 3763312, upload-time = "2026-08-29T01:29:58.691Z" },
-    { url = "https://files.pythonhosted.org/packages/df/11/dd134bfd5b3271716ea774d2446189a2b0706e0ecb90b1fb4e287222805c/pyqrack-2.19.3-py3-none-manylinux_2_39_x86_64.whl", hash = "sha256:e845c56a2cfaaf2b62db8db968332c7f7794b27347bdb7dc107fd712bd12e6f9", size = 3713204, upload-time = "2026-08-29T01:30:01.524Z" },
-    { url = "https://files.pythonhosted.org/packages/d9/97/56ac236e4fa05cd8e6381f378ec8e316645b36f0710deec42cec1c0a2e9e/pyqrack-2.19.3-py3-none-win_amd64.whl", hash = "sha256:5636bb4fb4fa57163b52506de134862a8dccb05b212d837e01f44a010b2d560e", size = 1021844, upload-time = "2026-08-29T01:30:03.368Z" },
-    { url = "https://files.pythonhosted.org/packages/b7/0c/e215251813799db7cabbd87cff9a9deb1f9dbf623b4bf30e898ca760ab7c/pyqrack-2.19.3-py313-none-android_16_arm64_v8a.whl", hash = "sha256:070916cfe4b2f904f9f873742f5846bfb8bc340caba02bd786522e0e98b0034b", size = 17062097, upload-time = "2026-08-29T01:29:48.946Z" },
-]
-
-[[package]]
 name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -578,21 +559,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/1c/ca/a1cd95daf75d09d2dc1744cde95d5d18fed61a0e4922788fb916a7cd8152/qiskit_aer-0.17.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2749e6027f67e1f6b9d328d2dda2d4bf926aebd3653edc62e94c45d8237294d8", size = 12376191, upload-time = "2025-09-17T13:54:38.092Z" },
     { url = "https://files.pythonhosted.org/packages/d6/69/e2f979e2fca054b0092fc52c46da050298513b9b03531305bc3f340c7669/qiskit_aer-0.17.2-cp313-cp313-win32.whl", hash = "sha256:c3ffd40a64bfcf8a6d10cbfdca8734d49ec57502fd70dc63aae9ed3819249dd6", size = 6922275, upload-time = "2025-09-17T13:54:40.024Z" },
     { url = "https://files.pythonhosted.org/packages/ae/91/195cb69d3af4359544939378879093764bd35d8abd7ac0de840bb5477d27/qiskit_aer-0.17.2-cp313-cp313-win_amd64.whl", hash = "sha256:b38c5dfdc6cb2bacac78a47b0df8247123051564007fdecedb8ffbd4256f0f09", size = 9563116, upload-time = "2025-09-17T13:54:42.061Z" },
-]
-
-[[package]]
-name = "qiskit-qrack-provider"
-version = "1.12.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "numpy" },
-    { name = "pandas" },
-    { name = "pyqrack" },
-    { name = "qiskit" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e2/db/b3b1e5619e417c2b4cf8f83328f40a2520f02d97670faec76a402ee59a81/qiskit_qrack_provider-1.12.0.tar.gz", hash = "sha256:42590488af34fdaf786f0e66ee32e50f5aeee5eaaaac5e912b6d88057fb3ea2e", size = 23676, upload-time = "2026-08-28T16:57:09.859Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/6d/368322e6cc39aced6fbe6fc443efa833dffed505175501bb914a2d438799/qiskit_qrack_provider-1.12.0-py3-none-any.whl", hash = "sha256:84c18b7acc78c930842098ccb0d9cbdebecadf7d54955fc5536ee14931d558b9", size = 32589, upload-time = "2026-08-28T16:57:08.757Z" },
 ]
 
 [[package]]
