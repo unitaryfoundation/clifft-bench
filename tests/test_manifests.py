@@ -66,6 +66,7 @@ def test_release_manifest_expands_named_variants() -> None:
 def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:
     suite = load_suite(ROOT / "campaigns/clifft-history-v1/run.v1.json")
 
+    assert suite.run["collection"]["placements"] == 1
     versions = {
         "0.1.0",
         "0.2.0",
