@@ -10,15 +10,10 @@ JSON, and summarized in derived CSV tables.
 
 ## Regular release questions
 
-The recurring release campaign answers three questions:
+The recurring release campaign answers two questions:
 
 1. Did the new Clifft release improve performance over the previous release?
 2. How does current Clifft compare with current near-Clifford alternatives?
-3. How has Clifft's workload-by-workload performance changed since the 1.x
-   benchmark baseline?
-
-The first two are answered on every release. The third accumulates from those
-same executions; it does not require a separate history campaign.
 
 ### Current status
 
