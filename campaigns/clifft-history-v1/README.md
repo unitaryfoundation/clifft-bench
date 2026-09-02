@@ -7,10 +7,13 @@ today; it does not reconstruct observations made at their original release
 dates.
 
 The selected versions are 0.1.0, 0.2.0, 0.3.0, 0.4.1, 0.5.0, 0.6.0, 0.7.0,
-0.8.0, and 0.9.0. Version 0.4.1 represents the 0.4 series because it superseded
-0.4.0. Every version runs the same eight immutable workloads with scalar
-sampling, three timed repetitions, and the same public shots per call.
-Comparisons are derived against both 0.1.0 and 0.9.0 without rerunning cases.
+0.8.0, 0.9.0, and the 0.10.0rc1 release candidate. Version 0.4.1 represents the
+0.4 series because it superseded 0.4.0. Every version runs the same eight
+immutable workloads with scalar sampling, three timed repetitions, and the same
+public shots per call. Comparisons are derived against both 0.1.0 and
+0.10.0rc1 without rerunning cases. After this backfill, normal release evidence
+comes from `release-v1`, which retains only the previous/current Clifft and
+current cross-tool comparisons.
 
 The general reference-host requirements and safety checks are documented in
 [`docs/manual-ec2.md`](../../docs/manual-ec2.md). Use the same
@@ -31,7 +34,7 @@ export CLIFFT_BENCH_EXECUTION=clifft-history-v1-$(date -u +%Y%m%d)
 ./scripts/ec2/bootstrap.sh "$CLIFFT_BENCH_CAMPAIGN"
 ```
 
-Bootstrap creates nine isolated environments from the checked-in locks and
+Bootstrap creates ten isolated environments from the checked-in locks and
 verifies that every Clifft release imports. Run the first placement inside
 `tmux`:
 

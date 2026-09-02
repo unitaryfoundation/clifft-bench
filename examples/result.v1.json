@@ -100,7 +100,8 @@
         "python_executable": "python",
         "release_datetime": "2026-07-31T15:28:45.643981Z",
         "source_url": "https://github.com/unitaryfoundation/clifft",
-        "version": "0.7.0"
+        "version": "0.7.0",
+        "display_version": "0.7.0"
       },
       "status": "success",
       "summary": {

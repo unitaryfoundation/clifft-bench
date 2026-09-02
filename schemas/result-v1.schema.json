@@ -333,10 +333,12 @@
         "implementation_id": {"type": "string"},
         "name": {"type": "string"},
         "version": {"type": "string"},
+        "display_version": {"type": "string", "minLength": 1},
         "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
         "commit_datetime": {"type": "string", "format": "date-time"},
         "release_datetime": {"type": ["string", "null"], "format": "date-time"},
         "source_url": {"type": "string", "format": "uri"},
+        "source_tag": {"type": "string", "minLength": 1},
         "adapter": {"type": "string"},
         "python_executable": {"type": "string"},
         "build": {

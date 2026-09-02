@@ -14,6 +14,13 @@ in the same block, and the worker reports the applied ceiling in setup runtime
 metadata. Official finalization verifies both values. Error cases preserve
 their exact failure phase and message without fabricating throughput.
 
+Simulator identity contains both the exact installed `version` and a
+`display_version` intended only for plots and prose. The runner copies an
+explicit display version from the software manifest or defaults it to the exact
+version. This permits pre-release evidence to remain attributable to an RC
+artifact, source tag, and commit while publication-facing results use the final
+release label.
+
 Per-call adapter timing dictionaries are summed into
 `adapter_timing_totals` for each sample, preventing fast single-shot loops from
 producing unbounded raw files.

@@ -25,10 +25,12 @@
           "adapter": {"enum": ["clifft", "symft", "fixture"]},
           "distribution": {"type": "string", "minLength": 1},
           "version": {"type": "string", "minLength": 1},
+          "display_version": {"type": "string", "minLength": 1},
           "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
           "commit_datetime": {"type": "string", "format": "date-time"},
           "release_datetime": {"type": ["string", "null"], "format": "date-time"},
           "source_url": {"type": "string", "format": "uri"},
+          "source_tag": {"type": "string", "minLength": 1},
           "dependency_distributions": {
             "type": "array",
             "uniqueItems": true,

@@ -30,6 +30,7 @@ CASE_FIELDS = [
     "implementation_id",
     "simulator_name",
     "simulator_version",
+    "simulator_display_version",
     "adapter",
     "mode",
     "batch_enabled",
@@ -65,6 +66,9 @@ COMPARISON_FIELDS = [
     "baseline_result_id",
     "baseline_case_id",
     "baseline_implementation_id",
+    "baseline_simulator_name",
+    "baseline_simulator_version",
+    "baseline_simulator_display_version",
     "baseline_mode",
     "baseline_batch_enabled",
     "baseline_batch_size_effective",
@@ -73,6 +77,9 @@ COMPARISON_FIELDS = [
     "candidate_result_id",
     "candidate_case_id",
     "candidate_implementation_id",
+    "candidate_simulator_name",
+    "candidate_simulator_version",
+    "candidate_simulator_display_version",
     "candidate_mode",
     "candidate_batch_enabled",
     "candidate_batch_size_effective",
@@ -130,6 +137,9 @@ def _common_row(
         "implementation_id": case["simulator"]["implementation_id"],
         "simulator_name": case["simulator"]["name"],
         "simulator_version": case["simulator"]["version"],
+        "simulator_display_version": case["simulator"].get(
+            "display_version", case["simulator"]["version"]
+        ),
         "adapter": case["simulator"]["adapter"],
         "mode": execution["mode"],
         "batch_enabled": str(execution["batch_enabled"]).lower(),
@@ -248,6 +258,13 @@ def _comparison_rows(
                                 "baseline_implementation_id": baseline[
                                     "implementation_id"
                                 ],
+                                "baseline_simulator_name": baseline["simulator_name"],
+                                "baseline_simulator_version": baseline[
+                                    "simulator_version"
+                                ],
+                                "baseline_simulator_display_version": baseline[
+                                    "simulator_display_version"
+                                ],
                                 "baseline_mode": baseline["mode"],
                                 "baseline_batch_enabled": baseline["batch_enabled"],
                                 "baseline_batch_size_effective": baseline[
@@ -259,6 +276,13 @@ def _comparison_rows(
                                 "candidate_case_id": candidate["case_id"],
                                 "candidate_implementation_id": candidate[
                                     "implementation_id"
+                                ],
+                                "candidate_simulator_name": candidate["simulator_name"],
+                                "candidate_simulator_version": candidate[
+                                    "simulator_version"
+                                ],
+                                "candidate_simulator_display_version": candidate[
+                                    "simulator_display_version"
                                 ],
                                 "candidate_mode": candidate["mode"],
                                 "candidate_batch_enabled": candidate["batch_enabled"],
