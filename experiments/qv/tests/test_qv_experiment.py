@@ -50,13 +50,13 @@ def test_qasm_adapter_rejects_unknown_statements() -> None:
 
 
 def test_schedule_alternates_tool_order_per_circuit() -> None:
-    cases = schedule_cases([6], [42, 43], ["clifft", "qiskit", "qrack"])
+    cases = schedule_cases([6], [42, 43], ["clifft", "qiskit", "qsim"])
 
     assert cases == [
         (6, 42, "clifft"),
         (6, 42, "qiskit"),
-        (6, 42, "qrack"),
-        (6, 43, "qrack"),
+        (6, 42, "qsim"),
+        (6, 43, "qsim"),
         (6, 43, "qiskit"),
         (6, 43, "clifft"),
     ]

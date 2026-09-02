@@ -3,10 +3,10 @@
 This is a self-contained, one-off refresh of the
 [`clifft-paper/qv_bench`](https://github.com/unitaryfoundation/clifft-paper/tree/db7dc9f13a2c2854690e92390c779048a1ac1400/qv_bench)
 experiment. It compares the pinned Clifft `v0.10.0rc1` release candidate with
-current pinned Qiskit Aer, Qulacs, qsim, and Qrack releases on dense random
-Quantum Volume circuits. Reader-facing output identifies the candidate with
-its target release, Clifft 0.10.0. The experiment does not extend the recurring
-QEC campaign, its schemas, or the `clifft-bench` CLI.
+current pinned Qiskit Aer, Qulacs, and qsim releases on dense random Quantum
+Volume circuits. Reader-facing output identifies the candidate with its target
+release, Clifft 0.10.0. The experiment does not extend the recurring QEC
+campaign, its schemas, or the `clifft-bench` CLI.
 
 The adapted paper code remains under this repository's Apache-2.0 license; its
 source repository, path, and exact commit are retained in code and run metadata.
@@ -24,13 +24,12 @@ The implementation preserves the paper question and timed regions:
 - median single-shot execution time plotted by width.
 
 These are intentionally the paper's asymmetric timing boundaries: Clifft is
-charged for compilation, while Qiskit transpilation and the Qulacs, qsim, and
-Qrack circuit preparation steps occur before their timers. The plot is not an
-equal end-to-end timing comparison.
+charged for compilation, while Qiskit transpilation and Qulacs/qsim circuit
+preparation occur before their timers. The plot is not an equal end-to-end
+timing comparison.
 
-The default matrix has 180 serial cases. Qrack runs CPU-only with OpenCL
-disabled. This is simulator runtime scaling on QV circuits, not a measurement
-of a quantum device's Quantum Volume score.
+The default matrix has 144 serial cases. This is simulator runtime scaling on
+QV circuits, not a measurement of a quantum device's Quantum Volume score.
 
 ## Provenance and outputs
 

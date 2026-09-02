@@ -46,10 +46,8 @@ DISTRIBUTIONS = [
     "clifft",
     "numpy",
     "ply",
-    "pyqrack",
     "qiskit",
     "qiskit-aer",
-    "qiskit-qrack-provider",
     "qsimcirq",
     "qulacs",
 ]
@@ -116,12 +114,12 @@ def parse_integers(value: str) -> list[int]:
 
 
 def parse_simulators(value: str) -> list[str]:
-    supported = {"clifft", "qiskit", "qulacs", "qsim", "qrack"}
+    supported = {"clifft", "qiskit", "qulacs", "qsim"}
     result = [item.strip() for item in value.split(",") if item.strip()]
     unknown = sorted(set(result) - supported)
     if not result or len(result) != len(set(result)) or unknown:
         raise argparse.ArgumentTypeError(
-            "expected unique simulators from clifft,qiskit,qulacs,qsim,qrack"
+            "expected unique simulators from clifft,qiskit,qulacs,qsim"
         )
     return result
 
@@ -153,7 +151,6 @@ def worker_environment(threads: int) -> dict[str, str]:
             "OMP_DYNAMIC": "false",
             "OMP_PROC_BIND": "true",
             "OMP_PLACES": "threads",
-            "QRACK_DISABLE_OPENCL": "1",
         }
     )
     return environment
@@ -206,7 +203,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--simulators",
         type=parse_simulators,
-        default=parse_simulators("clifft,qiskit,qulacs,qsim,qrack"),
+        default=parse_simulators("clifft,qiskit,qulacs,qsim"),
     )
     parser.add_argument("--threads", type=int, default=16)
     parser.add_argument("--memory-limit-gib", type=float, default=10.0)
@@ -283,7 +280,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             "circuit_depth": "width",
             "basis_gates": ["cx", "u3"],
             "timed_region": "original-clifft-paper-qv-v1",
-            "qrack_opencl_disabled": True,
         },
     }
     write_json(target / "metadata.json", metadata)

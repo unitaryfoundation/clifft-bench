@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import os
 import time
 from collections.abc import Callable
 from importlib.metadata import PackageNotFoundError, version
@@ -19,7 +18,6 @@ DEPENDENCIES = {
     "qiskit": ["qiskit", "qiskit-aer", "numpy"],
     "qulacs": ["qulacs", "numpy"],
     "qsim": ["qsimcirq", "cirq-core", "numpy", "ply"],
-    "qrack": ["qiskit", "qiskit-qrack-provider", "pyqrack", "numpy"],
 }
 
 
@@ -133,27 +131,6 @@ def _run_qsim(
     )
 
 
-def _run_qrack(
-    qasm: str, _threads: int, seed: int
-) -> tuple[dict[str, float], dict[str, Any]]:
-    from qiskit.circuit import QuantumCircuit
-    from qiskit.providers.qrack import QasmSimulator
-
-    circuit = QuantumCircuit.from_qasm_str(qasm)
-    simulator = QasmSimulator(shots=1)
-    started = time.perf_counter()
-    simulator.run(circuit, shots=1, seed_simulator=seed).result()
-    elapsed = time.perf_counter() - started
-    return (
-        {
-            "execution_seconds": elapsed,
-            "compile_seconds": 0.0,
-            "sample_seconds": 0.0,
-        },
-        {"opencl_disabled": os.environ.get("QRACK_DISABLE_OPENCL") == "1"},
-    )
-
-
 RUNNERS: dict[
     str,
     Callable[[str, int, int], tuple[dict[str, float], dict[str, Any]]],
@@ -162,7 +139,6 @@ RUNNERS: dict[
     "qiskit": _run_qiskit,
     "qulacs": _run_qulacs,
     "qsim": _run_qsim,
-    "qrack": _run_qrack,
 }
 
 
