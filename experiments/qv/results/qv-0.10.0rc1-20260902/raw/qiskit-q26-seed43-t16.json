@@ -1,0 +1,52 @@
+{
+  "case_id": "qiskit-q26-seed43-t16",
+  "circuit": {
+    "sha256": "cf3abd3a2c7cd97acd46da002cd4fcbacaff0713552c342b81fd86ab3abcea9a"
+  },
+  "depth": 26,
+  "qubits": 26,
+  "result": {
+    "dependencies": {
+      "numpy": "2.5.2",
+      "qiskit": "2.5.2",
+      "qiskit-aer": "0.17.2"
+    },
+    "peak_rss_bytes": 1223475200,
+    "resources": {
+      "address_space_limit_bytes": 10737418240,
+      "affinity_applied": true,
+      "cpu_set": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "runtime_metadata": {},
+    "status": "success",
+    "stderr_tail": [],
+    "threads_requested": 16,
+    "timing": {
+      "compile_seconds": 0.0,
+      "execution_seconds": 8.287850973999866,
+      "sample_seconds": 0.0,
+      "timed_region": "original-clifft-paper-qv-v1"
+    },
+    "worker_returncode": 0
+  },
+  "seed": 43,
+  "simulator": "qiskit",
+  "threads": 16
+}

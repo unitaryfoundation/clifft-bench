@@ -245,18 +245,15 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     target = args.output_root.resolve() / args.execution_id
     target.mkdir(parents=True, exist_ok=False)
-    circuits_dir = target / "circuits"
     raw_dir = target / "raw"
-    circuits_dir.mkdir()
     raw_dir.mkdir()
 
-    circuits: dict[tuple[int, int], tuple[Path, str]] = {}
+    circuits: dict[tuple[int, int], tuple[str, str]] = {}
     for width in args.qubits:
         for seed in args.seeds:
-            path = circuits_dir / f"qv-q{width}-seed{seed}.qasm"
-            path.write_text(generate_qv_qasm(width, seed))
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
-            circuits[(width, seed)] = (path, digest)
+            qasm = generate_qv_qasm(width, seed)
+            digest = hashlib.sha256(qasm.encode()).hexdigest()
+            circuits[(width, seed)] = (qasm, digest)
 
     metadata = {
         "execution_id": args.execution_id,
@@ -291,7 +288,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         writer = csv.DictWriter(stream, fieldnames=CSV_COLUMNS)
         writer.writeheader()
         for index, (width, seed, simulator) in enumerate(cases, start=1):
-            circuit_path, circuit_digest = circuits[(width, seed)]
+            circuit_qasm, circuit_digest = circuits[(width, seed)]
             case_id = f"{simulator}-q{width}-seed{seed}-t{args.threads}"
             print(f"[{index}/{len(cases)}] {case_id}", flush=True)
             command = [
@@ -299,7 +296,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "-m",
                 "qv_experiment.worker",
                 simulator,
-                str(circuit_path),
                 "--threads",
                 str(args.threads),
                 "--seed",
@@ -314,6 +310,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     command,
                     capture_output=True,
                     check=False,
+                    input=circuit_qasm,
                     text=True,
                     timeout=args.timeout_seconds,
                     env=worker_environment(args.threads),
@@ -352,7 +349,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "seed": seed,
                 "threads": args.threads,
                 "circuit": {
-                    "path": str(circuit_path.relative_to(target)),
                     "sha256": circuit_digest,
                 },
                 "result": response,

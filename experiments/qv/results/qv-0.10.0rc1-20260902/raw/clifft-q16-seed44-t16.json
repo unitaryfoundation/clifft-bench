@@ -1,0 +1,54 @@
+{
+  "case_id": "clifft-q16-seed44-t16",
+  "circuit": {
+    "sha256": "022c9229e1240db12c8cd689f9b4730b9cdafdbe5357a4ae68b45cd316ffe7eb"
+  },
+  "depth": 16,
+  "qubits": 16,
+  "result": {
+    "dependencies": {
+      "clifft": "0.10.0rc1",
+      "numpy": "2.5.2"
+    },
+    "peak_rss_bytes": 176582656,
+    "resources": {
+      "address_space_limit_bytes": 10737418240,
+      "affinity_applied": true,
+      "cpu_set": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "runtime_metadata": {
+      "cpu_baseline": "native",
+      "thread_interface": "sample-argument"
+    },
+    "status": "success",
+    "stderr_tail": [],
+    "threads_requested": 16,
+    "timing": {
+      "compile_seconds": 0.02915109599985044,
+      "execution_seconds": 0.0425737499999741,
+      "sample_seconds": 0.013422654000123657,
+      "timed_region": "original-clifft-paper-qv-v1"
+    },
+    "worker_returncode": 0
+  },
+  "seed": 44,
+  "simulator": "clifft",
+  "threads": 16
+}

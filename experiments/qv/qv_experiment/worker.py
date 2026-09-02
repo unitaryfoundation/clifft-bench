@@ -5,10 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 import time
 from collections.abc import Callable
 from importlib.metadata import PackageNotFoundError, version
-from pathlib import Path
 from typing import Any
 
 from qv_experiment.system import apply_resources, peak_rss_bytes
@@ -154,7 +154,6 @@ def validate_timings(timings: dict[str, float]) -> None:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("simulator", choices=sorted(RUNNERS))
-    parser.add_argument("qasm", type=Path)
     parser.add_argument("--threads", type=int, required=True)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--memory-limit-gib", type=float, required=True)
@@ -168,7 +167,7 @@ def main() -> int:
     try:
         resources = apply_resources(cpu_set, args.memory_limit_gib)
         timings, runtime = RUNNERS[args.simulator](
-            args.qasm.read_text(),
+            sys.stdin.read(),
             args.threads,
             args.seed,
         )
