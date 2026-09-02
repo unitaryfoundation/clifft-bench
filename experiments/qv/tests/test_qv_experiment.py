@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import math
+import subprocess
 from pathlib import Path
 
 import pytest
+from qv_experiment import run_benchmark
 from qv_experiment.plot import clifft_display_name, load_samples
 from qv_experiment.qasm_adapter import _safe_eval, parse_qasm, to_clifft_stim
 from qv_experiment.run_benchmark import (
@@ -60,6 +64,80 @@ def test_schedule_alternates_tool_order_per_circuit() -> None:
         (6, 43, "qiskit"),
         (6, 43, "clifft"),
     ]
+
+
+def test_run_passes_qasm_over_stdin_without_retaining_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    qasm = "OPENQASM 2.0;\nqreg q[1];\n"
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    monkeypatch.setattr(
+        run_benchmark,
+        "git_metadata",
+        lambda _root: {"commit": "test", "dirty": False},
+    )
+    monkeypatch.setattr(
+        run_benchmark,
+        "clifft_runtime_identity",
+        lambda: {
+            "distribution_version": "test",
+            "runtime_version": "test",
+            "cpu_baseline": "test",
+        },
+    )
+    monkeypatch.setattr(run_benchmark, "ec2_identity", lambda **_kwargs: {})
+    monkeypatch.setattr(run_benchmark, "select_physical_cpus", lambda _threads: [0])
+    monkeypatch.setattr(run_benchmark, "generate_qv_qasm", lambda _width, _seed: qasm)
+    monkeypatch.setattr(run_benchmark, "package_versions", lambda: {})
+    monkeypatch.setattr(run_benchmark, "system_metadata", lambda: {})
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append((command, kwargs))
+        response = {
+            "status": "success",
+            "timing": {
+                "execution_seconds": 1.0,
+                "compile_seconds": 0.5,
+                "sample_seconds": 0.5,
+            },
+            "peak_rss_bytes": 1,
+        }
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=json.dumps(response),
+            stderr="",
+        )
+
+    monkeypatch.setattr(run_benchmark.subprocess, "run", fake_run)
+
+    assert (
+        run_benchmark.main(
+            [
+                "--execution-id",
+                "test-run",
+                "--output-root",
+                str(tmp_path),
+                "--qubits",
+                "1",
+                "--seeds",
+                "7",
+                "--simulators",
+                "clifft",
+                "--threads",
+                "1",
+            ]
+        )
+        == 0
+    )
+
+    execution = tmp_path / "test-run"
+    assert len(calls) == 1
+    assert calls[0][1]["input"] == qasm
+    assert not (execution / "circuits").exists()
+    raw = json.loads((execution / "raw" / "clifft-q1-seed7-t1.json").read_text())
+    assert raw["circuit"] == {"sha256": hashlib.sha256(qasm.encode()).hexdigest()}
 
 
 def test_physical_cpu_selection_uses_one_logical_cpu_per_core() -> None:

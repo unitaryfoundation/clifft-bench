@@ -1,0 +1,53 @@
+{
+  "case_id": "qsim-q16-seed43-t16",
+  "circuit": {
+    "sha256": "cb40ed78827d7a099a40ae0ac549fca6ef448d38e604bc252ba349d62071ee41"
+  },
+  "depth": 16,
+  "qubits": 16,
+  "result": {
+    "dependencies": {
+      "cirq-core": "1.7.0",
+      "numpy": "2.5.2",
+      "ply": "3.11",
+      "qsimcirq": "0.22.1"
+    },
+    "peak_rss_bytes": 212258816,
+    "resources": {
+      "address_space_limit_bytes": 10737418240,
+      "affinity_applied": true,
+      "cpu_set": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "runtime_metadata": {},
+    "status": "success",
+    "stderr_tail": [],
+    "threads_requested": 16,
+    "timing": {
+      "compile_seconds": 0.0,
+      "execution_seconds": 0.107121903999996,
+      "sample_seconds": 0.0,
+      "timed_region": "original-clifft-paper-qv-v1"
+    },
+    "worker_returncode": 0
+  },
+  "seed": 43,
+  "simulator": "qsim",
+  "threads": 16
+}

@@ -1,0 +1,156 @@
+{
+  "case_count": 144,
+  "clifft_source": {
+    "artifact_kind": "release-candidate",
+    "artifact_version": "0.10.0rc1",
+    "commit": "4440ecb71ab9b4922ba2f543e392fbab640cd248",
+    "observed": {
+      "cpu_baseline": "native",
+      "distribution_version": "0.10.0rc1",
+      "runtime_version": "0.10.0rc1"
+    },
+    "release_version": "0.10.0",
+    "requested_build": {
+      "CLIFFT_CPU_BASELINE": "native",
+      "CLIFFT_MAX_QUBITS": "64",
+      "CLIFFT_OPENMP": "ON"
+    }
+  },
+  "configuration": {
+    "basis_gates": [
+      "cx",
+      "u3"
+    ],
+    "circuit_depth": "width",
+    "cpu_set": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "memory_limit_gib": 10.0,
+    "qubits": [
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24,
+      26,
+      28
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "simulators": [
+      "clifft",
+      "qiskit",
+      "qulacs",
+      "qsim"
+    ],
+    "threads": 16,
+    "timed_region": "original-clifft-paper-qv-v1",
+    "timeout_seconds": 600
+  },
+  "ec2": {
+    "accountId": "003146198539",
+    "architecture": "x86_64",
+    "availabilityZone": "us-east-1c",
+    "billingProducts": null,
+    "devpayProductCodes": null,
+    "imageId": "ami-0f8a61b66d1accaee",
+    "instanceId": "i-0e30f86118b3ffe81",
+    "instanceType": "c8i.8xlarge",
+    "kernelId": null,
+    "marketplaceProductCodes": null,
+    "pendingTime": "2026-09-02T13:33:55Z",
+    "privateIp": "172.31.9.104",
+    "ramdiskId": null,
+    "region": "us-east-1",
+    "version": "2017-09-30"
+  },
+  "execution_id": "qv-0.10.0rc1-20260902",
+  "failure_count": 0,
+  "finished_at": "2026-09-02T14:24:30.839096Z",
+  "git": {
+    "commit": "775cf6514a8f01115b99cc3603a193d2ed748b6c",
+    "dirty": false
+  },
+  "packages": {
+    "clifft": "0.10.0rc1",
+    "numpy": "2.5.2",
+    "ply": "3.11",
+    "qiskit": "2.5.2",
+    "qiskit-aer": "0.17.2",
+    "qsimcirq": "0.22.1",
+    "qulacs": "0.6.14"
+  },
+  "paper_source": {
+    "commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+    "path": "qv_bench",
+    "repository": "https://github.com/unitaryfoundation/clifft-paper"
+  },
+  "started_at": "2026-09-02T13:57:11.184805Z",
+  "status": "complete",
+  "system": {
+    "allowed_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "boot_id": "bfc6ee63-cec1-4002-9459-81245ea39d35",
+    "cpu_count": 32,
+    "cpu_model": "Intel(R) Xeon(R) 6975P-C",
+    "machine": "x86_64",
+    "memory_bytes": 66320400384,
+    "platform": "Linux-7.0.0-1011-aws-x86_64-with-glibc2.39",
+    "python": "3.12.3"
+  }
+}

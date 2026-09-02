@@ -17,7 +17,7 @@ The implementation preserves the paper question and timed regions:
 - deterministic seeds 42, 43, and 44;
 - Qiskit generation transpiled to the `cx`/`u3` basis with optimization
   disabled;
-- one generated QASM artifact reused byte-for-byte by every simulator;
+- one generated QASM input reused byte-for-byte by every simulator;
 - one fresh subprocess per simulator, width, and seed;
 - Clifft compilation plus one sample timed; backend execution timed for the
   other simulators; and
@@ -50,10 +50,15 @@ Each run creates a new, non-overwriting directory:
 results/EXECUTION_ID/
   metadata.json
   cases.csv
-  circuits/*.qasm
   raw/*.json
   qv-scaling.png
 ```
+
+Generated QASM is passed directly to each worker and is not retained. Width,
+depth, seed, source commit, and locked environment describe how to regenerate
+the input; its SHA-256 digest records the exact bytes shared by every simulator
+during collection. Floating-point text may differ in insignificant final digits
+when regenerated on a different platform.
 
 A failed or timed-out case is retained in `cases.csv` and its raw JSON. If the
 controller is interrupted, `metadata.json` remains at `status: "running"` and

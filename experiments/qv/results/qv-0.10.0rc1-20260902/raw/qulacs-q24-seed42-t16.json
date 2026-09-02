@@ -1,0 +1,51 @@
+{
+  "case_id": "qulacs-q24-seed42-t16",
+  "circuit": {
+    "sha256": "4e6857550ba9d5afc03233b3acfce55cbce07286a4fe26c1cdd6896e583ebdd6"
+  },
+  "depth": 24,
+  "qubits": 24,
+  "result": {
+    "dependencies": {
+      "numpy": "2.5.2",
+      "qulacs": "0.6.14"
+    },
+    "peak_rss_bytes": 567332864,
+    "resources": {
+      "address_space_limit_bytes": 10737418240,
+      "affinity_applied": true,
+      "cpu_set": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "runtime_metadata": {},
+    "status": "success",
+    "stderr_tail": [],
+    "threads_requested": 16,
+    "timing": {
+      "compile_seconds": 0.0,
+      "execution_seconds": 13.246653229999993,
+      "sample_seconds": 0.0,
+      "timed_region": "original-clifft-paper-qv-v1"
+    },
+    "worker_returncode": 0
+  },
+  "seed": 42,
+  "simulator": "qulacs",
+  "threads": 16
+}
