@@ -47,6 +47,12 @@ def _case(template: dict, *, variant: str, rate: float) -> dict:
     case["case_id"] = f"workload--{variant}"
     case["variant_id"] = variant
     case["simulator"]["implementation_id"] = variant
+    if variant == "candidate":
+        case["simulator"]["version"] = "0.10.0rc1"
+        case["simulator"]["display_version"] = "0.10.0"
+    else:
+        case["simulator"]["version"] = "0.9.0"
+        case["simulator"].pop("display_version", None)
     case["execution"]["memory_limit_bytes"] = 1 << 30
     case["setup"]["runtime_metadata"]["address_space_limit_bytes"] = 1 << 30
     if variant == "candidate":
@@ -103,6 +109,13 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
     assert index["placements"][0]["raw_results"] == [
         "raw/release-p01-r01-raw.json"
     ]
+    with (output_dir / "cases.csv").open(newline="") as stream:
+        cases = list(csv.DictReader(stream))
+    candidate_case = next(row for row in cases if row["variant_id"] == "candidate")
+    assert candidate_case["simulator_version"] == "0.10.0rc1"
+    assert candidate_case["simulator_display_version"] == "0.10.0"
+    baseline_case = next(row for row in cases if row["variant_id"] == "baseline")
+    assert baseline_case["simulator_display_version"] == "0.9.0"
     with (output_dir / "comparisons.csv").open(newline="") as stream:
         comparisons = list(csv.DictReader(stream))
     assert len(comparisons) == 1
@@ -110,6 +123,10 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
     assert comparisons[0]["baseline_variant_id"] == "baseline"
     assert comparisons[0]["candidate_variant_id"] == "candidate"
     assert comparisons[0]["candidate_batch_size_effective"] == "32"
+    assert comparisons[0]["baseline_simulator_version"] == "0.9.0"
+    assert comparisons[0]["baseline_simulator_display_version"] == "0.9.0"
+    assert comparisons[0]["candidate_simulator_version"] == "0.10.0rc1"
+    assert comparisons[0]["candidate_simulator_display_version"] == "0.10.0"
 
     changed = json.loads(raw_path.read_text())
     changed["runner"]["cloud"]["instance_type"] = "c8i.8xlarge"

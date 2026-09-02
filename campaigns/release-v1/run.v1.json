@@ -47,7 +47,7 @@
   "variants": [
     {
       "id": "clifft-previous",
-      "implementation_id": "clifft-0.8.0",
+      "implementation_id": "clifft-0.9.0",
       "execution": {
         "mode": "throughput",
         "batch_enabled": false,
@@ -67,7 +67,7 @@
     },
     {
       "id": "clifft-current",
-      "implementation_id": "clifft-0.9.0",
+      "implementation_id": "clifft-0.10.0rc1",
       "execution": {
         "mode": "throughput",
         "batch_enabled": false,

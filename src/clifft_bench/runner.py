@@ -164,10 +164,11 @@ def _workload_record(case: Case) -> dict[str, Any]:
 
 def _simulator_record(case: Case) -> dict[str, Any]:
     definition = case.implementation.definition
-    return {
+    record = {
         "implementation_id": definition["id"],
         "name": definition["name"],
         "version": definition["version"],
+        "display_version": definition.get("display_version", definition["version"]),
         "commit_sha": definition["commit_sha"],
         "commit_datetime": definition["commit_datetime"],
         "release_datetime": definition["release_datetime"],
@@ -177,6 +178,9 @@ def _simulator_record(case: Case) -> dict[str, Any]:
         "build": definition["build"],
         "dependencies": {},
     }
+    if "source_tag" in definition:
+        record["source_tag"] = definition["source_tag"]
+    return record
 
 
 def _new_case_result(

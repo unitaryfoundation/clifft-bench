@@ -88,6 +88,8 @@ def _write_fixture_suite(
             for identifier in ["fixture-a", "fixture-b"]
         ],
     }
+    software["implementations"][1]["display_version"] = "1.0"
+    software["implementations"][1]["source_tag"] = "v1.0.0"
     cases = [
         {
             "id": identifier,
@@ -168,6 +170,16 @@ def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     ]
     assert sequences == [[0, 1], [2, 3]]
     assert all(case["correctness"]["status"] == "passed" for case in result["cases"])
+    assert [case["simulator"]["version"] for case in result["cases"]] == [
+        "1.0.0",
+        "1.0.0",
+    ]
+    assert [case["simulator"]["display_version"] for case in result["cases"]] == [
+        "1.0.0",
+        "1.0",
+    ]
+    assert "source_tag" not in result["cases"][0]["simulator"]
+    assert result["cases"][1]["simulator"]["source_tag"] == "v1.0.0"
     for case in result["cases"]:
         assert case["execution"]["memory_limit_bytes"] == 1 << 30
         assert case["setup"]["runtime_metadata"]["address_space_limit_bytes"] in {

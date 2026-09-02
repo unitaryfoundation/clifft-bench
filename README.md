@@ -22,19 +22,20 @@ same executions; it does not require a separate history campaign.
 
 ### Current status
 
-The previous 0.x executions were removed when the harness was simplified. The
-next official execution will establish the 1.x baseline. Until then this
-repository intentionally publishes methodology and a tested release manifest,
-but no current performance claims.
+The final one-off 0.x history backfill now runs through the 0.10.0rc1 release
+candidate. After that backfill, official collection uses only the recurring
+release campaign: previous versus current Clifft and current alternatives
+versus current Clifft. Longer-term history accumulates from those executions;
+older releases are not rerun for every release.
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
-single recurring campaign definition. It currently retains the last known
-Clifft and SymFT versions as a working template; update its `clifft-current`
-and `clifft-previous` variants before the next collection.
+single recurring campaign definition. It currently compares Clifft 0.9.0 with
+0.10.0rc1 and compares the candidate with the pinned SymFT modes. Update its
+`clifft-current` and `clifft-previous` variants for each later release.
 
 [`campaigns/clifft-history-v1/`](campaigns/clifft-history-v1/) is an optional,
 one-off backfill that reruns representative 0.x releases together under the
-current contract. It does not change the 1.x baseline or recurring campaign.
+current contract. It is not part of the recurring release workflow.
 
 ## Other questions and experiments
 
@@ -117,6 +118,12 @@ For a new Clifft release:
    `clifft-previous` at the prior release in the release manifest.
 4. Update alternative tool versions or workload call sizes only when needed.
 5. Validate locally, then follow `docs/manual-ec2.md`.
+
+For a release candidate, keep its exact prerelease value in `version` and its
+environment lock, record the immutable `source_tag` and commit, and set
+`display_version` to the intended final release label. Runtime checks and raw
+evidence retain the exact candidate identity; derived tables expose the display
+version for plots, summaries, and release docs.
 
 One placement now produces one raw result containing every variant. The
 finalizer checks placement coverage and writes `cases.csv`, `comparisons.csv`,

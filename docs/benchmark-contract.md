@@ -110,10 +110,15 @@ observable counts plus these aggregate invariants:
 - logical errors are between zero and accepted shots; and
 - non-postselected workloads discard no shots.
 
-Each implementation records its version, source commit, release time, build
-features, and dependency versions. Each workload records an immutable artifact
-digest, semantic contract, and source provenance. An incompatible
-adapter/workload pairing is rejected before execution.
+Each implementation records its exact package version, source commit, optional
+release tag, release time, build features, and dependency versions. An optional
+`display_version` provides the intended public release label for plots and
+prose. It has no role in installation or runtime validation: a `0.10.0rc1`
+candidate built from `v0.10.0rc1` can display as `0.10.0`, while the raw result
+continues to identify and verify the RC version, tag, and commit. When omitted,
+the exact version is also the display version. Each workload records an
+immutable artifact digest, semantic contract, and source provenance. An
+incompatible adapter/workload pairing is rejected before execution.
 
 ## Placements and official evidence
 
