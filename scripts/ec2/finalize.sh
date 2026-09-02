@@ -51,6 +51,9 @@ staged_raw=("$stage"/raw/*-raw.json)
   --execution-id "$execution_id" \
   --output-dir "$stage" \
   "${staged_raw[@]}"
+if [[ "$campaign_id" == "release-v1" ]]; then
+  .venv/bin/python -m clifft_bench.release_audit "$stage"
+fi
 mv "$stage" "$target"
 
 relative="results/$campaign_id/$execution_id"

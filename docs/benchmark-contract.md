@@ -123,10 +123,10 @@ incompatible adapter/workload pairing is rejected before execution.
 ## Placements and official evidence
 
 The release campaign emits one raw result per placement and replica, containing
-all variants. Three stop/start placements are used for current comparisons.
+all variants. The recurring release campaign uses one reference-host placement.
 Finalization requires the declared coverage, one clean source commit, the
-reference instance type, one reference instance, distinct boot IDs between
-placements, and the declared memory ceiling.
+reference instance type, one reference instance, distinct boot IDs when a
+campaign requests multiple placements, and the declared memory ceiling.
 
 `manifests/run-smoke.v1.json` is only a short developer correctness check. A
 release execution becomes official evidence after finalization and review of

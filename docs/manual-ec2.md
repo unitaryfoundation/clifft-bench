@@ -29,7 +29,9 @@ ID. Before cloning, expect Ubuntu `VERSION_ID="24.04"` and Python `3.12.x`.
 ```bash
 git clone https://github.com/unitaryfoundation/clifft-bench.git
 cd clifft-bench
-git switch -c data/release-$(date -u +%Y%m%d)
+git switch main
+git pull --ff-only
+git switch -c data/release-20260902-calibrated
 ```
 
 Do not pull, edit tracked files, or change commits between placements.
@@ -56,12 +58,12 @@ Every worker receives the manifest's 12 GiB Linux address-space ceiling. The
 complete placement also has a wall-clock timeout with a 30-second forced-kill
 fallback.
 
-## 4. Collect each placement
+## 4. Collect the placement
 
-Choose a unique execution ID:
+For the corrected Clifft 0.10 release collection, use this new execution ID:
 
 ```bash
-export CLIFFT_BENCH_EXECUTION=release-v1-$(date -u +%Y%m%d)
+export CLIFFT_BENCH_EXECUTION=release-v1-20260902-calibrated
 ./scripts/ec2/run-placement.sh \
   "$CLIFFT_BENCH_CAMPAIGN" \
   "$CLIFFT_BENCH_EXECUTION" \
@@ -73,8 +75,9 @@ serially on one logical CPU and writes one raw file under
 `~/clifft-bench-ec2-results/`. A case failure remains in that raw result; a
 launcher timeout or invalid result leaves an `.incomplete-*` directory.
 
-After success, stop the instance. Start the same EBS-backed instance again and
-collect placements 2 and 3. Each placement must have a distinct Linux boot ID.
+The corrected recurring campaign declares one placement, so collection is
+complete after placement 1 succeeds. Stop the instance after the result has
+been finalized and pushed.
 
 ## 5. Finalize and push
 
@@ -85,7 +88,17 @@ collect placements 2 and 3. Each placement must have a distinct Linux boot ID.
 ```
 
 Finalization copies raw files into the repository and generates the index and
-tables described in [data-format.md](data-format.md). Review before committing:
+tables described in [data-format.md](data-format.md). For `release-v1`, it also
+audits the finalized rows and raw calibration evidence. The command must print
+`Release audit passed` before the result is committed. The audit can be rerun
+directly with:
+
+```bash
+.venv/bin/python -m clifft_bench.release_audit \
+  "results/$CLIFFT_BENCH_CAMPAIGN/$CLIFFT_BENCH_EXECUTION"
+```
+
+Review before committing:
 
 ```bash
 git diff --stat

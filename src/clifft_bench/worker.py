@@ -17,9 +17,9 @@ from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
+from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
 from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
 
-BATCH_CALIBRATION_CANDIDATES = (1, 32, 256, 1024, 2048)
 BATCH_CALIBRATION_REPETITIONS = 3
 BATCH_CALIBRATION_SECONDS = 1.0
 BATCH_CALIBRATION_MAX_API_CALLS = 1_000_000

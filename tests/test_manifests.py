@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
 from clifft_bench.manifest import load_suite
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
@@ -28,14 +29,15 @@ def test_checked_in_manifests_validate(relative: str) -> None:
 def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
-    assert len(suite.cases) == 32
-    assert len({case.id for case in suite.cases}) == 32
+    assert suite.run["collection"]["placements"] == 1
+    assert len(suite.cases) == 40
+    assert len({case.id for case in suite.cases}) == 40
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
+        "clifft-current-calibrated",
+        "symft-calibrated",
         "symft-single",
-        "symft-batch-32",
-        "symft-batch-2048",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
@@ -47,11 +49,16 @@ def test_release_manifest_expands_named_variants() -> None:
             for case in suite.cases
             if case.definition["variant_id"] == variant_id
         }
-        for variant_id in ("clifft-previous", "clifft-current")
+        for variant_id in (
+            "clifft-previous",
+            "clifft-current",
+            "clifft-current-calibrated",
+        )
     }
     assert versions_by_variant == {
         "clifft-previous": {"0.9.0"},
         "clifft-current": {"0.10.0rc1"},
+        "clifft-current-calibrated": {"0.10.0rc1"},
     }
     candidate = next(
         case.implementation.definition
@@ -61,6 +68,63 @@ def test_release_manifest_expands_named_variants() -> None:
     assert candidate["version"] == "0.10.0rc1"
     assert candidate["display_version"] == "0.10.0"
     assert candidate["source_tag"] == "v0.10.0rc1"
+
+    comparisons = {item["id"]: item for item in suite.run["comparisons"]}
+    assert comparisons == {
+        "current-vs-previous": {
+            "id": "current-vs-previous",
+            "baseline_variant": "clifft-previous",
+            "candidate_variants": ["clifft-current"],
+        },
+        "alternatives-vs-current": {
+            "id": "alternatives-vs-current",
+            "baseline_variant": "clifft-current-calibrated",
+            "candidate_variants": ["symft-calibrated"],
+        },
+        "scalar-alternatives-vs-current": {
+            "id": "scalar-alternatives-vs-current",
+            "baseline_variant": "clifft-current",
+            "candidate_variants": ["symft-single"],
+        },
+    }
+
+    scalar_cases = [
+        case
+        for case in suite.cases
+        if case.definition["variant_id"]
+        in {"clifft-previous", "clifft-current", "symft-single"}
+    ]
+    assert scalar_cases
+    assert all(
+        case.definition["execution"]["batch_enabled"] is False
+        and case.definition["execution"]["batch_size"] == 1
+        for case in scalar_cases
+    )
+
+    calibrated_by_variant = {
+        variant_id: [
+            case
+            for case in suite.cases
+            if case.definition["variant_id"] == variant_id
+        ]
+        for variant_id in ("clifft-current-calibrated", "symft-calibrated")
+    }
+    assert all(len(cases) == 8 for cases in calibrated_by_variant.values())
+    for cases in calibrated_by_variant.values():
+        assert all(
+            case.definition["execution"]["batch_enabled"] is True
+            and case.definition["execution"]["batch_size"] == "calibrate"
+            and case.definition["shots_per_call"] >= max(BATCH_CALIBRATION_CANDIDATES)
+            for case in cases
+        )
+    signatures = {
+        variant_id: {
+            (case.workload.id, case.definition["shots_per_call"])
+            for case in cases
+        }
+        for variant_id, cases in calibrated_by_variant.items()
+    }
+    assert signatures["clifft-current-calibrated"] == signatures["symft-calibrated"]
 
 
 def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:

@@ -40,6 +40,7 @@ def test_ec2_playbook_is_campaign_driven_and_keeps_safety_checks() -> None:
     assert "check_value \"lifecycle\" \"on-demand\"" in placement
     assert "instance-identity/document" in placement
     assert "clifft-bench finalize" in finalize
+    assert "clifft_bench.release_audit" in finalize
     assert "arm_shutdown_guard" in finalize
     assert "results/$campaign_id/$execution_id" in finalize
     assert "run_status == 1" in placement
