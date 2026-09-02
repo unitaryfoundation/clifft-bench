@@ -32,10 +32,10 @@ PAPER_SOURCE = {
     "commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
 }
 CLIFFT_SOURCE = {
-    "release_version": "0.9.0",
-    "artifact_version": "0.9.0",
-    "artifact_kind": "release",
-    "commit": "87175b513b8d944955102230b9c7931be1570ef2",
+    "release_version": "0.10.0",
+    "artifact_version": "0.10.0rc1",
+    "artifact_kind": "release-candidate",
+    "commit": "4440ecb71ab9b4922ba2f543e392fbab640cd248",
     "requested_build": {
         "CLIFFT_MAX_QUBITS": "64",
         "CLIFFT_OPENMP": "ON",

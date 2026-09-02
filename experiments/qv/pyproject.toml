@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Standalone Quantum Volume paper refresh for Clifft"
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "clifft @ git+https://github.com/unitaryfoundation/clifft.git@87175b513b8d944955102230b9c7931be1570ef2",
+    "clifft @ git+https://github.com/unitaryfoundation/clifft.git@4440ecb71ab9b4922ba2f543e392fbab640cd248",
     "numpy==2.5.2",
     "ply==3.11",
     "pyqrack==2.19.3",

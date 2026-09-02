@@ -2,10 +2,11 @@
 
 This is a self-contained, one-off refresh of the
 [`clifft-paper/qv_bench`](https://github.com/unitaryfoundation/clifft-paper/tree/db7dc9f13a2c2854690e92390c779048a1ac1400/qv_bench)
-experiment. It compares the current pinned Clifft release with current pinned
-Qiskit Aer, Qulacs, qsim, and Qrack releases on dense random Quantum Volume
-circuits. It does not extend the recurring QEC campaign, its schemas, or the
-`clifft-bench` CLI.
+experiment. It compares the pinned Clifft `v0.10.0rc1` release candidate with
+current pinned Qiskit Aer, Qulacs, qsim, and Qrack releases on dense random
+Quantum Volume circuits. Reader-facing output identifies the candidate with
+its target release, Clifft 0.10.0. The experiment does not extend the recurring
+QEC campaign, its schemas, or the `clifft-bench` CLI.
 
 The adapted paper code remains under this repository's Apache-2.0 license; its
 source repository, path, and exact commit are retained in code and run metadata.
@@ -138,12 +139,12 @@ uv run python -c \
 uv run python -m qv_experiment.validate
 ```
 
-The expected Clifft values are version `0.9.0` and a native CPU baseline until
-this experiment is updated to the intended release candidate. Official
-collection checks both values before creating its output directory. The locked
-project requests a 64-qubit limit and OpenMP from the pinned source build;
-those requested settings and the observable runtime identity are recorded
-separately.
+The expected Clifft values are artifact version `0.10.0rc1` and a native CPU
+baseline. Official collection checks both values before creating its output
+directory. The locked project builds tag `v0.10.0rc1` at commit
+`4440ecb71ab9b4922ba2f543e392fbab640cd248` and requests a 64-qubit limit and
+OpenMP; those requested settings and the observable runtime identity are
+recorded separately. Plots label this candidate as Clifft 0.10.0.
 
 ### 3. Pilot the largest case
 

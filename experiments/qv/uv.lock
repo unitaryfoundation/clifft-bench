@@ -46,8 +46,8 @@ wheels = [
 
 [[package]]
 name = "clifft"
-version = "0.9.0"
-source = { git = "https://github.com/unitaryfoundation/clifft.git?rev=87175b513b8d944955102230b9c7931be1570ef2#87175b513b8d944955102230b9c7931be1570ef2" }
+version = "0.10.0rc1"
+source = { git = "https://github.com/unitaryfoundation/clifft.git?rev=4440ecb71ab9b4922ba2f543e392fbab640cd248#4440ecb71ab9b4922ba2f543e392fbab640cd248" }
 dependencies = [
     { name = "numpy" },
 ]
@@ -78,7 +78,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clifft", git = "https://github.com/unitaryfoundation/clifft.git?rev=87175b513b8d944955102230b9c7931be1570ef2" },
+    { name = "clifft", git = "https://github.com/unitaryfoundation/clifft.git?rev=4440ecb71ab9b4922ba2f543e392fbab640cd248" },
     { name = "matplotlib", marker = "extra == 'plot'", specifier = "==3.11.1" },
     { name = "numpy", specifier = "==2.5.2" },
     { name = "ply", specifier = "==3.11" },
