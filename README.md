@@ -81,7 +81,21 @@ See the full [benchmark contract](docs/benchmark-contract.md),
 | `src/clifft_bench/` | Serial runner, adapters, validation, and finalization |
 | `scripts/ec2/` | Manual reference-host collection workflow |
 | `results/` | Reviewed raw executions and derived tables |
+| `reporting/` | Downstream cross-campaign reports and reproducible figures |
 | `experiments/` | Infrequent, self-contained performance studies |
+
+## Reporting
+
+Generate the cross-release and current-tool QEC figures from reviewed results:
+
+```bash
+uv run --extra report python reporting/qec.py
+```
+
+The reporting layer chains paired recurring-release ratios onto the one-off
+history backfill, so newer calibrated configurations can extend the historical
+view without rerunning old releases. See [`reporting/`](reporting/) for the
+source-selection and validation rules.
 
 ## Local development
 
