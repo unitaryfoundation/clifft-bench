@@ -2,5 +2,6 @@
   "history_execution": "results/clifft-history-v1/clifft-history-v1-20260902",
   "release_executions": [
     "results/release-v1/release-v1-20260903-133252"
-  ]
+  ],
+  "qv_execution": "experiments/qv/results/qv-0.10.0rc1-20260902"
 }

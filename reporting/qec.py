@@ -16,6 +16,7 @@ from typing import Any, Sequence
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCES = ROOT / "reporting/sources.json"
 DEFAULT_OUTPUT_DIR = ROOT / "reporting/figures"
+DEFAULT_WEB_OUTPUT_DIR = DEFAULT_OUTPUT_DIR / "web"
 CURRENT_COMPARISON = "current-vs-previous"
 ALTERNATIVES_COMPARISON = "alternatives-vs-current"
 
@@ -39,6 +40,7 @@ class ReleaseData:
     current_version: str
     current_ratios: dict[str, float]
     current_rates: dict[str, float]
+    current_packed: dict[str, bool]
     alternative_name: str
     alternative_version: str
     alternative_ratios: dict[str, float]
@@ -66,15 +68,32 @@ class ThroughputPoint:
 
 
 @dataclass(frozen=True)
+class ReleaseComparisonPoint:
+    workload_id: str
+    current_over_previous: float
+    current_packed: bool
+
+
+@dataclass(frozen=True)
 class Report:
     history: HistorySeries
     relative_points: tuple[RelativePoint, ...]
     throughput_points: tuple[ThroughputPoint, ...]
+    release_points: tuple[ReleaseComparisonPoint, ...]
     clifft_version: str
+    previous_clifft_version: str
     alternative_name: str
     alternative_version: str
     history_execution: str
     release_executions: tuple[str, ...]
+    qv_execution: str
+
+
+@dataclass(frozen=True)
+class SourceSelection:
+    history: Path
+    releases: tuple[Path, ...]
+    qv: Path
 
 
 def _read_csv(path: Path) -> list[dict[str, str]]:
@@ -176,12 +195,17 @@ def _load_release(path: Path) -> ReleaseData:
         alternatives, ("workload_id",), "ratio_candidate_over_baseline"
     )
     current_rates = _median_rates(alternatives, ("workload_id",), "baseline_rate")
+    current_packed = {
+        row["workload_id"]: int(row["candidate_batch_size_effective"]) > 1
+        for row in current
+    }
     return ReleaseData(
         execution_id=execution_id,
         previous_version=previous_version,
         current_version=current_version,
         current_ratios={key[0]: value for key, value in current_ratios.items()},
         current_rates={key[0]: value for key, value in current_rates.items()},
+        current_packed=current_packed,
         alternative_name=_one(
             alternatives, "candidate_simulator_name", "alternative simulator"
         ),
@@ -195,17 +219,28 @@ def _load_release(path: Path) -> ReleaseData:
     )
 
 
-def _load_sources(path: Path) -> tuple[Path, tuple[Path, ...]]:
+def _load_sources(path: Path) -> SourceSelection:
     document = json.loads(path.read_text())
     history = ROOT / document["history_execution"]
     releases = tuple(ROOT / value for value in document["release_executions"])
+    qv = ROOT / document["qv_execution"]
     if not releases:
         raise ValueError("reporting requires at least one recurring release execution")
-    return history, releases
+    qv_metadata = json.loads((qv / "metadata.json").read_text())
+    if qv_metadata["execution_id"] != qv.name or qv_metadata["status"] != "complete":
+        raise ValueError(f"QV identity or status mismatch in {qv}")
+    qv_rows = _read_csv(qv / "cases.csv")
+    if any(row["status"] != "success" for row in qv_rows):
+        raise ValueError(f"QV execution {qv.name} contains failed cases")
+    qv_simulators = {row["simulator"] for row in qv_rows}
+    if qv_simulators != {"clifft", "qiskit", "qsim", "qulacs"}:
+        raise ValueError(f"QV execution {qv.name} does not cover all four tools")
+    return SourceSelection(history, releases, qv)
 
 
 def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
-    history_path, release_paths = _load_sources(sources_path)
+    selected = _load_sources(sources_path)
+    history_path = selected.history
     history_rows = _read_csv(history_path / "cases.csv")
     if any(row["status"] != "success" for row in history_rows):
         raise ValueError(f"history execution {history_path.name} contains failed cases")
@@ -218,7 +253,7 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         "median_attempted_shots_per_second",
     )
     history_shots = _single_ints(history_rows, "shots_per_call", "historical shots_per_call")
-    releases = tuple(_load_release(path) for path in release_paths)
+    releases = tuple(_load_release(path) for path in selected.releases)
     if any(release.shots_per_call != history_shots for release in releases):
         raise ValueError("release shots_per_call do not match historical workloads")
 
@@ -264,6 +299,14 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         ThroughputPoint(workload, latest.current_rates[workload])
         for workload in WORKLOAD_ORDER
     )
+    release_points = tuple(
+        ReleaseComparisonPoint(
+            workload,
+            latest.current_ratios[workload],
+            latest.current_packed[workload],
+        )
+        for workload in WORKLOAD_ORDER
+    )
     return Report(
         HistorySeries(
             tuple(versions),
@@ -273,11 +316,14 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         ),
         points,
         throughput_points,
+        release_points,
         latest.current_version,
+        latest.previous_version,
         latest.alternative_name,
         latest.alternative_version,
         history_path.name,
         tuple(release.execution_id for release in releases),
+        selected.qv.name,
     )
 
 
@@ -477,23 +523,402 @@ def render(report: Report, output_dir: Path, write_pdf: bool = False) -> list[Pa
     return outputs
 
 
+@dataclass(frozen=True)
+class WebTheme:
+    name: str
+    foreground: str
+    muted: str
+    grid: str
+    blue: str
+
+
+WEB_THEMES = (
+    WebTheme("light", "#172033", "#64748B", "#CBD5E1", "#3C64B4"),
+    WebTheme("dark", "#E6EDF7", "#AAB6C8", "#526077", "#83A7F2"),
+)
+WEB_QEC_FIGURES = (
+    "clifft-throughput",
+    "clifft-vs-symft",
+    "performance-over-time",
+    "v010-vs-v009",
+)
+
+
+def web_output_paths(output_dir: Path) -> tuple[Path, ...]:
+    return tuple(
+        output_dir / f"{figure}-{theme.name}.png"
+        for figure in WEB_QEC_FIGURES
+        for theme in WEB_THEMES
+    )
+
+
+def _configure_web(theme: WebTheme, plt: Any) -> None:
+    plt.rcParams.update(
+        {
+            "axes.edgecolor": theme.muted,
+            "axes.labelcolor": theme.foreground,
+            "axes.labelsize": 12,
+            "axes.titlecolor": theme.foreground,
+            "font.family": "DejaVu Sans",
+            "font.size": 11,
+            "savefig.facecolor": "none",
+            "text.color": theme.foreground,
+            "xtick.color": theme.muted,
+            "xtick.labelsize": 10.5,
+            "ytick.color": theme.foreground,
+            "ytick.labelsize": 11.5,
+        }
+    )
+
+
+def _clean_web_axis(axis: Any, theme: WebTheme, *, x_grid: bool = True) -> None:
+    for spine in axis.spines.values():
+        spine.set_visible(False)
+    axis.tick_params(axis="both", length=0)
+    if x_grid:
+        axis.grid(axis="x", color=theme.grid, linewidth=0.8, alpha=0.48)
+        axis.set_axisbelow(True)
+
+
+def _web_version(version: str) -> str:
+    parts = version.split(".")
+    if len(parts) == 3 and parts[2] == "0":
+        return ".".join(parts[:2])
+    return version
+
+
+def _web_ratio_label(value: float) -> str:
+    if value >= 100:
+        return f"{value:.0f}x"
+    if value >= 10:
+        return f"{value:.1f}x"
+    return f"{value:.2f}x"
+
+
+def _plot_web_ratios(
+    plt: Any,
+    theme: WebTheme,
+    *,
+    points: list[tuple[str, float, bool]],
+    output: Path,
+    xlabel: str,
+    ticks: tuple[float, ...],
+    show_packed_legend: bool,
+    current_version: str,
+) -> None:
+    from matplotlib.lines import Line2D
+    from matplotlib.ticker import FixedLocator, FuncFormatter
+
+    points.sort(key=lambda point: point[1])
+    figure, axis = plt.subplots(figsize=(9.6, 4.5))
+    positions = list(range(len(points)))
+    maximum = max(point[1] for point in points)
+    upper = maximum * 1.55
+
+    axis.axvline(1, color=theme.muted, linewidth=1.2, linestyle=(0, (3, 3)))
+    for position, (_workload, ratio, packed) in zip(positions, points, strict=True):
+        axis.plot(
+            [1, ratio],
+            [position, position],
+            color=theme.blue,
+            linewidth=4.5,
+            alpha=0.32,
+            solid_capstyle="round",
+        )
+        axis.scatter(
+            ratio,
+            position,
+            s=88,
+            facecolor=theme.blue if packed else "none",
+            edgecolor=theme.blue,
+            linewidth=2,
+            zorder=3,
+        )
+        place_left = ratio > upper / 2.4
+        axis.annotate(
+            _web_ratio_label(ratio),
+            (ratio, position),
+            xytext=(-9 if place_left else 9, 0),
+            textcoords="offset points",
+            ha="right" if place_left else "left",
+            va="center",
+            fontsize=11,
+            fontweight="bold",
+            color=theme.foreground,
+        )
+
+    axis.set_xscale("log")
+    axis.set_xlim(0.88, upper)
+    axis.xaxis.set_major_locator(FixedLocator([tick for tick in ticks if tick <= upper]))
+    axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:g}x"))
+    axis.set_yticks(
+        positions,
+        labels=[WORKLOAD_LABELS[workload] for workload, _ratio, _packed in points],
+    )
+    axis.set_xlabel(xlabel, labelpad=12)
+    if show_packed_legend:
+        version = _web_version(current_version)
+        axis.legend(
+            handles=[
+                Line2D(
+                    [],
+                    [],
+                    marker="o",
+                    linestyle="none",
+                    markerfacecolor=theme.blue,
+                    markeredgecolor=theme.blue,
+                    markersize=7,
+                    label=f"v{version} packed",
+                ),
+                Line2D(
+                    [],
+                    [],
+                    marker="o",
+                    linestyle="none",
+                    markerfacecolor="none",
+                    markeredgecolor=theme.blue,
+                    markeredgewidth=1.5,
+                    markersize=7,
+                    label=f"v{version} scalar",
+                ),
+            ],
+            loc="lower right",
+            frameon=False,
+            ncols=2,
+            labelcolor=theme.foreground,
+            columnspacing=1.2,
+            handletextpad=0.45,
+            bbox_to_anchor=(1, 1.005),
+        )
+    _clean_web_axis(axis, theme)
+    figure.subplots_adjust(left=0.24, right=0.98, top=0.9, bottom=0.17)
+    figure.savefig(output, dpi=200, transparent=True)
+    plt.close(figure)
+
+
+def _plot_web_tool_comparison(
+    plt: Any, theme: WebTheme, report: Report, output: Path
+) -> None:
+    current = _web_version(report.clifft_version)
+    alternative = _web_version(report.alternative_version)
+    _plot_web_ratios(
+        plt,
+        theme,
+        points=[
+            (point.workload_id, point.clifft_over_alternative, True)
+            for point in report.relative_points
+        ],
+        output=output,
+        xlabel=(
+            f"Clifft v{current} throughput relative to "
+            f"{report.alternative_name} v{alternative}"
+        ),
+        ticks=(1, 2, 5, 10, 20, 50, 100),
+        show_packed_legend=False,
+        current_version=report.clifft_version,
+    )
+
+
+def _plot_web_release_comparison(
+    plt: Any, theme: WebTheme, report: Report, output: Path
+) -> None:
+    current = _web_version(report.clifft_version)
+    previous = _web_version(report.previous_clifft_version)
+    _plot_web_ratios(
+        plt,
+        theme,
+        points=[
+            (point.workload_id, point.current_over_previous, point.current_packed)
+            for point in report.release_points
+        ],
+        output=output,
+        xlabel=f"Clifft v{current} throughput relative to v{previous}",
+        ticks=(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000),
+        show_packed_legend=True,
+        current_version=report.clifft_version,
+    )
+
+
+def _web_throughput_label(value: float) -> str:
+    if value >= 1_000_000:
+        return f"{value / 1_000_000:.2f}M/s"
+    if value >= 1_000:
+        return f"{value / 1_000:.1f}k/s"
+    return f"{value:.1f}/s"
+
+
+def _plot_web_throughput(
+    plt: Any, theme: WebTheme, report: Report, output: Path
+) -> None:
+    from matplotlib.ticker import FixedLocator, FuncFormatter
+
+    points = sorted(
+        report.throughput_points,
+        key=lambda point: point.attempted_shots_per_second,
+    )
+    rates = [point.attempted_shots_per_second for point in points]
+    lower_power = math.floor(math.log10(min(rates)))
+    upper_power = math.ceil(math.log10(max(rates)))
+    lower = 10 ** (lower_power - 0.15)
+    upper = 10 ** (upper_power + 0.3)
+    positions = list(range(len(points)))
+    figure, axis = plt.subplots(figsize=(9.6, 4.5))
+    for position, rate in zip(positions, rates, strict=True):
+        axis.plot(
+            [lower, rate],
+            [position, position],
+            color=theme.blue,
+            linewidth=4.5,
+            alpha=0.32,
+            solid_capstyle="round",
+        )
+        axis.scatter(rate, position, color=theme.blue, s=88, zorder=3)
+        axis.annotate(
+            _web_throughput_label(rate),
+            (rate, position),
+            xytext=(9, 0),
+            textcoords="offset points",
+            va="center",
+            fontsize=11,
+            fontweight="bold",
+            color=theme.foreground,
+        )
+    axis.set_xscale("log")
+    axis.set_xlim(lower, upper)
+    axis.xaxis.set_major_locator(
+        FixedLocator([10**power for power in range(lower_power, upper_power + 1)])
+    )
+    axis.xaxis.set_major_formatter(FuncFormatter(_throughput_tick))
+    axis.set_yticks(positions, labels=[WORKLOAD_LABELS[point.workload_id] for point in points])
+    axis.set_xlabel(
+        f"Clifft v{_web_version(report.clifft_version)} attempted shots per second",
+        labelpad=12,
+    )
+    _clean_web_axis(axis, theme)
+    figure.subplots_adjust(left=0.24, right=0.98, top=0.9, bottom=0.17)
+    figure.savefig(output, dpi=200, transparent=True)
+    plt.close(figure)
+
+
+def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -> None:
+    from matplotlib.ticker import FixedLocator, FuncFormatter
+
+    positions = list(range(len(report.history.versions)))
+    medians = report.history.medians
+    figure, axis = plt.subplots(figsize=(9.6, 4.5))
+    axis.axhline(1, color=theme.muted, linewidth=1.2, linestyle=(0, (3, 3)))
+    axis.plot(
+        positions,
+        medians,
+        color=theme.blue,
+        linewidth=3.5,
+        marker="o",
+        markersize=6.5,
+        solid_capstyle="round",
+        zorder=3,
+    )
+    axis.fill_between(positions, 1, medians, color=theme.blue, alpha=0.09)
+    axis.annotate(
+        f"{medians[-1]:.0f}x median speedup",
+        (positions[-1], medians[-1]),
+        xytext=(-8, -24),
+        textcoords="offset points",
+        ha="right",
+        color=theme.blue,
+        fontsize=11.5,
+        fontweight="bold",
+    )
+    axis.annotate(
+        "symbolic plans",
+        (positions[-3], medians[-3]),
+        xytext=(0, 30),
+        textcoords="offset points",
+        ha="center",
+        color=theme.muted,
+        fontsize=10,
+        arrowprops={"arrowstyle": "-", "color": theme.grid, "linewidth": 1},
+    )
+    axis.annotate(
+        "packing + compiler",
+        (positions[-1], medians[-1]),
+        xytext=(-72, 22),
+        textcoords="offset points",
+        ha="center",
+        color=theme.muted,
+        fontsize=10,
+        arrowprops={"arrowstyle": "-", "color": theme.grid, "linewidth": 1},
+    )
+    axis.set_yscale("log", base=2)
+    axis.set_ylim(0.72, 10.5)
+    axis.yaxis.set_major_locator(FixedLocator([1, 2, 4, 8]))
+    axis.yaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:g}x"))
+    axis.set_xticks(
+        positions,
+        labels=[f"v{_web_version(version)}" for version in report.history.versions],
+    )
+    axis.set_ylabel("Median speedup vs v0.1")
+    _clean_web_axis(axis, theme)
+    figure.subplots_adjust(left=0.11, right=0.98, top=0.92, bottom=0.18)
+    figure.savefig(output, dpi=200, transparent=True)
+    plt.close(figure)
+
+
+def render_web(report: Report, output_dir: Path) -> list[Path]:
+    try:
+        import matplotlib
+    except ModuleNotFoundError as error:
+        raise RuntimeError("install the report extra to render figures") from error
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for theme in WEB_THEMES:
+        _configure_web(theme, plt)
+        suffix = theme.name
+        _plot_web_throughput(
+            plt, theme, report, output_dir / f"clifft-throughput-{suffix}.png"
+        )
+        _plot_web_tool_comparison(
+            plt, theme, report, output_dir / f"clifft-vs-symft-{suffix}.png"
+        )
+        _plot_web_history(
+            plt, theme, report, output_dir / f"performance-over-time-{suffix}.png"
+        )
+        _plot_web_release_comparison(
+            plt, theme, report, output_dir / f"v010-vs-v009-{suffix}.png"
+        )
+    return list(web_output_paths(output_dir))
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--style", choices=("paper", "web"), default="paper")
     parser.add_argument("--pdf", action="store_true")
     parser.add_argument("--check", action="store_true")
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
+    parser = _parser()
+    args = parser.parse_args(argv)
+    if args.style == "web" and args.pdf:
+        parser.error("--pdf is available only with --style paper")
     report = build_report(args.sources.resolve())
     print(f"history execution: {report.history_execution}")
     print(f"release chain: {', '.join(report.release_executions)}")
+    print(f"QV execution: {report.qv_execution}")
     print(f"releases: {' -> '.join(report.history.versions)}")
     if not args.check:
-        for path in render(report, args.output_dir.resolve(), args.pdf):
+        default_output = DEFAULT_WEB_OUTPUT_DIR if args.style == "web" else DEFAULT_OUTPUT_DIR
+        output_dir = (args.output_dir or default_output).resolve()
+        outputs = (
+            render_web(report, output_dir)
+            if args.style == "web"
+            else render(report, output_dir, args.pdf)
+        )
+        for path in outputs:
             print(path)
     return 0
 

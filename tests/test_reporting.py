@@ -3,9 +3,10 @@ from __future__ import annotations
 import csv
 import json
 import math
+import struct
 from pathlib import Path
 
-from reporting.qec import WORKLOAD_ORDER, build_report
+from reporting.qec import WORKLOAD_ORDER, build_report, web_output_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "reporting/sources.json"
@@ -87,3 +88,43 @@ def test_reporting_uses_latest_calibrated_cross_tool_comparison() -> None:
 
     slow_coherent = points["coherent-surface-d5-r5-p1e-3-rz2e-2"]
     assert slow_coherent.clifft_over_alternative > 80
+
+
+def test_reporting_exposes_release_comparison_and_qv_source() -> None:
+    report = build_report(SOURCES)
+    source_document = _source_document()
+
+    assert report.qv_execution == Path(source_document["qv_execution"]).name
+    assert len(report.release_points) == len(WORKLOAD_ORDER)
+    release_points = {point.workload_id: point for point in report.release_points}
+    assert release_points["coherent-surface-d3-r1-p1e-3-rz2e-2"].current_packed
+    assert not release_points["coherent-surface-d5-r5-p1e-3-rz2e-2"].current_packed
+
+
+def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
+    assert {path.name for path in web_output_paths(tmp_path)} == {
+        "clifft-throughput-light.png",
+        "clifft-throughput-dark.png",
+        "clifft-vs-symft-light.png",
+        "clifft-vs-symft-dark.png",
+        "performance-over-time-light.png",
+        "performance-over-time-dark.png",
+        "v010-vs-v009-light.png",
+        "v010-vs-v009-dark.png",
+    }
+
+
+def test_checked_in_web_assets_cover_docs_outputs() -> None:
+    output_dir = ROOT / "reporting/figures/web"
+    expected = {path.name for path in web_output_paths(output_dir)} | {
+        "quantum-volume-light.png",
+        "quantum-volume-dark.png",
+    }
+    assert {path.name for path in output_dir.glob("*.png")} == expected
+
+    for path in output_dir.glob("*.png"):
+        data = path.read_bytes()
+        assert data[:8] == b"\x89PNG\r\n\x1a\n"
+        width, _height = struct.unpack(">II", data[16:24])
+        assert width == 1920
+        assert data[25] == 6  # RGBA
