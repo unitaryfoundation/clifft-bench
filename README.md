@@ -24,11 +24,11 @@ versus current Clifft. Longer-term history accumulates from those executions;
 older releases are not rerun for every release.
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
-single recurring campaign definition. It currently compares scalar Clifft
-0.9.0 with campaign-calibrated 0.10.0rc1, compares separately calibrated Clifft
-and SymFT configurations, and retains a separate scalar cross-tool comparison.
-Update its current, calibrated-current, and previous Clifft variants for each
-later release.
+single recurring campaign definition. It records both calibrated and scalar
+Clifft release-over-release comparisons, compares separately calibrated Clifft
+and SymFT configurations, and retains a scalar cross-tool comparison. Update
+its current, calibrated-current, previous, and calibrated-previous Clifft
+variants for each later release.
 
 [`campaigns/clifft-history-v1/`](campaigns/clifft-history-v1/) is an optional,
 one-off backfill that reruns representative 0.x releases together under the
@@ -111,10 +111,12 @@ For a new Clifft release:
    `manifests/software.v1.json`.
 2. Add its direct requirement and resolved lock under `environments/`.
 3. Point `clifft-current` and `clifft-current-calibrated` at the new
-   implementation, and `clifft-previous` at the prior release in the release
-   manifest.
-4. Update alternative tool versions or calibrated workload call sizes only
-   when needed; every calibrated call must admit the full candidate sweep.
+   implementation, and point `clifft-previous` and
+   `clifft-previous-calibrated` at the prior release in the release manifest.
+4. Keep each workload's `shots_per_call` aligned across every variant and
+   release. Update those workload-level values only when measurement evidence
+   requires it; batch size remains a separately calibrated implementation
+   choice.
 5. Validate locally, then follow `docs/manual-ec2.md`.
 
 For a release candidate, keep its exact prerelease value in `version` and its

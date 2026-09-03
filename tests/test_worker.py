@@ -121,3 +121,47 @@ def test_batch_calibration_breaks_throughput_ties_toward_smaller_size(
 
     assert prepared.runtime_metadata["batch_calibration"]["selected_batch_size"] == 1
     assert adapter.prepared_batch_sizes == [1, 32, 1]
+
+
+def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
+    monkeypatch,
+) -> None:
+    class ScalarOnlyAdapter(_CalibrationAdapter):
+        def prepare(self, *, artifact_path, workload, execution):
+            if execution["batch_size"] != 1:
+                raise TypeError("batch_size is unsupported")
+            return super().prepare(
+                artifact_path=artifact_path,
+                workload=workload,
+                execution=execution,
+            )
+
+    adapter = ScalarOnlyAdapter()
+
+    def timed_sample(_prepared, shots: int, seed: int):
+        return Counts(shots, shots, 0, seed % 2), 0.25
+
+    monkeypatch.setattr(worker, "timed_sample", timed_sample)
+    prepared = worker.calibrate_batch_size(
+        adapter,
+        artifact_path=SimpleNamespace(),
+        workload={"semantics": {"postselect_all_detectors": False}},
+        execution={
+            "mode": "throughput",
+            "batch_enabled": True,
+            "batch_size": "calibrate",
+            "sample_chunk_shots": 0,
+        },
+        shots_per_call=2048,
+        seed=10,
+    )
+
+    calibration = prepared.runtime_metadata["batch_calibration"]
+    assert calibration["selected_batch_size"] == 1
+    assert [result["status"] for result in calibration["results"]] == [
+        "success",
+        "error",
+        "error",
+        "error",
+        "error",
+    ]

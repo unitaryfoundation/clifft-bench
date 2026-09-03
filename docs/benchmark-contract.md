@@ -97,15 +97,22 @@ numeric batch size remains supported for cases that do not request calibration.
 `shots_per_call` is the number requested from one public API call. Both are
 recorded because changing either can change amortization.
 
-Cross-mode comparisons are configured-throughput comparisons, not claims of
-equal public-call granularity. Derived rows therefore carry both sides' mode,
-effective batch size, and shots per call.
+The recurring campaign treats `shots_per_call` as a workload measurement
+parameter, chosen to produce meaningful throughput samples and kept identical
+across tools, releases, and batching modes. Batch calibration then selects an
+internal optimization for that fixed public call. The active-wide coherent
+d5/r5 workload intentionally retains one shot per call; its calibrated cases
+therefore consider only candidate `1` and record a scalar selection.
+
+Derived rows carry both sides' mode, effective batch size, and shots per call.
 
 The recurring `current-vs-previous` comparison asks whether Clifft improved
-using the capabilities available in each release. It therefore compares the
-previous release's scalar configuration with the current release's calibrated
-configuration at the same `shots_per_call`. A separate scalar cross-tool
-comparison retains visibility into non-batched behavior.
+using the capabilities available in each release. It applies calibration to
+both releases, allowing an older release without batching support to select
+scalar execution after unsupported candidates fail. The separate
+`current-vs-previous-scalar` comparison preserves the clean scalar trend.
+Calibrated and scalar cross-tool comparisons answer the corresponding two
+questions for current Clifft and SymFT.
 
 ## Correctness and identity
 

@@ -19,15 +19,15 @@
   },
   "cases": [
     {
-      "id": "msc-d3-smoke-clifft",
-      "variant_id": "clifft-current",
+      "id": "msc-d3-smoke-clifft-calibrated",
+      "variant_id": "clifft-current-calibrated",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "clifft-0.10.0rc1",
-      "shots_per_call": 64,
+      "shots_per_call": 2048,
       "execution": {
         "mode": "throughput",
-        "batch_enabled": false,
-        "batch_size": 1,
+        "batch_enabled": true,
+        "batch_size": "calibrate",
         "sample_chunk_shots": 0
       }
     },
@@ -36,7 +36,7 @@
       "variant_id": "symft-calibrated",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
       "implementation_id": "symft-0.1.0-9ec5790",
-      "shots_per_call": 64,
+      "shots_per_call": 2048,
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,

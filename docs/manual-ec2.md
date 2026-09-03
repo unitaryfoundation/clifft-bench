@@ -107,9 +107,12 @@ jq -r '
 ' "$result_dir"/raw/*-raw.json
 ```
 
-Confirm that `current-vs-previous` is scalar previous Clifft versus calibrated
-current Clifft, `alternatives-vs-current` compares the two calibrated tools,
-and `scalar-alternatives-vs-current` compares their scalar configurations.
+Confirm that `current-vs-previous` compares calibrated previous and current
+Clifft, `current-vs-previous-scalar` compares their scalar configurations,
+`alternatives-vs-current` compares calibrated Clifft and SymFT, and
+`scalar-alternatives-vs-current` compares their scalar configurations. Within
+every row, confirm that baseline and candidate use the same
+`shots_per_call`.
 
 Review before committing:
 
