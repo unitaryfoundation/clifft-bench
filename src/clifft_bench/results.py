@@ -7,7 +7,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
-from clifft_bench.manifest import Suite
+from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
+from clifft_bench.manifest import Case, Suite
 from clifft_bench.schema import (
     SchemaValidationError,
     repository_root,
@@ -306,6 +307,49 @@ def _comparison_rows(
     return comparisons
 
 
+def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> None:
+    if expected.definition["execution"]["batch_size"] != "calibrate":
+        return
+
+    case_id = expected.id
+    setup = observed.get("setup")
+    calibration = (
+        setup.get("runtime_metadata", {}).get("batch_calibration")
+        if isinstance(setup, dict)
+        else None
+    )
+    if not isinstance(calibration, dict):
+        raise ValueError(
+            f"calibrated raw case {case_id!r} has no batch_calibration metadata"
+        )
+
+    selected = calibration.get("selected_batch_size")
+    if type(selected) is not int or selected < 1:
+        raise ValueError(
+            f"calibrated raw case {case_id!r} has invalid selected_batch_size "
+            f"{selected!r}"
+        )
+    shots_per_call = int(expected.definition["shots_per_call"])
+    expected_candidates = [
+        candidate
+        for candidate in BATCH_CALIBRATION_CANDIDATES
+        if candidate <= shots_per_call
+    ]
+    if calibration.get("candidates") != expected_candidates:
+        raise ValueError(
+            f"calibrated raw case {case_id!r} candidates do not match the contract"
+        )
+    if selected not in expected_candidates:
+        raise ValueError(
+            f"calibrated raw case {case_id!r} selected an unsupported batch_size"
+        )
+    if observed["execution"].get("batch_size") != selected:
+        raise ValueError(
+            f"calibrated raw case {case_id!r} does not record selected numeric "
+            "batch_size"
+        )
+
+
 def _validate_execution(
     suite: Suite,
     raw_paths: list[Path],
@@ -329,7 +373,8 @@ def _validate_execution(
     placements: dict[int, list[dict[str, Any]]] = defaultdict(list)
     expected_memory_limit_bytes = int(float(collection["memory_limit_gib"]) * (1 << 30))
     expected_instance_type = suite.run["reference_host"]["instance_type"]
-    expected_case_ids = {case.id for case in suite.cases}
+    expected_cases = {case.id: case for case in suite.cases}
+    expected_case_ids = set(expected_cases)
     for result in results:
         if result["run"]["profile_id"] != suite.run["profile_id"]:
             raise ValueError(
@@ -344,10 +389,13 @@ def _validate_execution(
                 f"expected instance type {expected_instance_type!r}, "
                 f"received {cloud['instance_type']!r}"
             )
-        observed_case_ids = {case["case_id"] for case in result["cases"]}
-        if observed_case_ids != expected_case_ids:
+        observed_case_ids = [case["case_id"] for case in result["cases"]]
+        if len(observed_case_ids) != len(set(observed_case_ids)):
+            raise ValueError("raw result contains duplicate campaign case IDs")
+        if set(observed_case_ids) != expected_case_ids:
             raise ValueError("raw result does not contain every declared campaign case")
         for case in result["cases"]:
+            _validate_calibration_record(expected_cases[case["case_id"]], case)
             observed_memory_limit = case["execution"].get("memory_limit_bytes")
             if observed_memory_limit != expected_memory_limit_bytes:
                 raise ValueError(

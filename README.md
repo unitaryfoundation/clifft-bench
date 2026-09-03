@@ -24,9 +24,11 @@ versus current Clifft. Longer-term history accumulates from those executions;
 older releases are not rerun for every release.
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
-single recurring campaign definition. It currently compares Clifft 0.9.0 with
-0.10.0rc1 and compares the candidate with the pinned SymFT modes. Update its
-`clifft-current` and `clifft-previous` variants for each later release.
+single recurring campaign definition. It compares calibrated previous and
+current Clifft configurations, then compares calibrated current Clifft and
+SymFT configurations. A release without batching support selects scalar mode
+during calibration. Update its current and previous Clifft variants for each
+later release.
 
 [`campaigns/clifft-history-v1/`](campaigns/clifft-history-v1/) is an optional,
 one-off backfill that reruns representative 0.x releases together under the
@@ -61,8 +63,7 @@ Important comparison rules:
 - Raw JSON is authoritative; CSV tables are derived views.
 - Absolute rates are comparable only within one hardware epoch.
 - Internal batch size and public shots per call remain visible in comparisons.
-- Cases run serially in manifest order; three fresh host boots capture placement
-  variation.
+- Cases run serially in manifest order in one reference-host placement.
 
 See the full [benchmark contract](docs/benchmark-contract.md),
 [data format](docs/data-format.md), and
@@ -109,9 +110,12 @@ For a new Clifft release:
 1. Add its identity and install environment to
    `manifests/software.v1.json`.
 2. Add its direct requirement and resolved lock under `environments/`.
-3. Point `clifft-current` at the new implementation and
-   `clifft-previous` at the prior release in the release manifest.
-4. Update alternative tool versions or workload call sizes only when needed.
+3. Point `clifft-current` at the new implementation and `clifft-previous` at
+   the prior release in the release manifest.
+4. Keep each workload's `shots_per_call` aligned across every variant and
+   release. Update those workload-level values only when measurement evidence
+   requires it; batch size remains a separately calibrated implementation
+   choice.
 5. Validate locally, then follow `docs/manual-ec2.md`.
 
 For a release candidate, keep its exact prerelease value in `version` and its
@@ -121,8 +125,8 @@ evidence retain the exact candidate identity; derived tables expose the display
 version for plots, summaries, and release docs.
 
 One placement now produces one raw result containing every variant. The
-finalizer checks placement coverage and writes `cases.csv`, `comparisons.csv`,
-and `index.json` beside the raw evidence.
+finalizer checks placement coverage and calibration evidence, writes
+`cases.csv`, `comparisons.csv`, and `index.json` beside the raw evidence.
 
 ## Adding a workload
 

@@ -12,13 +12,37 @@ import pytest
 from clifft_bench.results import _comparison_rows, finalize_execution
 from clifft_bench.schema import repository_root, validate_path
 
+WORKLOAD_ID = "msc-d3-inject-cultivate-p1e-3"
 
-def _suite():
+
+def _expected_case(variant: str, *, batch_size: int | str) -> SimpleNamespace:
+    return SimpleNamespace(
+        id=f"workload--{variant}",
+        definition={
+            "id": f"workload--{variant}",
+            "variant_id": variant,
+            "workload_id": WORKLOAD_ID,
+            "implementation_id": variant,
+            "shots_per_call": 64,
+            "execution": {
+                "mode": "throughput",
+                "batch_enabled": batch_size != 1,
+                "batch_size": batch_size,
+                "sample_chunk_shots": 0,
+            },
+        },
+    )
+
+
+def _suite(*, calibrated_candidate: bool = False):
     return SimpleNamespace(
         run_path=repository_root() / "campaigns/release-v1/run.v1.json",
         cases=(
-            SimpleNamespace(id="workload--baseline"),
-            SimpleNamespace(id="workload--candidate"),
+            _expected_case("baseline", batch_size=1),
+            _expected_case(
+                "candidate",
+                batch_size="calibrate" if calibrated_candidate else 32,
+            ),
         ),
         run={
             "profile_id": "test-campaign",
@@ -174,6 +198,52 @@ def test_finalize_rejects_smoke_manifest(tmp_path: Path) -> None:
             execution_id="test-execution",
             raw_paths=[],
             output_dir=tmp_path,
+        )
+
+
+def test_finalize_requires_complete_calibration_evidence(tmp_path: Path) -> None:
+    raw_path = _result(tmp_path)
+
+    with pytest.raises(ValueError, match="has no batch_calibration metadata"):
+        finalize_execution(
+            _suite(calibrated_candidate=True),
+            execution_id="test-execution",
+            raw_paths=[raw_path],
+            output_dir=tmp_path / "missing-calibration",
+        )
+
+    document = json.loads(raw_path.read_text())
+    candidate = next(
+        case for case in document["cases"] if case["variant_id"] == "candidate"
+    )
+    runtime_metadata = candidate["setup"]["runtime_metadata"]
+    runtime_metadata["batch_enabled"] = True
+    runtime_metadata["effective_batch_size"] = 32
+    runtime_metadata["batch_calibration"] = {
+        "candidates": [1, 32],
+        "selected_batch_size": 32,
+        "results": [
+            {"batch_size": 1, "status": "success"},
+            {"batch_size": 32, "status": "success"},
+        ],
+    }
+    raw_path.write_text(json.dumps(document))
+
+    finalize_execution(
+        _suite(calibrated_candidate=True),
+        execution_id="test-execution",
+        raw_paths=[raw_path],
+        output_dir=tmp_path / "valid-calibration",
+    )
+
+    candidate["execution"]["batch_size"] = 1
+    raw_path.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="does not record selected numeric batch_size"):
+        finalize_execution(
+            _suite(calibrated_candidate=True),
+            execution_id="test-execution",
+            raw_paths=[raw_path],
+            output_dir=tmp_path / "mismatched-selected-size",
         )
 
 

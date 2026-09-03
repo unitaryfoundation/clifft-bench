@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
 from clifft_bench.manifest import load_suite
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
@@ -28,14 +29,13 @@ def test_checked_in_manifests_validate(relative: str) -> None:
 def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
-    assert len(suite.cases) == 32
-    assert len({case.id for case in suite.cases}) == 32
+    assert suite.run["collection"]["placements"] == 1
+    assert len(suite.cases) == 24
+    assert len({case.id for case in suite.cases}) == 24
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
-        "symft-single",
-        "symft-batch-32",
-        "symft-batch-2048",
+        "symft-current",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
@@ -61,6 +61,72 @@ def test_release_manifest_expands_named_variants() -> None:
     assert candidate["version"] == "0.10.0rc1"
     assert candidate["display_version"] == "0.10.0"
     assert candidate["source_tag"] == "v0.10.0rc1"
+
+    comparisons = {item["id"]: item for item in suite.run["comparisons"]}
+    assert comparisons == {
+        "current-vs-previous": {
+            "id": "current-vs-previous",
+            "baseline_variant": "clifft-previous",
+            "candidate_variants": ["clifft-current"],
+        },
+        "alternatives-vs-current": {
+            "id": "alternatives-vs-current",
+            "baseline_variant": "clifft-current",
+            "candidate_variants": ["symft-current"],
+        },
+    }
+
+    calibrated_by_variant = {
+        variant_id: [
+            case
+            for case in suite.cases
+            if case.definition["variant_id"] == variant_id
+        ]
+        for variant_id in ("clifft-previous", "clifft-current", "symft-current")
+    }
+    assert all(len(cases) == 8 for cases in calibrated_by_variant.values())
+    for cases in calibrated_by_variant.values():
+        assert all(
+            case.definition["execution"]["batch_enabled"] is True
+            and case.definition["execution"]["batch_size"] == "calibrate"
+            for case in cases
+        )
+        assert all(
+            case.definition["shots_per_call"]
+            >= max(BATCH_CALIBRATION_CANDIDATES)
+            for case in cases
+            if case.workload.id != "coherent-surface-d5-r5-p1e-3-rz2e-2"
+        )
+        slow_case = next(
+            case
+            for case in cases
+            if case.workload.id == "coherent-surface-d5-r5-p1e-3-rz2e-2"
+        )
+        assert slow_case.definition["shots_per_call"] == 1
+
+    variant_ids = {case.definition["variant_id"] for case in suite.cases}
+    signatures_by_variant = {
+        variant_id: {
+            (case.workload.id, case.definition["shots_per_call"])
+            for case in suite.cases
+            if case.definition["variant_id"] == variant_id
+        }
+        for variant_id in variant_ids
+    }
+    expected_signature = {
+        ("msc-d3-inject-cultivate-p1e-3", 100000),
+        ("msc-d5-inject-cultivate-p1e-3", 20000),
+        ("distillation-color-code-85q-p5e-2", 100000),
+        ("surface-code-d7-r7-p1e-3", 100000),
+        ("coherent-surface-d3-r1-p1e-3-rz2e-2", 100000),
+        ("coherent-surface-d3-r3-p1e-3-rz2e-2", 100000),
+        ("coherent-surface-d5-r1-p1e-3-rz2e-2", 10000),
+        ("coherent-surface-d5-r5-p1e-3-rz2e-2", 1),
+    }
+    assert all(
+        signature == expected_signature
+        for signature in signatures_by_variant.values()
+    )
 
 
 def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:
@@ -96,18 +162,20 @@ def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -
     assert len({frozenset(items) for items in case_signatures.values()}) == 1
 
 
-def test_smoke_suite_exercises_symft_batch_calibration() -> None:
+@pytest.mark.parametrize("adapter", ["clifft", "symft"])
+def test_smoke_suite_exercises_full_batch_calibration_sweep(adapter: str) -> None:
     smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
     calibrated = [
         case
         for case in smoke.cases
-        if case.implementation.definition["adapter"] == "symft"
+        if case.implementation.definition["adapter"] == adapter
         and case.definition["execution"]["mode"] == "throughput"
+        and case.definition["execution"]["batch_size"] == "calibrate"
     ]
 
     assert calibrated
-    assert all(
-        case.definition["execution"]["batch_size"] == "calibrate"
+    assert any(
+        case.definition["shots_per_call"] >= max(BATCH_CALIBRATION_CANDIDATES)
         for case in calibrated
     )
 

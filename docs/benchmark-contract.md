@@ -97,9 +97,21 @@ numeric batch size remains supported for cases that do not request calibration.
 `shots_per_call` is the number requested from one public API call. Both are
 recorded because changing either can change amortization.
 
-Cross-mode comparisons are configured-throughput comparisons, not claims of
-equal public-call granularity. Derived rows therefore carry both sides' mode,
-effective batch size, and shots per call.
+The recurring campaign treats `shots_per_call` as a workload measurement
+parameter, chosen to produce meaningful throughput samples and kept identical
+across tools, releases, and batching modes. Batch calibration then selects an
+internal optimization for that fixed public call. The active-wide coherent
+d5/r5 workload intentionally retains one shot per call; its calibrated cases
+therefore consider only candidate `1` and record a scalar selection.
+
+Derived rows carry both sides' mode, effective batch size, and shots per call.
+
+The recurring `current-vs-previous` comparison asks whether Clifft improved
+using the capabilities available in each release. It applies calibration to
+both releases, allowing an older release without batching support to select
+scalar execution after unsupported candidates fail. The
+`alternatives-vs-current` comparison applies the same calibration policy to
+current Clifft and SymFT. These are the recurring campaign's two comparisons.
 
 ## Correctness and identity
 
@@ -123,10 +135,10 @@ incompatible adapter/workload pairing is rejected before execution.
 ## Placements and official evidence
 
 The release campaign emits one raw result per placement and replica, containing
-all variants. Three stop/start placements are used for current comparisons.
+all variants. The recurring release campaign uses one reference-host placement.
 Finalization requires the declared coverage, one clean source commit, the
-reference instance type, one reference instance, distinct boot IDs between
-placements, and the declared memory ceiling.
+reference instance type, one reference instance, distinct boot IDs when a
+campaign requests multiple placements, and the declared memory ceiling.
 
 `manifests/run-smoke.v1.json` is only a short developer correctness check. A
 release execution becomes official evidence after finalization and review of
