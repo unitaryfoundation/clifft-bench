@@ -571,13 +571,12 @@ def _configure_web(theme: WebTheme, plt: Any) -> None:
     )
 
 
-def _clean_web_axis(axis: Any, theme: WebTheme, *, x_grid: bool = True) -> None:
+def _clean_web_axis(axis: Any, theme: WebTheme, *, grid_axis: str = "x") -> None:
     for spine in axis.spines.values():
         spine.set_visible(False)
     axis.tick_params(axis="both", length=0)
-    if x_grid:
-        axis.grid(axis="x", color=theme.grid, linewidth=0.8, alpha=0.48)
-        axis.set_axisbelow(True)
+    axis.grid(axis=grid_axis, color=theme.grid, linewidth=0.8, alpha=0.48)
+    axis.set_axisbelow(True)
 
 
 def _web_version(version: str) -> str:
@@ -603,10 +602,7 @@ def _plot_web_ratios(
     output: Path,
     xlabel: str,
     ticks: tuple[float, ...],
-    show_packed_legend: bool,
-    current_version: str,
 ) -> None:
-    from matplotlib.lines import Line2D
     from matplotlib.ticker import FixedLocator, FuncFormatter
 
     points.sort(key=lambda point: point[1])
@@ -634,13 +630,12 @@ def _plot_web_ratios(
             linewidth=2,
             zorder=3,
         )
-        place_left = ratio > upper / 2.4
         axis.annotate(
             _web_ratio_label(ratio),
             (ratio, position),
-            xytext=(-9 if place_left else 9, 0),
+            xytext=(9, 0),
             textcoords="offset points",
-            ha="right" if place_left else "left",
+            ha="left",
             va="center",
             fontsize=11,
             fontweight="bold",
@@ -656,42 +651,8 @@ def _plot_web_ratios(
         labels=[WORKLOAD_LABELS[workload] for workload, _ratio, _packed in points],
     )
     axis.set_xlabel(xlabel, labelpad=12)
-    if show_packed_legend:
-        version = _web_version(current_version)
-        axis.legend(
-            handles=[
-                Line2D(
-                    [],
-                    [],
-                    marker="o",
-                    linestyle="none",
-                    markerfacecolor=theme.blue,
-                    markeredgecolor=theme.blue,
-                    markersize=7,
-                    label=f"v{version} packed",
-                ),
-                Line2D(
-                    [],
-                    [],
-                    marker="o",
-                    linestyle="none",
-                    markerfacecolor="none",
-                    markeredgecolor=theme.blue,
-                    markeredgewidth=1.5,
-                    markersize=7,
-                    label=f"v{version} scalar",
-                ),
-            ],
-            loc="lower right",
-            frameon=False,
-            ncols=2,
-            labelcolor=theme.foreground,
-            columnspacing=1.2,
-            handletextpad=0.45,
-            bbox_to_anchor=(1, 1.005),
-        )
     _clean_web_axis(axis, theme)
-    figure.subplots_adjust(left=0.24, right=0.98, top=0.9, bottom=0.17)
+    figure.subplots_adjust(left=0.24, right=0.98, top=0.96, bottom=0.17)
     figure.savefig(output, dpi=200, transparent=True)
     plt.close(figure)
 
@@ -714,8 +675,6 @@ def _plot_web_tool_comparison(
             f"{report.alternative_name} v{alternative}"
         ),
         ticks=(1, 2, 5, 10, 20, 50, 100),
-        show_packed_legend=False,
-        current_version=report.clifft_version,
     )
 
 
@@ -734,8 +693,6 @@ def _plot_web_release_comparison(
         output=output,
         xlabel=f"Clifft v{current} throughput relative to v{previous}",
         ticks=(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000),
-        show_packed_legend=True,
-        current_version=report.clifft_version,
     )
 
 
@@ -760,7 +717,7 @@ def _plot_web_throughput(
     lower_power = math.floor(math.log10(min(rates)))
     upper_power = math.ceil(math.log10(max(rates)))
     lower = 10 ** (lower_power - 0.15)
-    upper = 10 ** (upper_power + 0.3)
+    upper = 10 ** (upper_power + 0.38)
     positions = list(range(len(points)))
     figure, axis = plt.subplots(figsize=(9.6, 4.5))
     for position, rate in zip(positions, rates, strict=True):
@@ -795,7 +752,7 @@ def _plot_web_throughput(
         labelpad=12,
     )
     _clean_web_axis(axis, theme)
-    figure.subplots_adjust(left=0.24, right=0.98, top=0.9, bottom=0.17)
+    figure.subplots_adjust(left=0.24, right=0.98, top=0.96, bottom=0.17)
     figure.savefig(output, dpi=200, transparent=True)
     plt.close(figure)
 
@@ -805,7 +762,7 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
 
     positions = list(range(len(report.history.versions)))
     medians = report.history.medians
-    figure, axis = plt.subplots(figsize=(9.6, 4.5))
+    figure, axis = plt.subplots(figsize=(9.6, 3.8))
     axis.axhline(1, color=theme.muted, linewidth=1.2, linestyle=(0, (3, 3)))
     axis.plot(
         positions,
@@ -817,21 +774,24 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
         solid_capstyle="round",
         zorder=3,
     )
-    axis.fill_between(positions, 1, medians, color=theme.blue, alpha=0.09)
+    axis.fill_between(
+        positions, 1, medians, color=theme.blue, alpha=0.09, linewidth=0, zorder=1
+    )
     axis.annotate(
         f"{medians[-1]:.0f}x median speedup",
         (positions[-1], medians[-1]),
-        xytext=(-8, -24),
+        xytext=(-26, -22),
         textcoords="offset points",
         ha="right",
         color=theme.blue,
         fontsize=11.5,
         fontweight="bold",
+        zorder=4,
     )
     axis.annotate(
         "symbolic plans",
         (positions[-3], medians[-3]),
-        xytext=(0, 30),
+        xytext=(0, 28),
         textcoords="offset points",
         ha="center",
         color=theme.muted,
@@ -841,7 +801,7 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     axis.annotate(
         "packing + compiler",
         (positions[-1], medians[-1]),
-        xytext=(-72, 22),
+        xytext=(-72, 20),
         textcoords="offset points",
         ha="center",
         color=theme.muted,
@@ -854,10 +814,10 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     axis.yaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:g}x"))
     axis.set_xticks(
         positions,
-        labels=[f"v{_web_version(version)}" for version in report.history.versions],
+        labels=[f"v{version}" for version in report.history.versions],
     )
     axis.set_ylabel("Median speedup vs v0.1")
-    _clean_web_axis(axis, theme)
+    _clean_web_axis(axis, theme, grid_axis="y")
     figure.subplots_adjust(left=0.11, right=0.98, top=0.92, bottom=0.18)
     figure.savefig(output, dpi=200, transparent=True)
     plt.close(figure)

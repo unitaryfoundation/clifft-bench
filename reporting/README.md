@@ -35,7 +35,8 @@ The web-ready, transparent light/dark figures are checked in under
 - `clifft-throughput-{light,dark}.png`: absolute attempted shots per second for
   the latest Clifft release configuration.
 - `clifft-vs-symft-{light,dark}.png`: latest calibrated Clifft throughput
-  relative to calibrated SymFT.
+  relative to calibrated SymFT. This optional pair remains available here but
+  is not consumed by Clifft's documentation.
 - `performance-over-time-{light,dark}.png`: median Clifft speedup since v0.1.0.
 - `v010-vs-v009-{light,dark}.png`: current release throughput relative to the
   previous release, retaining packed/scalar marker fill.
@@ -90,17 +91,22 @@ each tool and reuses the current Clifft cases.
 ## Update the Clifft documentation copy
 
 Clifft checks in rendered copies only. With `CLIFFT_CHECKOUT` set to a local
-Clifft checkout, update all ten assets with:
+Clifft checkout, update the four consumed light/dark pairs (eight assets) with:
 
 ```bash
 CLIFFT_CHECKOUT=/path/to/clifft
-cp reporting/figures/web/*.png \
+cp reporting/figures/web/clifft-throughput-{light,dark}.png \
+  reporting/figures/web/performance-over-time-{light,dark}.png \
+  reporting/figures/web/v010-vs-v009-{light,dark}.png \
+  reporting/figures/web/quantum-volume-{light,dark}.png \
   "$CLIFFT_CHECKOUT/docs/assets/performance/"
 ```
 
 The filenames are unchanged by the copy: each
 `reporting/figures/web/<name>.png` maps directly to
-`clifft/docs/assets/performance/<name>.png`. Review both light and dark variants
+`clifft/docs/assets/performance/<name>.png`. The guide reuses the README's
+absolute-throughput figure; do not copy the optional `clifft-vs-symft` pair.
+Review both light and dark variants
 in the Clifft pull request. For a later release pair, update the release-specific
 `v010-vs-v009` output stem and its Clifft references as part of that release's
 report refresh.

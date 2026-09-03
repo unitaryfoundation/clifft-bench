@@ -82,9 +82,11 @@ def load_samples(execution_dir: Path) -> dict[tuple[str, int], list[float]]:
     return samples
 
 
-def clifft_display_name(execution_dir: Path) -> str:
+def clifft_display_name(execution_dir: Path, *, compact: bool = False) -> str:
     metadata = json.loads((execution_dir / "metadata.json").read_text())
     release_version = metadata["clifft_source"]["release_version"]
+    if compact:
+        release_version = release_version.removesuffix(".0")
     return f"Clifft {release_version}"
 
 
@@ -128,7 +130,7 @@ def render_web(
     for theme in WEB_THEMES:
         _configure_web(theme, plt)
         styles = {
-            "clifft": (clifft_display_name(execution_dir), theme.blue, "o"),
+            "clifft": (clifft_display_name(execution_dir, compact=True), theme.blue, "o"),
             "qiskit": ("Qiskit Aer", theme.orange, "s"),
             "qsim": ("qsim", theme.green, "D"),
             "qulacs": ("Qulacs", theme.red, "^"),

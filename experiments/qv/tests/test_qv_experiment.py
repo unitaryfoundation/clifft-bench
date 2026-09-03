@@ -176,6 +176,7 @@ def test_plot_labels_clifft_with_release_version(tmp_path: Path) -> None:
     )
 
     assert clifft_display_name(tmp_path) == "Clifft 0.10.0"
+    assert clifft_display_name(tmp_path, compact=True) == "Clifft 0.10"
 
 
 def test_web_plot_output_paths_cover_both_themes(tmp_path: Path) -> None:

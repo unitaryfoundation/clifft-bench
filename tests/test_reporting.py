@@ -114,7 +114,7 @@ def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
     }
 
 
-def test_checked_in_web_assets_cover_docs_outputs() -> None:
+def test_checked_in_web_assets_cover_reporting_outputs() -> None:
     output_dir = ROOT / "reporting/figures/web"
     expected = {path.name for path in web_output_paths(output_dir)} | {
         "quantum-volume-light.png",
@@ -125,6 +125,12 @@ def test_checked_in_web_assets_cover_docs_outputs() -> None:
     for path in output_dir.glob("*.png"):
         data = path.read_bytes()
         assert data[:8] == b"\x89PNG\r\n\x1a\n"
-        width, _height = struct.unpack(">II", data[16:24])
+        width, height = struct.unpack(">II", data[16:24])
         assert width == 1920
+        if path.name.startswith("performance-over-time"):
+            assert height == 760
+        elif path.name.startswith("quantum-volume"):
+            assert height == 940
+        else:
+            assert height == 900
         assert data[25] == 6  # RGBA
