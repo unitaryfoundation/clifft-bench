@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 from qv_experiment import run_benchmark
-from qv_experiment.plot import clifft_display_name, load_samples
+from qv_experiment.plot import clifft_display_name, load_samples, web_output_paths
 from qv_experiment.qasm_adapter import _safe_eval, parse_qasm, to_clifft_stim
 from qv_experiment.run_benchmark import (
     CLIFFT_SOURCE,
@@ -176,6 +176,14 @@ def test_plot_labels_clifft_with_release_version(tmp_path: Path) -> None:
     )
 
     assert clifft_display_name(tmp_path) == "Clifft 0.10.0"
+    assert clifft_display_name(tmp_path, compact=True) == "Clifft 0.10"
+
+
+def test_web_plot_output_paths_cover_both_themes(tmp_path: Path) -> None:
+    assert {path.name for path in web_output_paths(tmp_path)} == {
+        "quantum-volume-light.png",
+        "quantum-volume-dark.png",
+    }
 
 
 def test_missing_worker_json_preserves_exit_code() -> None:

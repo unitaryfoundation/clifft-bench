@@ -202,6 +202,10 @@ git commit --no-gpg-sign -m "data: add QV execution $CLIFFT_QV_EXECUTION"
 git push -u origin HEAD
 ```
 
+The downstream documentation-sized light/dark pair is selected and regenerated
+through [`../../reporting/README.md`](../../reporting/README.md); do not copy QV
+rows into a separate reporting data file.
+
 Require `metadata.json` to say `complete` or `complete-with-failures`, never
 `running`. Review every non-successful row in `cases.csv`, worker exit codes and
 stderr tails, raw worker records, circuit digests, peak RSS values, and the plot

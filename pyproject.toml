@@ -13,6 +13,9 @@ authors = [{ name = "Unitary Foundation" }]
 dependencies = ["jsonschema>=4.23"]
 
 [project.optional-dependencies]
+report = [
+    "matplotlib>=3.10",
+]
 test = [
     "pytest>=8.3",
     "ruff>=0.9",
@@ -24,6 +27,7 @@ clifft-bench = "clifft_bench.cli:main"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
