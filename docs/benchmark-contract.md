@@ -109,10 +109,9 @@ Derived rows carry both sides' mode, effective batch size, and shots per call.
 The recurring `current-vs-previous` comparison asks whether Clifft improved
 using the capabilities available in each release. It applies calibration to
 both releases, allowing an older release without batching support to select
-scalar execution after unsupported candidates fail. The separate
-`current-vs-previous-scalar` comparison preserves the clean scalar trend.
-Calibrated and scalar cross-tool comparisons answer the corresponding two
-questions for current Clifft and SymFT.
+scalar execution after unsupported candidates fail. The
+`alternatives-vs-current` comparison applies the same calibration policy to
+current Clifft and SymFT. These are the recurring campaign's two comparisons.
 
 ## Correctness and identity
 

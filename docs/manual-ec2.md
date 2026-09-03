@@ -108,10 +108,8 @@ jq -r '
 ```
 
 Confirm that `current-vs-previous` compares calibrated previous and current
-Clifft, `current-vs-previous-scalar` compares their scalar configurations,
-`alternatives-vs-current` compares calibrated Clifft and SymFT, and
-`scalar-alternatives-vs-current` compares their scalar configurations. Within
-every row, confirm that baseline and candidate use the same
+Clifft and `alternatives-vs-current` compares calibrated Clifft and SymFT.
+Within every row, confirm that baseline and candidate use the same
 `shots_per_call`.
 
 Review before committing:

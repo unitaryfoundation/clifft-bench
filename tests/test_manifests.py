@@ -30,15 +30,12 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 48
-    assert len({case.id for case in suite.cases}) == 48
+    assert len(suite.cases) == 24
+    assert len({case.id for case in suite.cases}) == 24
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
-        "clifft-previous-calibrated",
         "clifft-current",
-        "clifft-current-calibrated",
-        "symft-calibrated",
-        "symft-single",
+        "symft-current",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
@@ -50,18 +47,11 @@ def test_release_manifest_expands_named_variants() -> None:
             for case in suite.cases
             if case.definition["variant_id"] == variant_id
         }
-        for variant_id in (
-            "clifft-previous",
-            "clifft-previous-calibrated",
-            "clifft-current",
-            "clifft-current-calibrated",
-        )
+        for variant_id in ("clifft-previous", "clifft-current")
     }
     assert versions_by_variant == {
         "clifft-previous": {"0.9.0"},
-        "clifft-previous-calibrated": {"0.9.0"},
         "clifft-current": {"0.10.0rc1"},
-        "clifft-current-calibrated": {"0.10.0rc1"},
     }
     candidate = next(
         case.implementation.definition
@@ -76,38 +66,15 @@ def test_release_manifest_expands_named_variants() -> None:
     assert comparisons == {
         "current-vs-previous": {
             "id": "current-vs-previous",
-            "baseline_variant": "clifft-previous-calibrated",
-            "candidate_variants": ["clifft-current-calibrated"],
-        },
-        "current-vs-previous-scalar": {
-            "id": "current-vs-previous-scalar",
             "baseline_variant": "clifft-previous",
             "candidate_variants": ["clifft-current"],
         },
         "alternatives-vs-current": {
             "id": "alternatives-vs-current",
-            "baseline_variant": "clifft-current-calibrated",
-            "candidate_variants": ["symft-calibrated"],
-        },
-        "scalar-alternatives-vs-current": {
-            "id": "scalar-alternatives-vs-current",
             "baseline_variant": "clifft-current",
-            "candidate_variants": ["symft-single"],
+            "candidate_variants": ["symft-current"],
         },
     }
-
-    scalar_cases = [
-        case
-        for case in suite.cases
-        if case.definition["variant_id"]
-        in {"clifft-previous", "clifft-current", "symft-single"}
-    ]
-    assert scalar_cases
-    assert all(
-        case.definition["execution"]["batch_enabled"] is False
-        and case.definition["execution"]["batch_size"] == 1
-        for case in scalar_cases
-    )
 
     calibrated_by_variant = {
         variant_id: [
@@ -115,11 +82,7 @@ def test_release_manifest_expands_named_variants() -> None:
             for case in suite.cases
             if case.definition["variant_id"] == variant_id
         ]
-        for variant_id in (
-            "clifft-previous-calibrated",
-            "clifft-current-calibrated",
-            "symft-calibrated",
-        )
+        for variant_id in ("clifft-previous", "clifft-current", "symft-current")
     }
     assert all(len(cases) == 8 for cases in calibrated_by_variant.values())
     for cases in calibrated_by_variant.values():
