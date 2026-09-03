@@ -33,7 +33,12 @@ The web-ready, transparent light/dark figures are checked in under
 `figures/web/`:
 
 - `clifft-throughput-{light,dark}.png`: absolute attempted shots per second for
-  the latest Clifft release configuration.
+  the latest Clifft release configuration, used by Clifft's README.
+- `clifft-symft-throughput-{light,dark}.png`: both tools' absolute attempted-shot
+  rates on one logarithmic axis, with Clifft/SymFT ratios in a right-hand column.
+  This combined figure replaces the Clifft-only figure and rate/ratio table on
+  Clifft's performance guide. Workloads retain the README's descending Clifft
+  throughput order; circles and squares distinguish the tools even without color.
 - `clifft-vs-symft-{light,dark}.png`: latest calibrated Clifft throughput
   relative to calibrated SymFT. This optional pair remains available here but
   is not consumed by Clifft's documentation.
@@ -42,6 +47,11 @@ The web-ready, transparent light/dark figures are checked in under
   previous release, retaining packed/scalar marker fill.
 - `quantum-volume-{light,dark}.png`: median execution time for Clifft, Qiskit
   Aer, qsim, and Qulacs from the selected QV execution.
+
+The combined figure reads each tool's absolute rates directly from the latest
+`alternatives-vs-current` rows. Per-workload rates are medians across the selected
+rows, and the speedup column uses the same paired-ratio statistic as the existing
+relative-only figure. No rates are reconstructed from rounded labels or ratios.
 
 ## Refresh after an RC campaign
 
@@ -91,11 +101,12 @@ each tool and reuses the current Clifft cases.
 ## Update the Clifft documentation copy
 
 Clifft checks in rendered copies only. With `CLIFFT_CHECKOUT` set to a local
-Clifft checkout, update the four consumed light/dark pairs (eight assets) with:
+Clifft checkout, update the five consumed light/dark pairs (ten assets) with:
 
 ```bash
 CLIFFT_CHECKOUT=/path/to/clifft
 cp reporting/figures/web/clifft-throughput-{light,dark}.png \
+  reporting/figures/web/clifft-symft-throughput-{light,dark}.png \
   reporting/figures/web/performance-over-time-{light,dark}.png \
   reporting/figures/web/v010-vs-v009-{light,dark}.png \
   reporting/figures/web/quantum-volume-{light,dark}.png \
@@ -104,8 +115,9 @@ cp reporting/figures/web/clifft-throughput-{light,dark}.png \
 
 The filenames are unchanged by the copy: each
 `reporting/figures/web/<name>.png` maps directly to
-`clifft/docs/assets/performance/<name>.png`. The guide reuses the README's
-absolute-throughput figure; do not copy the optional `clifft-vs-symft` pair.
+`clifft/docs/assets/performance/<name>.png`. The README retains the Clifft-only
+absolute-throughput figure, while the guide uses the new combined figure. Do not
+copy the optional relative-only `clifft-vs-symft` pair.
 Review both light and dark variants
 in the Clifft pull request. For a later release pair, update the release-specific
 `v010-vs-v009` output stem and its Clifft references as part of that release's

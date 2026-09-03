@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import math
+import statistics
 import struct
 from pathlib import Path
 
@@ -101,10 +102,41 @@ def test_reporting_exposes_release_comparison_and_qv_source() -> None:
     assert not release_points["coherent-surface-d5-r5-p1e-3-rz2e-2"].current_packed
 
 
+def test_combined_throughput_uses_both_calibrated_absolute_rates() -> None:
+    report = build_report(SOURCES)
+    latest_release = ROOT / _source_document()["release_executions"][-1]
+    rows = [
+        row for row in _comparison_rows(latest_release)
+        if row["comparison_id"] == "alternatives-vs-current"
+    ]
+    points = {point.workload_id: point for point in report.tool_throughput_points}
+    assert set(points) == set(WORKLOAD_ORDER)
+    for workload, point in points.items():
+        selected = [row for row in rows if row["workload_id"] == workload]
+        assert point.clifft_rate == statistics.median(
+            float(row["baseline_rate"]) for row in selected
+        )
+        assert point.alternative_rate == statistics.median(
+            float(row["candidate_rate"]) for row in selected
+        )
+        assert point.clifft_over_alternative == 1 / statistics.median(
+            float(row["ratio_candidate_over_baseline"]) for row in selected
+        )
+
+    near_tie = points["distillation-color-code-85q-p5e-2"]
+    assert round(near_tie.clifft_over_alternative, 2) == 1.05
+    outlier = points["coherent-surface-d5-r5-p1e-3-rz2e-2"]
+    assert round(outlier.clifft_rate) == 5819
+    assert round(outlier.alternative_rate) == 66
+    assert round(outlier.clifft_over_alternative, 1) == 87.7
+
+
 def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
     assert {path.name for path in web_output_paths(tmp_path)} == {
         "clifft-throughput-light.png",
         "clifft-throughput-dark.png",
+        "clifft-symft-throughput-light.png",
+        "clifft-symft-throughput-dark.png",
         "clifft-vs-symft-light.png",
         "clifft-vs-symft-dark.png",
         "performance-over-time-light.png",
@@ -131,6 +163,8 @@ def test_checked_in_web_assets_cover_reporting_outputs() -> None:
             assert height == 760
         elif path.name.startswith("quantum-volume"):
             assert height == 940
+        elif path.name.startswith("clifft-symft-throughput"):
+            assert height == 1080
         else:
             assert height == 900
         assert data[25] == 6  # RGBA

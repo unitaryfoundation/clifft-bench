@@ -44,6 +44,7 @@ class ReleaseData:
     alternative_name: str
     alternative_version: str
     alternative_ratios: dict[str, float]
+    alternative_rates: dict[str, float]
     shots_per_call: dict[str, int]
 
 
@@ -68,6 +69,14 @@ class ThroughputPoint:
 
 
 @dataclass(frozen=True)
+class ToolThroughputPoint:
+    workload_id: str
+    clifft_rate: float
+    alternative_rate: float
+    clifft_over_alternative: float
+
+
+@dataclass(frozen=True)
 class ReleaseComparisonPoint:
     workload_id: str
     current_over_previous: float
@@ -79,6 +88,7 @@ class Report:
     history: HistorySeries
     relative_points: tuple[RelativePoint, ...]
     throughput_points: tuple[ThroughputPoint, ...]
+    tool_throughput_points: tuple[ToolThroughputPoint, ...]
     release_points: tuple[ReleaseComparisonPoint, ...]
     clifft_version: str
     previous_clifft_version: str
@@ -195,6 +205,7 @@ def _load_release(path: Path) -> ReleaseData:
         alternatives, ("workload_id",), "ratio_candidate_over_baseline"
     )
     current_rates = _median_rates(alternatives, ("workload_id",), "baseline_rate")
+    alternative_rates = _median_rates(alternatives, ("workload_id",), "candidate_rate")
     current_packed = {
         row["workload_id"]: int(row["candidate_batch_size_effective"]) > 1
         for row in current
@@ -215,6 +226,7 @@ def _load_release(path: Path) -> ReleaseData:
             "alternative simulator version",
         ),
         alternative_ratios={key[0]: value for key, value in alternative_ratios.items()},
+        alternative_rates={key[0]: value for key, value in alternative_rates.items()},
         shots_per_call=_single_ints(current, "baseline_shots_per_call", "shots_per_call"),
     )
 
@@ -299,6 +311,15 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         ThroughputPoint(workload, latest.current_rates[workload])
         for workload in WORKLOAD_ORDER
     )
+    tool_throughput_points = tuple(
+        ToolThroughputPoint(
+            workload,
+            latest.current_rates[workload],
+            latest.alternative_rates[workload],
+            1 / latest.alternative_ratios[workload],
+        )
+        for workload in WORKLOAD_ORDER
+    )
     release_points = tuple(
         ReleaseComparisonPoint(
             workload,
@@ -316,6 +337,7 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         ),
         points,
         throughput_points,
+        tool_throughput_points,
         release_points,
         latest.current_version,
         latest.previous_version,
@@ -530,14 +552,16 @@ class WebTheme:
     muted: str
     grid: str
     blue: str
+    orange: str
 
 
 WEB_THEMES = (
-    WebTheme("light", "#172033", "#64748B", "#CBD5E1", "#3C64B4"),
-    WebTheme("dark", "#E6EDF7", "#AAB6C8", "#526077", "#83A7F2"),
+    WebTheme("light", "#172033", "#64748B", "#CBD5E1", "#3C64B4", "#C26713"),
+    WebTheme("dark", "#E6EDF7", "#AAB6C8", "#526077", "#83A7F2", "#F2A65A"),
 )
 WEB_QEC_FIGURES = (
     "clifft-throughput",
+    "clifft-symft-throughput",
     "clifft-vs-symft",
     "performance-over-time",
     "v010-vs-v009",
@@ -823,6 +847,101 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     plt.close(figure)
 
 
+def _plot_web_combined_throughput(
+    plt: Any, theme: WebTheme, report: Report, output: Path
+) -> None:
+    from matplotlib.lines import Line2D
+    from matplotlib.ticker import FixedLocator, FuncFormatter
+
+    points = sorted(report.tool_throughput_points, key=lambda point: point.clifft_rate)
+    rates = [rate for point in points for rate in (point.clifft_rate, point.alternative_rate)]
+    lower_power = math.floor(math.log10(min(rates)))
+    upper_power = math.ceil(math.log10(max(rates)))
+    lower = 10 ** (lower_power - 0.1)
+    # Reserve room after the fastest marker for its absolute-rate label.
+    upper = max(rates) * 7
+    positions = list(range(len(points)))
+    figure, axis = plt.subplots(figsize=(9.6, 5.4))
+
+    for position, point in zip(positions, points, strict=True):
+        for rate, offset, color, marker in (
+            (point.clifft_rate, 0.18, theme.blue, "o"),
+            (point.alternative_rate, -0.18, theme.orange, "s"),
+        ):
+            y = position + offset
+            axis.plot(
+                [lower, rate],
+                [y, y],
+                color=color,
+                linewidth=2.2,
+                alpha=0.32,
+                solid_capstyle="round",
+            )
+            axis.scatter(rate, y, color=color, marker=marker, s=52, zorder=3)
+            axis.annotate(
+                _web_throughput_label(rate),
+                (rate, y),
+                xytext=(8, 0),
+                textcoords="offset points",
+                va="center",
+                color=color,
+                fontsize=10,
+                fontweight="bold",
+            )
+        axis.text(
+            1.13,
+            position,
+            _web_ratio_label(point.clifft_over_alternative),
+            transform=axis.get_yaxis_transform(),
+            ha="center",
+            va="center",
+            color=theme.foreground,
+            fontsize=11,
+            fontweight="bold",
+        )
+
+    axis.set_xscale("log")
+    axis.set_xlim(lower, upper)
+    axis.set_ylim(-0.55, len(points) - 0.45)
+    axis.xaxis.set_major_locator(
+        FixedLocator([10**power for power in range(lower_power, upper_power + 1)])
+    )
+    axis.xaxis.set_major_formatter(FuncFormatter(_throughput_tick))
+    axis.set_yticks(positions, labels=[WORKLOAD_LABELS[point.workload_id] for point in points])
+    axis.set_xlabel("Attempted shots per second", labelpad=12)
+    axis.legend(
+        handles=[
+            Line2D(
+                [], [], color=theme.blue, marker="o", linewidth=2.2, markersize=5.5,
+                label=f"Clifft v{_web_version(report.clifft_version)}",
+            ),
+            Line2D(
+                [], [], color=theme.orange, marker="s", linewidth=2.2, markersize=5.5,
+                label=f"{report.alternative_name} v{_web_version(report.alternative_version)}",
+            ),
+        ],
+        loc="lower left",
+        bbox_to_anchor=(0, 1.035),
+        frameon=False,
+        ncols=2,
+        handletextpad=0.6,
+        columnspacing=1.8,
+        borderaxespad=0,
+    )
+    axis.plot(
+        [1.035, 1.035], [0, 1], transform=axis.transAxes,
+        color=theme.grid, linewidth=0.8, alpha=0.48, clip_on=False,
+    )
+    axis.text(
+        1.13, 1.045, f"Clifft / {report.alternative_name}", transform=axis.transAxes,
+        ha="center", va="bottom", color=theme.muted, fontsize=10,
+    )
+    _clean_web_axis(axis, theme)
+    figure.subplots_adjust(left=0.24, right=0.855, top=0.87, bottom=0.14)
+    figure.savefig(output, dpi=200, transparent=True)
+    plt.close(figure)
+
+
 def render_web(report: Report, output_dir: Path) -> list[Path]:
     try:
         import matplotlib
@@ -846,6 +965,9 @@ def render_web(report: Report, output_dir: Path) -> list[Path]:
         )
         _plot_web_release_comparison(
             plt, theme, report, output_dir / f"v010-vs-v009-{suffix}.png"
+        )
+        _plot_web_combined_throughput(
+            plt, theme, report, output_dir / f"clifft-symft-throughput-{suffix}.png"
         )
     return list(web_output_paths(output_dir))
 
