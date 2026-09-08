@@ -18,6 +18,7 @@ WORKLOAD_ID = "msc-d3-inject-cultivate-p1e-3"
 def _expected_case(variant: str, *, batch_size: int | str) -> SimpleNamespace:
     return SimpleNamespace(
         id=f"workload--{variant}",
+        implementation=SimpleNamespace(definition={"adapter": "fixture"}),
         definition={
             "id": f"workload--{variant}",
             "variant_id": variant,

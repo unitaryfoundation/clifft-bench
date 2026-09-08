@@ -25,6 +25,12 @@ Per-call adapter timing dictionaries are summed into
 `adapter_timing_totals` for each sample, preventing fast single-shot loops from
 producing unbounded raw files.
 
+Adapters with a constructor-seeded random stream (Stim) also record
+`stream_setup_seconds` in warmup, correctness details, and each sample.
+It is excluded from `duration_seconds`. Stim initializes one sampler per
+phase/repetition and reuses it for all calls; its per-call seed fields are audit
+identifiers. These optional fields preserve validation of older results.
+
 When an external launcher supplies a complete cloud identity, the runner
 snapshot also records provider, instance and image IDs, instance type,
 region/AZ, lifecycle, and Linux boot ID. The benchmark harness never contacts a

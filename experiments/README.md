@@ -10,6 +10,11 @@ workflow unless at least two real experiments need the same mechanism.
 its own locked environment, runner, validator, results directory, plotter, and
 EC2 instructions without adding experiment concepts to the core CLI.
 
+[`tsim-gpu/`](tsim-gpu/) contains the maintained Tsim GPU comparison on the
+immutable QEC corpus. It has a pinned source/dependency lock, hard preparation
+budgets, warm throughput tuning, cached failure evidence, and its own GPU-host
+instructions.
+
 ## Quantum Volume and multicore scaling
 
 The former integrated Quantum Volume campaign was removed with the 0.x result

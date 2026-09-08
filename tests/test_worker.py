@@ -165,3 +165,55 @@ def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
         "error",
         "error",
     ]
+
+
+def test_stream_setup_runs_once_outside_accumulated_sampling_time(monkeypatch) -> None:
+    events = []
+    prepared = SimpleNamespace(begin_sample=lambda seed: events.append(("setup", seed)))
+
+    def timed_sample(_prepared, shots, seed):
+        events.append(("sample", seed))
+        return Counts(shots, shots, 0, 0), 0.1
+
+    monkeypatch.setattr(worker, "timed_sample", timed_sample)
+    sample = worker.aggregate_sample(
+        prepared, shots_per_call=4, min_seconds=0.25, seed=10, postselect=False, max_api_calls=100
+    )
+    assert events == [("setup", 10), ("sample", 10), ("sample", 11), ("sample", 12)]
+    assert sample["duration_seconds"] == pytest.approx(0.3)
+    assert sample["stream_setup_seconds"] >= 0
+
+
+def test_installation_is_verified_before_any_calibration(monkeypatch):
+    import io
+    import json
+
+    emitted = []
+
+    def reject(**kwargs):
+        assert kwargs == {"expected_commit": "wrong-commit", "source_url": "source-url"}
+        raise RuntimeError("source identity mismatch")
+
+    adapter = SimpleNamespace(verify_installation=reject)
+    monkeypatch.setattr(worker, "isolate_protocol_stream", lambda: None)
+    monkeypatch.setattr(worker, "emit", emitted.append)
+    monkeypatch.setattr(worker, "load_adapter", lambda _: adapter)
+    monkeypatch.setattr(
+        worker.sys,
+        "stdin",
+        io.StringIO(
+            json.dumps(
+                {
+                    "command": "prepare",
+                    "workload": {},
+                    "adapter": "symft",
+                    "timeout_seconds": 1,
+                    "expected_commit": "wrong-commit",
+                    "source_url": "source-url",
+                }
+            )
+            + "\n"
+        ),
+    )
+    assert worker.main() == 1
+    assert emitted[0]["error"]["message"] == "source identity mismatch"

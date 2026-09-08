@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.1",
+  "suite_version": "0.2.2",
   "profile_id": "release-v1",
   "title": "Recurring single-core Clifft release benchmark",
   "classification": "official",
@@ -31,6 +31,11 @@
       "id": "alternatives-vs-current",
       "baseline_variant": "clifft-current",
       "candidate_variants": ["symft-current"]
+    },
+    {
+      "id": "stim-anchor-vs-current",
+      "baseline_variant": "clifft-current",
+      "candidate_variants": ["stim-current"]
     }
   ],
   "resources": {
@@ -87,7 +92,7 @@
     },
     {
       "id": "symft-current",
-      "implementation_id": "symft-0.1.0-9ec5790",
+      "implementation_id": "symft-0.1.1-c89b985",
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,
@@ -103,6 +108,19 @@
         {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2", "shots_per_call": 10000},
         {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1}
+      ]
+    },
+    {
+      "id": "stim-current",
+      "implementation_id": "stim-1.16.0",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0
+      },
+      "workloads": [
+        {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000}
       ]
     }
   ]

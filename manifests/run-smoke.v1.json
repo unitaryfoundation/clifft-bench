@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.1",
+  "suite_version": "0.2.2",
   "profile_id": "adapter-smoke",
   "classification": "smoke",
   "seed": 20260808,
@@ -35,7 +35,7 @@
       "id": "msc-d3-smoke-symft-calibrated",
       "variant_id": "symft-current",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",
-      "implementation_id": "symft-0.1.0-9ec5790",
+      "implementation_id": "symft-0.1.1-c89b985",
       "shots_per_call": 2048,
       "execution": {
         "mode": "throughput",
@@ -61,13 +61,26 @@
       "id": "distillation-85q-smoke-symft-calibrated",
       "variant_id": "symft-current",
       "workload_id": "distillation-color-code-85q-p5e-2",
-      "implementation_id": "symft-0.1.0-9ec5790",
+      "implementation_id": "symft-0.1.1-c89b985",
       "shots_per_call": 8,
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,
         "batch_size": "calibrate",
         "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "surface-d7-smoke-stim-calibrated",
+      "variant_id": "stim-current",
+      "workload_id": "surface-code-d7-r7-p1e-3",
+      "implementation_id": "stim-1.16.0",
+      "shots_per_call": 4096,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0
       }
     }
   ]

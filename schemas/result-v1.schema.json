@@ -199,6 +199,7 @@
           "type": ["object", "null"],
           "properties": {
             "duration_seconds": {"type": "number", "minimum": 0},
+            "stream_setup_seconds": {"type": "number", "minimum": 0},
             "contract_errors": {"type": "array", "items": {"type": "string"}},
             "adapter_timing": {"type": "object"},
             "attempted_shots": {"type": "integer", "minimum": 0},
@@ -239,6 +240,7 @@
                 "properties": {
                   "started_at": {"type": "string", "format": "date-time"},
                   "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+                  "stream_setup_seconds": {"type": "number", "minimum": 0},
                   "api_calls": {"type": "integer", "minimum": 1},
                   "throughput_attempted_shots_per_second": {"type": "number", "exclusiveMinimum": 0},
                   "seed_first": {"type": "integer", "minimum": 0},

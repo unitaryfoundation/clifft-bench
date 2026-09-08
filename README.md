@@ -40,4 +40,5 @@ Plot labels show the intended release version; the measurements used 0.10.0rc1.
 - [Collect release benchmarks](docs/manual-ec2.md) on the reference EC2 host.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including
-  [Quantum Volume comparisons](experiments/qv/README.md).
+  [Quantum Volume comparisons](experiments/qv/README.md) and the
+  [Tsim GPU study](experiments/tsim-gpu/README.md), with results pushed back from the GPU host.

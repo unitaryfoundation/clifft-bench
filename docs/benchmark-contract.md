@@ -16,8 +16,11 @@ uses attempted shots as the numerator.
 
 Every workload declares `reference_convention` as `raw-record-parity`.
 Detector events and logical errors are the XOR parity of their declared
-measurement records without a noiseless-reference correction. Materializing
-full sample arrays is not part of the timed work.
+measurement records without a noiseless-reference correction. Clifft and SymFT
+return native aggregate counts. Stim's public detector sampler returns packed
+records, which the adapter reduces to the same counts; both materialization and
+reduction are included in its sampling time. This is a comparison of available
+aggregate endpoints, not identical internal work or a decoder benchmark.
 
 ## Timed boundaries
 
@@ -27,7 +30,7 @@ full sample arrays is not part of the timed work.
 | Parse, plan, compile, and sampler setup | No; recorded separately |
 | Warmup | No; recorded separately |
 | Correctness check | No; recorded separately |
-| Repeated public aggregate sampling calls | Yes |
+| Repeated sampling calls, transfer and aggregate reduction | Yes |
 | Validation and result writing | No |
 
 Each sample runs until its accumulated public-call time reaches the manifest's
@@ -62,6 +65,11 @@ repetition counts whose reserved ranges exceed the unsigned 32-bit seed space.
 These non-overlapping ranges keep every phase deterministic for adapters that
 expose per-call streams.
 
+Stim accepts its seed when compiling a sampler. Its adapter starts one continuous
+native stream per phase or repetition and reuses that sampler across all timed
+calls. Stream initialization is excluded and recorded as `stream_setup_seconds`;
+per-call seed fields remain audit identifiers, not independent Stim seeds.
+
 Batch calibration uses the next four million stream identifiers, divided into
 one range for each probe repetition and one for candidate warmup.
 
@@ -83,7 +91,11 @@ worker:
 5. freshly prepares the selected configuration and uses it for all timed
    repetitions.
 
-Clifft and SymFT use the same procedure. Calibration is setup work and is not
+Clifft and SymFT use the same procedure. Stim calibrates public sampler chunks
+of 256, 1024, 4096, 16384, and 65536 shots, capped by `shots_per_call`, plus an
+unchunked call. Its compiled circuit detector sampler is reused across calls;
+packed detectors/observables are reduced with vectorized NumPy operations.
+Calibration is setup work and is not
 included in final throughput samples. Raw results record candidate probes,
 failures, the selected size, and total calibration duration in
 `setup.runtime_metadata.batch_calibration`.
@@ -93,7 +105,9 @@ They also record `batch_size_effective`, the maximum lanes available to one
 public call after capping the selected capacity by `shots_per_call`. A fixed
 numeric batch size remains supported for cases that do not request calibration.
 
-`batch_size` is the simulator's internal number of shots processed together.
+For Clifft/SymFT, `batch_size` is the internal number of shots processed together.
+For Stim it is the adapter's chunk size passed to the public detector sampler,
+not a claim about Stim's SIMD width.
 `shots_per_call` is the number requested from one public API call. Both are
 recorded because changing either can change amortization.
 
@@ -111,7 +125,33 @@ using the capabilities available in each release. It applies calibration to
 both releases, allowing an older release without batching support to select
 scalar execution after unsupported candidates fail. The
 `alternatives-vs-current` comparison applies the same calibration policy to
-current Clifft and SymFT. These are the recurring campaign's two comparisons.
+current Clifft and SymFT across all eight workloads. The separate
+`stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
+compatible surface-code workload. Keeping the anchor separate preserves the
+existing Clifft/SymFT comparison identity and its downstream consumers. All
+three comparisons reuse the same collected current-Clifft cases.
+
+## Stim compatibility and fast configuration
+
+Only `surface-code-d7-r7-p1e-3` is Stim-compatible in this QEC corpus. All other
+circuits contain non-Clifford instructions. The adapter passes the immutable
+file directly to `stim.Circuit`: no twirling, gate removal, detector error model
+conversion, or replacement circuit. Unsupported pairings are rejected by the
+workload manifest before collection.
+
+The compiled circuit detector sampler returns reference-relative flips. During
+setup we convert its noiseless measurement reference to raw detector/observable
+parities, then XOR these packed offsets into each sample before postselection.
+Tests cover nonzero offsets, noise, observable indices beyond the first byte,
+and chunk tails. The official circuit has deterministic detectors.
+
+Use the official pinned Stim 1.16.0 wheel and record the loaded `stim._stim_*`
+native extension. Its x86 Python dispatch selects SSE2, even on AVX2-capable
+hosts: upstream's [Python build](https://github.com/quantumlib/Stim/blob/v1.16.0/setup.py)
+disables AVX2 pending [Stim issue #432](https://github.com/quantumlib/Stim/issues/432).
+Retain upstream's build configuration and select the best measured packed-record
+chunk size on the reference host. These measurements describe the official
+release wheel; the recorded extension identifies the SIMD implementation used.
 
 ## Correctness and identity
 
@@ -121,6 +161,13 @@ observable counts plus these aggregate invariants:
 - attempted = accepted + discarded;
 - logical errors are between zero and accepted shots; and
 - non-postselected workloads discard no shots.
+
+Before calibration, the SymFT adapter verifies the installed package's PEP 610
+Git commit and repository URL against the manifest and records both in runtime
+metadata. A PyPI wheel with the same version string is rejected. The current
+`haoliri0/SOFT` pin replaces a snapshot from `haoliri0/SymFT_Test`; those are
+separate Git histories, so the two snapshots are identified by repository and
+commit rather than treated as an ancestor/descendant update.
 
 Each implementation records its exact package version, source commit, optional
 release tag, release time, build features, and dependency versions. An optional

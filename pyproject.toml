@@ -18,6 +18,7 @@ report = [
 ]
 test = [
     "pytest>=8.3",
+    "stim==1.16.0",
     "ruff>=0.9",
 ]
 

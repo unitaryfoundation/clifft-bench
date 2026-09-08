@@ -181,7 +181,7 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 raise SchemaValidationError(
                     f"case {identifier!r} requests batch calibration with batching disabled"
                 )
-            if adapter not in {"clifft", "symft"}:
+            if adapter not in {"clifft", "symft", "stim"}:
                 raise SchemaValidationError(
                     f"case {identifier!r} requests unsupported batch calibration for "
                     f"adapter {adapter!r}"

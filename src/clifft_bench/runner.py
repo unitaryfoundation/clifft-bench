@@ -118,6 +118,8 @@ class WorkerClient:
                 "shots_per_call": self.case.definition["shots_per_call"],
                 "seed": seed,
                 "expected_version": definition["version"],
+                "expected_commit": definition["commit_sha"],
+                "source_url": definition["source_url"],
                 "dependency_distributions": definition["dependency_distributions"],
                 "logical_cpu": self.cpu,
                 "memory_limit_gib": memory_limit_gib,

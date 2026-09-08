@@ -29,7 +29,9 @@ def _prepare(
             "batch_size": 32,
             "sample_chunk_shots": 32,
         }
-    return load_adapter(adapter_name).prepare(
+    if adapter_name == "stim":
+        execution["sample_chunk_shots"] = 0
+    prepared = load_adapter(adapter_name).prepare(
         artifact_path=artifact_path,
         workload={
             "semantics": {
@@ -40,9 +42,11 @@ def _prepare(
         },
         execution=execution,
     )
+    prepared.begin_sample(7)
+    return prepared
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim"])
 def test_detector_postselection_uses_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
@@ -62,7 +66,7 @@ def test_detector_postselection_uses_raw_record_parity(
     assert counts.logical_errors == 0
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim"])
 def test_logical_errors_use_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
