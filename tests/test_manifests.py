@@ -74,7 +74,12 @@ def test_release_manifest_expands_named_variants() -> None:
         "alternatives-vs-current": {
             "id": "alternatives-vs-current",
             "baseline_variant": "clifft-current",
-            "candidate_variants": ["symft-current", "stim-current"],
+            "candidate_variants": ["symft-current"],
+        },
+        "stim-anchor-vs-current": {
+            "id": "stim-anchor-vs-current",
+            "baseline_variant": "clifft-current",
+            "candidate_variants": ["stim-current"],
         },
     }
 

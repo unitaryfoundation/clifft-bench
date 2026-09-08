@@ -108,9 +108,11 @@ jq -r '
 ```
 
 Confirm that `current-vs-previous` compares calibrated previous and current
-Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT and
-Stim. Stim contributes only the surface-code row; seven non-Clifford workloads
-are outside its supported domain. The current campaign has 25 cases.
+Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT.
+The separate `stim-anchor-vs-current` comparison contributes only the
+surface-code row; seven non-Clifford workloads are outside Stim's supported
+domain. The current campaign has 25 cases; the anchor reuses current Clifft's
+surface-code measurement.
 Within every row, confirm that baseline and candidate use the same
 `shots_per_call`.
 

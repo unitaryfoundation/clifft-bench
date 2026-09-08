@@ -7,7 +7,10 @@ import statistics
 import struct
 from pathlib import Path
 
-from reporting.qec import WORKLOAD_ORDER, build_report, web_output_paths
+from clifft_bench.manifest import load_suite
+from clifft_bench.results import COMPARISON_FIELDS
+from clifft_bench.results import _comparison_rows as collect_comparisons
+from reporting.qec import WORKLOAD_ORDER, _load_release, build_report, web_output_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "reporting/sources.json"
@@ -89,6 +92,46 @@ def test_reporting_uses_latest_calibrated_cross_tool_comparison() -> None:
 
     slow_coherent = points["coherent-surface-d5-r5-p1e-3-rz2e-2"]
     assert slow_coherent.clifft_over_alternative > 80
+
+
+def test_release_loader_accepts_current_campaign_with_stim_anchor(tmp_path: Path) -> None:
+    source = ROOT / _source_document()["release_executions"][-1]
+    expected = _load_release(source)
+    with (source / "cases.csv").open(newline="") as stream:
+        cases = list(csv.DictReader(stream))
+    surface = "surface-code-d7-r7-p1e-3"
+    template = next(
+        row for row in cases
+        if row["variant_id"] == "symft-current" and row["workload_id"] == surface
+    )
+    cases.append({
+        **template,
+        "case_id": f"{surface}--stim-current",
+        "variant_id": "stim-current",
+        "implementation_id": "stim-1.16.0",
+        "simulator_name": "Stim",
+        "simulator_version": "1.16.0",
+        "simulator_display_version": "1.16.0",
+        "median_attempted_shots_per_second": "1000000",
+    })
+    # Use the real producer and active manifest so putting Stim back into the
+    # SymFT comparison makes this fail, even though archived results lack Stim.
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    rows = collect_comparisons(suite, source.name, cases)
+    execution = tmp_path / source.name
+    execution.mkdir()
+    (execution / "index.json").write_bytes((source / "index.json").read_bytes())
+    with (execution / "comparisons.csv").open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=COMPARISON_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    assert _load_release(execution) == expected
+    anchors = [row for row in rows if row["candidate_simulator_name"] == "Stim"]
+    assert len(anchors) == 1
+    assert anchors[0]["comparison_id"] == "stim-anchor-vs-current"
+    assert anchors[0]["workload_id"] == surface
+    assert anchors[0]["baseline_variant_id"] == "clifft-current"
 
 
 def test_reporting_exposes_release_comparison_and_qv_source() -> None:

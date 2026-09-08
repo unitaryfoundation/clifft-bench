@@ -125,8 +125,11 @@ using the capabilities available in each release. It applies calibration to
 both releases, allowing an older release without batching support to select
 scalar execution after unsupported candidates fail. The
 `alternatives-vs-current` comparison applies the same calibration policy to
-current Clifft and SymFT, plus Stim on compatible workloads. These are the
-recurring campaign's two comparisons; alternatives may have partial coverage.
+current Clifft and SymFT across all eight workloads. The separate
+`stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
+compatible surface-code workload. Keeping the anchor separate preserves the
+existing Clifft/SymFT comparison identity and its downstream consumers. All
+three comparisons reuse the same collected current-Clifft cases.
 
 ## Stim compatibility and fast configuration
 

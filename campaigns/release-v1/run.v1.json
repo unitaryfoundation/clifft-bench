@@ -30,7 +30,12 @@
     {
       "id": "alternatives-vs-current",
       "baseline_variant": "clifft-current",
-      "candidate_variants": ["symft-current", "stim-current"]
+      "candidate_variants": ["symft-current"]
+    },
+    {
+      "id": "stim-anchor-vs-current",
+      "baseline_variant": "clifft-current",
+      "candidate_variants": ["stim-current"]
     }
   ],
   "resources": {
