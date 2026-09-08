@@ -73,3 +73,5 @@ silently change meaning.
 
 For self-contained studies outside the recurring release campaign, see the
 [experiment guidelines](experiments/README.md).
+The [Tsim GPU study](experiments/tsim-gpu/README.md) has its own locked
+environment, bounded preparation, and finalize/commit/push workflow for results.

@@ -1,0 +1,24 @@
+[project]
+name = "clifft-bench-tsim-gpu"
+version = "0.1.0"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "bloqade-tsim",
+    "numpy==2.5.2",
+    "psutil>=7",
+]
+
+[project.optional-dependencies]
+cuda12 = ["jax[cuda12]"]
+cuda13 = ["jax[cuda13]"]
+test = ["pytest>=8"]
+
+[tool.uv.sources]
+bloqade-tsim = { git = "https://github.com/QuEraComputing/tsim.git", rev = "44f64ba79c91e6ada77d6b609595ad0a3d767c11" }
+
+[tool.uv]
+conflicts = [[{ extra = "cuda12" }, { extra = "cuda13" }]]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

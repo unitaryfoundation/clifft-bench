@@ -118,7 +118,9 @@ The bootstrap reads the new pinned SymFT source and Stim wheel environments from
 the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, Stim 1.16.0, and
 Stim's loaded native extension and chunk calibration in the raw setup metadata.
 Five 30-second samples across 25 cases require at least 62.5 minutes of sampling,
-plus setup/calibration and call overruns.
+plus setup/calibration and call overruns. The Tsim GPU study has separate
+[instructions](../experiments/tsim-gpu/README.md); do not run this CPU playbook
+on its GPU host.
 
 Review before committing:
 
