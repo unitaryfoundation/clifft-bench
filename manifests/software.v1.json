@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/software/v1",
-  "suite_version": "0.2.1",
+  "suite_version": "0.2.2",
   "implementations": [
     {
       "id": "clifft-0.1.0",
@@ -258,6 +258,75 @@
         "precision": "complex-fp64",
         "compiler_flags": ["SYMFT_PY_NATIVE=1"],
         "features": ["CPU-only", "runtime-dispatched SIMD", "CUDA disabled"]
+      }
+    },
+    {
+      "id": "symft-0.1.1-c89b985",
+      "name": "SymFT",
+      "adapter": "symft",
+      "distribution": "symft",
+      "version": "0.1.1",
+      "commit_sha": "c89b98514a919240b8afa53a271e08d926d3c987",
+      "commit_datetime": "2026-08-10T13:58:26Z",
+      "release_datetime": null,
+      "source_url": "https://github.com/haoliri0/SOFT",
+      "dependency_distributions": [
+        "numpy"
+      ],
+      "python_executable_env": "CLIFFT_BENCH_SYMFT_C89B985_PYTHON",
+      "environment": {
+        "requirements": "../environments/symft-0.1.1-c89b985.txt",
+        "import_modules": [
+          "symft"
+        ],
+        "install_environment": {
+          "SYMFT_PY_NATIVE": "1",
+          "SYMFT_PY_ENABLE_CUDA": "0"
+        }
+      },
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [
+          "SYMFT_PY_NATIVE=1"
+        ],
+        "features": [
+          "CPU-only",
+          "runtime-dispatched SIMD",
+          "CUDA disabled",
+          "pinned upstream source after PyPI 0.1.1"
+        ]
+      }
+    },
+    {
+      "id": "stim-1.16.0",
+      "name": "Stim",
+      "adapter": "stim",
+      "distribution": "stim",
+      "version": "1.16.0",
+      "commit_sha": "e2fc1eca7fd21684d433aa5f10f4504ea4860d07",
+      "commit_datetime": "2026-05-22T05:16:14Z",
+      "release_datetime": "2026-05-22T05:41:19.371644Z",
+      "source_url": "https://github.com/quantumlib/Stim",
+      "source_tag": "v1.16.0",
+      "dependency_distributions": [
+        "numpy"
+      ],
+      "python_executable_env": "CLIFFT_BENCH_STIM_1_16_0_PYTHON",
+      "environment": {
+        "requirements": "../environments/stim-1.16.0.txt",
+        "import_modules": [
+          "stim"
+        ]
+      },
+      "build": {
+        "precision": "binary-stabilizer",
+        "compiler_flags": [],
+        "features": [
+          "CPU-only",
+          "PyPI release wheel",
+          "loaded SIMD extension recorded at runtime",
+          "bit-packed detector sampler with calibrated chunking"
+        ]
       }
     }
   ]

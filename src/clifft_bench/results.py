@@ -7,7 +7,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
-from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
+from clifft_bench.calibration import calibration_candidates
 from clifft_bench.manifest import Case, Suite
 from clifft_bench.schema import (
     SchemaValidationError,
@@ -330,11 +330,9 @@ def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> No
             f"{selected!r}"
         )
     shots_per_call = int(expected.definition["shots_per_call"])
-    expected_candidates = [
-        candidate
-        for candidate in BATCH_CALIBRATION_CANDIDATES
-        if candidate <= shots_per_call
-    ]
+    expected_candidates = calibration_candidates(
+        expected.implementation.definition["adapter"], shots_per_call
+    )
     if calibration.get("candidates") != expected_candidates:
         raise ValueError(
             f"calibrated raw case {case_id!r} candidates do not match the contract"

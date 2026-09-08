@@ -33,6 +33,9 @@ class Counts:
 class PreparedAdapter(ABC):
     runtime_metadata: dict[str, Any]
 
+    def begin_sample(self, seed: int) -> None:
+        """Initialize a repetition's random stream outside the sampling timer."""
+
     @abstractmethod
     def sample(self, shots: int, seed: int) -> Counts:
         """Execute declared logical work and return aggregate counts."""
@@ -41,6 +44,10 @@ class PreparedAdapter(ABC):
 class Adapter(ABC):
     name: str
     adapter_version = ADAPTER_API_VERSION
+
+    def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
+        """Verify source identity when the adapter requires a source-built package."""
+        return {}
 
     @abstractmethod
     def prepare(

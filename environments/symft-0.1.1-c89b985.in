@@ -1,0 +1,2 @@
+numpy==2.5.2
+symft @ git+https://github.com/haoliri0/SOFT.git@c89b98514a919240b8afa53a271e08d926d3c987#subdirectory=python

@@ -26,7 +26,9 @@ a manual, reviewed workflow. Before changing measurements or results, read the
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
 recurring campaign definition. It compares calibrated previous and current
-Clifft configurations, then calibrated current Clifft and SymFT configurations.
+Clifft configurations, then calibrated current Clifft and SymFT configurations,
+with Stim as a Clifford-only anchor on the unchanged surface-code circuit.
+The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 
 For a new Clifft release:

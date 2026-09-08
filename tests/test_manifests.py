@@ -30,16 +30,18 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 24
-    assert len({case.id for case in suite.cases}) == 24
+    assert len(suite.cases) == 25
+    assert len({case.id for case in suite.cases}) == 25
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
         "symft-current",
+        "stim-current",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
         "symft",
+        "stim",
     }
     versions_by_variant = {
         variant_id: {
@@ -72,7 +74,7 @@ def test_release_manifest_expands_named_variants() -> None:
         "alternatives-vs-current": {
             "id": "alternatives-vs-current",
             "baseline_variant": "clifft-current",
-            "candidate_variants": ["symft-current"],
+            "candidate_variants": ["symft-current", "stim-current"],
         },
     }
 
@@ -104,7 +106,10 @@ def test_release_manifest_expands_named_variants() -> None:
         )
         assert slow_case.definition["shots_per_call"] == 1
 
-    variant_ids = {case.definition["variant_id"] for case in suite.cases}
+    stim_cases = [c for c in suite.cases if c.definition["variant_id"] == "stim-current"]
+    assert [c.workload.id for c in stim_cases] == ["surface-code-d7-r7-p1e-3"]
+    assert stim_cases[0].definition["shots_per_call"] == 100000
+    variant_ids = {case.definition["variant_id"] for case in suite.cases} - {"stim-current"}
     signatures_by_variant = {
         variant_id: {
             (case.workload.id, case.definition["shots_per_call"])
@@ -231,7 +236,7 @@ def test_environment_locks_pin_every_requirement() -> None:
         requirements = [
             line.strip()
             for line in requirements_path.read_text().splitlines()
-            if line.strip() and not line.startswith("#")
+            if line.strip() and not line.lstrip().startswith("#")
         ]
         assert requirements
         for requirement in requirements:

@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.1",
+  "suite_version": "0.2.2",
   "profile_id": "clifft-history-v1",
   "title": "Clifft 0.x release-history backfill",
   "classification": "official",

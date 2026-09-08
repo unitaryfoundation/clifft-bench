@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+from importlib.metadata import distribution
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +30,23 @@ class _PreparedSymft(PreparedAdapter):
 class SymftAdapter(Adapter):
     name = "symft"
 
+    def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
+        direct_url = json.loads(distribution("symft").read_text("direct_url.json") or "{}")
+        vcs = direct_url.get("vcs_info", {})
+        installed_url = str(direct_url.get("url", "")).rstrip("/").removesuffix(".git")
+        expected_url = source_url.rstrip("/").removesuffix(".git")
+        if (
+            vcs.get("vcs") != "git"
+            or vcs.get("commit_id") != expected_commit
+            or installed_url != expected_url
+        ):
+            raise RuntimeError(
+                f"SymFT source identity mismatch: expected {expected_url}@{expected_commit}, "
+                f"installed {installed_url or 'no VCS metadata'}@{vcs.get('commit_id')}; "
+                "install the manifest's pinned Git requirement, not a same-version PyPI wheel"
+            )
+        return {"installed_source_commit": vcs["commit_id"], "installed_direct_url": direct_url}
+
     def prepare(
         self,
         *,
@@ -38,8 +57,7 @@ class SymftAdapter(Adapter):
         reference_convention = str(workload["semantics"]["reference_convention"])
         if reference_convention != "raw-record-parity":
             raise ValueError(
-                f"SymFT adapter does not support reference convention "
-                f"{reference_convention!r}"
+                f"SymFT adapter does not support reference convention {reference_convention!r}"
             )
         import symft
 

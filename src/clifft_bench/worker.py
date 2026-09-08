@@ -17,7 +17,7 @@ from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
-from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
+from clifft_bench.calibration import calibration_candidates
 from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
 
 BATCH_CALIBRATION_REPETITIONS = 3
@@ -79,6 +79,16 @@ def timed_sample(prepared: Any, shots: int, seed: int) -> tuple[Counts, float]:
     return counts, time.perf_counter() - started
 
 
+def begin_sample(prepared: Any, seed: int) -> float:
+    hook = getattr(prepared, "begin_sample", None)
+    if hook is None:
+        return 0.0
+    started = time.perf_counter()
+    with redirect_stdout(sys.stderr):
+        hook(seed)
+    return time.perf_counter() - started
+
+
 def aggregate_sample(
     prepared: Any,
     *,
@@ -88,6 +98,7 @@ def aggregate_sample(
     postselect: bool,
     max_api_calls: int,
 ) -> dict[str, Any]:
+    stream_setup_seconds = begin_sample(prepared, seed)
     total = Counts(0, 0, 0, 0)
     calls = 0
     elapsed = 0.0
@@ -116,6 +127,7 @@ def aggregate_sample(
     return {
         "started_at": started_at,
         "duration_seconds": elapsed,
+        "stream_setup_seconds": stream_setup_seconds,
         "api_calls": calls,
         **total.as_dict(),
         "throughput_attempted_shots_per_second": total.attempted_shots / elapsed,
@@ -148,9 +160,7 @@ def calibrate_batch_size(
     shots_per_call: int,
     seed: int,
 ) -> Any:
-    candidates = [
-        candidate for candidate in BATCH_CALIBRATION_CANDIDATES if candidate <= shots_per_call
-    ]
+    candidates = calibration_candidates(getattr(adapter, "name", ""), shots_per_call)
     postselect = bool(workload["semantics"]["postselect_all_detectors"])
     calibration_started = time.perf_counter()
     results = []
@@ -165,6 +175,7 @@ def calibrate_batch_size(
                 workload=workload,
                 execution=candidate_execution,
             )
+            begin_sample(prepared, _calibration_seed(seed, BATCH_CALIBRATION_REPETITIONS))
             warm_counts, _ = timed_sample(
                 prepared,
                 shots_per_call,
@@ -188,6 +199,7 @@ def calibrate_batch_size(
                     {
                         "repetition": repetition,
                         "duration_seconds": sample["duration_seconds"],
+                        "stream_setup_seconds": sample["stream_setup_seconds"],
                         "api_calls": sample["api_calls"],
                         "attempted_shots": sample["attempted_shots"],
                         "seed_first": sample["seed_first"],
@@ -274,6 +286,10 @@ def main() -> int:
                 started = time.perf_counter()
                 with deadline(float(request["timeout_seconds"])):
                     with redirect_stdout(sys.stderr):
+                        installation = adapter.verify_installation(
+                            expected_commit=request["expected_commit"],
+                            source_url=request["source_url"],
+                        )
                         artifact_path = Path(request["artifact_path"])
                         execution = request["execution"]
                         if execution["batch_size"] == "calibrate":
@@ -301,6 +317,7 @@ def main() -> int:
                     )
                 runtime_metadata = {
                     **prepared.runtime_metadata,
+                    **installation,
                     "address_space_limit_bytes": address_space_limit,
                 }
                 emit(
@@ -319,6 +336,7 @@ def main() -> int:
             elif command in {"warmup", "correctness"}:
                 if prepared is None or workload is None:
                     raise RuntimeError("worker has not been prepared")
+                stream_setup_seconds = begin_sample(prepared, int(request["seed"]))
                 counts, duration = timed_sample(
                     prepared, int(request["shots"]), int(request["seed"])
                 )
@@ -336,6 +354,7 @@ def main() -> int:
                     {
                         "ok": True,
                         "duration_seconds": duration,
+                        "stream_setup_seconds": stream_setup_seconds,
                         **counts.as_dict(),
                         "contract_errors": errors,
                     }

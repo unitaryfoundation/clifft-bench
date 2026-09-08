@@ -107,9 +107,7 @@ def test_clifft_counts_the_selected_observable() -> None:
     assert counts.logical_errors == 7
 
 
-def test_clifft_explicit_batch_is_forwarded_and_recorded(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeypatch) -> None:
     artifact = tmp_path / "circuit.stim"
     artifact.write_text("M 0\n")
     hir = SimpleNamespace(
@@ -126,9 +124,7 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
         peak_active_width=3,
     )
 
-    def sample_survivors(
-        actual_program, shots, *, seed, keep_records, batch_size
-    ):
+    def sample_survivors(actual_program, shots, *, seed, keep_records, batch_size):
         assert (actual_program, shots, seed, keep_records, batch_size) == (
             program,
             10,
@@ -324,9 +320,7 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
 
 
 @pytest.mark.parametrize("adapter", [ClifftAdapter(), SymftAdapter()])
-def test_adapters_reject_unsupported_reference_convention(
-    adapter, tmp_path: Path
-) -> None:
+def test_adapters_reject_unsupported_reference_convention(adapter, tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="does not support reference convention"):
         adapter.prepare(
             artifact_path=tmp_path / "unused.stim",
@@ -343,3 +337,37 @@ def test_adapters_reject_unsupported_reference_convention(
                 "sample_chunk_shots": 0,
             },
         )
+
+
+@pytest.mark.parametrize("mismatch", ["wheel", "commit", "repository", None])
+def test_symft_verifies_installed_git_identity_even_for_same_version(monkeypatch, mismatch):
+    import json
+
+    from clifft_bench.adapters import symft as module
+
+    commit = "c" * 40
+    direct_url = {
+        "url": "https://github.com/haoliri0/SOFT.git",
+        "vcs_info": {"vcs": "git", "commit_id": commit},
+    }
+    if mismatch == "commit":
+        direct_url["vcs_info"]["commit_id"] = "d" * 40
+    elif mismatch == "repository":
+        direct_url["url"] = "https://github.com/haoliri0/SymFT_Test.git"
+    monkeypatch.setattr(
+        module,
+        "distribution",
+        lambda _: SimpleNamespace(
+            version="0.1.1",
+            read_text=lambda _: None if mismatch == "wheel" else json.dumps(direct_url),
+        ),
+    )
+    kwargs = {"expected_commit": commit, "source_url": "https://github.com/haoliri0/SOFT"}
+    if mismatch:
+        with pytest.raises(RuntimeError, match="source identity mismatch"):
+            SymftAdapter().verify_installation(**kwargs)
+    else:
+        assert SymftAdapter().verify_installation(**kwargs) == {
+            "installed_source_commit": commit,
+            "installed_direct_url": direct_url,
+        }
