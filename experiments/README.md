@@ -15,6 +15,11 @@ immutable QEC corpus. It has a pinned source/dependency lock, hard preparation
 budgets, warm throughput tuning, cached failure evidence, and its own GPU-host
 instructions.
 
+[`whole-machine/`](whole-machine/) collects the QEC comparison on an
+`m8a.16xlarge` using all 64 physical cores. It uses native Clifft/SymFT threads,
+persistent Stim/Tsim CPU processes, full-load batch tuning, and an aggregate
+memory limit, while reusing the successful Tsim GPU-component measurements.
+
 ## Quantum Volume and multicore scaling
 
 The former integrated Quantum Volume campaign was removed with the 0.x result

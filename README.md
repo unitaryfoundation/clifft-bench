@@ -41,4 +41,5 @@ Plot labels show the intended release version; the measurements used 0.10.0rc1.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including
   [Quantum Volume comparisons](experiments/qv/README.md) and the
-  [Tsim GPU study](experiments/tsim-gpu/README.md), with results pushed back from the GPU host.
+  [Tsim GPU study](experiments/tsim-gpu/README.md), with results pushed back from the GPU host,
+  and the [whole-machine CPU comparison](experiments/whole-machine/README.md).
