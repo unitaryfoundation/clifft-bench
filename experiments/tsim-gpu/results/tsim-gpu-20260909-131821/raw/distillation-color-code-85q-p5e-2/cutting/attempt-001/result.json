@@ -1,0 +1,67 @@
+{
+  "call_started": null,
+  "error": {
+    "message": "compile exceeded 120s",
+    "phase": "compile"
+  },
+  "exit_code": -9,
+  "fingerprint": "5b619274dbf8a0250f048f074464ab2cc603cf207ae2a1f30d2d0a429d2ef8ce",
+  "finished_at": "2026-09-09T13:47:20.808455+00:00",
+  "memory_monitor_errors": [],
+  "peak_process_tree_rss_bytes": 4121735168,
+  "phase": "compile",
+  "phase_started": 1743.682449718,
+  "preparation_seconds": 120.08626039,
+  "samples": [],
+  "schema_version": "clifft-bench/tsim-gpu-case/v1",
+  "seed": 20260916,
+  "started_at": "2026-09-09T13:45:18.523840+00:00",
+  "status": "timeout",
+  "strategy": "cutting",
+  "strategy_preparation_seconds": 120.08626039,
+  "tuning": [],
+  "wall_seconds": 122.32904301100007,
+  "workload": {
+    "angle_convention": "half-turns",
+    "artifact": {
+      "path": "../workloads/circuits/distillation.stim",
+      "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+    },
+    "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/distillation.stim",
+    "compatible_adapters": [
+      "clifft",
+      "symft"
+    ],
+    "description": "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks.",
+    "dialect": "clifft-symft-extended-stim",
+    "expected_metadata": {
+      "num_detectors": 40,
+      "num_measurements": 85,
+      "num_observables": 5,
+      "num_qubits": 85
+    },
+    "family": "magic-state-distillation",
+    "id": "distillation-color-code-85q-p5e-2",
+    "parameters": {
+      "blocks": 5,
+      "code": "[17,1,5] color code",
+      "preparation_error_rate": 0.05
+    },
+    "provenance": {
+      "license": "Apache-2.0",
+      "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+      "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+      "source_path": "qec_bench/circuits/distillation.stim",
+      "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+    },
+    "semantics": {
+      "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+      "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors.",
+      "observable_index": 0,
+      "output_contract": "aggregate detector-discard and logical-observable counts",
+      "postselect_all_detectors": true,
+      "reference_convention": "raw-record-parity",
+      "throughput_numerator": "attempted shots"
+    }
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "active_batch_size": 65536,
+  "batch_candidates": [
+    65536
+  ],
+  "call_started": null,
+  "compile_seconds": 0.11050932299986016,
+  "device_memory_stats": {
+    "bytes_in_use": 2304,
+    "bytes_limit": 63763906560,
+    "bytes_reserved": 0,
+    "largest_alloc_size": 512,
+    "largest_free_block_bytes": 63763904000,
+    "num_allocs": 26,
+    "peak_bytes_in_use": 2560,
+    "peak_bytes_reserved": 0,
+    "peak_pool_bytes": 63763906560,
+    "pool_bytes": 63763906560
+  },
+  "estimated_batch_capacity": 31881952128,
+  "exit_code": 0,
+  "fingerprint": "5b619274dbf8a0250f048f074464ab2cc603cf207ae2a1f30d2d0a429d2ef8ce",
+  "finished_at": "2026-09-09T14:00:03.527148+00:00",
+  "memory_monitor_errors": [],
+  "peak_process_tree_rss_bytes": 2888163328,
+  "phase": "measure",
+  "phase_started": 2440.078061093,
+  "preparation_seconds": 3.7123156789998575,
+  "runtime_metadata": {
+    "compiled_array_dtypes": [],
+    "compiled_graph_count": 0,
+    "compiled_phase_dtypes": [],
+    "execution_path": "direct-cpu",
+    "jax_default_matmul_precision": null,
+    "jax_x64_enabled": false,
+    "postselection_short_circuit": true,
+    "record_dtype": "bool",
+    "reference_convention": "raw-record-parity",
+    "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+  },
+  "samples": [
+    {
+      "accepted_shots": 1225994591,
+      "api_calls": 19200,
+      "attempted_shots": 1258291200,
+      "discarded_shots": 32296609,
+      "duration_seconds": 30.00003047099699,
+      "logical_errors": 24,
+      "repetition": 0,
+      "throughput_attempted_shots_per_second": 41942997.398501754
+    },
+    {
+      "accepted_shots": 1222985475,
+      "api_calls": 19153,
+      "attempted_shots": 1255211008,
+      "discarded_shots": 32225533,
+      "duration_seconds": 30.001462322973566,
+      "logical_errors": 22,
+      "repetition": 1,
+      "throughput_attempted_shots_per_second": 41838327.56174769
+    },
+    {
+      "accepted_shots": 1223506106,
+      "api_calls": 19161,
+      "attempted_shots": 1255735296,
+      "discarded_shots": 32229190,
+      "duration_seconds": 30.000361499978226,
+      "logical_errors": 22,
+      "repetition": 2,
+      "throughput_attempted_shots_per_second": 41857338.81909761
+    },
+    {
+      "accepted_shots": 1226630983,
+      "api_calls": 19210,
+      "attempted_shots": 1258946560,
+      "discarded_shots": 32315577,
+      "duration_seconds": 30.000781835994076,
+      "logical_errors": 18,
+      "repetition": 3,
+      "throughput_attempted_shots_per_second": 41963791.706573196
+    },
+    {
+      "accepted_shots": 1224713054,
+      "api_calls": 19180,
+      "attempted_shots": 1256980480,
+      "discarded_shots": 32267426,
+      "duration_seconds": 30.000903094003206,
+      "logical_errors": 21,
+      "repetition": 4,
+      "throughput_attempted_shots_per_second": 41898088.06959728
+    }
+  ],
+  "schema_version": "clifft-bench/tsim-gpu-case/v1",
+  "seed": 20260918,
+  "selected_batch_size": 65536,
+  "selection_probe_rate": 41755028.296523124,
+  "started_at": "2026-09-09T13:56:51.214580+00:00",
+  "status": "success",
+  "strategy": "bss",
+  "strategy_preparation_seconds": 3.7123156789998575,
+  "summary": {
+    "mad_attempted_shots_per_second": 44909.32890447229,
+    "median_attempted_shots_per_second": 41898088.06959728
+  },
+  "tune_seconds": 3.6018063559999973,
+  "tuning": [
+    {
+      "batch_size": 65536,
+      "mad_attempted_shots_per_second": 228925.4161586538,
+      "median_attempted_shots_per_second": 41755028.296523124,
+      "probes": [
+        {
+          "accepted_shots": 40741103,
+          "api_calls": 638,
+          "attempted_shots": 41811968,
+          "discarded_shots": 1070865,
+          "duration_seconds": 1.0013636609960486,
+          "logical_errors": 1,
+          "throughput_attempted_shots_per_second": 41755028.296523124
+        },
+        {
+          "accepted_shots": 40930727,
+          "api_calls": 641,
+          "attempted_shots": 42008576,
+          "discarded_shots": 1077849,
+          "duration_seconds": 1.000586468999245,
+          "logical_errors": 2,
+          "throughput_attempted_shots_per_second": 41983953.71268178
+        },
+        {
+          "accepted_shots": 39653016,
+          "api_calls": 621,
+          "attempted_shots": 40697856,
+          "discarded_shots": 1044840,
+          "duration_seconds": 1.0008841020030559,
+          "logical_errors": 0,
+          "throughput_attempted_shots_per_second": 40661906.726814754
+        }
+      ],
+      "status": "success",
+      "warmup_seconds": 0.002181763999942632
+    }
+  ],
+  "wall_seconds": 192.35667828799978,
+  "workload": {
+    "angle_convention": "half-turns",
+    "artifact": {
+      "path": "../workloads/circuits/coherent_d3_r1.stim",
+      "sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a"
+    },
+    "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r1.stim",
+    "compatible_adapters": [
+      "clifft",
+      "symft"
+    ],
+    "description": "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise.",
+    "dialect": "clifft-symft-extended-stim",
+    "expected_metadata": {
+      "num_detectors": 8,
+      "num_measurements": 17,
+      "num_observables": 1,
+      "num_qubits": 26
+    },
+    "family": "coherent-noise-surface-code",
+    "id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+    "parameters": {
+      "coherent_z_rotation": 0.02,
+      "distance": 3,
+      "physical_error_rate": 0.001,
+      "rounds": 1
+    },
+    "provenance": {
+      "license": "Apache-2.0",
+      "notes": "Byte-for-byte copy of the paper workload.",
+      "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+      "source_path": "qec_bench/circuits/coherent_d3_r1.stim",
+      "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+    },
+    "semantics": {
+      "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+      "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+      "observable_index": 0,
+      "output_contract": "aggregate detector-discard and logical-observable counts",
+      "postselect_all_detectors": true,
+      "reference_convention": "raw-record-parity",
+      "throughput_numerator": "attempted shots"
+    }
+  }
+}

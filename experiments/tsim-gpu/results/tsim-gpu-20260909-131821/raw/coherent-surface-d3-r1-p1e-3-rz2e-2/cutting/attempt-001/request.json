@@ -1,0 +1,73 @@
+{
+  "options": {
+    "batch_sizes": [
+      1024,
+      8192,
+      65536
+    ],
+    "call_timeout_seconds": 120.0,
+    "compile_timeout_seconds": 120.0,
+    "import_timeout_seconds": 60.0,
+    "max_output_mib": 256.0,
+    "max_rss_gib": 12.0,
+    "prepare_budget_seconds": 600.0,
+    "probe_repetitions": 3,
+    "probe_seconds": 1.0,
+    "repetitions": 5,
+    "sample_seconds": 30.0,
+    "seed": 20260908,
+    "shots_per_call": 65536,
+    "strategies": [
+      "cutting",
+      "cat5",
+      "bss"
+    ]
+  },
+  "remaining_prepare_seconds": 600.0,
+  "seed": 20260919,
+  "strategy": "cutting",
+  "workload": {
+    "angle_convention": "half-turns",
+    "artifact": {
+      "path": "../workloads/circuits/coherent_d3_r1.stim",
+      "sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a"
+    },
+    "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r1.stim",
+    "compatible_adapters": [
+      "clifft",
+      "symft"
+    ],
+    "description": "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise.",
+    "dialect": "clifft-symft-extended-stim",
+    "expected_metadata": {
+      "num_detectors": 8,
+      "num_measurements": 17,
+      "num_observables": 1,
+      "num_qubits": 26
+    },
+    "family": "coherent-noise-surface-code",
+    "id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+    "parameters": {
+      "coherent_z_rotation": 0.02,
+      "distance": 3,
+      "physical_error_rate": 0.001,
+      "rounds": 1
+    },
+    "provenance": {
+      "license": "Apache-2.0",
+      "notes": "Byte-for-byte copy of the paper workload.",
+      "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+      "source_path": "qec_bench/circuits/coherent_d3_r1.stim",
+      "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+    },
+    "semantics": {
+      "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+      "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+      "observable_index": 0,
+      "output_contract": "aggregate detector-discard and logical-observable counts",
+      "postselect_all_detectors": true,
+      "reference_convention": "raw-record-parity",
+      "throughput_numerator": "attempted shots"
+    }
+  }
+}

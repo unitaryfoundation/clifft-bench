@@ -1,0 +1,268 @@
+{
+  "active_batch_size": 65536,
+  "batch_candidates": [
+    1024,
+    8192,
+    65536
+  ],
+  "call_started": null,
+  "compile_seconds": 2.124782304000064,
+  "device_memory_stats": {
+    "bytes_in_use": 195328,
+    "bytes_limit": 63763906560,
+    "bytes_reserved": 0,
+    "largest_alloc_size": 809265920,
+    "largest_free_block_bytes": 63763705088,
+    "num_allocs": 89390,
+    "peak_bytes_in_use": 815491584,
+    "peak_bytes_reserved": 0,
+    "peak_pool_bytes": 63763906560,
+    "pool_bytes": 63763906560
+  },
+  "estimated_batch_capacity": 1194613,
+  "exit_code": 0,
+  "fingerprint": "5b619274dbf8a0250f048f074464ab2cc603cf207ae2a1f30d2d0a429d2ef8ce",
+  "finished_at": "2026-09-09T13:45:18.478694+00:00",
+  "memory_monitor_errors": [],
+  "peak_process_tree_rss_bytes": 4104638464,
+  "phase": "measure",
+  "phase_started": 1588.806811568,
+  "preparation_seconds": 28.721972494000056,
+  "runtime_metadata": {
+    "compiled_array_dtypes": [
+      "complex64",
+      "int32",
+      "uint8"
+    ],
+    "compiled_graph_count": 520,
+    "compiled_phase_dtypes": [
+      "uint8"
+    ],
+    "execution_path": "gpu-components",
+    "jax_default_matmul_precision": null,
+    "jax_x64_enabled": false,
+    "postselection_short_circuit": true,
+    "record_dtype": "bool",
+    "reference_convention": "raw-record-parity",
+    "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+  },
+  "samples": [
+    {
+      "accepted_shots": 3329333,
+      "api_calls": 637,
+      "attempted_shots": 41746432,
+      "discarded_shots": 38417099,
+      "duration_seconds": 30.033095482000135,
+      "logical_errors": 1404872,
+      "repetition": 0,
+      "throughput_attempted_shots_per_second": 1390014.293565579
+    },
+    {
+      "accepted_shots": 3334210,
+      "api_calls": 638,
+      "attempted_shots": 41811968,
+      "discarded_shots": 38477758,
+      "duration_seconds": 30.00535844599858,
+      "logical_errors": 1405642,
+      "repetition": 1,
+      "throughput_attempted_shots_per_second": 1393483.36982043
+    },
+    {
+      "accepted_shots": 3338300,
+      "api_calls": 639,
+      "attempted_shots": 41877504,
+      "discarded_shots": 38539204,
+      "duration_seconds": 30.018667516001415,
+      "logical_errors": 1409126,
+      "repetition": 2,
+      "throughput_attempted_shots_per_second": 1395048.7301835516
+    },
+    {
+      "accepted_shots": 3349574,
+      "api_calls": 641,
+      "attempted_shots": 42008576,
+      "discarded_shots": 38659002,
+      "duration_seconds": 30.01643940099575,
+      "logical_errors": 1412447,
+      "repetition": 3,
+      "throughput_attempted_shots_per_second": 1399518.9582214882
+    },
+    {
+      "accepted_shots": 3329423,
+      "api_calls": 637,
+      "attempted_shots": 41746432,
+      "discarded_shots": 38417009,
+      "duration_seconds": 30.017096711002523,
+      "logical_errors": 1404098,
+      "repetition": 4,
+      "throughput_attempted_shots_per_second": 1390755.1553677802
+    }
+  ],
+  "schema_version": "clifft-bench/tsim-gpu-case/v1",
+  "seed": 20260914,
+  "selected_batch_size": 8192,
+  "selection_probe_rate": 1410569.0208695258,
+  "started_at": "2026-09-09T13:42:14.959874+00:00",
+  "status": "success",
+  "strategy": "cat5",
+  "strategy_preparation_seconds": 28.721972494000056,
+  "summary": {
+    "mad_attempted_shots_per_second": 2728.2144526496995,
+    "median_attempted_shots_per_second": 1393483.36982043
+  },
+  "tune_seconds": 26.597190189999992,
+  "tuning": [
+    {
+      "batch_size": 1024,
+      "mad_attempted_shots_per_second": 1832.6920168969664,
+      "median_attempted_shots_per_second": 381593.73252797493,
+      "probes": [
+        {
+          "accepted_shots": 31344,
+          "api_calls": 6,
+          "attempted_shots": 393216,
+          "discarded_shots": 361872,
+          "duration_seconds": 1.0354300679996413,
+          "logical_errors": 13197,
+          "throughput_attempted_shots_per_second": 379761.04051107797
+        },
+        {
+          "accepted_shots": 31333,
+          "api_calls": 6,
+          "attempted_shots": 393216,
+          "discarded_shots": 361883,
+          "duration_seconds": 1.0304571759997998,
+          "logical_errors": 13249,
+          "throughput_attempted_shots_per_second": 381593.73252797493
+        },
+        {
+          "accepted_shots": 31533,
+          "api_calls": 6,
+          "attempted_shots": 393216,
+          "discarded_shots": 361683,
+          "duration_seconds": 1.0249378000000888,
+          "logical_errors": 13297,
+          "throughput_attempted_shots_per_second": 383648.6467763858
+        }
+      ],
+      "status": "success",
+      "warmup_seconds": 5.753259114999992
+    },
+    {
+      "batch_size": 8192,
+      "mad_attempted_shots_per_second": 2240.0542909470387,
+      "median_attempted_shots_per_second": 1410569.0208695258,
+      "probes": [
+        {
+          "accepted_shots": 115176,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "discarded_shots": 1326616,
+          "duration_seconds": 1.0328965710002649,
+          "logical_errors": 48528,
+          "throughput_attempted_shots_per_second": 1395872.5786104195
+        },
+        {
+          "accepted_shots": 115319,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "discarded_shots": 1326473,
+          "duration_seconds": 1.0205143959994984,
+          "logical_errors": 48739,
+          "throughput_attempted_shots_per_second": 1412809.075160473
+        },
+        {
+          "accepted_shots": 115633,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "discarded_shots": 1326159,
+          "duration_seconds": 1.0221350239999083,
+          "logical_errors": 48644,
+          "throughput_attempted_shots_per_second": 1410569.0208695258
+        }
+      ],
+      "status": "success",
+      "warmup_seconds": 5.045774823000102
+    },
+    {
+      "batch_size": 65536,
+      "mad_attempted_shots_per_second": 4664.696830829373,
+      "median_attempted_shots_per_second": 1332093.961417802,
+      "probes": [
+        {
+          "accepted_shots": 109759,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "discarded_shots": 1266497,
+          "duration_seconds": 1.0331523450006443,
+          "logical_errors": 46331,
+          "throughput_attempted_shots_per_second": 1332093.961417802
+        },
+        {
+          "accepted_shots": 109554,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "discarded_shots": 1266702,
+          "duration_seconds": 1.0449304159999429,
+          "logical_errors": 46332,
+          "throughput_attempted_shots_per_second": 1317079.0886424682
+        },
+        {
+          "accepted_shots": 109863,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "discarded_shots": 1266393,
+          "duration_seconds": 1.0295471000001726,
+          "logical_errors": 46444,
+          "throughput_attempted_shots_per_second": 1336758.6582486313
+        }
+      ],
+      "status": "success",
+      "warmup_seconds": 6.41768818699984
+    }
+  ],
+  "wall_seconds": 183.56276046099993,
+  "workload": {
+    "angle_convention": "half-turns",
+    "artifact": {
+      "path": "../workloads/circuits/distillation.stim",
+      "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+    },
+    "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/distillation.stim",
+    "compatible_adapters": [
+      "clifft",
+      "symft"
+    ],
+    "description": "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks.",
+    "dialect": "clifft-symft-extended-stim",
+    "expected_metadata": {
+      "num_detectors": 40,
+      "num_measurements": 85,
+      "num_observables": 5,
+      "num_qubits": 85
+    },
+    "family": "magic-state-distillation",
+    "id": "distillation-color-code-85q-p5e-2",
+    "parameters": {
+      "blocks": 5,
+      "code": "[17,1,5] color code",
+      "preparation_error_rate": 0.05
+    },
+    "provenance": {
+      "license": "Apache-2.0",
+      "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+      "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+      "source_path": "qec_bench/circuits/distillation.stim",
+      "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+    },
+    "semantics": {
+      "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+      "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors.",
+      "observable_index": 0,
+      "output_contract": "aggregate detector-discard and logical-observable counts",
+      "postselect_all_detectors": true,
+      "reference_convention": "raw-record-parity",
+      "throughput_numerator": "attempted shots"
+    }
+  }
+}

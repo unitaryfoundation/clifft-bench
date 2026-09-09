@@ -1,0 +1,459 @@
+{
+  "fingerprint": "5b619274dbf8a0250f048f074464ab2cc603cf207ae2a1f30d2d0a429d2ef8ce",
+  "workloads": [
+    {
+      "artifact_sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583",
+      "runtime_metadata": {
+        "compiled_array_dtypes": [],
+        "compiled_graph_count": 0,
+        "compiled_phase_dtypes": [],
+        "execution_path": "direct-cpu",
+        "jax_default_matmul_precision": null,
+        "jax_x64_enabled": false,
+        "postselection_short_circuit": true,
+        "record_dtype": "bool",
+        "reference_convention": "raw-record-parity",
+        "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+      },
+      "selected_batch_size": 65536,
+      "selected_strategy": "cutting",
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "success",
+      "strategies": [
+        {
+          "compile_seconds": 3.661446017000003,
+          "error": null,
+          "preparation_seconds": 6.793015278999974,
+          "status": "success",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": 3.6095260749999625,
+          "error": null,
+          "preparation_seconds": 6.775102729999958,
+          "status": "success",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": 3.648503253000058,
+          "error": null,
+          "preparation_seconds": 6.7947305820000565,
+          "status": "success",
+          "strategy": "bss"
+        }
+      ],
+      "summary": {
+        "mad_attempted_shots_per_second": 2228.644547275733,
+        "median_attempted_shots_per_second": 1912251.1412475046
+      },
+      "workload_id": "surface-code-d7-r7-p1e-3"
+    },
+    {
+      "artifact_sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f",
+      "runtime_metadata": {
+        "compiled_array_dtypes": [
+          "complex64",
+          "int32",
+          "uint8"
+        ],
+        "compiled_graph_count": 3873,
+        "compiled_phase_dtypes": [
+          "uint8"
+        ],
+        "execution_path": "gpu-components",
+        "jax_default_matmul_precision": null,
+        "jax_x64_enabled": false,
+        "postselection_short_circuit": true,
+        "record_dtype": "bool",
+        "reference_convention": "raw-record-parity",
+        "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+      },
+      "selected_batch_size": 6897,
+      "selected_strategy": "cutting",
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "success",
+      "strategies": [
+        {
+          "compile_seconds": 12.284412331000112,
+          "error": null,
+          "preparation_seconds": 68.73000269099998,
+          "status": "success",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.18325336099997,
+          "status": "timeout",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.00345976800008,
+          "status": "timeout",
+          "strategy": "bss"
+        }
+      ],
+      "summary": {
+        "mad_attempted_shots_per_second": 36.98675296093279,
+        "median_attempted_shots_per_second": 87396.24795068559
+      },
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "artifact_sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1",
+      "runtime_metadata": {
+        "compiled_array_dtypes": [
+          "complex64",
+          "int32",
+          "uint8"
+        ],
+        "compiled_graph_count": 520,
+        "compiled_phase_dtypes": [
+          "uint8"
+        ],
+        "execution_path": "gpu-components",
+        "jax_default_matmul_precision": null,
+        "jax_x64_enabled": false,
+        "postselection_short_circuit": true,
+        "record_dtype": "bool",
+        "reference_convention": "raw-record-parity",
+        "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+      },
+      "selected_batch_size": 8192,
+      "selected_strategy": "cat5",
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "success",
+      "strategies": [
+        {
+          "compile_seconds": 2.124782304000064,
+          "error": null,
+          "preparation_seconds": 28.721972494000056,
+          "status": "success",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.08626039,
+          "status": "timeout",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": 2.2271881140000005,
+          "error": null,
+          "preparation_seconds": 30.240119370000002,
+          "status": "success",
+          "strategy": "bss"
+        }
+      ],
+      "summary": {
+        "mad_attempted_shots_per_second": 2728.2144526496995,
+        "median_attempted_shots_per_second": 1393483.36982043
+      },
+      "workload_id": "distillation-color-code-85q-p5e-2"
+    },
+    {
+      "artifact_sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a",
+      "runtime_metadata": {
+        "compiled_array_dtypes": [],
+        "compiled_graph_count": 0,
+        "compiled_phase_dtypes": [],
+        "execution_path": "direct-cpu",
+        "jax_default_matmul_precision": null,
+        "jax_x64_enabled": false,
+        "postselection_short_circuit": true,
+        "record_dtype": "bool",
+        "reference_convention": "raw-record-parity",
+        "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+      },
+      "selected_batch_size": 65536,
+      "selected_strategy": "cutting",
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "success",
+      "strategies": [
+        {
+          "compile_seconds": 0.1085848329998953,
+          "error": null,
+          "preparation_seconds": 3.697283996999886,
+          "status": "success",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": 0.10942858800035538,
+          "error": null,
+          "preparation_seconds": 3.693718560000434,
+          "status": "success",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": 0.11050932299986016,
+          "error": null,
+          "preparation_seconds": 3.7123156789998575,
+          "status": "success",
+          "strategy": "bss"
+        }
+      ],
+      "summary": {
+        "mad_attempted_shots_per_second": 3081.016937471926,
+        "median_attempted_shots_per_second": 41830986.027827814
+      },
+      "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8",
+      "runtime_metadata": {
+        "compiled_array_dtypes": [],
+        "compiled_graph_count": 0,
+        "compiled_phase_dtypes": [],
+        "execution_path": "direct-cpu",
+        "jax_default_matmul_precision": null,
+        "jax_x64_enabled": false,
+        "postselection_short_circuit": true,
+        "record_dtype": "bool",
+        "reference_convention": "raw-record-parity",
+        "seed_policy": "continuous Tsim stream across tuning and final repetitions"
+      },
+      "selected_batch_size": 65536,
+      "selected_strategy": "cutting",
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "success",
+      "strategies": [
+        {
+          "compile_seconds": 0.15104439500009903,
+          "error": null,
+          "preparation_seconds": 3.5544170900002428,
+          "status": "success",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": 0.16519066599994403,
+          "error": null,
+          "preparation_seconds": 3.5321254679997764,
+          "status": "success",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": 0.15139250100037316,
+          "error": null,
+          "preparation_seconds": 3.5469955610005854,
+          "status": "success",
+          "strategy": "bss"
+        }
+      ],
+      "summary": {
+        "mad_attempted_shots_per_second": 13899.264132626355,
+        "median_attempted_shots_per_second": 24677594.74135936
+      },
+      "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d",
+      "runtime_metadata": null,
+      "selected_batch_size": null,
+      "selected_strategy": null,
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "no-success",
+      "strategies": [
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.02746114599995,
+          "status": "timeout",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.12837514800003,
+          "status": "timeout",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "worker process-tree RSS exceeded configured limit",
+            "phase": "compile"
+          },
+          "preparation_seconds": 99.0527600940004,
+          "status": "memory-limit",
+          "strategy": "bss"
+        }
+      ],
+      "summary": null,
+      "workload_id": "msc-d5-inject-cultivate-p1e-3"
+    },
+    {
+      "artifact_sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d",
+      "runtime_metadata": null,
+      "selected_batch_size": null,
+      "selected_strategy": null,
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "no-success",
+      "strategies": [
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.17572714500011,
+          "status": "timeout",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.17295535499989,
+          "status": "timeout",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.16374262499994,
+          "status": "timeout",
+          "strategy": "bss"
+        }
+      ],
+      "summary": null,
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549",
+      "runtime_metadata": null,
+      "selected_batch_size": null,
+      "selected_strategy": null,
+      "selection_rule": "highest warm-probe median; independent final samples",
+      "semantics": {
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+        "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+        "observable_index": 0,
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "postselect_all_detectors": true,
+        "reference_convention": "raw-record-parity",
+        "throughput_numerator": "attempted shots"
+      },
+      "status": "no-success",
+      "strategies": [
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.19425813299995,
+          "status": "timeout",
+          "strategy": "cutting"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.1519190199997,
+          "status": "timeout",
+          "strategy": "cat5"
+        },
+        {
+          "compile_seconds": null,
+          "error": {
+            "message": "compile exceeded 120s",
+            "phase": "compile"
+          },
+          "preparation_seconds": 120.17051933300081,
+          "status": "timeout",
+          "strategy": "bss"
+        }
+      ],
+      "summary": null,
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    }
+  ]
+}
