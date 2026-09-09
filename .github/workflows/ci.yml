@@ -5,38 +5,10 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      test: ${{ steps.filter.outputs.test }}
-      adapter-smoke: ${{ steps.filter.outputs.adapter-smoke }}
-      tsim-experiment: ${{ steps.filter.outputs.tsim-experiment }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          # PRs use the complete PR diff; pushes compare with main before the push.
-          base: main
-          filters: .github/ci-paths.yml
-
   test:
-    needs: changes
-    # Keep required checks visible when skipped, and fail if change detection fails.
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.test == 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -50,14 +22,8 @@ jobs:
       - run: clifft-bench validate
 
   adapter-smoke:
-    needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.adapter-smoke == 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         id: python
@@ -96,14 +62,8 @@ jobs:
       - run: clifft-bench validate /tmp/adapter-smoke.json
 
   tsim-experiment:
-    needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.tsim-experiment == 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:

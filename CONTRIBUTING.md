@@ -22,21 +22,6 @@ a manual, reviewed workflow. Before changing measurements or results, read the
 [benchmark contract](docs/benchmark-contract.md) and
 [data format](docs/data-format.md).
 
-CI selects jobs using the input paths in [`.github/ci-paths.yml`](.github/ci-paths.yml).
-Adapter smoke tests run for harness, simulator environment, schema, workload, or
-adapter contract test changes. The Tsim CPU check runs for Tsim code, tests,
-dependencies, or shared workload changes. Adding archived benchmark results does
-not run either simulator job; results and figures used by reporting still run the
-lightweight `test` job. Tsim result-only and ordinary documentation changes skip
-all three jobs (the EC2 playbook is an input to its documentation tests).
-
-The workflow still reports the existing required check names when jobs are
-skipped. Changes to CI exercise every job, and failed change detection fails the
-checks. When adding an input to a job, update its path list too. Pip caches reuse
-downloads and built wheels; native SymFT wheels also require matching compiler,
-CPU target, Python, and workflow build settings. The Tsim job caches uv artifacts
-using its project and lock files.
-
 ## Preparing a release campaign
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
