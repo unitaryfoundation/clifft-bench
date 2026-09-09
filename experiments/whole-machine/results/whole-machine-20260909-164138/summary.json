@@ -1,0 +1,1897 @@
+{
+  "cases": [
+    {
+      "artifact_sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f",
+      "case_id": "msc-d3-inject-cultivate-p1e-3--clifft",
+      "config": {
+        "batch_size": 2048,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 67108864
+      },
+      "final_path": "raw/msc-d3-inject-cultivate-p1e-3--clifft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1607042.3412515223,
+              "median_attempted_shots_per_second": 183621395.95787254
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1493615.9272199273,
+              "median_attempted_shots_per_second": 70791849.57012364
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 179155.77355624735,
+              "median_attempted_shots_per_second": 117669548.71641165
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 895456.4930233359,
+              "median_attempted_shots_per_second": 166146642.58474568
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 634670.0589229465,
+              "median_attempted_shots_per_second": 177726237.95395377
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 423124.48056688905,
+        "median_attempted_shots_per_second": 182491313.79833075
+      },
+      "tool": "clifft",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "artifact_sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d",
+      "case_id": "msc-d5-inject-cultivate-p1e-3--clifft",
+      "config": {
+        "batch_size": 1,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 6869504
+      },
+      "final_path": "raw/msc-d5-inject-cultivate-p1e-3--clifft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 6869504
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 13832.303047208115,
+              "median_attempted_shots_per_second": 14128017.847674424
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 41246.96562248003,
+              "median_attempted_shots_per_second": 3631314.6975793415
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 4729.971000435296,
+              "median_attempted_shots_per_second": 3660186.695819721
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 9091.319788917433,
+              "median_attempted_shots_per_second": 2438633.3868973986
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 2859.140251475619,
+              "median_attempted_shots_per_second": 1385232.0794237375
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 115494.28431908228,
+        "median_attempted_shots_per_second": 13855905.914269734
+      },
+      "tool": "clifft",
+      "workload_id": "msc-d5-inject-cultivate-p1e-3"
+    },
+    {
+      "artifact_sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583",
+      "case_id": "surface-code-d7-r7-p1e-3--clifft",
+      "config": {
+        "batch_size": 1024,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 67108864
+      },
+      "final_path": "raw/surface-code-d7-r7-p1e-3--clifft/final-04/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/surface-code-d7-r7-p1e-3--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 324800.67436277866,
+              "median_attempted_shots_per_second": 253719228.48853886
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/surface-code-d7-r7-p1e-3--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 16254.28084616363,
+              "median_attempted_shots_per_second": 32330559.634932358
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/surface-code-d7-r7-p1e-3--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 76829.32989284396,
+              "median_attempted_shots_per_second": 75736636.17919858
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/surface-code-d7-r7-p1e-3--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 290221.21952202916,
+              "median_attempted_shots_per_second": 226436135.1004715
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/surface-code-d7-r7-p1e-3--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1087846.1142969131,
+              "median_attempted_shots_per_second": 263554222.79536292
+            }
+          }
+        }
+      ],
+      "selected_candidate": 4,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 422086.5398430228,
+        "median_attempted_shots_per_second": 262349702.72379884
+      },
+      "tool": "clifft",
+      "workload_id": "surface-code-d7-r7-p1e-3"
+    },
+    {
+      "artifact_sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1",
+      "case_id": "distillation-color-code-85q-p5e-2--clifft",
+      "config": {
+        "batch_size": 256,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 59441152
+      },
+      "final_path": "raw/distillation-color-code-85q-p5e-2--clifft/final-03/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/distillation-color-code-85q-p5e-2--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 55574528
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 153587.69053977728,
+              "median_attempted_shots_per_second": 119138212.76956123
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/distillation-color-code-85q-p5e-2--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 16777216
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 56710.51688412577,
+              "median_attempted_shots_per_second": 39287456.89795513
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/distillation-color-code-85q-p5e-2--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 48406528
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 43075.61621764302,
+              "median_attempted_shots_per_second": 96636225.33334254
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/distillation-color-code-85q-p5e-2--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 59441152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 210822.03509059548,
+              "median_attempted_shots_per_second": 121093934.31154643
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/distillation-color-code-85q-p5e-2--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 56623104
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 17133.889065012336,
+              "median_attempted_shots_per_second": 117985190.46280175
+            }
+          }
+        }
+      ],
+      "selected_candidate": 3,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 367574.3125939369,
+        "median_attempted_shots_per_second": 121425683.21931103
+      },
+      "tool": "clifft",
+      "workload_id": "distillation-color-code-85q-p5e-2"
+    },
+    {
+      "artifact_sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a",
+      "case_id": "coherent-surface-d3-r1-p1e-3-rz2e-2--clifft",
+      "config": {
+        "batch_size": 2048,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 67108864
+      },
+      "final_path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--clifft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 639634.7884994149,
+              "median_attempted_shots_per_second": 405729138.19950485
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 3387413.132122062,
+              "median_attempted_shots_per_second": 62410688.91209658
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1098917.6623012424,
+              "median_attempted_shots_per_second": 304193812.9979877
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 241893.263643682,
+              "median_attempted_shots_per_second": 369899252.5136011
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 556745.4487982988,
+              "median_attempted_shots_per_second": 385941753.25130373
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 1519561.39412719,
+        "median_attempted_shots_per_second": 402787465.5434038
+      },
+      "tool": "clifft",
+      "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d",
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--clifft",
+      "config": {
+        "batch_size": 2048,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 30932992
+      },
+      "final_path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--clifft/final-04/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 29815040
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 260279.08594282717,
+              "median_attempted_shots_per_second": 59169306.774673164
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 26468352
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 191690.77741952986,
+              "median_attempted_shots_per_second": 55197981.53083321
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 30015488
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 57675.606347218156,
+              "median_attempted_shots_per_second": 64468733.44325945
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 31457280
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 884159.7207404524,
+              "median_attempted_shots_per_second": 67984328.1061166
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 30932992
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 71435.30997152627,
+              "median_attempted_shots_per_second": 70043703.76060234
+            }
+          }
+        }
+      ],
+      "selected_candidate": 4,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 501520.24472926557,
+        "median_attempted_shots_per_second": 68931869.11230253
+      },
+      "tool": "clifft",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8",
+      "case_id": "coherent-surface-d5-r1-p1e-3-rz2e-2--clifft",
+      "config": {
+        "batch_size": 1,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 2450176
+      },
+      "final_path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--clifft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 2450176
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 29323.607728956267,
+              "median_attempted_shots_per_second": 5063604.129726484
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 1048576
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 9752.512135343626,
+              "median_attempted_shots_per_second": 1815121.3945477465
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 196608
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 129.03928714216454,
+              "median_attempted_shots_per_second": 423181.3540348202
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 1048576
+            },
+            "error": "Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 179, in run\n    sample = pool.measure(config[\"shots_per_call\"], 0, f\"warmup-{index}\")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 122, in measure\n    samples = [self.receive(c, \"sample\") for c in self.connections]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 111, in receive\n    raise RuntimeError(result.get(\"error\", \"unexpected worker response\"))\nRuntimeError: Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 64, in child\n    result = prepared.sample(instruction[\"shots\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/adapters.py\", line 39, in sample\n    r = self.lib.sample_survivors(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: explicit batch_size exceeds the 64 MiB packed-state limit; request a smaller batch_size\n\n",
+            "status": "error"
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 1048576
+            },
+            "error": "Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 179, in run\n    sample = pool.measure(config[\"shots_per_call\"], 0, f\"warmup-{index}\")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 122, in measure\n    samples = [self.receive(c, \"sample\") for c in self.connections]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 111, in receive\n    raise RuntimeError(result.get(\"error\", \"unexpected worker response\"))\nRuntimeError: Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 64, in child\n    result = prepared.sample(instruction[\"shots\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/adapters.py\", line 39, in sample\n    r = self.lib.sample_survivors(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: explicit batch_size exceeds the 64 MiB packed-state limit; request a smaller batch_size\n\n",
+            "status": "error"
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 29361.56047316082,
+        "median_attempted_shots_per_second": 5025434.735815666
+      },
+      "tool": "clifft",
+      "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549",
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft",
+      "config": {
+        "batch_size": 1,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 199680
+      },
+      "final_path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--clifft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--clifft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 199680
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 460.23871966887964,
+              "median_attempted_shots_per_second": 414908.9723659487
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--clifft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 65536
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1006.5356385215564,
+              "median_attempted_shots_per_second": 100040.71244537568
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--clifft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 65536
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 111.61324980136851,
+              "median_attempted_shots_per_second": 21170.20614449425
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--clifft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 262144
+            },
+            "error": "Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 179, in run\n    sample = pool.measure(config[\"shots_per_call\"], 0, f\"warmup-{index}\")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 122, in measure\n    samples = [self.receive(c, \"sample\") for c in self.connections]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 111, in receive\n    raise RuntimeError(result.get(\"error\", \"unexpected worker response\"))\nRuntimeError: Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 64, in child\n    result = prepared.sample(instruction[\"shots\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/adapters.py\", line 39, in sample\n    r = self.lib.sample_survivors(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: explicit batch_size exceeds the 64 MiB packed-state limit; request a smaller batch_size\n\n",
+            "status": "error"
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--clifft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 524288
+            },
+            "error": "Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 179, in run\n    sample = pool.measure(config[\"shots_per_call\"], 0, f\"warmup-{index}\")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 122, in measure\n    samples = [self.receive(c, \"sample\") for c in self.connections]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 111, in receive\n    raise RuntimeError(result.get(\"error\", \"unexpected worker response\"))\nRuntimeError: Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/worker.py\", line 64, in child\n    result = prepared.sample(instruction[\"shots\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench/experiments/whole-machine/whole_machine/adapters.py\", line 39, in sample\n    r = self.lib.sample_survivors(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: explicit batch_size exceeds the 64 MiB packed-state limit; request a smaller batch_size\n\n",
+            "status": "error"
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 2130.8193821705645,
+        "median_attempted_shots_per_second": 422919.42456043285
+      },
+      "tool": "clifft",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f",
+      "case_id": "msc-d3-inject-cultivate-p1e-3--symft",
+      "config": {
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 67108864
+      },
+      "final_path": "raw/msc-d3-inject-cultivate-p1e-3--symft/final-04/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 550543.6482443511,
+              "median_attempted_shots_per_second": 152299327.9281142
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 137102.45307758078,
+              "median_attempted_shots_per_second": 22249400.303193904
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 140102.23089759052,
+              "median_attempted_shots_per_second": 119728377.33238634
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 263695.97440081835,
+              "median_attempted_shots_per_second": 169677425.53338423
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/msc-d3-inject-cultivate-p1e-3--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 453979.9392156303,
+              "median_attempted_shots_per_second": 171516201.74677464
+            }
+          }
+        }
+      ],
+      "selected_candidate": 4,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 17526.83328077197,
+        "median_attempted_shots_per_second": 169762214.1236337
+      },
+      "tool": "symft",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "artifact_sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d",
+      "case_id": "msc-d5-inject-cultivate-p1e-3--symft",
+      "config": {
+        "batch_size": 256,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 5242880
+      },
+      "final_path": "raw/msc-d5-inject-cultivate-p1e-3--symft/final-02/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 4718592
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1476.319739965722,
+              "median_attempted_shots_per_second": 10512695.901991917
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 21652.507585759275,
+              "median_attempted_shots_per_second": 6190123.182109647
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 5242880
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 21659.72252262011,
+              "median_attempted_shots_per_second": 11022366.798845053
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 92031.66089920793,
+              "median_attempted_shots_per_second": 8427945.299842509
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/msc-d5-inject-cultivate-p1e-3--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 2097152
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 19301.303873070516,
+              "median_attempted_shots_per_second": 5482326.818843077
+            }
+          }
+        }
+      ],
+      "selected_candidate": 2,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 18853.362863106653,
+        "median_attempted_shots_per_second": 11091503.349265771
+      },
+      "tool": "symft",
+      "workload_id": "msc-d5-inject-cultivate-p1e-3"
+    },
+    {
+      "artifact_sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583",
+      "case_id": "surface-code-d7-r7-p1e-3--symft",
+      "config": {
+        "batch_size": 2048,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 67108864
+      },
+      "final_path": "raw/surface-code-d7-r7-p1e-3--symft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/surface-code-d7-r7-p1e-3--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 913335.7864245772,
+              "median_attempted_shots_per_second": 261580773.67867637
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/surface-code-d7-r7-p1e-3--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 4718592
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 430.018295744434,
+              "median_attempted_shots_per_second": 9648908.13211971
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/surface-code-d7-r7-p1e-3--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 31466.772859871387,
+              "median_attempted_shots_per_second": 63384553.812297
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/surface-code-d7-r7-p1e-3--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 485930.49042981863,
+              "median_attempted_shots_per_second": 197580875.1083622
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/surface-code-d7-r7-p1e-3--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 360710.937766999,
+              "median_attempted_shots_per_second": 254821879.67579398
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 84378.17310908437,
+        "median_attempted_shots_per_second": 260638406.86653283
+      },
+      "tool": "symft",
+      "workload_id": "surface-code-d7-r7-p1e-3"
+    },
+    {
+      "artifact_sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1",
+      "case_id": "distillation-color-code-85q-p5e-2--symft",
+      "config": {
+        "batch_size": 1024,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 47710208
+      },
+      "final_path": "raw/distillation-color-code-85q-p5e-2--symft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/distillation-color-code-85q-p5e-2--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 47710208
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 97243.19478589296,
+              "median_attempted_shots_per_second": 123388878.2762019
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/distillation-color-code-85q-p5e-2--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 16777216
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 66639.50635029562,
+              "median_attempted_shots_per_second": 11345342.81252459
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/distillation-color-code-85q-p5e-2--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 37748736
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 265273.0459564775,
+              "median_attempted_shots_per_second": 76767663.20455196
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/distillation-color-code-85q-p5e-2--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 53477376
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 647988.3474822938,
+              "median_attempted_shots_per_second": 110261908.27659032
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/distillation-color-code-85q-p5e-2--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 44564480
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 7475.765282809734,
+              "median_attempted_shots_per_second": 114725213.21775734
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 52576.62018491328,
+        "median_attempted_shots_per_second": 122948560.07746066
+      },
+      "tool": "symft",
+      "workload_id": "distillation-color-code-85q-p5e-2"
+    },
+    {
+      "artifact_sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a",
+      "case_id": "coherent-surface-d3-r1-p1e-3-rz2e-2--symft",
+      "config": {
+        "batch_size": 1024,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 67108864
+      },
+      "final_path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--symft/final-03/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 237265.81434589624,
+              "median_attempted_shots_per_second": 152447533.42398125
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 42073.82568895072,
+              "median_attempted_shots_per_second": 25106165.12990401
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 33554432
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 107183.65916897357,
+              "median_attempted_shots_per_second": 104708883.69034842
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 46773.90868464112,
+              "median_attempted_shots_per_second": 169898390.35907453
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 67108864
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 934828.7541023493,
+              "median_attempted_shots_per_second": 161597636.5817475
+            }
+          }
+        }
+      ],
+      "selected_candidate": 3,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 516585.3258494437,
+        "median_attempted_shots_per_second": 165741399.6885321
+      },
+      "tool": "symft",
+      "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d",
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft",
+      "config": {
+        "batch_size": 256,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 17301504
+      },
+      "final_path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--symft/final-02/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 8388608
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 196518.43403520063,
+              "median_attempted_shots_per_second": 33732070.01909651
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 8388608
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 87789.57537452318,
+              "median_attempted_shots_per_second": 13541441.071371142
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 17301504
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 162017.60005306453,
+              "median_attempted_shots_per_second": 35530825.390918784
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 8388608
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 35536.1535592936,
+              "median_attempted_shots_per_second": 32787757.633792657
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d3-r3-p1e-3-rz2e-2--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 8388608
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 87886.57108209655,
+              "median_attempted_shots_per_second": 27887148.6268338
+            }
+          }
+        }
+      ],
+      "selected_candidate": 2,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 92291.6005409658,
+        "median_attempted_shots_per_second": 34879760.23853692
+      },
+      "tool": "symft",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8",
+      "case_id": "coherent-surface-d5-r1-p1e-3-rz2e-2--symft",
+      "config": {
+        "batch_size": 32,
+        "sample_chunk_shots": 2048,
+        "shots_per_call": 524288
+      },
+      "final_path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--symft/final-01/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 2011.8533210670575,
+              "median_attempted_shots_per_second": 1442826.1599582434
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 273.24097085697576,
+              "median_attempted_shots_per_second": 1903379.5904371832
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--symft/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 200.00417770797503,
+              "median_attempted_shots_per_second": 224616.0910502987
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--symft/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 201.25280724672484,
+              "median_attempted_shots_per_second": 154370.75290811184
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--symft/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 229.2578408824338,
+              "median_attempted_shots_per_second": 151377.04736591017
+            }
+          }
+        }
+      ],
+      "selected_candidate": 1,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 11335.44390478218,
+        "median_attempted_shots_per_second": 1918408.4146803974
+      },
+      "tool": "symft",
+      "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549",
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft",
+      "config": {
+        "batch_size": 1,
+        "sample_chunk_shots": 4,
+        "shots_per_call": 1024
+      },
+      "final_path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--symft/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--symft/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1,
+              "sample_chunk_shots": 4,
+              "shots_per_call": 1024
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 9.076114505100009,
+              "median_attempted_shots_per_second": 554.9329452980162
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d5-r5-p1e-3-rz2e-2--symft/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 32,
+              "sample_chunk_shots": 32,
+              "shots_per_call": 8192
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 0.03522665156913263,
+              "median_attempted_shots_per_second": 342.57393689748375
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 256,
+              "shots_per_call": 65536
+            },
+            "error": "dense state lower bound exceeds 75% of aggregate memory budget",
+            "status": "memory-estimate-skip"
+          }
+        },
+        {
+          "candidate": 3,
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 1024,
+              "shots_per_call": 262144
+            },
+            "error": "dense state lower bound exceeds 75% of aggregate memory budget",
+            "status": "memory-estimate-skip"
+          }
+        },
+        {
+          "candidate": 4,
+          "result": {
+            "config": {
+              "batch_size": 2048,
+              "sample_chunk_shots": 2048,
+              "shots_per_call": 524288
+            },
+            "error": "dense state lower bound exceeds 75% of aggregate memory budget",
+            "status": "memory-estimate-skip"
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 0.359236308829054,
+        "median_attempted_shots_per_second": 548.1361905238424
+      },
+      "tool": "symft",
+      "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583",
+      "case_id": "surface-code-d7-r7-p1e-3--stim",
+      "config": {
+        "batch_size": 4096,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 524288
+      },
+      "final_path": "raw/surface-code-d7-r7-p1e-3--stim/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/surface-code-d7-r7-p1e-3--stim/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 4096,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 83163.00610220432,
+              "median_attempted_shots_per_second": 72128129.24065524
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/surface-code-d7-r7-p1e-3--stim/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 256,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 262144
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 23296.46309325099,
+              "median_attempted_shots_per_second": 68551136.42147751
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/surface-code-d7-r7-p1e-3--stim/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 1024,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 552960
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 115688.56563168764,
+              "median_attempted_shots_per_second": 72118033.80803189
+            }
+          }
+        },
+        {
+          "candidate": 3,
+          "path": "raw/surface-code-d7-r7-p1e-3--stim/probe-03/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 16384,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 524288
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 51605.07585589588,
+              "median_attempted_shots_per_second": 70672489.36397779
+            }
+          }
+        },
+        {
+          "candidate": 4,
+          "path": "raw/surface-code-d7-r7-p1e-3--stim/probe-04/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 65536,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 262144
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 448647.2620130405,
+              "median_attempted_shots_per_second": 50683340.490647644
+            }
+          }
+        },
+        {
+          "candidate": 5,
+          "path": "raw/surface-code-d7-r7-p1e-3--stim/probe-05/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 262144
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 827065.6890954673,
+              "median_attempted_shots_per_second": 33290021.52892801
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 306492.07550930977,
+        "median_attempted_shots_per_second": 74628056.3505228
+      },
+      "tool": "stim",
+      "workload_id": "surface-code-d7-r7-p1e-3"
+    },
+    {
+      "artifact_sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583",
+      "case_id": "surface-code-d7-r7-p1e-3--tsim",
+      "config": {
+        "batch_size": 0,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 65536
+      },
+      "final_path": "raw/surface-code-d7-r7-p1e-3--tsim/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/surface-code-d7-r7-p1e-3--tsim/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 65536
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 110977.93255628645,
+              "median_attempted_shots_per_second": 83703554.17868432
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/surface-code-d7-r7-p1e-3--tsim/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 8192
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 344.96624874323606,
+              "median_attempted_shots_per_second": 32016887.782464713
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 1048576
+            },
+            "error": "aggregate returned detector/observable allocation exceeds output budget",
+            "status": "memory-estimate-skip"
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 82917.4901189655,
+        "median_attempted_shots_per_second": 86143911.48220336
+      },
+      "tool": "tsim",
+      "workload_id": "surface-code-d7-r7-p1e-3"
+    },
+    {
+      "artifact_sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a",
+      "case_id": "coherent-surface-d3-r1-p1e-3-rz2e-2--tsim",
+      "config": {
+        "batch_size": 0,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 65536
+      },
+      "final_path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--tsim/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--tsim/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 65536
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 5029678.8358130455,
+              "median_attempted_shots_per_second": 3297571297.5941844
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--tsim/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 8192
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 6083838.930927277,
+              "median_attempted_shots_per_second": 1599159198.401593
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d3-r1-p1e-3-rz2e-2--tsim/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 1048576
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 6462529.282912254,
+              "median_attempted_shots_per_second": 3045912253.1566067
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 3150428.458443165,
+        "median_attempted_shots_per_second": 3374219114.5350103
+      },
+      "tool": "tsim",
+      "workload_id": "coherent-surface-d3-r1-p1e-3-rz2e-2"
+    },
+    {
+      "artifact_sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8",
+      "case_id": "coherent-surface-d5-r1-p1e-3-rz2e-2--tsim",
+      "config": {
+        "batch_size": 0,
+        "sample_chunk_shots": 0,
+        "shots_per_call": 65536
+      },
+      "final_path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--tsim/final-00/attempt-001/result.json",
+      "probes": [
+        {
+          "candidate": 0,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--tsim/probe-00/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 65536
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 1051750.4839975834,
+              "median_attempted_shots_per_second": 1897250333.1601477
+            }
+          }
+        },
+        {
+          "candidate": 1,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--tsim/probe-01/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 8192
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 267031.2142852545,
+              "median_attempted_shots_per_second": 699829654.3072789
+            }
+          }
+        },
+        {
+          "candidate": 2,
+          "path": "raw/coherent-surface-d5-r1-p1e-3-rz2e-2--tsim/probe-02/attempt-001/result.json",
+          "result": {
+            "config": {
+              "batch_size": 0,
+              "sample_chunk_shots": 0,
+              "shots_per_call": 1048576
+            },
+            "status": "success",
+            "summary": {
+              "mad_attempted_shots_per_second": 9965490.770872593,
+              "median_attempted_shots_per_second": 1838223635.4635248
+            }
+          }
+        }
+      ],
+      "selected_candidate": 0,
+      "status": "success",
+      "summary": {
+        "mad_attempted_shots_per_second": 461171.3745417595,
+        "median_attempted_shots_per_second": 1903985411.375081
+      },
+      "tool": "tsim",
+      "workload_id": "coherent-surface-d5-r1-p1e-3-rz2e-2"
+    }
+  ],
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d"
+}

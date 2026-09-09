@@ -1,13 +1,13 @@
-"""Validate complete evidence and copy it into a reviewable results directory."""
+"""Validate complete evidence and export four reviewable results files."""
 
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import fcntl
 import math
 import re
-import shutil
 import tempfile
 from pathlib import Path
 
@@ -22,10 +22,12 @@ from .common import (
     stream_seed,
     summarize,
     validate_counts,
+    write,
 )
 from .run import choose, fingerprint
 
 TERMINAL = {"success", "error", "timeout", "memory-limit", "memory-estimate-skip"}
+RAW_SCHEMA = "clifft-bench/whole-machine-raw/v1"
 
 
 def contained(source, relative):
@@ -33,6 +35,74 @@ def contained(source, relative):
     if not path.is_relative_to(source.resolve()):
         raise ValueError("result path escapes spool")
     return path
+
+
+def expand_request(request, metadata):
+    """Restore shared request fields from the unchanged collection metadata."""
+    if set(request) != {"case_id", "config", "kind", "seed"}:
+        raise ValueError("invalid compact request fields")
+    cases = {case["id"]: case for case in metadata["cases"]}
+    if request["case_id"] not in cases:
+        raise ValueError("unknown compact request case")
+    return {
+        "case": cases[request["case_id"]],
+        "config": request["config"],
+        "kind": request["kind"],
+        "seed": request["seed"],
+        "fingerprint": metadata["fingerprint"],
+        "options": metadata["options"],
+        "cpus": metadata["provenance"]["cpus"],
+        "development": metadata["provenance"]["development"],
+    }
+
+
+def probe_summary(result):
+    return {k: result[k] for k in ("status", "config", "summary", "error") if k in result}
+
+
+def compact_summary(summary):
+    summary = copy.deepcopy(summary)
+    for row in summary["cases"]:
+        for probe in row["probes"]:
+            if "path" in probe:
+                probe["result"] = probe_summary(probe["result"])
+    return summary
+
+
+def pack_attempts(source, metadata):
+    attempts = {}
+    for path in sorted(source.rglob("request.json")):
+        request = read(path)
+        compact = {k: request[k] for k in ("config", "kind", "seed")}
+        compact["case_id"] = request["case"]["id"]
+        if expand_request(compact, metadata) != request:
+            raise ValueError("cannot compact differing request context")
+        entry = {"request": compact}
+        result_path = path.parent / "result.json"
+        if result_path.exists():
+            entry["result"] = read(result_path)
+        elif (path.parent / "checkpoint.json").exists():
+            # Preserve partial evidence from an attempt abandoned before a retry.
+            entry["checkpoint"] = read(path.parent / "checkpoint.json")
+        log = path.parent / "worker.log"
+        if log.exists() and log.stat().st_size:
+            entry["log"] = log.read_text()
+        attempts[result_path.relative_to(source).as_posix()] = entry
+    return {
+        "schema_version": RAW_SCHEMA,
+        "fingerprint": metadata["fingerprint"],
+        "attempts": attempts,
+    }
+
+
+def read_attempt(source, relative, metadata, bundle):
+    path = contained(source, relative)
+    if bundle is None:
+        return read(path), read(path.parent / "request.json")
+    entry = bundle["attempts"].get(relative)
+    if entry is None or "result" not in entry:
+        raise ValueError("missing raw attempt evidence")
+    return entry["result"], expand_request(entry["request"], metadata)
 
 
 def validate_result(result, request, metadata):
@@ -104,6 +174,11 @@ def validate_result(result, request, metadata):
 
 def validate_execution(source):
     metadata, summary = read(source / "metadata.json"), read(source / "summary.json")
+    bundle = read(source / "raw.json") if (source / "raw.json").exists() else None
+    if bundle is not None and (
+        bundle["schema_version"] != RAW_SCHEMA or bundle["fingerprint"] != metadata["fingerprint"]
+    ):
+        raise ValueError("raw bundle schema/fingerprint mismatch")
     provenance = metadata["provenance"]
     if provenance["development"] or provenance["source"]["dirty"]:
         raise ValueError("development/dirty results cannot be finalized")
@@ -166,9 +241,7 @@ def validate_execution(source):
         for probe in row["probes"]:
             config = configs[probe["candidate"]]
             if "path" in probe:
-                path = contained(source, probe["path"])
-                raw = read(path)
-                req = read(path.parent / "request.json")
+                raw, req = read_attempt(source, probe["path"], metadata, bundle)
                 if (
                     req["case"] != case
                     or req["kind"] != "probe"
@@ -178,7 +251,7 @@ def validate_execution(source):
                 ):
                     raise ValueError("probe request identity mismatch")
                 validate_result(raw, req, metadata)
-                if raw != probe["result"]:
+                if (raw if bundle is None else probe_summary(raw)) != probe["result"]:
                     raise ValueError("stale probe summary")
             elif (
                 probe["result"]["status"] != "memory-estimate-skip"
@@ -191,8 +264,7 @@ def validate_execution(source):
         if row["selected_candidate"] != (selected["candidate"] if selected else None):
             raise ValueError("selection differs from independent warm probes")
         if selected:
-            path = contained(source, row["final_path"])
-            result, req = read(path), read(path.parent / "request.json")
+            result, req = read_attempt(source, row["final_path"], metadata, bundle)
             if (
                 req["case"] != case
                 or req["kind"] != "final"
@@ -223,12 +295,15 @@ def finalize(source, execution_id, output_root=None):
         if any(p.is_symlink() for p in source.rglob("*")):
             raise ValueError("spool must not contain symlinks")
         metadata, summary = validate_execution(source)
+        bundle = pack_attempts(source, metadata)
+        summary = compact_summary(summary)
         target.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=target.parent) as temp:
             staged = Path(temp) / execution_id
-            shutil.copytree(
-                source, staged, ignore=shutil.ignore_patterns("collection.lock", "*.tmp")
-            )
+            write(staged / "metadata.json", metadata)
+            write(staged / "raw.json", bundle)
+            write(staged / "summary.json", summary)
+            validate_execution(staged)
             columns = [
                 "tool",
                 "workload_id",

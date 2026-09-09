@@ -1,0 +1,1331 @@
+{
+  "cases": [
+    {
+      "id": "msc-d3-inject-cultivate-p1e-3--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+          "sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 injection and cultivation circuit with circuit-level Pauli noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d3-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "msc-d5-inject-cultivate-p1e-3--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim",
+          "sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 injection and cultivation circuit with circuit-level Pauli noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 107,
+          "num_measurements": 112,
+          "num_observables": 1,
+          "num_qubits": 42
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d5-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "none",
+        "artifact": {
+          "path": "../workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim"
+        ],
+        "description": "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds.",
+        "dialect": "stim",
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "distillation-color-code-85q-p5e-2--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/distillation.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r1-p1e-3-rz2e-2--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d3_r1.stim",
+          "sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r1.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 8,
+          "num_measurements": 17,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 1
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r1.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d5-r1-p1e-3-rz2e-2--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d5_r1.stim",
+          "sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d5_r1.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 surface-code circuit with one round of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 49,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r1-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 1
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r1.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft",
+      "tool": "clifft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 surface-code circuit with five rounds of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "msc-d3-inject-cultivate-p1e-3--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+          "sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 injection and cultivation circuit with circuit-level Pauli noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d3-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "msc-d5-inject-cultivate-p1e-3--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim",
+          "sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 injection and cultivation circuit with circuit-level Pauli noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 107,
+          "num_measurements": 112,
+          "num_observables": 1,
+          "num_qubits": 42
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d5-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "none",
+        "artifact": {
+          "path": "../workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim"
+        ],
+        "description": "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds.",
+        "dialect": "stim",
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "distillation-color-code-85q-p5e-2--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/distillation.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r1-p1e-3-rz2e-2--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d3_r1.stim",
+          "sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r1.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 8,
+          "num_measurements": 17,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 1
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r1.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d5-r1-p1e-3-rz2e-2--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d5_r1.stim",
+          "sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d5_r1.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 surface-code circuit with one round of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 49,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r1-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 1
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r1.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft",
+      "tool": "symft",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 surface-code circuit with five rounds of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3--stim",
+      "tool": "stim",
+      "workload": {
+        "angle_convention": "none",
+        "artifact": {
+          "path": "../workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim"
+        ],
+        "description": "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds.",
+        "dialect": "stim",
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3--tsim",
+      "tool": "tsim",
+      "workload": {
+        "angle_convention": "none",
+        "artifact": {
+          "path": "../workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim"
+        ],
+        "description": "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds.",
+        "dialect": "stim",
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r1-p1e-3-rz2e-2--tsim",
+      "tool": "tsim",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d3_r1.stim",
+          "sha256": "9b439238478b15977829c1015ee47dfe401976b3882092d9560ba321fb0f510a"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d3_r1.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 8,
+          "num_measurements": 17,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r1-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 1
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r1.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d5-r1-p1e-3-rz2e-2--tsim",
+      "tool": "tsim",
+      "workload": {
+        "angle_convention": "half-turns",
+        "artifact": {
+          "path": "../workloads/circuits/coherent_d5_r1.stim",
+          "sha256": "2707188abe8912f693fe4f910db8c4b6bd795c71a8fba38cc153da90ee5910b8"
+        },
+        "artifact_path": "/home/ubuntu/clifft-bench/workloads/circuits/coherent_d5_r1.stim",
+        "compatible_adapters": [
+          "clifft",
+          "symft"
+        ],
+        "description": "Distance-5 surface-code circuit with one round of coherent Z over-rotation noise.",
+        "dialect": "clifft-symft-extended-stim",
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 49,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r1-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 1
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r1.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work.",
+          "logical_work": "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors.",
+          "observable_index": 0,
+          "output_contract": "aggregate detector-discard and logical-observable counts",
+          "postselect_all_detectors": true,
+          "reference_convention": "raw-record-parity",
+          "throughput_numerator": "attempted shots"
+        }
+      }
+    }
+  ],
+  "created_at": "2026-09-09T16:51:07.819775+00:00",
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d",
+  "options": {
+    "call_timeout_seconds": 120.0,
+    "candidate_timeout_seconds": 600.0,
+    "collection_timeout_seconds": 10800.0,
+    "max_output_gib": 16.0,
+    "max_rss_gib": 216.0,
+    "probe_repetitions": 3,
+    "probe_seconds": 1.0,
+    "repetitions": 5,
+    "sample_seconds": 30.0,
+    "seed": 20260909,
+    "setup_timeout_seconds": 180.0,
+    "workers": 64
+  },
+  "provenance": {
+    "boot_id": "6e6153d1-0654-40b7-8781-0cc90d2acee3",
+    "cgroup": {
+      "memory.max": "231928233984",
+      "memory.swap.max": "0",
+      "path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/run-r663a0e8c431642418b02768285d54e0d.scope"
+    },
+    "cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "development": false,
+    "ec2": {
+      "accountId": "003146198539",
+      "architecture": "x86_64",
+      "availabilityZone": "us-east-1a",
+      "billingProducts": null,
+      "devpayProductCodes": null,
+      "imageId": "ami-0ec10929233384c7f",
+      "instanceId": "i-03b786eefddae9ce8",
+      "instanceType": "m8a.16xlarge",
+      "kernelId": null,
+      "marketplaceProductCodes": null,
+      "pendingTime": "2026-09-09T16:38:43Z",
+      "privateIp": "172.31.28.122",
+      "ramdiskId": null,
+      "region": "us-east-1",
+      "version": "2017-09-30"
+    },
+    "files": {
+      "experiments/tsim-gpu/results/tsim-gpu-20260909-131821/summary.json": "ae272dc04625a7719e7fd97e6882d602f0b9d62cbcff58f520f5ec5307114c4f",
+      "experiments/whole-machine/pyproject.toml": "e4537c4e9d1c13ac5ef46a1d0c382be28c1f9f6a2460609637fe647d06b904e9",
+      "experiments/whole-machine/uv.lock": "a83f3f83b2fc739308b2cde29503caea41aa98354b7bd0a7ba4fd5bbba9059a6",
+      "experiments/whole-machine/whole_machine/__init__.py": "ce9c1590f5595256df69345800bdc376b8324daf58a7fff59023f473fc0b10b8",
+      "experiments/whole-machine/whole_machine/__main__.py": "e6a5b8a9b0f5bc30f863a0f88db0d1acf6a56ac41415d9dfd346748a63a015be",
+      "experiments/whole-machine/whole_machine/adapters.py": "85b9210709017d093501f3e7a1fb95d5fdbb9a8438ee93ab4b302bec3f751905",
+      "experiments/whole-machine/whole_machine/common.py": "bc73796ca3aa3bdf91d77d9a5547de4a12df11797b3afe0b3827387cf7b3d32e",
+      "experiments/whole-machine/whole_machine/finalize.py": "add6986ebcecbf2bba88dfa0090457494f984a1110f78c6a16f578abfa5bb12e",
+      "experiments/whole-machine/whole_machine/run.py": "d2918058ef550d004da5c07ff8263096a2b059e271ff316561e8d7e303a03856",
+      "experiments/whole-machine/whole_machine/worker.py": "16192405a91a93e24fed84a48e24b6df6b58fd0cb8d0818f8017fe6ea743c0a6",
+      "manifests/software.v1.json": "0b30080b001bc7b3ceefb9c79878ac3fa40a5e9a215030161c723546aa3eba10",
+      "manifests/workloads.v1.json": "9c25b6e4202d45e6e83bfc624ee9bc294f1e586cc908cbbca5fec8040fe378dd",
+      "results/release-v1/release-v1-20260909-130000/raw/release-v1-p01-r01-raw.json": "047460074b46c0e2aa97a3a4f8a7e02314b92541ca4edf298eb87091d797ee8c",
+      "src/clifft_bench/__init__.py": "d6508515eb5d53a66c1610ae8813172a57794f1f9b2a3695c3cd473646959068",
+      "src/clifft_bench/__main__.py": "6d59caeb9d15669a9b8fe24fe5490188c9effe9d049eab8a582373401e7c1408",
+      "src/clifft_bench/adapters/__init__.py": "f029c3d22e4c8581db0b2008ab239b33b2a093489c6fe6d9fb3d73cbfda3d895",
+      "src/clifft_bench/adapters/base.py": "4bbe4ef492de33c759afb711fa93cf207deb5d511e7c8093d6c367f1ad3cc081",
+      "src/clifft_bench/adapters/clifft.py": "a2713660ffe1534ff7506e588a4064425049176404b204f1c5e5bfa57e518ad3",
+      "src/clifft_bench/adapters/fixture.py": "792a7d63aef138af0ce510ab53d5060729a50f178f345414fd0578f50bf924eb",
+      "src/clifft_bench/adapters/stim.py": "ecb2114e361f31bc0c6aef59c39b5f28f58071a63c94152341d31ffbdb53f695",
+      "src/clifft_bench/adapters/symft.py": "94f3240d97722b6cecb14e1e90f6d7171bef48ba01ce79927855a3d879f632f9",
+      "src/clifft_bench/calibration.py": "03377a1e353d804caa3c968204cdfc088b205e3d196c09f03920976d26a5083b",
+      "src/clifft_bench/cli.py": "f3c7f66236525a0d91de0329fc7683cabc44635293bec63825ab24d5fa93c20a",
+      "src/clifft_bench/manifest.py": "2d287a35e793143fb5a1209f67f0dfd783fe8ee4742d524a7d35418bba16984b",
+      "src/clifft_bench/results.py": "b8cfad8ac0810633a1ddde703d5faaa2b8be0ab1e11996e793b8180b30d5a114",
+      "src/clifft_bench/runner.py": "59c65c6a197e29f8a8612e6cab8bf13e513d3a6b85940013b11a5af9abd2bcb5",
+      "src/clifft_bench/schema.py": "58a648c3e80a918c1c2c0501f14aa4ea8fb665e6df23ec71caeabb9120da809a",
+      "src/clifft_bench/system.py": "2ffcab11b717386ca057e30b28c51de6ec290ba837044ab6c09c3df937ac6fc6",
+      "src/clifft_bench/worker.py": "b8ffca9da386f88e52fc11fc30d320a813ff8b14b604ed9ceda52d220130eeb8"
+    },
+    "gpu_comparison_hourly_usd": 4.29,
+    "host": {
+      "accelerator": null,
+      "allowed_logical_cpus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "cloud": null,
+      "cpu_model": "AMD EPYC 9R45",
+      "hostname": "ip-172-31-28-122",
+      "kernel_version": "#7~24.04.1-Ubuntu SMP Thu Jan 22 21:04:49 UTC 2026",
+      "load_average_at_start": [
+        7.10595703125,
+        22.65234375,
+        12.7998046875
+      ],
+      "logical_cpus": 64,
+      "machine": "x86_64",
+      "memory_bytes": 265267654656,
+      "os": "Linux",
+      "os_release": "6.17.0-1007-aws",
+      "physical_cores": 64,
+      "python": "3.12.3",
+      "python_compiler": "GCC 13.3.0",
+      "suite_source": {
+        "commit": "cc7ef349a9c59a4fe34a7f478d4e2298755cedd4",
+        "dirty": false
+      },
+      "thread_environment": {
+        "BLIS_NUM_THREADS": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "JAX_ENABLE_COMPILATION_CACHE": "false",
+        "JAX_PLATFORMS": "cpu",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "OMP_DYNAMIC": "false",
+        "OMP_MAX_ACTIVE_LEVELS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "false",
+        "OPENBLAS_NUM_THREADS": "1",
+        "PYTHONHASHSEED": "0",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
+      }
+    },
+    "hourly_usd": 3.89504,
+    "packages": {
+      "all_versions": {
+        "Pygments": "2.21.0",
+        "asttokens": "3.0.2",
+        "attrs": "26.1.0",
+        "bloqade-tsim": "0.1.5",
+        "clifft": "0.10.0rc1",
+        "comm": "0.2.3",
+        "equinox": "0.13.8",
+        "executing": "2.2.1",
+        "iniconfig": "2.3.0",
+        "ipython": "9.17.1",
+        "ipython_pygments_lexers": "1.1.1",
+        "ipywidgets": "8.1.9",
+        "jax": "0.11.1",
+        "jaxlib": "0.11.1",
+        "jaxtyping": "0.3.11",
+        "jedi": "0.20.0",
+        "jsonschema": "4.26.0",
+        "jsonschema-specifications": "2025.9.1",
+        "jupyterlab_widgets": "3.0.17",
+        "lark": "1.3.1",
+        "lxml": "6.1.3",
+        "matplotlib-inline": "0.2.2",
+        "ml_dtypes": "0.6.0",
+        "mpmath": "1.3.0",
+        "numpy": "2.5.2",
+        "opt_einsum": "3.4.0",
+        "packaging": "26.3",
+        "parso": "0.8.7",
+        "pexpect": "4.9.0",
+        "pluggy": "1.6.0",
+        "prompt_toolkit": "3.0.53",
+        "psutil": "7.2.2",
+        "ptyprocess": "0.7.0",
+        "pure_eval": "0.2.3",
+        "pyperclip": "1.11.0",
+        "pytest": "9.1.1",
+        "pyzx-param": "0.9.3",
+        "referencing": "0.37.0",
+        "rpds-py": "2026.6.3",
+        "ruff": "0.16.6",
+        "scipy": "1.18.1",
+        "stack-data": "0.6.3",
+        "stim": "1.16.0",
+        "stim-timeline-text": "0.1.0",
+        "symft": "0.1.1",
+        "sympy": "1.14.0",
+        "tqdm": "4.70.0",
+        "traitlets": "5.16.1",
+        "typing_extensions": "4.16.0",
+        "wadler_lindig": "0.1.7",
+        "wcwidth": "0.8.3",
+        "widgetsnbextension": "4.0.16"
+      },
+      "bloqade-tsim": {
+        "direct_url": {
+          "url": "https://github.com/QuEraComputing/tsim.git",
+          "vcs_info": {
+            "commit_id": "44f64ba79c91e6ada77d6b609595ad0a3d767c11",
+            "requested_revision": "44f64ba79c91e6ada77d6b609595ad0a3d767c11",
+            "vcs": "git"
+          }
+        },
+        "version": "0.1.5"
+      },
+      "clifft": {
+        "direct_url": {},
+        "version": "0.10.0rc1"
+      },
+      "jax": {
+        "direct_url": {},
+        "version": "0.11.1"
+      },
+      "jaxlib": {
+        "direct_url": {},
+        "version": "0.11.1"
+      },
+      "numpy": {
+        "direct_url": {},
+        "version": "2.5.2"
+      },
+      "pyzx-param": {
+        "direct_url": {},
+        "version": "0.9.3"
+      },
+      "stim": {
+        "direct_url": {},
+        "version": "1.16.0"
+      },
+      "symft": {
+        "direct_url": {
+          "subdirectory": "python",
+          "url": "https://github.com/haoliri0/SOFT.git",
+          "vcs_info": {
+            "commit_id": "c89b98514a919240b8afa53a271e08d926d3c987",
+            "requested_revision": "c89b98514a919240b8afa53a271e08d926d3c987",
+            "vcs": "git"
+          }
+        },
+        "version": "0.1.1"
+      }
+    },
+    "price_basis": "Linux On-Demand, shared tenancy, us-east-1, 2026-09-09; EBS excluded",
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "source": {
+      "commit": "cc7ef349a9c59a4fe34a7f478d4e2298755cedd4",
+      "dirty": false
+    }
+  },
+  "schema_version": "clifft-bench/whole-machine/v1"
+}
