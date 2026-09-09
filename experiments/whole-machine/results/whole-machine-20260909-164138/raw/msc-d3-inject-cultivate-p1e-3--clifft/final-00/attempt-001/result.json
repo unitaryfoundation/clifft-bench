@@ -1,0 +1,256 @@
+{
+  "case_id": "msc-d3-inject-cultivate-p1e-3--clifft",
+  "config": {
+    "batch_size": 2048,
+    "sample_chunk_shots": 0,
+    "shots_per_call": 67108864
+  },
+  "exit_code": 0,
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d",
+  "peak_process_tree_rss_bytes": 155844608,
+  "phase": "sample",
+  "runtime": [
+    {
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "metadata": {
+        "batch_size": 2048,
+        "cpu_baseline": "x86-64-v2",
+        "keep_records": false,
+        "num_detectors": 20,
+        "num_measurements": 21,
+        "num_observables": 1,
+        "num_qubits": 15,
+        "peak_active_width": 4,
+        "thread_layout": [
+          64,
+          1
+        ],
+        "threads": 64,
+        "tool": "clifft",
+        "version": "0.10.0rc1"
+      },
+      "pid": 23195,
+      "seed": 17524278702480619278,
+      "status": "ready"
+    }
+  ],
+  "samples": [
+    {
+      "accepted_shots": 3779330824,
+      "api_calls": 82,
+      "attempted_shots": 5502926848,
+      "discarded_shots": 1723596024,
+      "duration_seconds": 30.18757175799999,
+      "logical_errors": 3399,
+      "scheduled_start": 761.699278434,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 182291139.2845525,
+      "workers": [
+        {
+          "accepted_shots": 3779330824,
+          "api_calls": 82,
+          "attempted_shots": 5502926848,
+          "call_seconds": 30.187236487000632,
+          "discarded_shots": 1723596024,
+          "ended": 791.886726921,
+          "logical_errors": 3399,
+          "started": 761.699340544,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 3779334970,
+      "api_calls": 82,
+      "attempted_shots": 5502926848,
+      "discarded_shots": 1723591878,
+      "duration_seconds": 30.224537678000047,
+      "logical_errors": 3405,
+      "scheduled_start": 791.9103590029999,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 182068189.31776386,
+      "workers": [
+        {
+          "accepted_shots": 3779334970,
+          "api_calls": 82,
+          "attempted_shots": 5502926848,
+          "call_seconds": 30.224210585999913,
+          "discarded_shots": 1723591878,
+          "ended": 822.13478554,
+          "logical_errors": 3405,
+          "started": 791.910422534,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 3779406799,
+      "api_calls": 82,
+      "attempted_shots": 5502926848,
+      "discarded_shots": 1723520049,
+      "duration_seconds": 30.154459044999953,
+      "logical_errors": 3356,
+      "scheduled_start": 822.155404974,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 182491313.79833075,
+      "workers": [
+        {
+          "accepted_shots": 3779406799,
+          "api_calls": 82,
+          "attempted_shots": 5502926848,
+          "call_seconds": 30.154111953999745,
+          "discarded_shots": 1723520049,
+          "ended": 852.309740068,
+          "logical_errors": 3356,
+          "started": 822.155467104,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 3825373650,
+      "api_calls": 83,
+      "attempted_shots": 5570035712,
+      "discarded_shots": 1744662062,
+      "duration_seconds": 30.19519473799994,
+      "logical_errors": 3455,
+      "scheduled_start": 852.331910761,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 184467620.10745507,
+      "workers": [
+        {
+          "accepted_shots": 3825373650,
+          "api_calls": 83,
+          "attempted_shots": 5570035712,
+          "call_seconds": 30.194829656000138,
+          "discarded_shots": 1744662062,
+          "ended": 882.526963748,
+          "logical_errors": 3455,
+          "started": 852.331972811,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 3871435745,
+      "api_calls": 84,
+      "attempted_shots": 5637144576,
+      "discarded_shots": 1765708831,
+      "duration_seconds": 30.337438015999965,
+      "logical_errors": 3548,
+      "scheduled_start": 882.549276122,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 185814786.76699626,
+      "workers": [
+        {
+          "accepted_shots": 3871435745,
+          "api_calls": 84,
+          "attempted_shots": 5637144576,
+          "call_seconds": 30.337112865000336,
+          "discarded_shots": 1765708831,
+          "ended": 912.886595997,
+          "logical_errors": 3548,
+          "started": 882.549340042,
+          "status": "sample"
+        }
+      ]
+    }
+  ],
+  "status": "success",
+  "summary": {
+    "mad_attempted_shots_per_second": 423124.48056688905,
+    "median_attempted_shots_per_second": 182491313.79833075
+  },
+  "wall_seconds": 151.81980709599998,
+  "warmup": [
+    {
+      "accepted_shots": 46078634,
+      "api_calls": 1,
+      "attempted_shots": 67108864,
+      "discarded_shots": 21030230,
+      "duration_seconds": 0.37568827799998417,
+      "logical_errors": 33,
+      "scheduled_start": 761.303207244,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 178629113.3629749,
+      "workers": [
+        {
+          "accepted_shots": 46078634,
+          "api_calls": 1,
+          "attempted_shots": 67108864,
+          "call_seconds": 0.37555452699996295,
+          "discarded_shots": 21030230,
+          "ended": 761.678829971,
+          "logical_errors": 33,
+          "started": 761.303269084,
+          "status": "sample"
+        }
+      ]
+    }
+  ]
+}

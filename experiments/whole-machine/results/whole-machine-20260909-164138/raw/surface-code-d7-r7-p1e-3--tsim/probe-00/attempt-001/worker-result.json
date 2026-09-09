@@ -1,0 +1,4425 @@
+{
+  "case_id": "surface-code-d7-r7-p1e-3--tsim",
+  "config": {
+    "batch_size": 0,
+    "sample_chunk_shots": 0,
+    "shots_per_call": 65536
+  },
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d",
+  "phase": "probe",
+  "runtime": [
+    {
+      "affinity": [
+        0
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479955,
+      "seed": 3994016265,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        1
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479956,
+      "seed": 3994016266,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        2
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479957,
+      "seed": 3994016267,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        3
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479958,
+      "seed": 3994016268,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        4
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479959,
+      "seed": 3994016269,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        5
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479960,
+      "seed": 3994016270,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        6
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479961,
+      "seed": 3994016271,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        7
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479962,
+      "seed": 3994016272,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        8
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479963,
+      "seed": 3994016273,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        9
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479964,
+      "seed": 3994016274,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        10
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479965,
+      "seed": 3994016275,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        11
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479966,
+      "seed": 3994016276,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        12
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479967,
+      "seed": 3994016277,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        13
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479968,
+      "seed": 3994016278,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        14
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479969,
+      "seed": 3994016279,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        15
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479970,
+      "seed": 3994016280,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        16
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479971,
+      "seed": 3994016281,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        17
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479972,
+      "seed": 3994016282,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        18
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479973,
+      "seed": 3994016283,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        19
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479974,
+      "seed": 3994016284,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        20
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479975,
+      "seed": 3994016285,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        21
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479976,
+      "seed": 3994016286,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        22
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479977,
+      "seed": 3994016287,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        23
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479978,
+      "seed": 3994016288,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        24
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479979,
+      "seed": 3994016289,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        25
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479980,
+      "seed": 3994016290,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        26
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479981,
+      "seed": 3994016291,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        27
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479982,
+      "seed": 3994016292,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        28
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479983,
+      "seed": 3994016293,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        29
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479984,
+      "seed": 3994016294,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        30
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479985,
+      "seed": 3994016295,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        31
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479986,
+      "seed": 3994016296,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        32
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479987,
+      "seed": 3994016297,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        33
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479988,
+      "seed": 3994016298,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        34
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479989,
+      "seed": 3994016299,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        35
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479990,
+      "seed": 3994016300,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        36
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479991,
+      "seed": 3994016301,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        37
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479992,
+      "seed": 3994016302,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        38
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479993,
+      "seed": 3994016303,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        39
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479994,
+      "seed": 3994016304,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        40
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479995,
+      "seed": 3994016305,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        41
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479996,
+      "seed": 3994016306,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        42
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479997,
+      "seed": 3994016307,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        43
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479998,
+      "seed": 3994016308,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        44
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 479999,
+      "seed": 3994016309,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        45
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480000,
+      "seed": 3994016310,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        46
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480001,
+      "seed": 3994016311,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        47
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480002,
+      "seed": 3994016312,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        48
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480003,
+      "seed": 3994016313,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        49
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480004,
+      "seed": 3994016314,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        50
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480005,
+      "seed": 3994016315,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        51
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480006,
+      "seed": 3994016316,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        52
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480007,
+      "seed": 3994016317,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        53
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480008,
+      "seed": 3994016318,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        54
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480009,
+      "seed": 3994016319,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        55
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480010,
+      "seed": 3994016320,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        56
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480011,
+      "seed": 3994016321,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        57
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480012,
+      "seed": 3994016322,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        58
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480013,
+      "seed": 3994016323,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        59
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480014,
+      "seed": 3994016324,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        60
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480015,
+      "seed": 3994016325,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        61
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480016,
+      "seed": 3994016326,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        62
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480017,
+      "seed": 3994016327,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        63
+      ],
+      "metadata": {
+        "compiled_graph_count": 0,
+        "execution_path": "direct-cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "seed_policy": "continuous stream within one candidate or final run",
+        "strategy": "cutting",
+        "threads": 1,
+        "tool": "tsim",
+        "version": "0.1.5"
+      },
+      "pid": 480018,
+      "seed": 3994016328,
+      "status": "ready"
+    }
+  ],
+  "samples": [
+    {
+      "accepted_shots": 7652131,
+      "api_calls": 1329,
+      "attempted_shots": 87097344,
+      "discarded_shots": 79445213,
+      "duration_seconds": 1.0391675740002029,
+      "logical_errors": 0,
+      "scheduled_start": 3862.66045266,
+      "shots_per_call": 65536,
+      "throughput_attempted_shots_per_second": 83814532.11124061,
+      "workers": [
+        {
+          "accepted_shots": 120050,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0302942530006476,
+          "discarded_shots": 1256206,
+          "ended": 3863.690915892,
+          "logical_errors": 0,
+          "started": 3862.660518319,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120973,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.00219968600004,
+          "discarded_shots": 1255283,
+          "ended": 3863.662815636,
+          "logical_errors": 0,
+          "started": 3862.660517259,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120987,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0238790930011419,
+          "discarded_shots": 1255269,
+          "ended": 3863.684493004,
+          "logical_errors": 0,
+          "started": 3862.660517359,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115295,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0029027190003035,
+          "discarded_shots": 1195425,
+          "ended": 3863.66350105,
+          "logical_errors": 0,
+          "started": 3862.660517439,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121042,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.005526985999495,
+          "discarded_shots": 1255214,
+          "ended": 3863.666138645,
+          "logical_errors": 0,
+          "started": 3862.660517519,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121128,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0253224340003726,
+          "discarded_shots": 1255128,
+          "ended": 3863.685946613,
+          "logical_errors": 0,
+          "started": 3862.660517459,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115349,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0168720240003495,
+          "discarded_shots": 1195371,
+          "ended": 3863.677479153,
+          "logical_errors": 0,
+          "started": 3862.660517559,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120619,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0282066310019218,
+          "discarded_shots": 1255637,
+          "ended": 3863.68880756,
+          "logical_errors": 0,
+          "started": 3862.660517569,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115160,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0188706849999107,
+          "discarded_shots": 1195560,
+          "ended": 3863.679471854,
+          "logical_errors": 0,
+          "started": 3862.660520539,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121555,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0268938010008242,
+          "discarded_shots": 1254701,
+          "ended": 3863.687503812,
+          "logical_errors": 0,
+          "started": 3862.660514519,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115321,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.008898995999516,
+          "discarded_shots": 1195399,
+          "ended": 3863.669501645,
+          "logical_errors": 0,
+          "started": 3862.660511969,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121222,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0297063690004506,
+          "discarded_shots": 1255034,
+          "ended": 3863.690314729,
+          "logical_errors": 0,
+          "started": 3862.660517199,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114585,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.01710566499969,
+          "discarded_shots": 1196135,
+          "ended": 3863.677706894,
+          "logical_errors": 0,
+          "started": 3862.660517259,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121169,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.030761896000513,
+          "discarded_shots": 1255087,
+          "ended": 3863.691376585,
+          "logical_errors": 0,
+          "started": 3862.660517479,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120535,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.032705236998936,
+          "discarded_shots": 1255721,
+          "ended": 3863.693308646,
+          "logical_errors": 0,
+          "started": 3862.660516289,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115321,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0296237680008744,
+          "discarded_shots": 1195399,
+          "ended": 3863.690225158,
+          "logical_errors": 0,
+          "started": 3862.660515109,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120762,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0258411960007834,
+          "discarded_shots": 1255494,
+          "ended": 3863.686457806,
+          "logical_errors": 0,
+          "started": 3862.660520969,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120747,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0344665369998438,
+          "discarded_shots": 1255509,
+          "ended": 3863.695072657,
+          "logical_errors": 0,
+          "started": 3862.660520879,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120765,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0157459870006278,
+          "discarded_shots": 1255491,
+          "ended": 3863.676355006,
+          "logical_errors": 0,
+          "started": 3862.660521549,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120948,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0228908390013203,
+          "discarded_shots": 1255308,
+          "ended": 3863.683500288,
+          "logical_errors": 0,
+          "started": 3862.660521109,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121511,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.014339129000291,
+          "discarded_shots": 1254745,
+          "ended": 3863.674955398,
+          "logical_errors": 0,
+          "started": 3862.660521199,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120935,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0208791249997375,
+          "discarded_shots": 1255321,
+          "ended": 3863.681508956,
+          "logical_errors": 0,
+          "started": 3862.660521089,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120784,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0299694499994985,
+          "discarded_shots": 1255472,
+          "ended": 3863.69057632,
+          "logical_errors": 0,
+          "started": 3862.660520899,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114770,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0154299040004844,
+          "discarded_shots": 1195950,
+          "ended": 3863.676039214,
+          "logical_errors": 0,
+          "started": 3862.660520949,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120467,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0304316729989296,
+          "discarded_shots": 1255789,
+          "ended": 3863.691037643,
+          "logical_errors": 0,
+          "started": 3862.660520769,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120720,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0117255730015131,
+          "discarded_shots": 1255536,
+          "ended": 3863.672334932,
+          "logical_errors": 0,
+          "started": 3862.660518149,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115379,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0014884919996803,
+          "discarded_shots": 1195341,
+          "ended": 3863.662086511,
+          "logical_errors": 0,
+          "started": 3862.660517999,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120555,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.026810619999651,
+          "discarded_shots": 1255701,
+          "ended": 3863.687409141,
+          "logical_errors": 0,
+          "started": 3862.660518009,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120875,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0361346580002646,
+          "discarded_shots": 1255381,
+          "ended": 3863.696744177,
+          "logical_errors": 0,
+          "started": 3862.660520739,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115058,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.003196401999503,
+          "discarded_shots": 1195662,
+          "ended": 3863.663793602,
+          "logical_errors": 0,
+          "started": 3862.660516569,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115183,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0118741939995743,
+          "discarded_shots": 1195537,
+          "ended": 3863.672481793,
+          "logical_errors": 0,
+          "started": 3862.660518409,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120290,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0362509879992103,
+          "discarded_shots": 1255966,
+          "ended": 3863.696862127,
+          "logical_errors": 0,
+          "started": 3862.660518379,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120320,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0253137729991977,
+          "discarded_shots": 1255936,
+          "ended": 3863.685931403,
+          "logical_errors": 0,
+          "started": 3862.660521089,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120670,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0037773050003125,
+          "discarded_shots": 1255586,
+          "ended": 3863.664388105,
+          "logical_errors": 0,
+          "started": 3862.660520539,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121147,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0133457829997496,
+          "discarded_shots": 1255109,
+          "ended": 3863.673957652,
+          "logical_errors": 0,
+          "started": 3862.660520989,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120919,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.007424598000398,
+          "discarded_shots": 1255337,
+          "ended": 3863.668028617,
+          "logical_errors": 0,
+          "started": 3862.660520889,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120927,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0273677460004365,
+          "discarded_shots": 1255329,
+          "ended": 3863.687976145,
+          "logical_errors": 0,
+          "started": 3862.660520449,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126443,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.0380409779995716,
+          "discarded_shots": 1315349,
+          "ended": 3863.698667708,
+          "logical_errors": 0,
+          "started": 3862.660520969,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120599,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0346392490000653,
+          "discarded_shots": 1255657,
+          "ended": 3863.695257708,
+          "logical_errors": 0,
+          "started": 3862.660520429,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120834,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0104595239990886,
+          "discarded_shots": 1255422,
+          "ended": 3863.671071815,
+          "logical_errors": 0,
+          "started": 3862.660520669,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121057,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0121383829996375,
+          "discarded_shots": 1255199,
+          "ended": 3863.672757735,
+          "logical_errors": 0,
+          "started": 3862.660520749,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120451,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0250789220017396,
+          "discarded_shots": 1255805,
+          "ended": 3863.685693271,
+          "logical_errors": 0,
+          "started": 3862.660520409,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120887,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0275875159995849,
+          "discarded_shots": 1255369,
+          "ended": 3863.688206746,
+          "logical_errors": 0,
+          "started": 3862.660520569,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 127268,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.0331317199988916,
+          "discarded_shots": 1314524,
+          "ended": 3863.693746149,
+          "logical_errors": 0,
+          "started": 3862.660518599,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121179,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0231120710000141,
+          "discarded_shots": 1255077,
+          "ended": 3863.68371663,
+          "logical_errors": 0,
+          "started": 3862.660520209,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120395,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0361138470002516,
+          "discarded_shots": 1255861,
+          "ended": 3863.696725077,
+          "logical_errors": 0,
+          "started": 3862.660518579,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120649,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.02292658900069,
+          "discarded_shots": 1255607,
+          "ended": 3863.683542029,
+          "logical_errors": 0,
+          "started": 3862.660521109,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115543,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0103038750012274,
+          "discarded_shots": 1195177,
+          "ended": 3863.670919474,
+          "logical_errors": 0,
+          "started": 3862.660518389,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121152,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0158927179991224,
+          "discarded_shots": 1255104,
+          "ended": 3863.676487937,
+          "logical_errors": 0,
+          "started": 3862.660518419,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115568,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0376309069993113,
+          "discarded_shots": 1195152,
+          "ended": 3863.698251106,
+          "logical_errors": 0,
+          "started": 3862.660522299,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120847,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0272877549996338,
+          "discarded_shots": 1255409,
+          "ended": 3863.687890414,
+          "logical_errors": 0,
+          "started": 3862.660517929,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121290,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0387874630000624,
+          "discarded_shots": 1254966,
+          "ended": 3863.699393412,
+          "logical_errors": 0,
+          "started": 3862.660517909,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120916,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0200093009993907,
+          "discarded_shots": 1255340,
+          "ended": 3863.680617421,
+          "logical_errors": 0,
+          "started": 3862.660518209,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120978,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.011424201000409,
+          "discarded_shots": 1255278,
+          "ended": 3863.67203559,
+          "logical_errors": 0,
+          "started": 3862.660520119,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121218,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0059411180000097,
+          "discarded_shots": 1255038,
+          "ended": 3863.666554998,
+          "logical_errors": 0,
+          "started": 3862.660519769,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115543,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0041450460007582,
+          "discarded_shots": 1195177,
+          "ended": 3863.664754987,
+          "logical_errors": 0,
+          "started": 3862.660518179,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120726,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0127456279997205,
+          "discarded_shots": 1255530,
+          "ended": 3863.673362588,
+          "logical_errors": 0,
+          "started": 3862.660520599,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115768,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0241748870002993,
+          "discarded_shots": 1194952,
+          "ended": 3863.684778086,
+          "logical_errors": 0,
+          "started": 3862.660516269,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121017,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0257811650003532,
+          "discarded_shots": 1255239,
+          "ended": 3863.686383955,
+          "logical_errors": 0,
+          "started": 3862.660516199,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115281,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0126493490010944,
+          "discarded_shots": 1195439,
+          "ended": 3863.673256628,
+          "logical_errors": 0,
+          "started": 3862.660516219,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120798,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.037084632999722,
+          "discarded_shots": 1255458,
+          "ended": 3863.697688752,
+          "logical_errors": 0,
+          "started": 3862.660516189,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115011,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.034009674000572,
+          "discarded_shots": 1195709,
+          "ended": 3863.694608684,
+          "logical_errors": 0,
+          "started": 3862.660516469,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115345,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0180610500005969,
+          "discarded_shots": 1195375,
+          "ended": 3863.67866326,
+          "logical_errors": 0,
+          "started": 3862.660516169,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121325,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0233206209977652,
+          "discarded_shots": 1254931,
+          "ended": 3863.683923871,
+          "logical_errors": 0,
+          "started": 3862.660516449,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 7619435,
+      "api_calls": 1323,
+      "attempted_shots": 86704128,
+      "discarded_shots": 79084693,
+      "duration_seconds": 1.0381993189998866,
+      "logical_errors": 0,
+      "scheduled_start": 3863.722171539,
+      "shots_per_call": 65536,
+      "throughput_attempted_shots_per_second": 83513951.91004694,
+      "workers": [
+        {
+          "accepted_shots": 120715,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0113536370013207,
+          "discarded_shots": 1255541,
+          "ended": 3864.733692405,
+          "logical_errors": 0,
+          "started": 3863.722235978,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120648,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.01230403999989,
+          "discarded_shots": 1255608,
+          "ended": 3864.734631248,
+          "logical_errors": 0,
+          "started": 3863.722233548,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120966,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0277071890000116,
+          "discarded_shots": 1255290,
+          "ended": 3864.750026418,
+          "logical_errors": 0,
+          "started": 3863.722233958,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120942,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0356503690013596,
+          "discarded_shots": 1255314,
+          "ended": 3864.757975478,
+          "logical_errors": 0,
+          "started": 3863.722243728,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126505,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.0316881349999676,
+          "discarded_shots": 1315287,
+          "ended": 3864.754036313,
+          "logical_errors": 0,
+          "started": 3863.722244528,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120832,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0155502329994306,
+          "discarded_shots": 1255424,
+          "ended": 3864.737877081,
+          "logical_errors": 0,
+          "started": 3863.722233708,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115100,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0092250780007817,
+          "discarded_shots": 1195620,
+          "ended": 3864.731564296,
+          "logical_errors": 0,
+          "started": 3863.722248498,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120647,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0176953609989141,
+          "discarded_shots": 1255609,
+          "ended": 3864.740015539,
+          "logical_errors": 0,
+          "started": 3863.722231978,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115051,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0161189850009578,
+          "discarded_shots": 1195669,
+          "ended": 3864.738454203,
+          "logical_errors": 0,
+          "started": 3863.722249318,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120548,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.036004511999181,
+          "discarded_shots": 1255708,
+          "ended": 3864.75833803,
+          "logical_errors": 0,
+          "started": 3863.722237338,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115380,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0025924030001079,
+          "discarded_shots": 1195340,
+          "ended": 3864.724926551,
+          "logical_errors": 0,
+          "started": 3863.722249018,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115610,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0151391000003969,
+          "discarded_shots": 1195110,
+          "ended": 3864.737461069,
+          "logical_errors": 0,
+          "started": 3863.722237328,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114975,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0077038629992785,
+          "discarded_shots": 1195745,
+          "ended": 3864.730043091,
+          "logical_errors": 0,
+          "started": 3863.722249278,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121271,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0230074620003506,
+          "discarded_shots": 1254985,
+          "ended": 3864.74535292,
+          "logical_errors": 0,
+          "started": 3863.722237378,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120527,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0230548919989815,
+          "discarded_shots": 1255729,
+          "ended": 3864.74537863,
+          "logical_errors": 0,
+          "started": 3863.722237358,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115104,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0285860630006027,
+          "discarded_shots": 1195616,
+          "ended": 3864.750908491,
+          "logical_errors": 0,
+          "started": 3863.722237398,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121550,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0118955089997144,
+          "discarded_shots": 1254706,
+          "ended": 3864.734218987,
+          "logical_errors": 0,
+          "started": 3863.722235148,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120973,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.035629950000839,
+          "discarded_shots": 1255283,
+          "ended": 3864.757940998,
+          "logical_errors": 0,
+          "started": 3863.722235168,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115272,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0063254069991672,
+          "discarded_shots": 1195448,
+          "ended": 3864.728656505,
+          "logical_errors": 0,
+          "started": 3863.722248218,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115197,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0163825760005238,
+          "discarded_shots": 1195523,
+          "ended": 3864.738707634,
+          "logical_errors": 0,
+          "started": 3863.722249318,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121089,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0036526470016724,
+          "discarded_shots": 1255167,
+          "ended": 3864.725994855,
+          "logical_errors": 0,
+          "started": 3863.722249408,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120738,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0375435770006334,
+          "discarded_shots": 1255518,
+          "ended": 3864.759884396,
+          "logical_errors": 0,
+          "started": 3863.722249548,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114526,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0030046840001887,
+          "discarded_shots": 1196194,
+          "ended": 3864.725342952,
+          "logical_errors": 0,
+          "started": 3863.722235178,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115585,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0132247839997035,
+          "discarded_shots": 1195135,
+          "ended": 3864.735557062,
+          "logical_errors": 0,
+          "started": 3863.722248698,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120796,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0321248270001888,
+          "discarded_shots": 1255460,
+          "ended": 3864.754445775,
+          "logical_errors": 0,
+          "started": 3863.722236848,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121511,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0081110230003105,
+          "discarded_shots": 1254745,
+          "ended": 3864.730457882,
+          "logical_errors": 0,
+          "started": 3863.722246388,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121199,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0311391629993523,
+          "discarded_shots": 1255057,
+          "ended": 3864.753459681,
+          "logical_errors": 0,
+          "started": 3863.722243338,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120164,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0145231589995092,
+          "discarded_shots": 1256092,
+          "ended": 3864.736839507,
+          "logical_errors": 0,
+          "started": 3863.722236798,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115168,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0144131279989779,
+          "discarded_shots": 1195552,
+          "ended": 3864.736734236,
+          "logical_errors": 0,
+          "started": 3863.722236818,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120098,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0275827889990978,
+          "discarded_shots": 1256158,
+          "ended": 3864.749918307,
+          "logical_errors": 0,
+          "started": 3863.722244828,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114732,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.005295561999901,
+          "discarded_shots": 1195988,
+          "ended": 3864.727631071,
+          "logical_errors": 0,
+          "started": 3863.722248178,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120806,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0094200680009635,
+          "discarded_shots": 1255450,
+          "ended": 3864.731738557,
+          "logical_errors": 0,
+          "started": 3863.722236838,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120984,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0310498720000396,
+          "discarded_shots": 1255272,
+          "ended": 3864.753368141,
+          "logical_errors": 0,
+          "started": 3863.722235748,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121200,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.003146084000491,
+          "discarded_shots": 1255056,
+          "ended": 3864.725486383,
+          "logical_errors": 0,
+          "started": 3863.722244048,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120625,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0076605609997387,
+          "discarded_shots": 1255631,
+          "ended": 3864.72999108,
+          "logical_errors": 0,
+          "started": 3863.722247888,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115364,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0004566339998746,
+          "discarded_shots": 1195356,
+          "ended": 3864.722786502,
+          "logical_errors": 0,
+          "started": 3863.722248028,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121065,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0172656290001214,
+          "discarded_shots": 1255191,
+          "ended": 3864.739580267,
+          "logical_errors": 0,
+          "started": 3863.722235708,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121358,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.01067536400069,
+          "discarded_shots": 1254898,
+          "ended": 3864.732992452,
+          "logical_errors": 0,
+          "started": 3863.722235688,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115764,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0173399689992948,
+          "discarded_shots": 1194956,
+          "ended": 3864.739676328,
+          "logical_errors": 0,
+          "started": 3863.722235728,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126481,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.0353848680001647,
+          "discarded_shots": 1315311,
+          "ended": 3864.757735427,
+          "logical_errors": 0,
+          "started": 3863.722249688,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121496,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.010290652999629,
+          "discarded_shots": 1254760,
+          "ended": 3864.732625841,
+          "logical_errors": 0,
+          "started": 3863.722250208,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120822,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.014649749000455,
+          "discarded_shots": 1255434,
+          "ended": 3864.736972967,
+          "logical_errors": 0,
+          "started": 3863.722235698,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121467,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.015822943999865,
+          "discarded_shots": 1254789,
+          "ended": 3864.738143072,
+          "logical_errors": 0,
+          "started": 3863.722235518,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126328,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.022169587000917,
+          "discarded_shots": 1315464,
+          "ended": 3864.744480296,
+          "logical_errors": 0,
+          "started": 3863.722235648,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120710,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0264474949990472,
+          "discarded_shots": 1255546,
+          "ended": 3864.748769453,
+          "logical_errors": 0,
+          "started": 3863.722235478,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115130,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0129564829990159,
+          "discarded_shots": 1195590,
+          "ended": 3864.735273851,
+          "logical_errors": 0,
+          "started": 3863.722235618,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115427,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.020781232999525,
+          "discarded_shots": 1195293,
+          "ended": 3864.743099351,
+          "logical_errors": 0,
+          "started": 3863.722234238,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120877,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.006194456000685,
+          "discarded_shots": 1255379,
+          "ended": 3864.728543175,
+          "logical_errors": 0,
+          "started": 3863.722250178,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115337,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.004996332000701,
+          "discarded_shots": 1195383,
+          "ended": 3864.72732109,
+          "logical_errors": 0,
+          "started": 3863.722247028,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114865,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.034397295999952,
+          "discarded_shots": 1195855,
+          "ended": 3864.756730774,
+          "logical_errors": 0,
+          "started": 3863.722231568,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120707,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0150188209995576,
+          "discarded_shots": 1255549,
+          "ended": 3864.737333559,
+          "logical_errors": 0,
+          "started": 3863.722231268,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115255,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.009777160001704,
+          "discarded_shots": 1195465,
+          "ended": 3864.732096768,
+          "logical_errors": 0,
+          "started": 3863.722230598,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120611,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0274705989986614,
+          "discarded_shots": 1255645,
+          "ended": 3864.749787657,
+          "logical_errors": 0,
+          "started": 3863.722234618,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121668,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.031448523000563,
+          "discarded_shots": 1254588,
+          "ended": 3864.753786612,
+          "logical_errors": 0,
+          "started": 3863.722246668,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121181,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0004745150008603,
+          "discarded_shots": 1255075,
+          "ended": 3864.722818603,
+          "logical_errors": 0,
+          "started": 3863.722242948,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120739,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0122997799994664,
+          "discarded_shots": 1255517,
+          "ended": 3864.734638058,
+          "logical_errors": 0,
+          "started": 3863.722243228,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120734,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0060477959996206,
+          "discarded_shots": 1255522,
+          "ended": 3864.728398314,
+          "logical_errors": 0,
+          "started": 3863.722249858,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115247,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0209142940002494,
+          "discarded_shots": 1195473,
+          "ended": 3864.743237032,
+          "logical_errors": 0,
+          "started": 3863.722237138,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120535,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0158796440014157,
+          "discarded_shots": 1255721,
+          "ended": 3864.738201502,
+          "logical_errors": 0,
+          "started": 3863.722237088,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115667,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0081532029994378,
+          "discarded_shots": 1195053,
+          "ended": 3864.730486672,
+          "logical_errors": 0,
+          "started": 3863.722250138,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121385,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0250882900013494,
+          "discarded_shots": 1254871,
+          "ended": 3864.747406198,
+          "logical_errors": 0,
+          "started": 3863.722237108,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115438,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0313623939996432,
+          "discarded_shots": 1195282,
+          "ended": 3864.753680772,
+          "logical_errors": 0,
+          "started": 3863.722237128,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115809,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0156521820003945,
+          "discarded_shots": 1194911,
+          "ended": 3864.737989271,
+          "logical_errors": 0,
+          "started": 3863.722250178,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114934,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0020444709998628,
+          "discarded_shots": 1195786,
+          "ended": 3864.724360659,
+          "logical_errors": 0,
+          "started": 3863.722237518,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 7623871,
+      "api_calls": 1324,
+      "attempted_shots": 86769664,
+      "discarded_shots": 79145793,
+      "duration_seconds": 1.0366305809998266,
+      "logical_errors": 0,
+      "scheduled_start": 3864.783079538,
+      "shots_per_call": 65536,
+      "throughput_attempted_shots_per_second": 83703554.17868432,
+      "workers": [
+        {
+          "accepted_shots": 120609,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0146681099995476,
+          "discarded_shots": 1255647,
+          "ended": 3865.797911975,
+          "logical_errors": 0,
+          "started": 3864.783145255,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126374,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.032780360000288,
+          "discarded_shots": 1315418,
+          "ended": 3865.816040325,
+          "logical_errors": 0,
+          "started": 3864.783155915,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121083,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.022394369999347,
+          "discarded_shots": 1255173,
+          "ended": 3865.805634125,
+          "logical_errors": 0,
+          "started": 3864.783141915,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120552,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0341153949989348,
+          "discarded_shots": 1255704,
+          "ended": 3865.81734054,
+          "logical_errors": 0,
+          "started": 3864.783140595,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121200,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0026325229987378,
+          "discarded_shots": 1255056,
+          "ended": 3865.785864969,
+          "logical_errors": 0,
+          "started": 3864.783141855,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126545,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.0359611330004554,
+          "discarded_shots": 1315247,
+          "ended": 3865.819216798,
+          "logical_errors": 0,
+          "started": 3864.783150375,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114907,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0126660509999965,
+          "discarded_shots": 1195813,
+          "ended": 3865.795897447,
+          "logical_errors": 0,
+          "started": 3864.783150435,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120841,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0071953710012167,
+          "discarded_shots": 1255415,
+          "ended": 3865.790435356,
+          "logical_errors": 0,
+          "started": 3864.783151005,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120947,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0327645389997997,
+          "discarded_shots": 1255309,
+          "ended": 3865.816016585,
+          "logical_errors": 0,
+          "started": 3864.783156715,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121097,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0277337809998244,
+          "discarded_shots": 1255159,
+          "ended": 3865.810956586,
+          "logical_errors": 0,
+          "started": 3864.783143375,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115441,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0001557539990245,
+          "discarded_shots": 1195279,
+          "ended": 3865.783394829,
+          "logical_errors": 0,
+          "started": 3864.783156595,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120695,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.025575280999874,
+          "discarded_shots": 1255561,
+          "ended": 3865.808810817,
+          "logical_errors": 0,
+          "started": 3864.783157195,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115466,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.008173865000117,
+          "discarded_shots": 1195254,
+          "ended": 3865.79141991,
+          "logical_errors": 0,
+          "started": 3864.783156295,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121325,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0216816170009224,
+          "discarded_shots": 1254931,
+          "ended": 3865.804918582,
+          "logical_errors": 0,
+          "started": 3864.783145315,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115045,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0198926799980654,
+          "discarded_shots": 1195675,
+          "ended": 3865.803117695,
+          "logical_errors": 0,
+          "started": 3864.783141555,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115065,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0293747469991104,
+          "discarded_shots": 1195655,
+          "ended": 3865.812597642,
+          "logical_errors": 0,
+          "started": 3864.783145095,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120629,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.012447931999759,
+          "discarded_shots": 1255627,
+          "ended": 3865.795701667,
+          "logical_errors": 0,
+          "started": 3864.783150885,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120569,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0039122079992921,
+          "discarded_shots": 1255687,
+          "ended": 3865.787139314,
+          "logical_errors": 0,
+          "started": 3864.783144735,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120925,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0330427709991454,
+          "discarded_shots": 1255331,
+          "ended": 3865.816274286,
+          "logical_errors": 0,
+          "started": 3864.783146925,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114987,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0025688139999147,
+          "discarded_shots": 1195733,
+          "ended": 3865.785816449,
+          "logical_errors": 0,
+          "started": 3864.783156185,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120685,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0159894649991656,
+          "discarded_shots": 1255571,
+          "ended": 3865.79923794,
+          "logical_errors": 0,
+          "started": 3864.783151625,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115043,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0138087369991808,
+          "discarded_shots": 1195677,
+          "ended": 3865.797032452,
+          "logical_errors": 0,
+          "started": 3864.783140355,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121049,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0200067799987664,
+          "discarded_shots": 1255207,
+          "ended": 3865.803231946,
+          "logical_errors": 0,
+          "started": 3864.783143235,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114714,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.018344124000123,
+          "discarded_shots": 1196006,
+          "ended": 3865.801584689,
+          "logical_errors": 0,
+          "started": 3864.783159115,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114905,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0148870609996266,
+          "discarded_shots": 1195815,
+          "ended": 3865.798111586,
+          "logical_errors": 0,
+          "started": 3864.783142845,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120987,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.006900570000198,
+          "discarded_shots": 1255269,
+          "ended": 3865.790147055,
+          "logical_errors": 0,
+          "started": 3864.783148305,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120897,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0184429149999232,
+          "discarded_shots": 1255359,
+          "ended": 3865.80166942,
+          "logical_errors": 0,
+          "started": 3864.783142755,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121159,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0013252979993013,
+          "discarded_shots": 1255097,
+          "ended": 3865.784581154,
+          "logical_errors": 0,
+          "started": 3864.783158435,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115250,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 0.9998729029985043,
+          "discarded_shots": 1195470,
+          "ended": 3865.783121268,
+          "logical_errors": 0,
+          "started": 3864.783155465,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114903,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.009755521000443,
+          "discarded_shots": 1195817,
+          "ended": 3865.792991336,
+          "logical_errors": 0,
+          "started": 3864.783144725,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120832,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0129526040013843,
+          "discarded_shots": 1255424,
+          "ended": 3865.796197979,
+          "logical_errors": 0,
+          "started": 3864.783151935,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121235,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0155960840006628,
+          "discarded_shots": 1255021,
+          "ended": 3865.798847459,
+          "logical_errors": 0,
+          "started": 3864.783148735,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115306,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0109350250017997,
+          "discarded_shots": 1195414,
+          "ended": 3865.794170151,
+          "logical_errors": 0,
+          "started": 3864.783145195,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120784,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0128487320002932,
+          "discarded_shots": 1255472,
+          "ended": 3865.796077288,
+          "logical_errors": 0,
+          "started": 3864.783145265,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121218,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0040154489988709,
+          "discarded_shots": 1255038,
+          "ended": 3865.787255914,
+          "logical_errors": 0,
+          "started": 3864.783148325,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115404,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.004659150000407,
+          "discarded_shots": 1195316,
+          "ended": 3865.787881806,
+          "logical_errors": 0,
+          "started": 3864.783145475,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121620,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0157396530007645,
+          "discarded_shots": 1254636,
+          "ended": 3865.798981739,
+          "logical_errors": 0,
+          "started": 3864.783159765,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121104,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0066577490006239,
+          "discarded_shots": 1255152,
+          "ended": 3865.789914874,
+          "logical_errors": 0,
+          "started": 3864.783156455,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120973,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0231681720010783,
+          "discarded_shots": 1255283,
+          "ended": 3865.806406748,
+          "logical_errors": 0,
+          "started": 3864.783150315,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121030,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.010272901000917,
+          "discarded_shots": 1255226,
+          "ended": 3865.793509348,
+          "logical_errors": 0,
+          "started": 3864.783143615,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121204,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.023632164000901,
+          "discarded_shots": 1255052,
+          "ended": 3865.80687903,
+          "logical_errors": 0,
+          "started": 3864.783156715,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120818,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0044531200001074,
+          "discarded_shots": 1255438,
+          "ended": 3865.787697556,
+          "logical_errors": 0,
+          "started": 3864.783148975,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121272,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0242551470000762,
+          "discarded_shots": 1254984,
+          "ended": 3865.807493042,
+          "logical_errors": 0,
+          "started": 3864.783148965,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 126548,
+          "api_calls": 22,
+          "attempted_shots": 1441792,
+          "call_seconds": 1.0348693879991515,
+          "discarded_shots": 1315244,
+          "ended": 3865.818106483,
+          "logical_errors": 0,
+          "started": 3864.783149035,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121058,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.021241994997581,
+          "discarded_shots": 1255198,
+          "ended": 3865.80447041,
+          "logical_errors": 0,
+          "started": 3864.783144915,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115654,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0123966700011806,
+          "discarded_shots": 1195066,
+          "ended": 3865.795638726,
+          "logical_errors": 0,
+          "started": 3864.783149575,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114970,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.007603582000229,
+          "discarded_shots": 1195750,
+          "ended": 3865.790850448,
+          "logical_errors": 0,
+          "started": 3864.783149105,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121064,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0227502509983424,
+          "discarded_shots": 1255192,
+          "ended": 3865.805991326,
+          "logical_errors": 0,
+          "started": 3864.783146365,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120864,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0351153879996673,
+          "discarded_shots": 1255392,
+          "ended": 3865.818350574,
+          "logical_errors": 0,
+          "started": 3864.783152685,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 109588,
+          "api_calls": 19,
+          "attempted_shots": 1245184,
+          "call_seconds": 1.0057482359993628,
+          "discarded_shots": 1135596,
+          "ended": 3865.788981681,
+          "logical_errors": 0,
+          "started": 3864.783142195,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120308,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0074462319989834,
+          "discarded_shots": 1255948,
+          "ended": 3865.790687237,
+          "logical_errors": 0,
+          "started": 3864.783155115,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115637,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0024040230000537,
+          "discarded_shots": 1195083,
+          "ended": 3865.785645178,
+          "logical_errors": 0,
+          "started": 3864.783147075,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121108,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0279132510004274,
+          "discarded_shots": 1255148,
+          "ended": 3865.811152336,
+          "logical_errors": 0,
+          "started": 3864.783142365,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121352,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0146598099995572,
+          "discarded_shots": 1254904,
+          "ended": 3865.797886325,
+          "logical_errors": 0,
+          "started": 3864.783142175,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120936,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0056838940013222,
+          "discarded_shots": 1255320,
+          "ended": 3865.78892571,
+          "logical_errors": 0,
+          "started": 3864.783147215,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120991,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0119096490006996,
+          "discarded_shots": 1255265,
+          "ended": 3865.795148654,
+          "logical_errors": 0,
+          "started": 3864.783148955,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120584,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0274035980010012,
+          "discarded_shots": 1255672,
+          "ended": 3865.810655254,
+          "logical_errors": 0,
+          "started": 3864.783152345,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114623,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0226361700006237,
+          "discarded_shots": 1196097,
+          "ended": 3865.805876416,
+          "logical_errors": 0,
+          "started": 3864.783148905,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114686,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0034026670009553,
+          "discarded_shots": 1196034,
+          "ended": 3865.786632272,
+          "logical_errors": 0,
+          "started": 3864.783149635,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 120840,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0158202849997906,
+          "discarded_shots": 1255416,
+          "ended": 3865.7990645,
+          "logical_errors": 0,
+          "started": 3864.783150295,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 121070,
+          "api_calls": 21,
+          "attempted_shots": 1376256,
+          "call_seconds": 1.0331498719988303,
+          "discarded_shots": 1255186,
+          "ended": 3865.816374317,
+          "logical_errors": 0,
+          "started": 3864.783141675,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115220,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0252351310009544,
+          "discarded_shots": 1195500,
+          "ended": 3865.808460476,
+          "logical_errors": 0,
+          "started": 3864.783141665,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 114922,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.0130454239997562,
+          "discarded_shots": 1195798,
+          "ended": 3865.796281749,
+          "logical_errors": 0,
+          "started": 3864.783150035,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 115154,
+          "api_calls": 20,
+          "attempted_shots": 1310720,
+          "call_seconds": 1.018679085999338,
+          "discarded_shots": 1195566,
+          "ended": 3865.801913091,
+          "logical_errors": 0,
+          "started": 3864.783146535,
+          "status": "sample"
+        }
+      ]
+    }
+  ],
+  "status": "success",
+  "summary": {
+    "mad_attempted_shots_per_second": 110977.93255628645,
+    "median_attempted_shots_per_second": 83703554.17868432
+  },
+  "warmup": [
+    {
+      "accepted_shots": 368573,
+      "api_calls": 64,
+      "attempted_shots": 4194304,
+      "discarded_shots": 3825731,
+      "duration_seconds": 0.056839004999801546,
+      "logical_errors": 0,
+      "scheduled_start": 3862.581396202,
+      "shots_per_call": 65536,
+      "throughput_attempted_shots_per_second": 73792706.25892632,
+      "workers": [
+        {
+          "accepted_shots": 5725,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.054755413999828306,
+          "discarded_shots": 59811,
+          "ended": 3862.636243215,
+          "logical_errors": 0,
+          "started": 3862.581474981,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5635,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05513495600007445,
+          "discarded_shots": 59901,
+          "ended": 3862.636618157,
+          "logical_errors": 0,
+          "started": 3862.581472531,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5882,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.0551960269999654,
+          "discarded_shots": 59654,
+          "ended": 3862.636680158,
+          "logical_errors": 0,
+          "started": 3862.581472641,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5843,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05616440300036629,
+          "discarded_shots": 59693,
+          "ended": 3862.637648204,
+          "logical_errors": 0,
+          "started": 3862.581473881,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5774,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05401910000000498,
+          "discarded_shots": 59762,
+          "ended": 3862.635506981,
+          "logical_errors": 0,
+          "started": 3862.581472541,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5773,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05420037100020636,
+          "discarded_shots": 59763,
+          "ended": 3862.635686492,
+          "logical_errors": 0,
+          "started": 3862.581475301,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5813,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055555969000124605,
+          "discarded_shots": 59723,
+          "ended": 3862.63703893,
+          "logical_errors": 0,
+          "started": 3862.581472751,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5794,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055730530000346334,
+          "discarded_shots": 59742,
+          "ended": 3862.637212981,
+          "logical_errors": 0,
+          "started": 3862.581472511,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5718,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05580692000012277,
+          "discarded_shots": 59818,
+          "ended": 3862.637292071,
+          "logical_errors": 0,
+          "started": 3862.581474871,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5634,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05579522000016368,
+          "discarded_shots": 59902,
+          "ended": 3862.637281271,
+          "logical_errors": 0,
+          "started": 3862.581474661,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5689,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055797959999836166,
+          "discarded_shots": 59847,
+          "ended": 3862.637282561,
+          "logical_errors": 0,
+          "started": 3862.581474471,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5878,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055868730999918625,
+          "discarded_shots": 59658,
+          "ended": 3862.637353522,
+          "logical_errors": 0,
+          "started": 3862.581474591,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5663,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05598253100015427,
+          "discarded_shots": 59873,
+          "ended": 3862.637464602,
+          "logical_errors": 0,
+          "started": 3862.581471091,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5735,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.056200073000127304,
+          "discarded_shots": 59801,
+          "ended": 3862.637686134,
+          "logical_errors": 0,
+          "started": 3862.581474711,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5847,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05615555199983646,
+          "discarded_shots": 59689,
+          "ended": 3862.637640804,
+          "logical_errors": 0,
+          "started": 3862.581474611,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5902,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05591979100017852,
+          "discarded_shots": 59634,
+          "ended": 3862.637404432,
+          "logical_errors": 0,
+          "started": 3862.581474561,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5789,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05559134899976925,
+          "discarded_shots": 59747,
+          "ended": 3862.63707717,
+          "logical_errors": 0,
+          "started": 3862.581475001,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5673,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05601802199998929,
+          "discarded_shots": 59863,
+          "ended": 3862.637501143,
+          "logical_errors": 0,
+          "started": 3862.581472771,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5768,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05438198199999533,
+          "discarded_shots": 59768,
+          "ended": 3862.635868413,
+          "logical_errors": 0,
+          "started": 3862.581472651,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5717,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05585771100004422,
+          "discarded_shots": 59819,
+          "ended": 3862.637343432,
+          "logical_errors": 0,
+          "started": 3862.581474601,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5745,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05447532200014393,
+          "discarded_shots": 59791,
+          "ended": 3862.635960333,
+          "logical_errors": 0,
+          "started": 3862.581472621,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5812,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055349327999920206,
+          "discarded_shots": 59724,
+          "ended": 3862.636834239,
+          "logical_errors": 0,
+          "started": 3862.581474561,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5766,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05515807599977052,
+          "discarded_shots": 59770,
+          "ended": 3862.636641158,
+          "logical_errors": 0,
+          "started": 3862.581472631,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5774,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05530941699998948,
+          "discarded_shots": 59762,
+          "ended": 3862.636792788,
+          "logical_errors": 0,
+          "started": 3862.581472671,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5735,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.053799438000169175,
+          "discarded_shots": 59801,
+          "ended": 3862.63528996,
+          "logical_errors": 0,
+          "started": 3862.581474551,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5836,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05475434400023005,
+          "discarded_shots": 59700,
+          "ended": 3862.636239745,
+          "logical_errors": 0,
+          "started": 3862.581473481,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5755,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05604557200013005,
+          "discarded_shots": 59781,
+          "ended": 3862.637531023,
+          "logical_errors": 0,
+          "started": 3862.581474501,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5775,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.0550991659997635,
+          "discarded_shots": 59761,
+          "ended": 3862.636582257,
+          "logical_errors": 0,
+          "started": 3862.581472371,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5753,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.056001862000357505,
+          "discarded_shots": 59783,
+          "ended": 3862.637484803,
+          "logical_errors": 0,
+          "started": 3862.581472301,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5635,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.056070641999667714,
+          "discarded_shots": 59901,
+          "ended": 3862.637553133,
+          "logical_errors": 0,
+          "started": 3862.581472451,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5723,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05570809000028021,
+          "discarded_shots": 59813,
+          "ended": 3862.637190901,
+          "logical_errors": 0,
+          "started": 3862.581472291,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5655,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05472139400035303,
+          "discarded_shots": 59881,
+          "ended": 3862.636205195,
+          "logical_errors": 0,
+          "started": 3862.581472431,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5772,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05400546000009854,
+          "discarded_shots": 59764,
+          "ended": 3862.635489551,
+          "logical_errors": 0,
+          "started": 3862.581472611,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5855,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.056056662000173674,
+          "discarded_shots": 59681,
+          "ended": 3862.637542723,
+          "logical_errors": 0,
+          "started": 3862.581474701,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5888,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05400037000026714,
+          "discarded_shots": 59648,
+          "ended": 3862.635486961,
+          "logical_errors": 0,
+          "started": 3862.581472621,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5770,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05484639499991317,
+          "discarded_shots": 59766,
+          "ended": 3862.636326846,
+          "logical_errors": 0,
+          "started": 3862.581469731,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5690,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.0548311949996787,
+          "discarded_shots": 59846,
+          "ended": 3862.636312926,
+          "logical_errors": 0,
+          "started": 3862.581469941,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5674,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.0540671899998415,
+          "discarded_shots": 59862,
+          "ended": 3862.635550931,
+          "logical_errors": 0,
+          "started": 3862.581472261,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5849,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.0546008129999791,
+          "discarded_shots": 59687,
+          "ended": 3862.636083314,
+          "logical_errors": 0,
+          "started": 3862.581470281,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5664,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.054939905000082945,
+          "discarded_shots": 59872,
+          "ended": 3862.636425366,
+          "logical_errors": 0,
+          "started": 3862.581475061,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5810,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05420199099989986,
+          "discarded_shots": 59726,
+          "ended": 3862.635691332,
+          "logical_errors": 0,
+          "started": 3862.581473171,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5588,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05486175499981982,
+          "discarded_shots": 59948,
+          "ended": 3862.636346786,
+          "logical_errors": 0,
+          "started": 3862.581474071,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5796,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05424663099984173,
+          "discarded_shots": 59740,
+          "ended": 3862.635731372,
+          "logical_errors": 0,
+          "started": 3862.581473611,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5629,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.056142491999708,
+          "discarded_shots": 59907,
+          "ended": 3862.637626753,
+          "logical_errors": 0,
+          "started": 3862.581473501,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5688,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055568408999988606,
+          "discarded_shots": 59848,
+          "ended": 3862.63705293,
+          "logical_errors": 0,
+          "started": 3862.581473451,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5839,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05610864199979915,
+          "discarded_shots": 59697,
+          "ended": 3862.637593603,
+          "logical_errors": 0,
+          "started": 3862.581473431,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5775,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05440924200001973,
+          "discarded_shots": 59761,
+          "ended": 3862.635892443,
+          "logical_errors": 0,
+          "started": 3862.581470991,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5841,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.055471077999754925,
+          "discarded_shots": 59695,
+          "ended": 3862.636952829,
+          "logical_errors": 0,
+          "started": 3862.581471001,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5700,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05448098199985907,
+          "discarded_shots": 59836,
+          "ended": 3862.635964763,
+          "logical_errors": 0,
+          "started": 3862.581472811,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5662,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05485998499989364,
+          "discarded_shots": 59874,
+          "ended": 3862.636344666,
+          "logical_errors": 0,
+          "started": 3862.581473091,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5738,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.054938645000220276,
+          "discarded_shots": 59798,
+          "ended": 3862.636421996,
+          "logical_errors": 0,
+          "started": 3862.581472861,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5717,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05608994199974404,
+          "discarded_shots": 59819,
+          "ended": 3862.637572773,
+          "logical_errors": 0,
+          "started": 3862.581472591,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5918,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.0557349300001988,
+          "discarded_shots": 59618,
+          "ended": 3862.637219721,
+          "logical_errors": 0,
+          "started": 3862.581474851,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5720,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05374140799995075,
+          "discarded_shots": 59816,
+          "ended": 3862.635227969,
+          "logical_errors": 0,
+          "started": 3862.581472891,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5868,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05394392899961531,
+          "discarded_shots": 59668,
+          "ended": 3862.63541252,
+          "logical_errors": 0,
+          "started": 3862.581458851,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5889,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05470140400029777,
+          "discarded_shots": 59647,
+          "ended": 3862.636171495,
+          "logical_errors": 0,
+          "started": 3862.581459291,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5815,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05592730100033805,
+          "discarded_shots": 59721,
+          "ended": 3862.637411652,
+          "logical_errors": 0,
+          "started": 3862.581474201,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5655,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05581934000019828,
+          "discarded_shots": 59881,
+          "ended": 3862.637299421,
+          "logical_errors": 0,
+          "started": 3862.581469971,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5799,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05577442999992854,
+          "discarded_shots": 59737,
+          "ended": 3862.637261951,
+          "logical_errors": 0,
+          "started": 3862.581474001,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5810,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05578990000003614,
+          "discarded_shots": 59726,
+          "ended": 3862.637270421,
+          "logical_errors": 0,
+          "started": 3862.581468981,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5698,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05619655300006343,
+          "discarded_shots": 59838,
+          "ended": 3862.637676374,
+          "logical_errors": 0,
+          "started": 3862.581468961,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5768,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.056170912999732536,
+          "discarded_shots": 59768,
+          "ended": 3862.637650524,
+          "logical_errors": 0,
+          "started": 3862.581468991,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5688,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05588496100017437,
+          "discarded_shots": 59848,
+          "ended": 3862.637364152,
+          "logical_errors": 0,
+          "started": 3862.581469271,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 5784,
+          "api_calls": 1,
+          "attempted_shots": 65536,
+          "call_seconds": 0.05588331100034338,
+          "discarded_shots": 59752,
+          "ended": 3862.637363512,
+          "logical_errors": 0,
+          "started": 3862.581469251,
+          "status": "sample"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5001 @@
+{
+  "case_id": "surface-code-d7-r7-p1e-3--stim",
+  "config": {
+    "batch_size": 0,
+    "sample_chunk_shots": 0,
+    "shots_per_call": 262144
+  },
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d",
+  "phase": "probe",
+  "runtime": [
+    {
+      "affinity": [
+        0
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001660909997553972,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.0288669330002449,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479820,
+      "seed": 11530393483150407947,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        1
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015389100008178502,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027589645000261953,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479821,
+      "seed": 1640604275594667119,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        2
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015003099997557,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028234248999979172,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479822,
+      "seed": 12865839415065588358,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        3
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016502099970239215,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027224232999742526,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479823,
+      "seed": 16717887618855539547,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        4
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001649309997446835,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027188753000245924,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479824,
+      "seed": 6208697504271243937,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        5
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015005100021880935,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028061878000244178,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479825,
+      "seed": 3674028767386839956,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        6
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001640710001993284,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027939736999996967,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479826,
+      "seed": 15174887017346349965,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        7
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015233099975375808,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027198821999718348,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479827,
+      "seed": 13645503849285262065,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        8
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016848099994604127,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027881857000011223,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479828,
+      "seed": 18026970967943542572,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        9
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016184100013560965,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028091977999793016,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479829,
+      "seed": 5270577052302635902,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        10
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015356099993368844,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02781483599983403,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479830,
+      "seed": 48675497464591040,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        11
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001606709997759026,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02763155499997083,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479831,
+      "seed": 5864585395085536269,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        12
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.005743895000250632,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.025835444000222196,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479832,
+      "seed": 9422458445994449655,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        13
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015415100006066496,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027782286999809003,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479833,
+      "seed": 2688485055049230567,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        14
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00020957100014129537,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.035196389999782696,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479834,
+      "seed": 9294739929818879360,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        15
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001515310000286263,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027897237000161113,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479835,
+      "seed": 7893819367805377997,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        16
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015770099980727537,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.0283037389999663,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479836,
+      "seed": 901770708493706934,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        17
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001561809999657271,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028225388999999268,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479837,
+      "seed": 2697426068745842299,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        18
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001579509998919093,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027938286999869888,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479838,
+      "seed": 15876807844807010317,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        19
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001506910002717632,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027802535999853717,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479839,
+      "seed": 11786645410520408654,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        20
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015669099957449362,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.03650581800002328,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479840,
+      "seed": 2211860131458012185,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        21
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014737099991180003,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027068182000220986,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479841,
+      "seed": 7579421085090652804,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        22
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014542100007020053,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027238333000241255,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479842,
+      "seed": 5960164228733815143,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        23
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014684099960504682,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027134572000250046,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479843,
+      "seed": 9095040037219351971,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        24
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015825099990252056,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027990857000077085,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479844,
+      "seed": 14655269990222713074,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        25
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015011100003903266,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027941757000007783,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479845,
+      "seed": 14712217451072778556,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        26
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014645100009147427,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.0270790820000002,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479846,
+      "seed": 15663549172485076326,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        27
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015542099981757929,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027758305999668664,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479847,
+      "seed": 2631107393550588994,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        28
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015947000019878033,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027275233000182197,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479848,
+      "seed": 13880708059858372327,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        29
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015072100040924852,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027855466000346496,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479849,
+      "seed": 15281664544062306817,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        30
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015105100010259775,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028100678000100743,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479850,
+      "seed": 16863650624717153351,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        31
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015205099998638616,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027284693000183324,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479851,
+      "seed": 13933934780184262367,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        32
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016036099987104535,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028526001000045653,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479852,
+      "seed": 8699371886345310898,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        33
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00017870100009531598,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027967987000010908,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479853,
+      "seed": 17295445671510803291,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        34
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014874099997541634,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027234093000060966,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479854,
+      "seed": 8242858440063833154,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        35
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.000154011000176979,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027684175000104005,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479855,
+      "seed": 6425961424607503510,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        36
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016578099985053996,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027657346000069083,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479856,
+      "seed": 14372912293824198061,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        37
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001525409998066607,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027474705000258837,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479857,
+      "seed": 620974146374047218,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        38
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015106099999684375,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02744728399966334,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479858,
+      "seed": 2589871098855255998,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        39
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014929999997548293,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028100859000005585,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479859,
+      "seed": 1188318562110606580,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        40
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00018066099983116146,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.028616571000384283,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479860,
+      "seed": 10539871075859246158,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        41
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001529309997749806,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027465113999824098,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479861,
+      "seed": 5073634637634415377,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        42
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015178100011326023,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027242223000030208,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479862,
+      "seed": 7853586581545696770,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        43
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015263100021911669,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02758545500000764,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479863,
+      "seed": 16269782608548287046,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        44
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015490099985981942,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027125562000037462,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479864,
+      "seed": 5693779117654474278,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        45
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00013775100023849518,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02785112699984893,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479865,
+      "seed": 16442613091335215655,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        46
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015475100008188747,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027028792000237445,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479866,
+      "seed": 2951174785261686989,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        47
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001503510002294206,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02734172300006321,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479867,
+      "seed": 6294768906226995808,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        48
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015204100009214017,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027357063999716047,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479868,
+      "seed": 3105574309134015142,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        49
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015917100017759367,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.0271011930003624,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479869,
+      "seed": 14530489396482560468,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        50
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015451099989149952,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.026772469999741588,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479870,
+      "seed": 7742095308629951907,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        51
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001679010001680581,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.026913460999821837,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479871,
+      "seed": 12755324490607141347,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        52
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015480100000786479,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02786039600005097,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479872,
+      "seed": 7104257789692736128,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        53
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001515909998488496,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027736296000057337,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479873,
+      "seed": 4894434574917835525,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        54
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016967099963949295,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.02409346500007814,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479874,
+      "seed": 13520241297369394947,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        55
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015269100003934,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.0268841209999664,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479875,
+      "seed": 5896144879731620498,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        56
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015605100043103448,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.026268467000136297,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479876,
+      "seed": 6934402847884790415,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        57
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00015349100021921913,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027483743999709986,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479877,
+      "seed": 3564125715978914547,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        58
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001698810001471429,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.025995915999828867,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479878,
+      "seed": 8465225129427652498,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        59
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00017097099998863996,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027396284000133164,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479879,
+      "seed": 17085576624905914057,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        60
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00014736100001755403,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.0261651159999019,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479880,
+      "seed": 6117133340235941531,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        61
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00016481099964948953,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.027092541999991226,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479881,
+      "seed": 5976377726847433116,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        62
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.0001510409997536044,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.022505785999783257,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479882,
+      "seed": 18259101577521978019,
+      "status": "ready"
+    },
+    {
+      "affinity": [
+        63
+      ],
+      "metadata": {
+        "batch_enabled": true,
+        "batch_parameter": "public-detector-sampler-chunk-shots",
+        "chunk_policy": "one chunk per public call",
+        "effective_batch_size": null,
+        "name": "stim",
+        "native_extensions": [
+          "stim._stim_sse2"
+        ],
+        "num_detectors": 336,
+        "num_measurements": 385,
+        "num_observables": 1,
+        "num_qubits": 118,
+        "parse_seconds": 0.00012650999997276813,
+        "precision": "binary-stabilizer",
+        "raw_reference_detector_ones": 0,
+        "raw_reference_observable_ones": 0,
+        "record_materialization": "bit-packed-detectors-and-observables",
+        "reference_convention": "raw-record-parity",
+        "reference_setup_seconds": 0.021076587999687035,
+        "sampling_backend": "compiled-circuit-detector-sampler",
+        "seed_policy": "continuous-stream-seeded-once-per-phase-or-repetition",
+        "threads": 1,
+        "version": "1.16.0"
+      },
+      "pid": 479883,
+      "seed": 13077603560796732649,
+      "status": "ready"
+    }
+  ],
+  "samples": [
+    {
+      "accepted_shots": 4099737,
+      "api_calls": 178,
+      "attempted_shots": 46661632,
+      "discarded_shots": 42561895,
+      "duration_seconds": 1.4373808790001021,
+      "logical_errors": 0,
+      "scheduled_start": 3698.927325389,
+      "shots_per_call": 262144,
+      "throughput_attempted_shots_per_second": 32462955.839832544,
+      "workers": [
+        {
+          "accepted_shots": 68708,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3717783119996056,
+          "discarded_shots": 717724,
+          "ended": 3700.299185483,
+          "logical_errors": 0,
+          "started": 3698.9273911,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69142,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3392037859998709,
+          "discarded_shots": 717290,
+          "ended": 3700.266611086,
+          "logical_errors": 0,
+          "started": 3698.92739092,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69185,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3471593740000571,
+          "discarded_shots": 717247,
+          "ended": 3700.274568854,
+          "logical_errors": 0,
+          "started": 3698.92739176,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69338,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.35557502499978,
+          "discarded_shots": 717094,
+          "ended": 3700.282991565,
+          "logical_errors": 0,
+          "started": 3698.92738994,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46148,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.000842233000185,
+          "discarded_shots": 478140,
+          "ended": 3699.928247963,
+          "logical_errors": 0,
+          "started": 3698.92739063,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69056,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3231251089996476,
+          "discarded_shots": 717376,
+          "ended": 3700.250533039,
+          "logical_errors": 0,
+          "started": 3698.92739041,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69184,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3769879140004377,
+          "discarded_shots": 717248,
+          "ended": 3700.304397864,
+          "logical_errors": 0,
+          "started": 3698.92739065,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69457,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.379273268000361,
+          "discarded_shots": 716975,
+          "ended": 3700.306680268,
+          "logical_errors": 0,
+          "started": 3698.92739069,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69373,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3055291429996032,
+          "discarded_shots": 717059,
+          "ended": 3700.232933163,
+          "logical_errors": 0,
+          "started": 3698.92738888,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45947,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.1683460450003622,
+          "discarded_shots": 478341,
+          "ended": 3700.095749355,
+          "logical_errors": 0,
+          "started": 3698.92739142,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68815,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3140199040003608,
+          "discarded_shots": 717617,
+          "ended": 3700.241426424,
+          "logical_errors": 0,
+          "started": 3698.92738886,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69270,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3450091109998539,
+          "discarded_shots": 717162,
+          "ended": 3700.272425351,
+          "logical_errors": 0,
+          "started": 3698.92739042,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69560,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1393417790000058,
+          "discarded_shots": 716872,
+          "ended": 3700.066750089,
+          "logical_errors": 0,
+          "started": 3698.92739018,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69090,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2873950329999388,
+          "discarded_shots": 717342,
+          "ended": 3700.214800003,
+          "logical_errors": 0,
+          "started": 3698.92739022,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69060,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.262750694999795,
+          "discarded_shots": 717372,
+          "ended": 3700.190157375,
+          "logical_errors": 0,
+          "started": 3698.9273898,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68723,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2080136939998738,
+          "discarded_shots": 717709,
+          "ended": 3700.135421254,
+          "logical_errors": 0,
+          "started": 3698.92739041,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69091,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2683376479999424,
+          "discarded_shots": 717341,
+          "ended": 3700.195743098,
+          "logical_errors": 0,
+          "started": 3698.927388,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69081,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.268995141999767,
+          "discarded_shots": 717351,
+          "ended": 3700.196403362,
+          "logical_errors": 0,
+          "started": 3698.92739028,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68966,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3084101399999781,
+          "discarded_shots": 717466,
+          "ended": 3700.23581445,
+          "logical_errors": 0,
+          "started": 3698.92738801,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68602,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3750851129993862,
+          "discarded_shots": 717830,
+          "ended": 3700.302490343,
+          "logical_errors": 0,
+          "started": 3698.92738962,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69054,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3814323510000577,
+          "discarded_shots": 717378,
+          "ended": 3700.308837091,
+          "logical_errors": 0,
+          "started": 3698.92738836,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46153,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.3464128600003278,
+          "discarded_shots": 478135,
+          "ended": 3700.27381407,
+          "logical_errors": 0,
+          "started": 3698.92738943,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68983,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2708085229996868,
+          "discarded_shots": 717449,
+          "ended": 3700.198222463,
+          "logical_errors": 0,
+          "started": 3698.92738917,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69256,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3526308460004657,
+          "discarded_shots": 717176,
+          "ended": 3700.280034277,
+          "logical_errors": 0,
+          "started": 3698.92738803,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46186,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0112621560001571,
+          "discarded_shots": 478102,
+          "ended": 3699.938666436,
+          "logical_errors": 0,
+          "started": 3698.92739115,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69229,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3841096169999219,
+          "discarded_shots": 717203,
+          "ended": 3700.311518027,
+          "logical_errors": 0,
+          "started": 3698.92739159,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69460,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.179134850000537,
+          "discarded_shots": 716972,
+          "ended": 3700.10654329,
+          "logical_errors": 0,
+          "started": 3698.92739117,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68432,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.419274349999796,
+          "discarded_shots": 718000,
+          "ended": 3700.34668144,
+          "logical_errors": 0,
+          "started": 3698.92739118,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69011,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.349440068000149,
+          "discarded_shots": 717421,
+          "ended": 3700.276849228,
+          "logical_errors": 0,
+          "started": 3698.9273912,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69081,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3858830979997947,
+          "discarded_shots": 717351,
+          "ended": 3700.313290668,
+          "logical_errors": 0,
+          "started": 3698.92739121,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46322,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0147729370000889,
+          "discarded_shots": 477966,
+          "ended": 3699.942177257,
+          "logical_errors": 0,
+          "started": 3698.92739148,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68662,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3121506730003603,
+          "discarded_shots": 717770,
+          "ended": 3700.239560813,
+          "logical_errors": 0,
+          "started": 3698.92739144,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46235,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0333854799996516,
+          "discarded_shots": 478053,
+          "ended": 3699.96078573,
+          "logical_errors": 0,
+          "started": 3698.92738712,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69041,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.396723803000441,
+          "discarded_shots": 717391,
+          "ended": 3700.324124203,
+          "logical_errors": 0,
+          "started": 3698.92738606,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69305,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2178143730002375,
+          "discarded_shots": 717127,
+          "ended": 3700.145218703,
+          "logical_errors": 0,
+          "started": 3698.92738766,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69039,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3519607930002167,
+          "discarded_shots": 717393,
+          "ended": 3700.279364833,
+          "logical_errors": 0,
+          "started": 3698.92738735,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68942,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1334776439998677,
+          "discarded_shots": 717490,
+          "ended": 3700.060880784,
+          "logical_errors": 0,
+          "started": 3698.9273863,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69260,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.4153930359998412,
+          "discarded_shots": 717172,
+          "ended": 3700.342798796,
+          "logical_errors": 0,
+          "started": 3698.92738742,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68989,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2516796879999674,
+          "discarded_shots": 717443,
+          "ended": 3700.179084088,
+          "logical_errors": 0,
+          "started": 3698.9273864,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69488,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3565930309996475,
+          "discarded_shots": 716944,
+          "ended": 3700.283998141,
+          "logical_errors": 0,
+          "started": 3698.92738607,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69002,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3998763429999599,
+          "discarded_shots": 717430,
+          "ended": 3700.327284233,
+          "logical_errors": 0,
+          "started": 3698.92739111,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68909,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3221522529997856,
+          "discarded_shots": 717523,
+          "ended": 3700.249554623,
+          "logical_errors": 0,
+          "started": 3698.92738844,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68971,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2380668150008205,
+          "discarded_shots": 717461,
+          "ended": 3700.165469656,
+          "logical_errors": 0,
+          "started": 3698.92738582,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46427,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0374303640001017,
+          "discarded_shots": 477861,
+          "ended": 3699.964826934,
+          "logical_errors": 0,
+          "started": 3698.92738472,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69161,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3432201400005397,
+          "discarded_shots": 717271,
+          "ended": 3700.27062344,
+          "logical_errors": 0,
+          "started": 3698.92738713,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46244,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.1029378800003542,
+          "discarded_shots": 478044,
+          "ended": 3700.0303356,
+          "logical_errors": 0,
+          "started": 3698.9273847,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69253,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.43702958699987,
+          "discarded_shots": 717179,
+          "ended": 3700.364431797,
+          "logical_errors": 0,
+          "started": 3698.92738503,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46296,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0326236149999204,
+          "discarded_shots": 477992,
+          "ended": 3699.960021925,
+          "logical_errors": 0,
+          "started": 3698.92738613,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69362,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1895693530000244,
+          "discarded_shots": 717070,
+          "ended": 3700.116974993,
+          "logical_errors": 0,
+          "started": 3698.92738882,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68691,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3533646619998763,
+          "discarded_shots": 717741,
+          "ended": 3700.280770512,
+          "logical_errors": 0,
+          "started": 3698.9273888,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45942,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0404561719997218,
+          "discarded_shots": 478346,
+          "ended": 3699.967857212,
+          "logical_errors": 0,
+          "started": 3698.92738889,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46126,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0066283480000493,
+          "discarded_shots": 478162,
+          "ended": 3699.934033838,
+          "logical_errors": 0,
+          "started": 3698.92739133,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45990,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.127079065000089,
+          "discarded_shots": 478298,
+          "ended": 3700.054480655,
+          "logical_errors": 0,
+          "started": 3698.92738887,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46254,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0666221000001315,
+          "discarded_shots": 478034,
+          "ended": 3699.99402354,
+          "logical_errors": 0,
+          "started": 3698.92738902,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68896,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3683692919998975,
+          "discarded_shots": 717536,
+          "ended": 3700.295772742,
+          "logical_errors": 0,
+          "started": 3698.92738619,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68793,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.362853479000023,
+          "discarded_shots": 717639,
+          "ended": 3700.290255339,
+          "logical_errors": 0,
+          "started": 3698.9273862,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68799,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3507793460003086,
+          "discarded_shots": 717633,
+          "ended": 3700.278185726,
+          "logical_errors": 0,
+          "started": 3698.92738892,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68933,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.366977094000049,
+          "discarded_shots": 717499,
+          "ended": 3700.294385034,
+          "logical_errors": 0,
+          "started": 3698.92739021,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69179,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2753997110003183,
+          "discarded_shots": 717253,
+          "ended": 3700.202806231,
+          "logical_errors": 0,
+          "started": 3698.92738878,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69417,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3805231360001926,
+          "discarded_shots": 717015,
+          "ended": 3700.307931176,
+          "logical_errors": 0,
+          "started": 3698.92738954,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68998,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3674954769994656,
+          "discarded_shots": 717434,
+          "ended": 3700.294901047,
+          "logical_errors": 0,
+          "started": 3698.92738885,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45933,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.102763029000016,
+          "discarded_shots": 478355,
+          "ended": 3700.030161839,
+          "logical_errors": 0,
+          "started": 3698.92738615,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69433,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3713646500000323,
+          "discarded_shots": 716999,
+          "ended": 3700.29876871,
+          "logical_errors": 0,
+          "started": 3698.92738707,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68804,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.179433931999938,
+          "discarded_shots": 717628,
+          "ended": 3700.106838652,
+          "logical_errors": 0,
+          "started": 3698.92738732,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 4238135,
+      "api_calls": 184,
+      "attempted_shots": 48234496,
+      "discarded_shots": 43996361,
+      "duration_seconds": 1.3811924599999656,
+      "logical_errors": 0,
+      "scheduled_start": 3700.436745513,
+      "shots_per_call": 262144,
+      "throughput_attempted_shots_per_second": 34922356.87414714,
+      "workers": [
+        {
+          "accepted_shots": 69280,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3796821109999655,
+          "discarded_shots": 717152,
+          "ended": 3701.816518905,
+          "logical_errors": 0,
+          "started": 3700.436824314,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45790,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.1310585789997276,
+          "discarded_shots": 478498,
+          "ended": 3701.567890243,
+          "logical_errors": 0,
+          "started": 3700.436820624,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69682,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1616403440002614,
+          "discarded_shots": 716750,
+          "ended": 3701.598473928,
+          "logical_errors": 0,
+          "started": 3700.436820554,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69181,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.077302074999352,
+          "discarded_shots": 717251,
+          "ended": 3701.514141189,
+          "logical_errors": 0,
+          "started": 3700.436824374,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69062,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.198050173999036,
+          "discarded_shots": 717370,
+          "ended": 3701.634884918,
+          "logical_errors": 0,
+          "started": 3700.436819164,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68829,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3806263460000991,
+          "discarded_shots": 717603,
+          "ended": 3701.81746096,
+          "logical_errors": 0,
+          "started": 3700.436820924,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69580,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2321849300005852,
+          "discarded_shots": 716852,
+          "ended": 3701.669023954,
+          "logical_errors": 0,
+          "started": 3700.436825274,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69198,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.247565662999932,
+          "discarded_shots": 717234,
+          "ended": 3701.684401347,
+          "logical_errors": 0,
+          "started": 3700.436820954,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68990,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2521209099995758,
+          "discarded_shots": 717442,
+          "ended": 3701.688950664,
+          "logical_errors": 0,
+          "started": 3700.436816384,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68755,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3075527249998231,
+          "discarded_shots": 717677,
+          "ended": 3701.744392269,
+          "logical_errors": 0,
+          "started": 3700.436825064,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68839,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1265750520001347,
+          "discarded_shots": 717593,
+          "ended": 3701.563414586,
+          "logical_errors": 0,
+          "started": 3700.436825274,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68983,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.298909993000052,
+          "discarded_shots": 717449,
+          "ended": 3701.735744367,
+          "logical_errors": 0,
+          "started": 3700.436821194,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68915,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.156017269000131,
+          "discarded_shots": 717517,
+          "ended": 3701.592858954,
+          "logical_errors": 0,
+          "started": 3700.436824864,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69076,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.0607301549998738,
+          "discarded_shots": 717356,
+          "ended": 3701.497569449,
+          "logical_errors": 0,
+          "started": 3700.436825004,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69066,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3547183799992126,
+          "discarded_shots": 717366,
+          "ended": 3701.791548154,
+          "logical_errors": 0,
+          "started": 3700.436816364,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45953,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0197009270004855,
+          "discarded_shots": 478335,
+          "ended": 3701.456539361,
+          "logical_errors": 0,
+          "started": 3700.436825234,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 91900,
+          "api_calls": 4,
+          "attempted_shots": 1048576,
+          "call_seconds": 1.2245529539995914,
+          "discarded_shots": 956676,
+          "ended": 3701.661388838,
+          "logical_errors": 0,
+          "started": 3700.436818704,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69232,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2108470309999575,
+          "discarded_shots": 717200,
+          "ended": 3701.647676205,
+          "logical_errors": 0,
+          "started": 3700.436815074,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69478,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2238818400001037,
+          "discarded_shots": 716954,
+          "ended": 3701.660714124,
+          "logical_errors": 0,
+          "started": 3700.436818534,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69412,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2890979939998033,
+          "discarded_shots": 717020,
+          "ended": 3701.725928728,
+          "logical_errors": 0,
+          "started": 3700.436817964,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68778,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1572507460000452,
+          "discarded_shots": 717654,
+          "ended": 3701.594079991,
+          "logical_errors": 0,
+          "started": 3700.436815054,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45906,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.1142264179998165,
+          "discarded_shots": 478382,
+          "ended": 3701.551050272,
+          "logical_errors": 0,
+          "started": 3700.436815094,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69110,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1371538059997874,
+          "discarded_shots": 717322,
+          "ended": 3701.57398365,
+          "logical_errors": 0,
+          "started": 3700.436815044,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46213,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0466243900004883,
+          "discarded_shots": 478075,
+          "ended": 3701.483466624,
+          "logical_errors": 0,
+          "started": 3700.436826254,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69057,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3163030879995858,
+          "discarded_shots": 717375,
+          "ended": 3701.753133962,
+          "logical_errors": 0,
+          "started": 3700.436816824,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46232,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.015671232999921,
+          "discarded_shots": 478056,
+          "ended": 3701.452502697,
+          "logical_errors": 0,
+          "started": 3700.436820704,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69499,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.17471745299963,
+          "discarded_shots": 716933,
+          "ended": 3701.611549187,
+          "logical_errors": 0,
+          "started": 3700.436816804,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68724,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1165973619999932,
+          "discarded_shots": 717708,
+          "ended": 3701.553429286,
+          "logical_errors": 0,
+          "started": 3700.436816784,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69185,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2691499330003353,
+          "discarded_shots": 717247,
+          "ended": 3701.705980687,
+          "logical_errors": 0,
+          "started": 3700.436817684,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69663,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1147603509994042,
+          "discarded_shots": 716769,
+          "ended": 3701.551591555,
+          "logical_errors": 0,
+          "started": 3700.436816834,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68761,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3556929359997412,
+          "discarded_shots": 717671,
+          "ended": 3701.79252425,
+          "logical_errors": 0,
+          "started": 3700.436816774,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69460,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3146394780005721,
+          "discarded_shots": 716972,
+          "ended": 3701.751470212,
+          "logical_errors": 0,
+          "started": 3700.436816854,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68688,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1805679680001049,
+          "discarded_shots": 717744,
+          "ended": 3701.617401182,
+          "logical_errors": 0,
+          "started": 3700.436817314,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68816,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1234707140001774,
+          "discarded_shots": 717616,
+          "ended": 3701.560308128,
+          "logical_errors": 0,
+          "started": 3700.436823954,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68786,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.157788021000215,
+          "discarded_shots": 717646,
+          "ended": 3701.594629695,
+          "logical_errors": 0,
+          "started": 3700.436825674,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69189,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2219298379995962,
+          "discarded_shots": 717243,
+          "ended": 3701.658765732,
+          "logical_errors": 0,
+          "started": 3700.436823374,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69297,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1738907779999863,
+          "discarded_shots": 717135,
+          "ended": 3701.610725132,
+          "logical_errors": 0,
+          "started": 3700.436819724,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68920,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1997896539996873,
+          "discarded_shots": 717512,
+          "ended": 3701.636626858,
+          "logical_errors": 0,
+          "started": 3700.436823534,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69343,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1340195069997208,
+          "discarded_shots": 717089,
+          "ended": 3701.570857961,
+          "logical_errors": 0,
+          "started": 3700.436823244,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69110,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2490659319996666,
+          "discarded_shots": 717322,
+          "ended": 3701.685906666,
+          "logical_errors": 0,
+          "started": 3700.436825924,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69213,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.301567848999639,
+          "discarded_shots": 717219,
+          "ended": 3701.738398233,
+          "logical_errors": 0,
+          "started": 3700.436817174,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68677,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2026325709994126,
+          "discarded_shots": 717755,
+          "ended": 3701.639464985,
+          "logical_errors": 0,
+          "started": 3700.436819514,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68979,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1876601600001777,
+          "discarded_shots": 717453,
+          "ended": 3701.624493735,
+          "logical_errors": 0,
+          "started": 3700.436819594,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69321,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2911371759996655,
+          "discarded_shots": 717111,
+          "ended": 3701.72797028,
+          "logical_errors": 0,
+          "started": 3700.436819664,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45938,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.2017188259997056,
+          "discarded_shots": 478350,
+          "ended": 3701.63854866,
+          "logical_errors": 0,
+          "started": 3700.436819704,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45791,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0902723530002731,
+          "discarded_shots": 478497,
+          "ended": 3701.527103557,
+          "logical_errors": 0,
+          "started": 3700.436819464,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69194,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2575464530000318,
+          "discarded_shots": 717238,
+          "ended": 3701.694378957,
+          "logical_errors": 0,
+          "started": 3700.436819854,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69336,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2595636549999654,
+          "discarded_shots": 717096,
+          "ended": 3701.696398619,
+          "logical_errors": 0,
+          "started": 3700.436819494,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68985,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2012614529999155,
+          "discarded_shots": 717447,
+          "ended": 3701.638097827,
+          "logical_errors": 0,
+          "started": 3700.436823584,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46005,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.13671448300056,
+          "discarded_shots": 478283,
+          "ended": 3701.573548437,
+          "logical_errors": 0,
+          "started": 3700.436823634,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69770,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1362769110000954,
+          "discarded_shots": 716662,
+          "ended": 3701.573114605,
+          "logical_errors": 0,
+          "started": 3700.436823654,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68874,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2051338870001018,
+          "discarded_shots": 717558,
+          "ended": 3701.641974221,
+          "logical_errors": 0,
+          "started": 3700.436823644,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69262,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3487505940001938,
+          "discarded_shots": 717170,
+          "ended": 3701.785588138,
+          "logical_errors": 0,
+          "started": 3700.436823614,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68833,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.331543799999963,
+          "discarded_shots": 717599,
+          "ended": 3701.768382264,
+          "logical_errors": 0,
+          "started": 3700.436823694,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69423,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3336990429997968,
+          "discarded_shots": 717009,
+          "ended": 3701.770535187,
+          "logical_errors": 0,
+          "started": 3700.436823674,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69211,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.186021900999549,
+          "discarded_shots": 717221,
+          "ended": 3701.622858585,
+          "logical_errors": 0,
+          "started": 3700.436823604,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69352,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2036564180002642,
+          "discarded_shots": 717080,
+          "ended": 3701.640487762,
+          "logical_errors": 0,
+          "started": 3700.436817384,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69072,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.0388241319997178,
+          "discarded_shots": 717360,
+          "ended": 3701.475653826,
+          "logical_errors": 0,
+          "started": 3700.436815664,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68598,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1117475329997433,
+          "discarded_shots": 717834,
+          "ended": 3701.548579917,
+          "logical_errors": 0,
+          "started": 3700.436817154,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45736,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0161639060002017,
+          "discarded_shots": 478552,
+          "ended": 3701.45299019,
+          "logical_errors": 0,
+          "started": 3700.436815634,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69244,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2193019319997802,
+          "discarded_shots": 717188,
+          "ended": 3701.656133346,
+          "logical_errors": 0,
+          "started": 3700.436817874,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68892,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2559319919996597,
+          "discarded_shots": 717540,
+          "ended": 3701.692763217,
+          "logical_errors": 0,
+          "started": 3700.436817344,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69277,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.0730152490000364,
+          "discarded_shots": 717155,
+          "ended": 3701.509851963,
+          "logical_errors": 0,
+          "started": 3700.436823124,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69214,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1470744359999117,
+          "discarded_shots": 717218,
+          "ended": 3701.5839055,
+          "logical_errors": 0,
+          "started": 3700.436815684,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 4102073,
+      "api_calls": 178,
+      "attempted_shots": 46661632,
+      "discarded_shots": 42559559,
+      "duration_seconds": 1.4016702260000784,
+      "logical_errors": 0,
+      "scheduled_start": 3701.888361418,
+      "shots_per_call": 262144,
+      "throughput_attempted_shots_per_second": 33290021.52892801,
+      "workers": [
+        {
+          "accepted_shots": 69466,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3947352129998762,
+          "discarded_shots": 716966,
+          "ended": 3703.283175732,
+          "logical_errors": 0,
+          "started": 3701.888425909,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69091,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3720184230005543,
+          "discarded_shots": 717341,
+          "ended": 3703.260460492,
+          "logical_errors": 0,
+          "started": 3701.888425949,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68781,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3432873669999026,
+          "discarded_shots": 717651,
+          "ended": 3703.231727026,
+          "logical_errors": 0,
+          "started": 3701.888425859,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69192,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.334540972999548,
+          "discarded_shots": 717240,
+          "ended": 3703.222982132,
+          "logical_errors": 0,
+          "started": 3701.888425839,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69332,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.4011003120003807,
+          "discarded_shots": 717100,
+          "ended": 3703.289538861,
+          "logical_errors": 0,
+          "started": 3701.888425919,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46287,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0488642610002898,
+          "discarded_shots": 478001,
+          "ended": 3702.93730003,
+          "logical_errors": 0,
+          "started": 3701.888425819,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69211,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3676767469996776,
+          "discarded_shots": 717221,
+          "ended": 3703.256117266,
+          "logical_errors": 0,
+          "started": 3701.888425889,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69152,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.388712976000079,
+          "discarded_shots": 717280,
+          "ended": 3703.277152965,
+          "logical_errors": 0,
+          "started": 3701.888425879,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68787,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3305898889998389,
+          "discarded_shots": 717645,
+          "ended": 3703.219026688,
+          "logical_errors": 0,
+          "started": 3701.888423459,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46263,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.1634594539996215,
+          "discarded_shots": 478025,
+          "ended": 3703.051892973,
+          "logical_errors": 0,
+          "started": 3701.888423479,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46224,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0750945619997765,
+          "discarded_shots": 478064,
+          "ended": 3702.963528821,
+          "logical_errors": 0,
+          "started": 3701.888423559,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69260,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3467987290005112,
+          "discarded_shots": 717172,
+          "ended": 3703.235240448,
+          "logical_errors": 0,
+          "started": 3701.888425899,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69191,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3689681639998525,
+          "discarded_shots": 717241,
+          "ended": 3703.257404534,
+          "logical_errors": 0,
+          "started": 3701.888423489,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68875,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2841122139998333,
+          "discarded_shots": 717557,
+          "ended": 3703.172549953,
+          "logical_errors": 0,
+          "started": 3701.888423509,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69409,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2951944919996095,
+          "discarded_shots": 717023,
+          "ended": 3703.183630701,
+          "logical_errors": 0,
+          "started": 3701.888423519,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69507,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2050014290002764,
+          "discarded_shots": 716925,
+          "ended": 3703.093439758,
+          "logical_errors": 0,
+          "started": 3701.888423539,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69411,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2558466810000937,
+          "discarded_shots": 717021,
+          "ended": 3703.14428989,
+          "logical_errors": 0,
+          "started": 3701.888427059,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69066,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3494780449996142,
+          "discarded_shots": 717366,
+          "ended": 3703.237919044,
+          "logical_errors": 0,
+          "started": 3701.888427109,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69339,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3070318649997716,
+          "discarded_shots": 717093,
+          "ended": 3703.195473134,
+          "logical_errors": 0,
+          "started": 3701.888427089,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69206,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3873366070001794,
+          "discarded_shots": 717226,
+          "ended": 3703.275776986,
+          "logical_errors": 0,
+          "started": 3701.888427139,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69421,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3758035159999054,
+          "discarded_shots": 717011,
+          "ended": 3703.264244385,
+          "logical_errors": 0,
+          "started": 3701.888427169,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45970,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.38984357299978,
+          "discarded_shots": 478318,
+          "ended": 3703.278280732,
+          "logical_errors": 0,
+          "started": 3701.888427119,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69238,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2799831589995847,
+          "discarded_shots": 717194,
+          "ended": 3703.168425578,
+          "logical_errors": 0,
+          "started": 3701.888427079,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69133,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.279872718000206,
+          "discarded_shots": 717299,
+          "ended": 3703.168313847,
+          "logical_errors": 0,
+          "started": 3701.888427149,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68732,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3999725450003098,
+          "discarded_shots": 717700,
+          "ended": 3703.288407904,
+          "logical_errors": 0,
+          "started": 3701.888422859,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69507,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3652128419998917,
+          "discarded_shots": 716925,
+          "ended": 3703.253654841,
+          "logical_errors": 0,
+          "started": 3701.888426519,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68956,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.1737248469994483,
+          "discarded_shots": 717476,
+          "ended": 3703.062160726,
+          "logical_errors": 0,
+          "started": 3701.888421309,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68667,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3114914020006836,
+          "discarded_shots": 717765,
+          "ended": 3703.199928931,
+          "logical_errors": 0,
+          "started": 3701.888421269,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69284,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3399023859997214,
+          "discarded_shots": 717148,
+          "ended": 3703.228338555,
+          "logical_errors": 0,
+          "started": 3701.888421349,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69096,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.388592234999578,
+          "discarded_shots": 717336,
+          "ended": 3703.277033634,
+          "logical_errors": 0,
+          "started": 3701.888426569,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68475,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.364401017000091,
+          "discarded_shots": 717957,
+          "ended": 3703.252835026,
+          "logical_errors": 0,
+          "started": 3701.888421359,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69293,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3050404820005497,
+          "discarded_shots": 717139,
+          "ended": 3703.193475231,
+          "logical_errors": 0,
+          "started": 3701.888421329,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45984,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0349334960005763,
+          "discarded_shots": 478304,
+          "ended": 3702.923371065,
+          "logical_errors": 0,
+          "started": 3701.888427119,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69267,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3915390930001195,
+          "discarded_shots": 717165,
+          "ended": 3703.279977952,
+          "logical_errors": 0,
+          "started": 3701.888426009,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69106,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.22408602600035,
+          "discarded_shots": 717326,
+          "ended": 3703.112526415,
+          "logical_errors": 0,
+          "started": 3701.888425589,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69025,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3610005160003311,
+          "discarded_shots": 717407,
+          "ended": 3703.249439355,
+          "logical_errors": 0,
+          "started": 3701.888426309,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69023,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.136452458999429,
+          "discarded_shots": 717409,
+          "ended": 3703.024891398,
+          "logical_errors": 0,
+          "started": 3701.888425899,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45927,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.006225970000287,
+          "discarded_shots": 478361,
+          "ended": 3702.894662849,
+          "logical_errors": 0,
+          "started": 3701.888425819,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68753,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2606092700002591,
+          "discarded_shots": 717679,
+          "ended": 3703.149046299,
+          "logical_errors": 0,
+          "started": 3701.888421869,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68948,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3645040070000505,
+          "discarded_shots": 717484,
+          "ended": 3703.252939696,
+          "logical_errors": 0,
+          "started": 3701.888422699,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69506,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3908987290001278,
+          "discarded_shots": 716926,
+          "ended": 3703.279334748,
+          "logical_errors": 0,
+          "started": 3701.888423369,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69021,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2978404880000198,
+          "discarded_shots": 717411,
+          "ended": 3703.186278207,
+          "logical_errors": 0,
+          "started": 3701.888423739,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69092,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2368282639999961,
+          "discarded_shots": 717340,
+          "ended": 3703.125266703,
+          "logical_errors": 0,
+          "started": 3701.888424139,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46173,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0428363439996247,
+          "discarded_shots": 478115,
+          "ended": 3702.931270233,
+          "logical_errors": 0,
+          "started": 3701.888424089,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68879,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3380334149996997,
+          "discarded_shots": 717553,
+          "ended": 3703.226471344,
+          "logical_errors": 0,
+          "started": 3701.888423329,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45904,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0968130649998784,
+          "discarded_shots": 478384,
+          "ended": 3702.985246204,
+          "logical_errors": 0,
+          "started": 3701.888422709,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68908,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.33227031899969,
+          "discarded_shots": 717524,
+          "ended": 3703.220707499,
+          "logical_errors": 0,
+          "started": 3701.888422799,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45857,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0096422510000593,
+          "discarded_shots": 478431,
+          "ended": 3702.89807737,
+          "logical_errors": 0,
+          "started": 3701.888424299,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68814,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2337262550004198,
+          "discarded_shots": 717618,
+          "ended": 3703.122166674,
+          "logical_errors": 0,
+          "started": 3701.888426759,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69610,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3475297830000272,
+          "discarded_shots": 716822,
+          "ended": 3703.235972112,
+          "logical_errors": 0,
+          "started": 3701.888426739,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46154,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.188255116000164,
+          "discarded_shots": 478134,
+          "ended": 3703.076692315,
+          "logical_errors": 0,
+          "started": 3701.888426809,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46517,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0613249379998706,
+          "discarded_shots": 477771,
+          "ended": 3702.949763117,
+          "logical_errors": 0,
+          "started": 3701.888426709,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 46173,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.117458501999863,
+          "discarded_shots": 478115,
+          "ended": 3703.005894941,
+          "logical_errors": 0,
+          "started": 3701.888426779,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45972,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0703346430000238,
+          "discarded_shots": 478316,
+          "ended": 3702.958771322,
+          "logical_errors": 0,
+          "started": 3701.888426959,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69762,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3689562740000838,
+          "discarded_shots": 716670,
+          "ended": 3703.257398963,
+          "logical_errors": 0,
+          "started": 3701.888426789,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68780,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3425541029996566,
+          "discarded_shots": 717652,
+          "ended": 3703.230994212,
+          "logical_errors": 0,
+          "started": 3701.888426729,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69077,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3440160510003807,
+          "discarded_shots": 717355,
+          "ended": 3703.232457621,
+          "logical_errors": 0,
+          "started": 3701.888427899,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69291,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3303709979995801,
+          "discarded_shots": 717141,
+          "ended": 3703.218813617,
+          "logical_errors": 0,
+          "started": 3701.888427929,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69389,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.2757610529997692,
+          "discarded_shots": 717043,
+          "ended": 3703.164213132,
+          "logical_errors": 0,
+          "started": 3701.888427879,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69556,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3287981680005032,
+          "discarded_shots": 716876,
+          "ended": 3703.217240587,
+          "logical_errors": 0,
+          "started": 3701.888427939,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68932,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3742850369994812,
+          "discarded_shots": 717500,
+          "ended": 3703.262727616,
+          "logical_errors": 0,
+          "started": 3701.888427829,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 45591,
+          "api_calls": 2,
+          "attempted_shots": 524288,
+          "call_seconds": 1.0911475509997217,
+          "discarded_shots": 478697,
+          "ended": 3702.97958608,
+          "logical_errors": 0,
+          "started": 3701.888427859,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 68945,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.3505799219997243,
+          "discarded_shots": 717487,
+          "ended": 3703.239021241,
+          "logical_errors": 0,
+          "started": 3701.888427849,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 69315,
+          "api_calls": 3,
+          "attempted_shots": 786432,
+          "call_seconds": 1.178867669000283,
+          "discarded_shots": 717117,
+          "ended": 3703.067310438,
+          "logical_errors": 0,
+          "started": 3701.888427909,
+          "status": "sample"
+        }
+      ]
+    }
+  ],
+  "status": "success",
+  "summary": {
+    "mad_attempted_shots_per_second": 827065.6890954673,
+    "median_attempted_shots_per_second": 33290021.52892801
+  },
+  "warmup": [
+    {
+      "accepted_shots": 1473247,
+      "api_calls": 64,
+      "attempted_shots": 16777216,
+      "discarded_shots": 15303969,
+      "duration_seconds": 0.7956592949999504,
+      "logical_errors": 0,
+      "scheduled_start": 3698.071047279,
+      "shots_per_call": 262144,
+      "throughput_attempted_shots_per_second": 21085929.7508754,
+      "workers": [
+        {
+          "accepted_shots": 22940,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5535989420000078,
+          "discarded_shots": 239204,
+          "ended": 3698.624723733,
+          "logical_errors": 0,
+          "started": 3698.07111747,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23185,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.47815541699992536,
+          "discarded_shots": 238959,
+          "ended": 3698.549285617,
+          "logical_errors": 0,
+          "started": 3698.07112007,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23052,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5200516700001572,
+          "discarded_shots": 239092,
+          "ended": 3698.59119814,
+          "logical_errors": 0,
+          "started": 3698.07113864,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22975,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5455273739999029,
+          "discarded_shots": 239169,
+          "ended": 3698.616655444,
+          "logical_errors": 0,
+          "started": 3698.07111986,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22825,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.46588723300010315,
+          "discarded_shots": 239319,
+          "ended": 3698.537014323,
+          "logical_errors": 0,
+          "started": 3698.07111932,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23016,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4902300600001581,
+          "discarded_shots": 239128,
+          "ended": 3698.56135824,
+          "logical_errors": 0,
+          "started": 3698.07111995,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23182,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.47378519099993355,
+          "discarded_shots": 238962,
+          "ended": 3698.544913581,
+          "logical_errors": 0,
+          "started": 3698.0711195,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22866,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5865227610001966,
+          "discarded_shots": 239278,
+          "ended": 3698.657652871,
+          "logical_errors": 0,
+          "started": 3698.07112094,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23075,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4838608310001291,
+          "discarded_shots": 239069,
+          "ended": 3698.554986301,
+          "logical_errors": 0,
+          "started": 3698.07111693,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23104,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5760788980001053,
+          "discarded_shots": 239040,
+          "ended": 3698.647205938,
+          "logical_errors": 0,
+          "started": 3698.07111782,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22969,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4475610120002784,
+          "discarded_shots": 239175,
+          "ended": 3698.518688142,
+          "logical_errors": 0,
+          "started": 3698.07111675,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22830,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.643057712999962,
+          "discarded_shots": 239314,
+          "ended": 3698.714182113,
+          "logical_errors": 0,
+          "started": 3698.07111626,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23119,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5540550249997978,
+          "discarded_shots": 239025,
+          "ended": 3698.625175545,
+          "logical_errors": 0,
+          "started": 3698.07111372,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22935,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5458894160001364,
+          "discarded_shots": 239209,
+          "ended": 3698.617015426,
+          "logical_errors": 0,
+          "started": 3698.07111737,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23152,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5246922280002764,
+          "discarded_shots": 238992,
+          "ended": 3698.595812538,
+          "logical_errors": 0,
+          "started": 3698.07111375,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22680,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5190645039997435,
+          "discarded_shots": 239464,
+          "ended": 3698.590194154,
+          "logical_errors": 0,
+          "started": 3698.07111951,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23103,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5976929090002159,
+          "discarded_shots": 239041,
+          "ended": 3698.668820879,
+          "logical_errors": 0,
+          "started": 3698.07111892,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23163,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4992091839999375,
+          "discarded_shots": 238981,
+          "ended": 3698.570335794,
+          "logical_errors": 0,
+          "started": 3698.07111804,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22843,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.468648309999935,
+          "discarded_shots": 239301,
+          "ended": 3698.5397763,
+          "logical_errors": 0,
+          "started": 3698.07111803,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23334,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5308588650000274,
+          "discarded_shots": 238810,
+          "ended": 3698.601985355,
+          "logical_errors": 0,
+          "started": 3698.07111846,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22780,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4763786059997983,
+          "discarded_shots": 239364,
+          "ended": 3698.547504676,
+          "logical_errors": 0,
+          "started": 3698.0711176,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23041,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.48108065499991426,
+          "discarded_shots": 239103,
+          "ended": 3698.552208455,
+          "logical_errors": 0,
+          "started": 3698.07111885,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22802,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.49614560600002733,
+          "discarded_shots": 239342,
+          "ended": 3698.567272276,
+          "logical_errors": 0,
+          "started": 3698.07111819,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22971,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.48436622400004126,
+          "discarded_shots": 239173,
+          "ended": 3698.555493695,
+          "logical_errors": 0,
+          "started": 3698.07111848,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22916,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5054775520002295,
+          "discarded_shots": 239228,
+          "ended": 3698.576605532,
+          "logical_errors": 0,
+          "started": 3698.07111975,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23054,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.463525448999917,
+          "discarded_shots": 239090,
+          "ended": 3698.534655409,
+          "logical_errors": 0,
+          "started": 3698.07112045,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23014,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5190387739999096,
+          "discarded_shots": 239130,
+          "ended": 3698.590166684,
+          "logical_errors": 0,
+          "started": 3698.07112012,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22811,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.49795256700008395,
+          "discarded_shots": 239333,
+          "ended": 3698.569080907,
+          "logical_errors": 0,
+          "started": 3698.07112018,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23132,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.45870286999979726,
+          "discarded_shots": 239012,
+          "ended": 3698.52983154,
+          "logical_errors": 0,
+          "started": 3698.07111999,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23156,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5222502530000384,
+          "discarded_shots": 238988,
+          "ended": 3698.593378603,
+          "logical_errors": 0,
+          "started": 3698.07111973,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22964,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.47861041000032856,
+          "discarded_shots": 239180,
+          "ended": 3698.54973993,
+          "logical_errors": 0,
+          "started": 3698.07112062,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22955,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.43818053600034546,
+          "discarded_shots": 239189,
+          "ended": 3698.509312066,
+          "logical_errors": 0,
+          "started": 3698.07112025,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23231,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.485595222000029,
+          "discarded_shots": 238913,
+          "ended": 3698.556719462,
+          "logical_errors": 0,
+          "started": 3698.07111654,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23263,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5096006070002659,
+          "discarded_shots": 238881,
+          "ended": 3698.580724407,
+          "logical_errors": 0,
+          "started": 3698.07111595,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23095,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.49227248199986207,
+          "discarded_shots": 239049,
+          "ended": 3698.563395972,
+          "logical_errors": 0,
+          "started": 3698.07111453,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23091,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5457291750003606,
+          "discarded_shots": 239053,
+          "ended": 3698.616851425,
+          "logical_errors": 0,
+          "started": 3698.07111456,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23372,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.6558787799999664,
+          "discarded_shots": 238772,
+          "ended": 3698.72701125,
+          "logical_errors": 0,
+          "started": 3698.07111744,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23352,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.48036424999963856,
+          "discarded_shots": 238792,
+          "ended": 3698.55149006,
+          "logical_errors": 0,
+          "started": 3698.07111657,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23097,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5392196759999024,
+          "discarded_shots": 239047,
+          "ended": 3698.610342326,
+          "logical_errors": 0,
+          "started": 3698.07111454,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22972,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5086115509998308,
+          "discarded_shots": 239172,
+          "ended": 3698.579735541,
+          "logical_errors": 0,
+          "started": 3698.07111473,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22763,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.46671977799996966,
+          "discarded_shots": 239381,
+          "ended": 3698.537851488,
+          "logical_errors": 0,
+          "started": 3698.07112067,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23122,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5174086540000644,
+          "discarded_shots": 239022,
+          "ended": 3698.588537324,
+          "logical_errors": 0,
+          "started": 3698.07111996,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22952,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5749832520000382,
+          "discarded_shots": 239192,
+          "ended": 3698.646111012,
+          "logical_errors": 0,
+          "started": 3698.07111987,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23157,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4783138080001663,
+          "discarded_shots": 238987,
+          "ended": 3698.549442558,
+          "logical_errors": 0,
+          "started": 3698.07112007,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22816,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.49252459399986037,
+          "discarded_shots": 239328,
+          "ended": 3698.563652844,
+          "logical_errors": 0,
+          "started": 3698.07112003,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23261,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5329769180002586,
+          "discarded_shots": 238883,
+          "ended": 3698.604104498,
+          "logical_errors": 0,
+          "started": 3698.07112027,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23161,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5464753400001428,
+          "discarded_shots": 238983,
+          "ended": 3698.61760313,
+          "logical_errors": 0,
+          "started": 3698.07111963,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23074,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.54254429599996,
+          "discarded_shots": 239070,
+          "ended": 3698.613672356,
+          "logical_errors": 0,
+          "started": 3698.07112031,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22836,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.6271852069999113,
+          "discarded_shots": 239308,
+          "ended": 3698.698308697,
+          "logical_errors": 0,
+          "started": 3698.07111627,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22870,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5497015390001252,
+          "discarded_shots": 239274,
+          "ended": 3698.620826059,
+          "logical_errors": 0,
+          "started": 3698.07111665,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23123,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5019259900000179,
+          "discarded_shots": 239021,
+          "ended": 3698.573050181,
+          "logical_errors": 0,
+          "started": 3698.0711159,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23108,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.45540673999994397,
+          "discarded_shots": 239036,
+          "ended": 3698.52653172,
+          "logical_errors": 0,
+          "started": 3698.07111621,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22983,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4500042370000301,
+          "discarded_shots": 239161,
+          "ended": 3698.521130247,
+          "logical_errors": 0,
+          "started": 3698.0711165,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22867,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4811186350002572,
+          "discarded_shots": 239277,
+          "ended": 3698.552244535,
+          "logical_errors": 0,
+          "started": 3698.07111675,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23007,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5027332949998709,
+          "discarded_shots": 239137,
+          "ended": 3698.573854715,
+          "logical_errors": 0,
+          "started": 3698.07111389,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23012,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4204871090000779,
+          "discarded_shots": 239132,
+          "ended": 3698.491612619,
+          "logical_errors": 0,
+          "started": 3698.071116,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23219,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5614143100001456,
+          "discarded_shots": 238925,
+          "ended": 3698.63253256,
+          "logical_errors": 0,
+          "started": 3698.07111169,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22818,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.4916358179998497,
+          "discarded_shots": 239326,
+          "ended": 3698.562763128,
+          "logical_errors": 0,
+          "started": 3698.07111733,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22652,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.46992871700012984,
+          "discarded_shots": 239492,
+          "ended": 3698.541055657,
+          "logical_errors": 0,
+          "started": 3698.07111569,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22745,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5816128919996117,
+          "discarded_shots": 239399,
+          "ended": 3698.652738572,
+          "logical_errors": 0,
+          "started": 3698.07111682,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23129,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5131903589999638,
+          "discarded_shots": 239015,
+          "ended": 3698.584314869,
+          "logical_errors": 0,
+          "started": 3698.07111556,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23111,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.6299208929999622,
+          "discarded_shots": 239033,
+          "ended": 3698.701044293,
+          "logical_errors": 0,
+          "started": 3698.07111527,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 23059,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.5132978189999449,
+          "discarded_shots": 239085,
+          "ended": 3698.584414089,
+          "logical_errors": 0,
+          "started": 3698.07110947,
+          "status": "sample"
+        },
+        {
+          "accepted_shots": 22985,
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "call_seconds": 0.7954534330001479,
+          "discarded_shots": 239159,
+          "ended": 3698.866569423,
+          "logical_errors": 0,
+          "started": 3698.07110937,
+          "status": "sample"
+        }
+      ]
+    }
+  ]
+}

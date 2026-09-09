@@ -1,0 +1,238 @@
+{
+  "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft",
+  "config": {
+    "batch_size": 256,
+    "sample_chunk_shots": 2048,
+    "shots_per_call": 17301504
+  },
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d",
+  "phase": "probe",
+  "runtime": [
+    {
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "metadata": {
+        "info": {
+          "active_components": false,
+          "backend": "batch",
+          "batch_mask_threshold_denominator": 2,
+          "batch_size": 256,
+          "detector_postselection": true,
+          "max_active_qubits": 7,
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observable_includes": 1,
+          "num_qubits": 26,
+          "observable": 0,
+          "reference_normalized": false,
+          "sample_chunk_shots": 2048,
+          "threads": 64
+        },
+        "num_detectors": 24,
+        "num_measurements": 33,
+        "num_observables": 1,
+        "num_qubits": 26,
+        "simd_backend": "avx512",
+        "threads": 64,
+        "tool": "symft",
+        "version": "0.1.1"
+      },
+      "pid": 413963,
+      "seed": 15783716215422258265,
+      "status": "ready"
+    }
+  ],
+  "samples": [
+    {
+      "accepted_shots": 19368393,
+      "api_calls": 3,
+      "attempted_shots": 51904512,
+      "discarded_shots": 32536119,
+      "duration_seconds": 1.4608304600001247,
+      "logical_errors": 0,
+      "scheduled_start": 3028.73776444,
+      "shots_per_call": 17301504,
+      "throughput_attempted_shots_per_second": 35530825.390918784,
+      "workers": [
+        {
+          "accepted_shots": 19368393,
+          "api_calls": 3,
+          "attempted_shots": 51904512,
+          "call_seconds": 1.4606347809990439,
+          "discarded_shots": 32536119,
+          "ended": 3030.198477649,
+          "logical_errors": 0,
+          "started": 3028.737827428,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 19371814,
+      "api_calls": 3,
+      "attempted_shots": 51904512,
+      "discarded_shots": 32532698,
+      "duration_seconds": 1.4675222389996634,
+      "logical_errors": 0,
+      "scheduled_start": 3030.219143093,
+      "shots_per_call": 17301504,
+      "throughput_attempted_shots_per_second": 35368807.79086572,
+      "workers": [
+        {
+          "accepted_shots": 19371814,
+          "api_calls": 3,
+          "attempted_shots": 51904512,
+          "call_seconds": 1.4673148599999877,
+          "discarded_shots": 32532698,
+          "ended": 3031.686532002,
+          "logical_errors": 0,
+          "started": 3030.219202571,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 19368302,
+      "api_calls": 3,
+      "attempted_shots": 51904512,
+      "discarded_shots": 32536210,
+      "duration_seconds": 1.4441227709999112,
+      "logical_errors": 0,
+      "scheduled_start": 3031.707225856,
+      "shots_per_call": 17301504,
+      "throughput_attempted_shots_per_second": 35941897.07573221,
+      "workers": [
+        {
+          "accepted_shots": 19368302,
+          "api_calls": 3,
+          "attempted_shots": 51904512,
+          "call_seconds": 1.443928661999962,
+          "discarded_shots": 32536210,
+          "ended": 3033.151228066,
+          "logical_errors": 0,
+          "started": 3031.707285264,
+          "status": "sample"
+        }
+      ]
+    }
+  ],
+  "status": "success",
+  "summary": {
+    "mad_attempted_shots_per_second": 162017.60005306453,
+    "median_attempted_shots_per_second": 35530825.390918784
+  },
+  "warmup": [
+    {
+      "accepted_shots": 3129742,
+      "api_calls": 1,
+      "attempted_shots": 8388608,
+      "discarded_shots": 5258866,
+      "duration_seconds": 0.2373237829997379,
+      "logical_errors": 0,
+      "scheduled_start": 3027.97089524,
+      "shots_per_call": 8388608,
+      "throughput_attempted_shots_per_second": 35346680.78339736,
+      "workers": [
+        {
+          "accepted_shots": 3129742,
+          "api_calls": 1,
+          "attempted_shots": 8388608,
+          "call_seconds": 0.2369894230000682,
+          "discarded_shots": 5258866,
+          "ended": 3028.207955561,
+          "logical_errors": 0,
+          "started": 3027.970956338,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 6459545,
+      "api_calls": 1,
+      "attempted_shots": 17301504,
+      "discarded_shots": 10841959,
+      "duration_seconds": 0.48838230000001204,
+      "logical_errors": 1,
+      "scheduled_start": 3028.228744266,
+      "shots_per_call": 17301504,
+      "throughput_attempted_shots_per_second": 35426148.73634768,
+      "workers": [
+        {
+          "accepted_shots": 6459545,
+          "api_calls": 1,
+          "attempted_shots": 17301504,
+          "call_seconds": 0.48817832200029443,
+          "discarded_shots": 10841959,
+          "ended": 3028.716989226,
+          "logical_errors": 1,
+          "started": 3028.228803644,
+          "status": "sample"
+        }
+      ]
+    }
+  ]
+}

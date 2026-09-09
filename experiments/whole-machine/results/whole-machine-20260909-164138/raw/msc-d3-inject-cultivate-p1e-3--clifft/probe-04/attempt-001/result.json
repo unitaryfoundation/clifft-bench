@@ -1,0 +1,232 @@
+{
+  "case_id": "msc-d3-inject-cultivate-p1e-3--clifft",
+  "config": {
+    "batch_size": 1024,
+    "sample_chunk_shots": 0,
+    "shots_per_call": 67108864
+  },
+  "exit_code": 0,
+  "fingerprint": "5afb5c41605ada491e678f7e53c58d8efce31bd36e174df5a1fa1a9879cecd1d",
+  "peak_process_tree_rss_bytes": 118763520,
+  "phase": "probe",
+  "runtime": [
+    {
+      "affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "metadata": {
+        "batch_size": 1024,
+        "cpu_baseline": "x86-64-v2",
+        "keep_records": false,
+        "num_detectors": 20,
+        "num_measurements": 21,
+        "num_observables": 1,
+        "num_qubits": 15,
+        "peak_active_width": 4,
+        "thread_layout": [
+          64,
+          1
+        ],
+        "threads": 64,
+        "tool": "clifft",
+        "version": "0.10.0rc1"
+      },
+      "pid": 22499,
+      "seed": 17654110159899520363,
+      "status": "ready"
+    }
+  ],
+  "samples": [
+    {
+      "accepted_shots": 138273954,
+      "api_calls": 3,
+      "attempted_shots": 201326592,
+      "discarded_shots": 63052638,
+      "duration_seconds": 1.1287596270000222,
+      "logical_errors": 117,
+      "scheduled_start": 757.5847411359999,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 178360908.01287672,
+      "workers": [
+        {
+          "accepted_shots": 138273954,
+          "api_calls": 3,
+          "attempted_shots": 201326592,
+          "call_seconds": 1.1286114169998882,
+          "discarded_shots": 63052638,
+          "ended": 758.713423463,
+          "logical_errors": 117,
+          "started": 757.584803436,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 138267593,
+      "api_calls": 3,
+      "attempted_shots": 201326592,
+      "discarded_shots": 63058999,
+      "duration_seconds": 1.1408820370000967,
+      "logical_errors": 125,
+      "scheduled_start": 758.7338497549999,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 176465739.20068035,
+      "workers": [
+        {
+          "accepted_shots": 138267593,
+          "api_calls": 3,
+          "attempted_shots": 201326592,
+          "call_seconds": 1.1407445350000671,
+          "discarded_shots": 63058999,
+          "ended": 759.874666051,
+          "logical_errors": 125,
+          "started": 758.733915096,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 138278539,
+      "api_calls": 3,
+      "attempted_shots": 201326592,
+      "discarded_shots": 63048053,
+      "duration_seconds": 1.1327904890000582,
+      "logical_errors": 124,
+      "scheduled_start": 759.895107264,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 177726237.95395377,
+      "workers": [
+        {
+          "accepted_shots": 138278539,
+          "api_calls": 3,
+          "attempted_shots": 201326592,
+          "call_seconds": 1.1326702189999196,
+          "discarded_shots": 63048053,
+          "ended": 761.027844803,
+          "logical_errors": 124,
+          "started": 759.895168554,
+          "status": "sample"
+        }
+      ]
+    }
+  ],
+  "status": "success",
+  "summary": {
+    "mad_attempted_shots_per_second": 634670.0589229465,
+    "median_attempted_shots_per_second": 177726237.95395377
+  },
+  "wall_seconds": 4.323627861999967,
+  "warmup": [
+    {
+      "accepted_shots": 23051867,
+      "api_calls": 1,
+      "attempted_shots": 33554432,
+      "discarded_shots": 10502565,
+      "duration_seconds": 0.18963719999999284,
+      "logical_errors": 18,
+      "scheduled_start": 756.98007632,
+      "shots_per_call": 33554432,
+      "throughput_attempted_shots_per_second": 176940136.2180061,
+      "workers": [
+        {
+          "accepted_shots": 23051867,
+          "api_calls": 1,
+          "attempted_shots": 33554432,
+          "call_seconds": 0.18951090000007298,
+          "discarded_shots": 10502565,
+          "ended": 757.1696546,
+          "logical_errors": 18,
+          "started": 756.9801388,
+          "status": "sample"
+        }
+      ]
+    },
+    {
+      "accepted_shots": 46094188,
+      "api_calls": 1,
+      "attempted_shots": 67108864,
+      "discarded_shots": 21014676,
+      "duration_seconds": 0.3742788910000172,
+      "logical_errors": 29,
+      "scheduled_start": 757.190050812,
+      "shots_per_call": 67108864,
+      "throughput_attempted_shots_per_second": 179301760.3015098,
+      "workers": [
+        {
+          "accepted_shots": 46094188,
+          "api_calls": 1,
+          "attempted_shots": 67108864,
+          "call_seconds": 0.37416376999999557,
+          "discarded_shots": 21014676,
+          "ended": 757.564279073,
+          "logical_errors": 29,
+          "started": 757.190111323,
+          "status": "sample"
+        }
+      ]
+    }
+  ]
+}
