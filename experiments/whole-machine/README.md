@@ -189,10 +189,21 @@ The finalizer checks the complete corpus and candidate coverage, selection,
 worker resources, counts, timing, and derived rates against raw evidence. It
 rejects development data, incomplete coverage, and reused output paths.
 Failures remain explicit rows with blank rates. The output under
-`results/EXECUTION_ID/` contains the raw evidence, metadata, summary, and
-`cases.csv`, including attempted shots per dollar. Copy that directory off the
-instance or commit it on a results branch before stopping the rental. Source
-changes and data publishing can be reviewed separately.
+`results/EXECUTION_ID/` contains four files:
+
+- `metadata.json`: unchanged collection provenance, settings, and circuit identities.
+- `raw.json`: every attempt's raw result and distinct request fields. Shared
+  request fields come from metadata; nonempty logs and incomplete attempts'
+  checkpoints are retained here too.
+- `summary.json`: candidate statuses, configurations, rates, and final selections.
+  Its `path` and `final_path` values identify entries in `raw.json`'s `attempts`
+  mapping. Raw measurements appear only in `raw.json`.
+- `cases.csv`: presentation-ready final rates, including attempted shots per dollar.
+
+Validation supports both this compact export and the original per-attempt spool
+layout. The spool retains its original files for resuming collection. Copy the
+export directory off the instance or commit it on a results branch before
+stopping the rental. Source changes and data publishing can be reviewed separately.
 
 ## Presentation caveats
 

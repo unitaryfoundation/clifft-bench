@@ -17,7 +17,7 @@ from whole_machine.common import (
     summarize,
     write,
 )
-from whole_machine.finalize import finalize, validate_execution, validate_result
+from whole_machine.finalize import expand_request, finalize, validate_execution, validate_result
 from whole_machine.run import DEFAULTS, attempt, choose, fingerprint, supervise
 from whole_machine.worker import Pool
 
@@ -316,12 +316,77 @@ def evidence(tmp_path):
 
 
 def test_finalize_recomputes_evidence_and_preserves_failures(evidence, tmp_path_factory):
-    validate_execution(evidence)
+    metadata, summary = validate_execution(evidence)
+    interrupted = read(evidence / summary["cases"][0]["final_path"])
+    req_path = (evidence / summary["cases"][0]["final_path"]).parent / "request.json"
+    request = read(req_path)
+    # Earlier retries and diagnostics need to survive even without a summary reference.
+    interrupted.update(status="interrupted", error="operator interrupted collection")
+    write(evidence / "earlier-attempt" / "request.json", request)
+    write(evidence / "earlier-attempt" / "result.json", interrupted)
+    (evidence / "earlier-attempt" / "worker.log").write_text("failure diagnostics\n")
+    write(evidence / "incomplete-attempt" / "request.json", request)
+    write(evidence / "incomplete-attempt" / "checkpoint.json", {"phase": "warmup"})
     target = finalize(evidence, "synthetic-test-only", tmp_path_factory.mktemp("export"))
-    assert (target / "cases.csv").exists()
-    assert len(read(target / "summary.json")["cases"]) == 20
+    assert {p.name for p in target.iterdir()} == {
+        "metadata.json", "raw.json", "summary.json", "cases.csv"
+    }
+    assert read(target / "metadata.json") == metadata
+    bundle = read(target / "raw.json")
+    requests = list(evidence.rglob("request.json"))
+    assert len(bundle["attempts"]) == len(requests)
+    for path in requests:
+        result_path = path.parent / "result.json"
+        entry = bundle["attempts"][result_path.relative_to(evidence).as_posix()]
+        assert expand_request(entry["request"], metadata) == read(path)
+        if result_path.exists():
+            assert entry["result"] == read(result_path)
+    assert bundle["attempts"]["earlier-attempt/result.json"]["log"] == "failure diagnostics\n"
+    assert bundle["attempts"]["incomplete-attempt/result.json"]["checkpoint"] == {"phase": "warmup"}
+    _, compact = validate_execution(target)
+    assert len(compact["cases"]) == 20
+    for before, after in zip(summary["cases"], compact["cases"], strict=True):
+        assert before["summary"] == after["summary"]
+        assert before["selected_candidate"] == after["selected_candidate"]
+        for probe in after["probes"]:
+            assert "samples" not in probe["result"] and "runtime" not in probe["result"]
     with pytest.raises(ValueError, match="destination exists"):
         finalize(evidence, "synthetic-test-only", target.parent)
+
+
+def test_finalize_rejects_lossy_request_compaction(evidence, tmp_path_factory):
+    request = read(next(evidence.rglob("request.json")))
+    request["extra_context"] = "must not be silently discarded"
+    write(evidence / "earlier-attempt" / "request.json", request)
+    with pytest.raises(ValueError, match="differing request context"):
+        finalize(evidence, "synthetic-test-only", tmp_path_factory.mktemp("export"))
+
+
+@pytest.mark.parametrize(
+    "corruption", ["missing-attempt", "seed", "counts", "probe-summary", "fingerprint"]
+)
+def test_compact_validation_rejects_changed_evidence(evidence, tmp_path_factory, corruption):
+    target = finalize(evidence, "synthetic-test-only", tmp_path_factory.mktemp("export"))
+    summary = read(target / "summary.json")
+    bundle = read(target / "raw.json")
+    final_path = summary["cases"][0]["final_path"]
+    entry = bundle["attempts"][final_path]
+    if corruption == "missing-attempt":
+        del bundle["attempts"][final_path]
+    elif corruption == "seed":
+        entry["request"]["seed"] += 1
+    elif corruption == "counts":
+        entry["result"]["samples"][0]["attempted_shots"] += 1
+    elif corruption == "probe-summary":
+        summary["cases"][0]["probes"][0]["result"]["summary"][
+            "median_attempted_shots_per_second"
+        ] *= 2
+    else:
+        bundle["fingerprint"] = "changed"
+    write(target / "raw.json", bundle)
+    write(target / "summary.json", summary)
+    with pytest.raises(ValueError):
+        validate_execution(target)
 
 
 @pytest.mark.parametrize(
