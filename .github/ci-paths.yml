@@ -1,0 +1,47 @@
+# Positive input lists keep archived experiment results out of simulator jobs.
+# Changes to CI itself exercise every job.
+test:
+  - '.github/workflows/ci.yml'
+  - '.github/ci-paths.yml'
+  - '**/*.py'
+  - 'pyproject.toml'
+  - 'uv.lock'
+  - 'experiments/qv/pyproject.toml'
+  - 'experiments/qv/uv.lock'
+  - 'schemas/**'
+  - 'manifests/**'
+  - 'campaigns/*/run.v1.json'
+  - 'examples/**'
+  - 'environments/**'
+  - 'workloads/circuits/**'
+  - 'scripts/ec2/**'
+  - 'docs/manual-ec2.md'
+  # Reporting tests read these checked-in sources and figures.
+  - 'reporting/sources.json'
+  - 'reporting/figures/**'
+  - 'results/**'
+  - 'experiments/qv/results/**'
+
+adapter-smoke:
+  - '.github/workflows/ci.yml'
+  - '.github/ci-paths.yml'
+  - 'src/**'
+  - 'pyproject.toml'
+  - 'uv.lock'
+  - 'environments/**'
+  - 'manifests/**'
+  - 'schemas/**'
+  - 'workloads/circuits/**'
+  - 'tests/test_reference_convention.py'
+  - 'tests/test_stim_adapter.py'
+  - 'tests/conftest.py'
+
+tsim-experiment:
+  - '.github/workflows/ci.yml'
+  - '.github/ci-paths.yml'
+  - 'experiments/tsim-gpu/tsim_gpu/**'
+  - 'experiments/tsim-gpu/tests/**'
+  - 'experiments/tsim-gpu/pyproject.toml'
+  - 'experiments/tsim-gpu/uv.lock'
+  - 'manifests/workloads.v1.json'
+  - 'workloads/circuits/**'
