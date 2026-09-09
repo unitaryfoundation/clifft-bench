@@ -80,3 +80,34 @@ jobs:
         env:
           JAX_PLATFORMS: cpu
         run: .venv/bin/python -m pytest -q
+
+  whole-machine-experiment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        id: python
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - name: Identify native build cache
+        id: native-cache
+        run: |
+          echo "path=$(uv cache dir)" >> "$GITHUB_OUTPUT"
+          fingerprint=$({ g++ --version; g++ -march=native -Q --help=target; } | sha256sum | cut -d ' ' -f 1)
+          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.native-cache.outputs.path }}
+          # No fallback key: SymFT's native wheel must match the CPU/compiler.
+          key: ${{ runner.os }}-${{ runner.arch }}-whole-machine-uv-${{ steps.python.outputs.python-version }}-${{ steps.native-cache.outputs.fingerprint }}-${{ hashFiles('experiments/whole-machine/pyproject.toml', 'experiments/whole-machine/uv.lock', '.github/workflows/ci.yml') }}
+      - name: Install the pinned CPU simulators
+        env:
+          SYMFT_PY_NATIVE: "1"
+          SYMFT_PY_ENABLE_CUDA: "0"
+        run: uv sync --project experiments/whole-machine --locked --python 3.12 --extra test
+      - name: Validate whole-machine APIs, accounting, and cleanup
+        working-directory: experiments/whole-machine
+        run: .venv/bin/python -m pytest -q
