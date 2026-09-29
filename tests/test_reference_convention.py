@@ -84,3 +84,47 @@ def test_logical_errors_use_raw_record_parity(
     assert counts.accepted_shots == 32
     assert counts.discarded_shots == 0
     assert counts.logical_errors == 32
+
+
+@pytest.mark.parametrize("batch_size", [1, 32])
+@pytest.mark.parametrize("search_budget", [16.0, None])
+def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
+    tmp_path, batch_size, search_budget,
+):
+    clifft = pytest.importorskip("clifft")
+    if not hasattr(clifft, "ActiveWidthSchedulePass"):
+        pytest.skip("this Clifft release predates active-width scheduling")
+    source = (
+        "R_PAULI(0.3) X0*X1\nZ_ERROR(0.3) 0\n"
+        "R_PAULI(0.3) Z0*Y1\nMPP Y0*Y1\nMPP Y0\n"
+    )
+    expected = sum(
+        weight * clifft.record_probabilities(
+            clifft.compile(source.replace("Z_ERROR(0.3) 0", replacement)),
+            ["00", "01", "10", "11"],
+        )
+        for weight, replacement in [(0.7, ""), (0.3, "Z 0")]
+    )
+    artifact = tmp_path / "noisy.stim"
+    artifact.write_text(source + "DETECTOR rec[-2]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    prepared = load_adapter("clifft").prepare(
+        artifact_path=artifact,
+        workload={"semantics": {
+            "observable_index": 0, "postselect_all_detectors": True,
+            "reference_convention": "raw-record-parity",
+        }},
+        execution={
+            "batch_enabled": batch_size > 1, "batch_size": batch_size,
+            "sample_chunk_shots": 0,
+            "clifft_scheduler": {"enabled": True, "search_budget": search_budget},
+        },
+    )
+    stats = prepared.runtime_metadata["scheduler_statistics"]
+    assert stats["applied"]
+    assert stats["result_peak"] < stats["incumbent_peak"]
+    counts = prepared.sample(32768, 27)
+    assert counts.attempted_shots == counts.accepted_shots + counts.discarded_shots
+    assert counts.accepted_shots / counts.attempted_shots == pytest.approx(
+        expected[0] + expected[1], abs=0.015
+    )
+    assert counts.logical_errors / counts.attempted_shots == pytest.approx(expected[1], abs=0.015)

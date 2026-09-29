@@ -250,6 +250,8 @@ def _record_runtime_execution(
     execution: dict[str, Any], runtime_metadata: dict[str, Any], shots_per_call: int
 ) -> None:
     execution["threads_effective"] = int(runtime_metadata["threads"])
+    if "clifft_scheduler" in runtime_metadata:
+        execution["clifft_scheduler"] = runtime_metadata["clifft_scheduler"]
     calibration = runtime_metadata.get("batch_calibration")
     if calibration is not None:
         execution["batch_size"] = int(calibration["selected_batch_size"])

@@ -34,6 +34,14 @@ raw results or release manifest.
 
 Individual samples remain only in raw JSON. Plotting and reports should consume
 the long-form CSV tables rather than add another checked-in data representation.
+
+Newly finalized tables append compiler evidence without changing existing
+column positions. `cases.csv` includes `clifft_scheduler` (a JSON object for
+Clifft, blank for other tools), `compile_seconds`, `peak_active_width`, and
+`batch_calibration_seconds`. `comparisons.csv` includes both sides' compiler
+configuration, compilation time, and peak width. Missing costs in older raw
+records remain blank; omitted Clifft scheduler settings mean disabled. Full
+search counters and per-candidate calibration evidence remain in raw JSON.
 Plots, tables, and prose use `simulator_display_version` in `cases.csv` and the
 corresponding `baseline_simulator_display_version` and
 `candidate_simulator_display_version` fields in `comparisons.csv`. The adjacent

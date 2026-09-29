@@ -141,6 +141,30 @@ compatible surface-code workload. Keeping the anchor separate preserves the
 existing Clifft/SymFT comparison identity and its downstream consumers. All
 three comparisons reuse the same collected current-Clifft cases.
 
+## Compiler configuration
+
+Clifft cases may explicitly enable `ActiveWidthSchedulePass` after the default
+compiler pipeline through `execution.clifft_scheduler`. Each workload selection
+may override execution keys from its variant; nested compiler configurations
+are replaced as a whole. An omitted scheduler setting means disabled. An
+explicit enabled setting requires a Clifft installation with that capability;
+unsupported requests fail rather than fall back.
+
+The tuned release configuration may differ per circuit. Compare scheduling off,
+the pinned default search, and deeper searches where warranted, calibrating
+batching independently for each profile. Select using measured sampling
+throughput, then collect fresh official samples. Keep circuit bytes, semantics,
+precision, resource limits, and public call size fixed. Record compilation and
+calibration cost separately, and retain equivalent tuning opportunities for
+the comparison implementations. See [Compiler tuning](compiler-tuning.md) for
+the commands, review procedure, and RC confirmation step.
+
+Raw execution records contain the fully resolved scheduler options. Runtime
+metadata also contains those options, whether the pass changed the schedule,
+its width/work estimates and search counters, and the final program's width.
+Finalization checks compiler configuration against the manifest and runtime
+metadata. Old records that omit the field continue to mean scheduling disabled.
+
 ## Stim compatibility and fast configuration
 
 Only `surface-code-d7-r7-p1e-3` is Stim-compatible in this QEC corpus. All other

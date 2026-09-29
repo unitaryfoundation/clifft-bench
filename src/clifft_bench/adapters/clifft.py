@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.compiler import scheduler_configuration
 
 
 class _PreparedClifft(PreparedAdapter):
@@ -55,6 +56,17 @@ class ClifftAdapter(Adapter):
             )
         import clifft
 
+        scheduler_config = scheduler_configuration(execution)
+        scheduler = None
+        if scheduler_config["enabled"]:
+            if not hasattr(clifft, "ActiveWidthSchedulePass"):
+                raise ValueError(
+                    "this Clifft installation does not support active-width scheduling"
+                )
+            scheduler = clifft.ActiveWidthSchedulePass(
+                **{key: value for key, value in scheduler_config.items() if key != "enabled"}
+            )
+
         batch_enabled = bool(execution["batch_enabled"])
         requested_batch_size = execution["batch_size"]
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
@@ -88,7 +100,10 @@ class ClifftAdapter(Adapter):
 
         compile_started = time.perf_counter()
         hir = clifft.trace(circuit)
-        clifft.default_hir_pass_manager().run(hir)
+        manager = clifft.default_hir_pass_manager()
+        if scheduler is not None:
+            manager.add(scheduler)
+        manager.run(hir)
         mask = [1] * int(hir.num_detectors) if postselect else []
         program = clifft.lower(hir, postselection_mask=mask)
         # The bytecode pass API exists through 0.7. Clifft 0.8 replaced that
@@ -131,7 +146,16 @@ class ClifftAdapter(Adapter):
             "sampling_backend": str(clifft.svm_backend())
             if hasattr(clifft, "svm_backend")
             else "symbolic-coordinate",
+            "clifft_scheduler": scheduler_config,
         }
+        if scheduler is not None:
+            metadata["scheduler_statistics"] = {
+                name: getattr(scheduler, name)
+                for name in (
+                    "applied", "incumbent_peak", "result_peak", "incumbent_dense_work",
+                    "result_dense_work", "swept_ops", "classification_probes",
+                )
+            }
         return _PreparedClifft(
             clifft,
             program,

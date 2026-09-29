@@ -5,10 +5,12 @@ from __future__ import annotations
 import hashlib
 import os
 import sys
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from clifft_bench.compiler import scheduler_configuration
 from clifft_bench.schema import SchemaValidationError, validate_path
 
 
@@ -93,7 +95,9 @@ def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
                     "workload_id": workload["workload_id"],
                     "implementation_id": variant["implementation_id"],
                     "shots_per_call": workload["shots_per_call"],
-                    "execution": dict(variant["execution"]),
+                    "execution": deepcopy({
+                        **variant["execution"], **workload.get("execution", {})
+                    }),
                 }
             )
     return definitions
@@ -172,6 +176,12 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"workload {workload_id!r}"
             )
         execution = definition["execution"]
+        if "clifft_scheduler" in execution:
+            if adapter != "clifft":
+                raise SchemaValidationError(
+                    f"case {identifier!r} requests Clifft compiler options for {adapter!r}"
+                )
+            scheduler_configuration(execution)
         if execution["batch_size"] == "calibrate":
             if execution["mode"] != "throughput":
                 raise SchemaValidationError(

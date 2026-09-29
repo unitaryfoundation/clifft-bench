@@ -62,6 +62,13 @@ relative-only figure. No rates are reconstructed from rounded labels or ratios.
 
 ## Refresh after an RC campaign
 
+For a tuned compiler release, follow [Compiler tuning](../docs/compiler-tuning.md)
+before collecting the final campaign. Include a per-circuit configuration table
+with the release figures, using the appended compiler and cost columns in the
+finalized CSVs. Label headline results as tuned single-core throughput; preserve
+the exact RC identity in the evidence. Changing scheduler settings does not
+change workload identity or shot counts.
+
 First edit [`sources.json`](sources.json). Append the newly reviewed
 `results/release-v1/<execution-id>` path to `release_executions` in release
 order. Replace an entry only when it points to a corrected execution; do not

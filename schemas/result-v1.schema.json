@@ -13,6 +13,20 @@
     "cases": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/case"}}
   },
   "$defs": {
+    "clifftScheduler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "beam_width": {"type": "integer", "minimum": 1},
+        "search_budget": {"type": ["number", "null"], "minimum": 0},
+        "noise_transparent": {"type": "boolean"},
+        "sink_neutral_rotations": {"type": "boolean"}
+      },
+      "if": {"properties": {"enabled": {"const": false}}},
+      "then": {"maxProperties": 1}
+    },
     "nullableString": {"type": ["string", "null"]},
     "counts": {
       "type": "object",
@@ -181,7 +195,8 @@
             "min_sample_seconds": {"type": "number", "exclusiveMinimum": 0},
             "request_timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
             "repetitions": {"type": "integer", "minimum": 1},
-            "postselection": {"type": "boolean"}
+            "postselection": {"type": "boolean"},
+            "clifft_scheduler": {"$ref": "#/$defs/clifftScheduler"}
           },
           "additionalProperties": false
         },
