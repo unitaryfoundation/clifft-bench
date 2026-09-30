@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import os
 import sys
 from dataclasses import dataclass
@@ -172,6 +173,14 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"workload {workload_id!r}"
             )
         execution = definition["execution"]
+        if "clifft_scheduler" in execution:
+            if adapter != "clifft":
+                raise SchemaValidationError(
+                    f"case {identifier!r} requests Clifft compiler options for {adapter!r}"
+                )
+            budget = execution["clifft_scheduler"]["search_budget"]
+            if budget is not None and not math.isfinite(budget):
+                raise SchemaValidationError("clifft_scheduler search_budget must be finite or null")
         if execution["batch_size"] == "calibrate":
             if execution["mode"] != "throughput":
                 raise SchemaValidationError(

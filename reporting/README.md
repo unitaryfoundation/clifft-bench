@@ -62,6 +62,10 @@ relative-only figure. No rates are reconstructed from rounded labels or ratios.
 
 ## Refresh after an RC campaign
 
+Finalized CSVs record the
+[compiler configuration](../docs/benchmark-contract.md#compiler-configuration)
+and compilation costs; retain the exact RC identity in the evidence.
+
 First edit [`sources.json`](sources.json). Append the newly reviewed
 `results/release-v1/<execution-id>` path to `release_executions` in release
 order. Replace an entry only when it points to a corrected execution; do not

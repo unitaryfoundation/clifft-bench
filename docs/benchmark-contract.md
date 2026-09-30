@@ -141,6 +141,29 @@ compatible surface-code workload. Keeping the anchor separate preserves the
 existing Clifft/SymFT comparison identity and its downstream consumers. All
 three comparisons reuse the same collected current-Clifft cases.
 
+## Compiler configuration
+
+Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
+pipeline. When pinning a scheduler-capable RC, set `clifft-current.execution`
+to the checked-in
+[`clifft-scheduled-execution.json`](../campaigns/release-v1/clifft-scheduled-execution.json).
+Use the same settings across the release workloads. The four pass options must
+be explicit; the benchmark supplies no defaults. Omit `clifft_scheduler` to
+disable scheduling. Unsupported installations fail when the pass is requested.
+
+With `execution` set to that JSON object, the public Python configuration is:
+
+```python
+manager = clifft.default_hir_pass_manager()
+manager.add(clifft.ActiveWidthSchedulePass(**execution["clifft_scheduler"]))
+manager.run(hir)
+```
+
+Raw execution records contain the explicit scheduler options. Runtime metadata
+records whether the pass changed the schedule, its width/work estimates and
+search counters, compilation time, and the final program's width. Finalization
+requires scheduler statistics for successful cases that requested the pass.
+
 ## Stim compatibility and fast configuration
 
 Only `surface-code-d7-r7-p1e-3` is Stim-compatible in this QEC corpus. All other

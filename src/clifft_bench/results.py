@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import json
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
@@ -53,6 +54,9 @@ CASE_FIELDS = [
     "max_attempted_shots_per_second",
     "total_attempted_shots",
     "total_duration_seconds",
+    "clifft_scheduler",
+    "compile_seconds",
+    "peak_active_width",
 ]
 
 COMPARISON_FIELDS = [
@@ -164,6 +168,7 @@ def _case_rows(
             common = _common_row(suite, execution_id, result, case)
             error = case.get("error") or {}
             summary = case.get("summary") or {}
+            metadata = (case.get("setup") or {}).get("runtime_metadata", {})
             case_rows.append(
                 {
                     **common,
@@ -187,6 +192,12 @@ def _case_rows(
                     ),
                     "total_attempted_shots": summary.get("total_attempted_shots", 0),
                     "total_duration_seconds": summary.get("total_duration_seconds", ""),
+                    "clifft_scheduler": (
+                        json.dumps(case["execution"]["clifft_scheduler"], sort_keys=True)
+                        if "clifft_scheduler" in case["execution"] else ""
+                    ),
+                    "compile_seconds": metadata.get("compile_seconds", ""),
+                    "peak_active_width": metadata.get("peak_active_width", ""),
                 }
             )
     return case_rows
@@ -393,7 +404,16 @@ def _validate_execution(
         if set(observed_case_ids) != expected_case_ids:
             raise ValueError("raw result does not contain every declared campaign case")
         for case in result["cases"]:
-            _validate_calibration_record(expected_cases[case["case_id"]], case)
+            expected = expected_cases[case["case_id"]]
+            if (
+                "clifft_scheduler" in expected.definition["execution"]
+                and case["status"] == "success"
+            ):
+                metadata = (case.get("setup") or {}).get("runtime_metadata", {})
+                statistics = metadata.get("scheduler_statistics")
+                if not isinstance(statistics, dict) or type(statistics.get("applied")) is not bool:
+                    raise ValueError(f"raw case {expected.id!r} is missing scheduler statistics")
+            _validate_calibration_record(expected, case)
             observed_memory_limit = case["execution"].get("memory_limit_bytes")
             if observed_memory_limit != expected_memory_limit_bytes:
                 raise ValueError(

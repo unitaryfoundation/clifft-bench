@@ -109,6 +109,17 @@
     }
   },
   "$defs": {
+    "clifftScheduler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["beam_width", "search_budget", "noise_transparent", "sink_neutral_rotations"],
+      "properties": {
+        "beam_width": {"type": "integer", "minimum": 1},
+        "search_budget": {"type": ["number", "null"], "minimum": 0},
+        "noise_transparent": {"type": "boolean"},
+        "sink_neutral_rotations": {"type": "boolean"}
+      }
+    },
     "execution": {
       "type": "object",
       "additionalProperties": false,
@@ -122,7 +133,8 @@
             {"const": "calibrate"}
           ]
         },
-        "sample_chunk_shots": {"type": "integer", "minimum": 0}
+        "sample_chunk_shots": {"type": "integer", "minimum": 0},
+        "clifft_scheduler": {"$ref": "#/$defs/clifftScheduler"}
       }
     },
     "workloadSelection": {
