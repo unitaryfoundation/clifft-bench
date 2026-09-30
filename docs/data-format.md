@@ -37,10 +37,9 @@ the long-form CSV tables rather than add another checked-in data representation.
 
 `cases.csv` includes `clifft_scheduler` (the pass options as JSON when enabled,
 otherwise blank), `compile_seconds`, and `peak_active_width`.
-`comparisons.csv` includes both sides' compiler
-configuration, compilation time, and peak width. Missing costs in older raw
-records remain blank; omitted Clifft scheduler settings mean disabled. Full
-search counters and calibration timings remain in raw JSON.
+Missing costs in older raw records remain blank; omitted Clifft scheduler
+settings mean disabled. Full search counters and calibration timings remain
+in raw JSON.
 
 Plots, tables, and prose use `simulator_display_version` in `cases.csv` and the
 corresponding `baseline_simulator_display_version` and

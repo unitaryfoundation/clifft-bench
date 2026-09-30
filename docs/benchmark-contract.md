@@ -159,17 +159,10 @@ manager.add(clifft.ActiveWidthSchedulePass(**execution["clifft_scheduler"]))
 manager.run(hir)
 ```
 
-Compare scheduling on and off with the existing runner and batch calibration,
-keeping workload inputs fixed. Confirm on the published RC wheel before the
-official campaign. Compilation and calibration are setup costs, separate from
-steady-state throughput. A calibrated scheduler-off run is not an out-of-box
-measurement.
-
-Raw execution records contain the explicit scheduler options. Runtime
-metadata also contains those options, whether the pass changed the schedule,
-its width/work estimates and search counters, and the final program's width.
-Finalization checks compiler configuration against the manifest and runtime
-metadata.
+Raw execution records contain the explicit scheduler options. Runtime metadata
+records whether the pass changed the schedule, its width/work estimates and
+search counters, compilation time, and the final program's width. Finalization
+requires scheduler statistics for successful cases that requested the pass.
 
 ## Stim compatibility and fast configuration
 

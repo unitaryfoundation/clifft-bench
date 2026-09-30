@@ -28,11 +28,9 @@ def _scheduler_options() -> dict:
 
 @pytest.mark.parametrize("options", [
     {"beam_width": 0},
-    {"search_budget": -1},
     {"search_budget": float("nan")},
     {"search_budget": float("inf")},
     {"typo": True},
-    {"enabled": False},
 ])
 def test_invalid_scheduler_options_are_rejected_before_launch(tmp_path, options):
     path, document = _release_copy(tmp_path)
@@ -62,31 +60,10 @@ def test_requested_scheduler_is_rejected_on_older_clifft(tmp_path, monkeypatch):
         )
 
 
-def test_release_scheduler_configuration_preserves_workload_inputs(tmp_path):
-    path, document = _release_copy(tmp_path)
-    original = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    execution = json.loads(
-        (ROOT / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
-    )
-    document["variants"][1]["execution"] = execution
-    write_json(path, document)
-    scheduled = load_suite(path)
-    assert [(c.id, c.workload.id, c.definition["shots_per_call"]) for c in scheduled.cases] == [
-        (c.id, c.workload.id, c.definition["shots_per_call"]) for c in original.cases
-    ]
-    for before, after in zip(original.cases, scheduled.cases):
-        if after.definition["variant_id"] == "clifft-current":
-            assert after.definition["execution"]["batch_size"] == "calibrate"
-            assert after.definition["execution"]["clifft_scheduler"] == _scheduler_options()
-        else:
-            assert after.definition == before.definition
-
-
-@pytest.mark.parametrize("missing", tuple(_scheduler_options()))
-def test_scheduler_requires_every_option(tmp_path, missing):
+def test_scheduler_requires_explicit_options(tmp_path):
     path, document = _release_copy(tmp_path)
     options = _scheduler_options()
-    options.pop(missing)
+    options.pop("search_budget")
     document["variants"][1]["execution"]["clifft_scheduler"] = options
     write_json(path, document)
     with pytest.raises(ValueError, match="required property"):

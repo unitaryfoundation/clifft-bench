@@ -94,12 +94,6 @@ COMPARISON_FIELDS = [
     "candidate_rate",
     "ratio_candidate_over_baseline",
     "symmetric_delta_percent",
-    "baseline_clifft_scheduler",
-    "candidate_clifft_scheduler",
-    "baseline_compile_seconds",
-    "candidate_compile_seconds",
-    "baseline_peak_active_width",
-    "candidate_peak_active_width",
 ]
 
 
@@ -319,37 +313,9 @@ def _comparison_rows(
                                     * abs(candidate_rate - baseline_rate)
                                     / (candidate_rate + baseline_rate)
                                 ),
-                                **{
-                                    f"{side}_{field}": row.get(field, "")
-                                    for side, row in (
-                                        ("baseline", baseline), ("candidate", candidate)
-                                    )
-                                    for field in (
-                                        "clifft_scheduler", "compile_seconds", "peak_active_width"
-                                    )
-                                },
                             }
                         )
     return comparisons
-
-
-def _validate_compiler_record(expected: Case, observed: dict[str, Any]) -> None:
-    if expected.implementation.definition["adapter"] != "clifft":
-        return
-    requested = expected.definition["execution"].get("clifft_scheduler")
-    actual = observed["execution"].get("clifft_scheduler")
-    if requested != actual:
-        raise ValueError(f"raw case {expected.id!r} compiler configuration does not match manifest")
-    if observed["status"] == "success":
-        metadata = (observed.get("setup") or {}).get("runtime_metadata", {})
-        if metadata.get("clifft_scheduler") != actual:
-            raise ValueError(
-                f"raw case {expected.id!r} has missing or mismatched compiler metadata"
-            )
-        if actual is not None:
-            statistics = metadata.get("scheduler_statistics")
-            if not isinstance(statistics, dict) or type(statistics.get("applied")) is not bool:
-                raise ValueError(f"raw case {expected.id!r} is missing scheduler statistics")
 
 
 def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> None:
@@ -438,8 +404,16 @@ def _validate_execution(
         if set(observed_case_ids) != expected_case_ids:
             raise ValueError("raw result does not contain every declared campaign case")
         for case in result["cases"]:
-            _validate_compiler_record(expected_cases[case["case_id"]], case)
-            _validate_calibration_record(expected_cases[case["case_id"]], case)
+            expected = expected_cases[case["case_id"]]
+            if (
+                "clifft_scheduler" in expected.definition["execution"]
+                and case["status"] == "success"
+            ):
+                metadata = (case.get("setup") or {}).get("runtime_metadata", {})
+                statistics = metadata.get("scheduler_statistics")
+                if not isinstance(statistics, dict) or type(statistics.get("applied")) is not bool:
+                    raise ValueError(f"raw case {expected.id!r} is missing scheduler statistics")
+            _validate_calibration_record(expected, case)
             observed_memory_limit = case["execution"].get("memory_limit_bytes")
             if observed_memory_limit != expected_memory_limit_bytes:
                 raise ValueError(

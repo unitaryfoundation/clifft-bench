@@ -145,7 +145,6 @@ class ClifftAdapter(Adapter):
             else "symbolic-coordinate",
         }
         if scheduler is not None:
-            metadata["clifft_scheduler"] = scheduler_config
             metadata["scheduler_statistics"] = {
                 name: getattr(scheduler, name)
                 for name in (

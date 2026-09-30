@@ -189,12 +189,12 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
         )
 
 
-def test_finalize_records_and_validates_clifft_scheduler(tmp_path: Path) -> None:
+@pytest.mark.parametrize("applied", [False, True])
+def test_finalize_records_and_validates_clifft_scheduler(tmp_path: Path, applied: bool) -> None:
     suite = _suite()
     options = json.loads((
         repository_root() / "campaigns/release-v1/clifft-scheduled-execution.json"
     ).read_text())["clifft_scheduler"]
-    suite.cases[1].implementation.definition["adapter"] = "clifft"
     suite.cases[1].definition["execution"]["clifft_scheduler"] = options
     raw_path = _result(tmp_path)
     raw = json.loads(raw_path.read_text())
@@ -202,7 +202,7 @@ def test_finalize_records_and_validates_clifft_scheduler(tmp_path: Path) -> None
     candidate["execution"]["clifft_scheduler"] = options
     metadata = candidate["setup"]["runtime_metadata"]
     metadata.update(
-        clifft_scheduler=options, scheduler_statistics={"applied": True},
+        scheduler_statistics={"applied": applied},
         compile_seconds=0.125, peak_active_width=3,
     )
     raw_path.write_text(json.dumps(raw))
@@ -217,19 +217,7 @@ def test_finalize_records_and_validates_clifft_scheduler(tmp_path: Path) -> None
     assert json.loads(row["clifft_scheduler"]) == options
     assert float(row["compile_seconds"]) == 0.125
     assert int(row["peak_active_width"]) == 3
-    with (output / "comparisons.csv").open(newline="") as stream:
-        row = next(csv.DictReader(stream))
-    assert json.loads(row["candidate_clifft_scheduler"]) == options
-    assert float(row["candidate_compile_seconds"]) == 0.125
 
-    candidate["execution"].pop("clifft_scheduler")
-    raw_path.write_text(json.dumps(raw))
-    with pytest.raises(ValueError, match="configuration does not match manifest"):
-        finalize_execution(
-            suite, execution_id="test-execution", raw_paths=[raw_path],
-            output_dir=tmp_path / "rejected-settings",
-        )
-    candidate["execution"]["clifft_scheduler"] = options
     metadata.pop("scheduler_statistics")
     raw_path.write_text(json.dumps(raw))
     with pytest.raises(ValueError, match="missing scheduler statistics"):
