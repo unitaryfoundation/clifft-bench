@@ -260,8 +260,8 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
     history_versions = tuple(
         dict.fromkeys(row["simulator_display_version"] for row in history_rows)
     )
-    # Archived executions retain retired workloads; every plotted version uses
-    # the same core so a corpus change cannot move the aggregate by itself.
+    # Every plotted version must use the same core so differing source coverage
+    # cannot create an apparent performance change.
     history_rows = [row for row in history_rows if row["workload_id"] in WORKLOAD_ORDER]
     history_rates = _median_rates(
         history_rows,
