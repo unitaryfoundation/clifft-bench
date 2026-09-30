@@ -52,17 +52,17 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in ("clifft-previous", "clifft-current")
     }
     assert versions_by_variant == {
-        "clifft-previous": {"0.9.0"},
-        "clifft-current": {"0.10.0rc1"},
+        "clifft-previous": {"0.10.0rc1"},
+        "clifft-current": {"0.11.0rc1"},
     }
     candidate = next(
         case.implementation.definition
         for case in suite.cases
         if case.definition["variant_id"] == "clifft-current"
     )
-    assert candidate["version"] == "0.10.0rc1"
-    assert candidate["display_version"] == "0.10.0"
-    assert candidate["source_tag"] == "v0.10.0rc1"
+    assert candidate["version"] == "0.11.0rc1"
+    assert candidate["display_version"] == "0.11.0"
+    assert candidate["source_tag"] == "v0.11.0rc1"
 
     comparisons = {item["id"]: item for item in suite.run["comparisons"]}
     assert comparisons == {
@@ -212,8 +212,8 @@ def test_official_implementations_require_unique_python_variables(
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     software = copy.deepcopy(suite.software_document)
     implementations = {item["id"]: item for item in software["implementations"]}
-    implementations["clifft-0.9.0"]["python_executable_env"] = implementations[
-        "clifft-0.10.0rc1"
+    implementations["clifft-0.10.0rc1"]["python_executable_env"] = implementations[
+        "clifft-0.11.0rc1"
     ]["python_executable_env"]
     for implementation in implementations.values():
         environment = implementation.get("environment")
