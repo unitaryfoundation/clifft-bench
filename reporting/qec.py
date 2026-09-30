@@ -797,6 +797,7 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     medians = report.history.medians
     symbolic_index = report.history.versions.index("0.8.0")
     packing_index = report.history.versions.index("0.10.0")
+    scheduling_index = report.history.versions.index("0.11.0")
     figure, axis = plt.subplots(figsize=(9.6, 3.8))
     axis.axhline(1, color=theme.muted, linewidth=1.2, linestyle=(0, (3, 3)))
     axis.plot(
@@ -839,6 +840,16 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
         xytext=(-72, 20),
         textcoords="offset points",
         ha="center",
+        color=theme.muted,
+        fontsize=10,
+        arrowprops={"arrowstyle": "-", "color": theme.grid, "linewidth": 1},
+    )
+    axis.annotate(
+        "scheduling\n+ sampling",
+        (positions[scheduling_index], medians[scheduling_index]),
+        xytext=(8, -65),
+        textcoords="offset points",
+        ha="right",
         color=theme.muted,
         fontsize=10,
         arrowprops={"arrowstyle": "-", "color": theme.grid, "linewidth": 1},
