@@ -7,6 +7,8 @@ import statistics
 import struct
 from pathlib import Path
 
+import pytest
+
 from clifft_bench.manifest import load_suite
 from clifft_bench.results import COMPARISON_FIELDS
 from clifft_bench.results import _comparison_rows as collect_comparisons
@@ -23,6 +25,90 @@ def _source_document() -> dict:
 def _comparison_rows(execution: Path) -> list[dict[str, str]]:
     with (execution / "comparisons.csv").open(newline="") as stream:
         return list(csv.DictReader(stream))
+
+
+def _write_rows(path: Path, rows: list[dict[str, str]]) -> None:
+    with path.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+@pytest.fixture
+def copied_sources(tmp_path: Path) -> Path:
+    document = _source_document()
+    history = ROOT / document["history_execution"]
+    history_copy = tmp_path / history.name
+    history_copy.mkdir()
+    (history_copy / "cases.csv").write_bytes((history / "cases.csv").read_bytes())
+    document["history_execution"] = str(history_copy)
+    releases = []
+    for relative in document["release_executions"]:
+        source = ROOT / relative
+        destination = tmp_path / source.name
+        destination.mkdir()
+        for name in ("comparisons.csv", "index.json"):
+            (destination / name).write_bytes((source / name).read_bytes())
+        releases.append(str(destination))
+    document["release_executions"] = releases
+    path = tmp_path / "sources.json"
+    path.write_text(json.dumps(document))
+    return path
+
+
+def test_reporting_selects_the_release_core_from_archived_results(copied_sources: Path) -> None:
+    expected = build_report(SOURCES)
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    core = {case.workload.id for case in suite.cases}
+    assert len(core) == 6
+    assert set(WORKLOAD_ORDER) == core
+    assert set(expected.history.speedups) == core
+    assert expected.history.medians == tuple(
+        statistics.median(values) for values in zip(*expected.history.speedups.values())
+    )
+
+    document = json.loads(copied_sources.read_text())
+    paths = [Path(document["history_execution"]) / "cases.csv"] + [
+        Path(execution) / "comparisons.csv" for execution in document["release_executions"]
+    ]
+    archived_extras = set()
+    for path in paths:
+        with path.open(newline="") as stream:
+            rows = list(csv.DictReader(stream))
+        archived_extras.update({row["workload_id"] for row in rows} - core)
+        _write_rows(path, [row for row in rows if row["workload_id"] in core])
+    assert archived_extras == {
+        "coherent-surface-d3-r1-p1e-3-rz2e-2",
+        "coherent-surface-d5-r1-p1e-3-rz2e-2",
+    }
+
+    # A future six-workload execution and the archived eight-workload evidence
+    # must produce the same view when the shared measurements are identical.
+    assert build_report(copied_sources) == expected
+
+
+@pytest.mark.parametrize("section", ["history", "current-vs-previous", "alternatives-vs-current"])
+def test_reporting_rejects_missing_core_measurements(copied_sources: Path, section: str) -> None:
+    document = json.loads(copied_sources.read_text())
+    if section == "history":
+        path = Path(document["history_execution"]) / "cases.csv"
+    else:
+        path = Path(document["release_executions"][-1]) / "comparisons.csv"
+    with path.open(newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    _write_rows(path, [
+        row for row in rows
+        if not (
+            row["workload_id"] == "coherent-surface-d3-r3-p1e-3-rz2e-2"
+            and (
+                row["simulator_display_version"] == "0.5.0"
+                if section == "history" else row["comparison_id"] == section
+            )
+        )
+    ])
+
+    with pytest.raises(ValueError, match="does not cover the reporting core"):
+        build_report(copied_sources)
 
 
 def test_reporting_chains_calibrated_release_onto_scalar_history() -> None:
@@ -141,7 +227,7 @@ def test_reporting_exposes_release_comparison_and_qv_source() -> None:
     assert report.qv_execution == Path(source_document["qv_execution"]).name
     assert len(report.release_points) == len(WORKLOAD_ORDER)
     release_points = {point.workload_id: point for point in report.release_points}
-    assert release_points["coherent-surface-d3-r1-p1e-3-rz2e-2"].current_packed
+    assert release_points["distillation-color-code-85q-p5e-2"].current_packed
     assert not release_points["coherent-surface-d5-r5-p1e-3-rz2e-2"].current_packed
 
 

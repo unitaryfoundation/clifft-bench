@@ -18,6 +18,13 @@ The joins validate execution identities, workload coverage, equal per-workload
 shot counts, the release chain, and reuse of the same current Clifft cases in
 both release comparisons.
 
+QEC figures use the recurring campaign's
+[workload set](../docs/benchmark-contract.md#release-workload-selection) for
+historical medians, release ratios, and cross-tool comparisons. Every selected
+version and comparison must cover the full set. Source executions may contain
+additional workloads; reporting selects the current set without modifying the
+archived evidence.
+
 ## Publication figures
 
 The paper-style QEC figures remain in `figures/`. Generate them from the

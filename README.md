@@ -24,7 +24,7 @@ Plot labels show the intended release version; the measurements used 0.10.0rc1.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/v010-vs-v009-dark.png">
-  <img src="reporting/figures/web/v010-vs-v009-light.png" alt="Clifft 0.10.0 throughput relative to 0.9.0 across eight near-Clifford workloads">
+  <img src="reporting/figures/web/v010-vs-v009-light.png" alt="Clifft 0.10.0 throughput relative to 0.9.0 across QEC workloads">
 </picture>
 
 ### How does Clifft compare with other simulators?

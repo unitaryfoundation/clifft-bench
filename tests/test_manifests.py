@@ -30,8 +30,8 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 25
-    assert len({case.id for case in suite.cases}) == 25
+    assert len(suite.cases) == 19
+    assert len({case.id for case in suite.cases}) == 19
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
@@ -91,7 +91,7 @@ def test_release_manifest_expands_named_variants() -> None:
         ]
         for variant_id in ("clifft-previous", "clifft-current", "symft-current")
     }
-    assert all(len(cases) == 8 for cases in calibrated_by_variant.values())
+    assert all(len(cases) == 6 for cases in calibrated_by_variant.values())
     for cases in calibrated_by_variant.values():
         assert all(
             case.definition["execution"]["batch_enabled"] is True
@@ -128,9 +128,7 @@ def test_release_manifest_expands_named_variants() -> None:
         ("msc-d5-inject-cultivate-p1e-3", 20000),
         ("distillation-color-code-85q-p5e-2", 100000),
         ("surface-code-d7-r7-p1e-3", 100000),
-        ("coherent-surface-d3-r1-p1e-3-rz2e-2", 100000),
         ("coherent-surface-d3-r3-p1e-3-rz2e-2", 100000),
-        ("coherent-surface-d5-r1-p1e-3-rz2e-2", 10000),
         ("coherent-surface-d5-r5-p1e-3-rz2e-2", 1),
     }
     assert all(
