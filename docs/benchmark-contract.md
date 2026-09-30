@@ -150,14 +150,12 @@ are replaced as a whole. An omitted scheduler setting means disabled. An
 explicit enabled setting requires a Clifft installation with that capability;
 unsupported requests fail rather than fall back.
 
-The tuned release configuration may differ per circuit. Compare scheduling off,
-the pinned default search, and deeper searches where warranted, calibrating
-batching independently for each profile. Select using measured sampling
-throughput, then collect fresh official samples. Keep circuit bytes, semantics,
-precision, resource limits, and public call size fixed. Record compilation and
-calibration cost separately, and retain equivalent tuning opportunities for
-the comparison implementations. See [Compiler tuning](compiler-tuning.md) for
-the commands, review procedure, and RC confirmation step.
+Use the [recommended compiler configuration](compiler-configuration.md), with
+per-workload overrides only for clear, repeatable throughput improvements.
+Compare configurations with the existing runner and calibrate batching for
+each. Keep circuit bytes, semantics, precision, resources, and shots per call
+fixed. Compilation and calibration are setup costs, recorded separately from
+steady-state throughput.
 
 Raw execution records contain the fully resolved scheduler options. Runtime
 metadata also contains those options, whether the pass changed the schedule,

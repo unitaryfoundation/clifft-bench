@@ -11,8 +11,7 @@ from typing import Sequence
 from clifft_bench.manifest import load_suite
 from clifft_bench.results import finalize_execution
 from clifft_bench.runner import run_suite
-from clifft_bench.schema import SchemaValidationError, repository_root, validate_path, write_json
-from clifft_bench.tuning import tuning_manifest, tuning_summary
+from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
 DEFAULT_RUN_MANIFEST = Path("manifests/run-smoke.v1.json")
 
@@ -47,16 +46,6 @@ def _parser() -> argparse.ArgumentParser:
     finalize.add_argument("--execution-id", required=True)
     finalize.add_argument("--output-dir", required=True, type=Path)
     finalize.add_argument("results", nargs="+", type=Path)
-
-    tuning = commands.add_parser("tuning-manifest", help="prepare Clifft compiler-profile trials")
-    tuning.add_argument("--run-manifest", type=Path, required=True)
-    tuning.add_argument("--variant", required=True)
-    tuning.add_argument("--output", type=Path, required=True)
-
-    summary = commands.add_parser("tuning-summary", help="propose per-workload compiler settings")
-    summary.add_argument("--run-manifest", type=Path, required=True)
-    summary.add_argument("--output", type=Path, required=True)
-    summary.add_argument("result", type=Path)
 
     return parser
 
@@ -173,16 +162,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _run(args)
         if args.command == "finalize":
             return _finalize(args)
-        if args.command in {"tuning-manifest", "tuning-summary"}:
-            suite = load_suite(_resolve(args.run_manifest))
-            if args.command == "tuning-manifest":
-                document = tuning_manifest(suite, args.variant, args.output.resolve())
-            else:
-                raw_path = _resolve(args.result)
-                document = tuning_summary(suite, validate_path(raw_path), raw_path)
-            write_json(args.output.resolve(), document)
-            print(f"Written: {args.output.resolve()}")
-            return 0
         raise AssertionError(f"unhandled command {args.command!r}")
     except (SchemaValidationError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)

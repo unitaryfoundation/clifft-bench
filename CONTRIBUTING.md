@@ -32,11 +32,9 @@ Clifford surface-code circuit.
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 
-For releases with active-width scheduling, follow
-[Compiler tuning](docs/compiler-tuning.md) to compare compiler profiles with
-independent batch calibration and review per-workload overrides before the
-official run. Pilot the harness on a recorded development build before tagging;
-confirm the configurations on the exact published RC wheel.
+Use the [recommended compiler configuration](docs/compiler-configuration.md)
+for releases with active-width scheduling. Confirm it on the published RC wheel
+before collecting the official campaign.
 
 For a new Clifft release:
 
