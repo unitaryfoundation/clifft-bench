@@ -52,7 +52,7 @@
   "variants": [
     {
       "id": "clifft-previous",
-      "implementation_id": "clifft-0.9.0",
+      "implementation_id": "clifft-0.10.0rc1",
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,
@@ -70,12 +70,18 @@
     },
     {
       "id": "clifft-current",
-      "implementation_id": "clifft-0.10.0rc1",
+      "implementation_id": "clifft-0.11.0rc1",
       "execution": {
         "mode": "throughput",
         "batch_enabled": true,
         "batch_size": "calibrate",
-        "sample_chunk_shots": 0
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
       },
       "workloads": [
         {"workload_id": "msc-d3-inject-cultivate-p1e-3", "shots_per_call": 100000},
