@@ -114,7 +114,7 @@ def test_reporting_rejects_missing_core_measurements(copied_sources: Path, secti
 def test_reporting_chains_calibrated_release_onto_scalar_history() -> None:
     report = build_report(SOURCES)
 
-    assert report.history.versions[:10] == (
+    assert report.history.versions == (
         "0.1.0",
         "0.2.0",
         "0.3.0",
@@ -125,10 +125,12 @@ def test_reporting_chains_calibrated_release_onto_scalar_history() -> None:
         "0.8.0",
         "0.9.0",
         "0.10.0",
+        "0.11.0",
     )
-    assert report.history.source_executions[8:10] == (
+    assert report.history.source_executions[8:] == (
         "clifft-history-v1-20260902",
         "release-v1-20260903-133252",
+        "release-v1-20260930-180134",
     )
     assert set(report.history.speedups) == set(WORKLOAD_ORDER)
     assert all(
@@ -184,7 +186,7 @@ def test_release_loader_accepts_current_campaign_with_stim_anchor(tmp_path: Path
     source = ROOT / _source_document()["release_executions"][-1]
     expected = _load_release(source)
     with (source / "cases.csv").open(newline="") as stream:
-        cases = list(csv.DictReader(stream))
+        cases = [row for row in csv.DictReader(stream) if row["variant_id"] != "stim-current"]
     surface = "surface-code-d7-r7-p1e-3"
     template = next(
         row for row in cases
@@ -201,7 +203,7 @@ def test_release_loader_accepts_current_campaign_with_stim_anchor(tmp_path: Path
         "median_attempted_shots_per_second": "1000000",
     })
     # Use the real producer and active manifest so putting Stim back into the
-    # SymFT comparison makes this fail, even though archived results lack Stim.
+    # SymFT comparison makes this fail, whether or not the source already has Stim.
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     rows = collect_comparisons(suite, source.name, cases)
     execution = tmp_path / source.name
@@ -252,12 +254,12 @@ def test_combined_throughput_uses_both_calibrated_absolute_rates() -> None:
             float(row["ratio_candidate_over_baseline"]) for row in selected
         )
 
-    near_tie = points["distillation-color-code-85q-p5e-2"]
-    assert round(near_tie.clifft_over_alternative, 2) == 1.05
+    near_tie = points["msc-d3-inject-cultivate-p1e-3"]
+    assert round(near_tie.clifft_over_alternative, 2) == 1.06
     outlier = points["coherent-surface-d5-r5-p1e-3-rz2e-2"]
-    assert round(outlier.clifft_rate) == 5819
-    assert round(outlier.alternative_rate) == 66
-    assert round(outlier.clifft_over_alternative, 1) == 87.7
+    assert round(outlier.clifft_rate) == 12893
+    assert round(outlier.alternative_rate) == 64
+    assert round(outlier.clifft_over_alternative, 1) == 200.9
 
 
 def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
@@ -270,8 +272,8 @@ def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
         "clifft-vs-symft-dark.png",
         "performance-over-time-light.png",
         "performance-over-time-dark.png",
-        "v010-vs-v009-light.png",
-        "v010-vs-v009-dark.png",
+        "v011-vs-v010-light.png",
+        "v011-vs-v010-dark.png",
     }
 
 

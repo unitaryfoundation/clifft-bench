@@ -50,7 +50,7 @@ The web-ready, transparent light/dark figures are checked in under
   relative to calibrated SymFT. This optional pair remains available here but
   is not consumed by Clifft's documentation.
 - `performance-over-time-{light,dark}.png`: median Clifft speedup since v0.1.0.
-- `v010-vs-v009-{light,dark}.png`: current release throughput relative to the
+- `v011-vs-v010-{light,dark}.png`: current release throughput relative to the
   previous release, retaining packed/scalar marker fill.
 - `quantum-volume-{light,dark}.png`: median execution time for Clifft, Qiskit
   Aer, qsim, and Qulacs from the selected QV execution.
@@ -80,8 +80,9 @@ uv run --extra report python reporting/qec.py --check
 uv run --extra report python reporting/qec.py --style web
 ```
 
-Regenerate the QV pair from the exact `qv_execution` selected in
-`sources.json`. For the currently selected execution, run:
+The QV pair remains based on the reviewed 0.10.0rc1 execution; the QEC release
+campaign does not provide new Quantum Volume measurements. To regenerate that
+pair from the exact `qv_execution` selected in `sources.json`, run:
 
 ```bash
 cd experiments/qv
@@ -119,7 +120,7 @@ CLIFFT_CHECKOUT=/path/to/clifft
 cp reporting/figures/web/clifft-throughput-{light,dark}.png \
   reporting/figures/web/clifft-symft-throughput-{light,dark}.png \
   reporting/figures/web/performance-over-time-{light,dark}.png \
-  reporting/figures/web/v010-vs-v009-{light,dark}.png \
+  reporting/figures/web/v011-vs-v010-{light,dark}.png \
   reporting/figures/web/quantum-volume-{light,dark}.png \
   "$CLIFFT_CHECKOUT/docs/assets/performance/"
 ```
@@ -131,7 +132,7 @@ absolute-throughput figure, while the guide uses the new combined figure. Do not
 copy the optional relative-only `clifft-vs-symft` pair.
 Review both light and dark variants
 in the Clifft pull request. For a later release pair, update the release-specific
-`v010-vs-v009` output stem and its Clifft references as part of that release's
+`v011-vs-v010` output stem and its Clifft references as part of that release's
 report refresh.
 
 ## How the QEC history is combined
