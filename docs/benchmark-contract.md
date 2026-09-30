@@ -143,25 +143,33 @@ three comparisons reuse the same collected current-Clifft cases.
 
 ## Compiler configuration
 
-Clifft cases may explicitly enable `ActiveWidthSchedulePass` after the default
-compiler pipeline through `execution.clifft_scheduler`. Each workload selection
-may override execution keys from its variant; nested compiler configurations
-are replaced as a whole. An omitted scheduler setting means disabled. An
-explicit enabled setting requires a Clifft installation with that capability;
-unsupported requests fail rather than fall back.
+Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
+pipeline. When pinning a scheduler-capable RC, set `clifft-current.execution`
+to the checked-in
+[`clifft-scheduled-execution.json`](../campaigns/release-v1/clifft-scheduled-execution.json).
+Use the same settings across the release workloads. The four pass options must
+be explicit; the benchmark supplies no defaults. Omit `clifft_scheduler` to
+disable scheduling. Unsupported installations fail when the pass is requested.
 
-Use the [recommended compiler configuration](compiler-configuration.md), with
-per-workload overrides only for clear, repeatable throughput improvements.
-Compare configurations with the existing runner and calibrate batching for
-each. Keep circuit bytes, semantics, precision, resources, and shots per call
-fixed. Compilation and calibration are setup costs, recorded separately from
-steady-state throughput.
+With `execution` set to that JSON object, the public Python configuration is:
 
-Raw execution records contain the fully resolved scheduler options. Runtime
+```python
+manager = clifft.default_hir_pass_manager()
+manager.add(clifft.ActiveWidthSchedulePass(**execution["clifft_scheduler"]))
+manager.run(hir)
+```
+
+Compare scheduling on and off with the existing runner and batch calibration,
+keeping workload inputs fixed. Confirm on the published RC wheel before the
+official campaign. Compilation and calibration are setup costs, separate from
+steady-state throughput. A calibrated scheduler-off run is not an out-of-box
+measurement.
+
+Raw execution records contain the explicit scheduler options. Runtime
 metadata also contains those options, whether the pass changed the schedule,
 its width/work estimates and search counters, and the final program's width.
 Finalization checks compiler configuration against the manifest and runtime
-metadata. Old records that omit the field continue to mean scheduling disabled.
+metadata.
 
 ## Stim compatibility and fast configuration
 

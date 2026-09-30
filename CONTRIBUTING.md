@@ -32,17 +32,17 @@ Clifford surface-code circuit.
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 
-Use the [recommended compiler configuration](docs/compiler-configuration.md)
-for releases with active-width scheduling. Confirm it on the published RC wheel
-before collecting the official campaign.
-
 For a new Clifft release:
 
 1. Add its identity and install environment to
    [`manifests/software.v1.json`](manifests/software.v1.json).
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
+   Add the version to the adapter-smoke loop in [CI](.github/workflows/ci.yml)
+   so the real-Clifft scheduler tests run against the published RC.
 3. Point `clifft-current` at the new implementation and `clifft-previous` at
-   the prior release in the release manifest.
+   the prior release in the release manifest. For a scheduler-capable RC, set
+   `clifft-current.execution` to the checked-in
+   [scheduler configuration](campaigns/release-v1/clifft-scheduled-execution.json).
 4. Keep each workload's `shots_per_call` aligned across every variant and
    release. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.

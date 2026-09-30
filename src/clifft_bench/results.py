@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from clifft_bench.calibration import calibration_candidates
-from clifft_bench.compiler import scheduler_configuration
 from clifft_bench.manifest import Case, Suite
 from clifft_bench.schema import (
     SchemaValidationError,
@@ -58,7 +57,6 @@ CASE_FIELDS = [
     "clifft_scheduler",
     "compile_seconds",
     "peak_active_width",
-    "batch_calibration_seconds",
 ]
 
 COMPARISON_FIELDS = [
@@ -201,14 +199,11 @@ def _case_rows(
                     "total_attempted_shots": summary.get("total_attempted_shots", 0),
                     "total_duration_seconds": summary.get("total_duration_seconds", ""),
                     "clifft_scheduler": (
-                        json.dumps(scheduler_configuration(case["execution"]), sort_keys=True)
-                        if case["simulator"]["adapter"] == "clifft" else ""
+                        json.dumps(case["execution"]["clifft_scheduler"], sort_keys=True)
+                        if "clifft_scheduler" in case["execution"] else ""
                     ),
                     "compile_seconds": metadata.get("compile_seconds", ""),
                     "peak_active_width": metadata.get("peak_active_width", ""),
-                    "batch_calibration_seconds": metadata.get("batch_calibration", {}).get(
-                        "duration_seconds", ""
-                    ),
                 }
             )
     return case_rows
@@ -341,17 +336,17 @@ def _comparison_rows(
 def _validate_compiler_record(expected: Case, observed: dict[str, Any]) -> None:
     if expected.implementation.definition["adapter"] != "clifft":
         return
-    requested = scheduler_configuration(expected.definition["execution"])
-    actual = scheduler_configuration(observed["execution"])
+    requested = expected.definition["execution"].get("clifft_scheduler")
+    actual = observed["execution"].get("clifft_scheduler")
     if requested != actual:
         raise ValueError(f"raw case {expected.id!r} compiler configuration does not match manifest")
-    if observed["status"] == "success" and "clifft_scheduler" in observed["execution"]:
+    if observed["status"] == "success":
         metadata = (observed.get("setup") or {}).get("runtime_metadata", {})
         if metadata.get("clifft_scheduler") != actual:
             raise ValueError(
                 f"raw case {expected.id!r} has missing or mismatched compiler metadata"
             )
-        if actual["enabled"]:
+        if actual is not None:
             statistics = metadata.get("scheduler_statistics")
             if not isinstance(statistics, dict) or type(statistics.get("applied")) is not bool:
                 raise ValueError(f"raw case {expected.id!r} is missing scheduler statistics")

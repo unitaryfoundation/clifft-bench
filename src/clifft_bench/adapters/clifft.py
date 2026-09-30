@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
-from clifft_bench.compiler import scheduler_configuration
 
 
 class _PreparedClifft(PreparedAdapter):
@@ -56,16 +55,14 @@ class ClifftAdapter(Adapter):
             )
         import clifft
 
-        scheduler_config = scheduler_configuration(execution)
+        scheduler_config = execution.get("clifft_scheduler")
         scheduler = None
-        if scheduler_config["enabled"]:
+        if scheduler_config is not None:
             if not hasattr(clifft, "ActiveWidthSchedulePass"):
                 raise ValueError(
                     "this Clifft installation does not support active-width scheduling"
                 )
-            scheduler = clifft.ActiveWidthSchedulePass(
-                **{key: value for key, value in scheduler_config.items() if key != "enabled"}
-            )
+            scheduler = clifft.ActiveWidthSchedulePass(**scheduler_config)
 
         batch_enabled = bool(execution["batch_enabled"])
         requested_batch_size = execution["batch_size"]
@@ -146,9 +143,9 @@ class ClifftAdapter(Adapter):
             "sampling_backend": str(clifft.svm_backend())
             if hasattr(clifft, "svm_backend")
             else "symbolic-coordinate",
-            "clifft_scheduler": scheduler_config,
         }
         if scheduler is not None:
+            metadata["clifft_scheduler"] = scheduler_config
             metadata["scheduler_statistics"] = {
                 name: getattr(scheduler, name)
                 for name in (

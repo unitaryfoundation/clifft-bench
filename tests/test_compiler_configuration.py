@@ -7,7 +7,6 @@ from types import SimpleNamespace
 import pytest
 
 from clifft_bench.adapters.clifft import ClifftAdapter
-from clifft_bench.compiler import scheduler_configuration
 from clifft_bench.manifest import load_suite
 from clifft_bench.schema import repository_root, write_json
 
@@ -21,32 +20,23 @@ def _release_copy(tmp_path: Path) -> tuple[Path, dict]:
     return tmp_path / "release.json", document
 
 
-def test_workload_override_replaces_scheduler_and_preserves_other_execution_options(tmp_path):
-    path, document = _release_copy(tmp_path)
-    variant = document["variants"][1]
-    variant["execution"]["clifft_scheduler"] = {"enabled": True, "beam_width": 32}
-    variant["workloads"][0]["execution"] = {"clifft_scheduler": {"enabled": False}}
-    write_json(path, document)
-    cases = [c for c in load_suite(path).cases
-             if c.definition["variant_id"] == "clifft-current"]
-    assert scheduler_configuration(cases[0].definition["execution"]) == {"enabled": False}
-    assert scheduler_configuration(cases[1].definition["execution"])["beam_width"] == 32
-    assert all(c.definition["execution"]["batch_size"] == "calibrate" for c in cases)
-    cases[1].definition["execution"]["clifft_scheduler"]["beam_width"] = 1
-    assert cases[2].definition["execution"]["clifft_scheduler"]["beam_width"] == 32
+def _scheduler_options() -> dict:
+    return json.loads(
+        (ROOT / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
+    )["clifft_scheduler"]
 
 
 @pytest.mark.parametrize("options", [
-    {"enabled": True, "beam_width": 0},
-    {"enabled": True, "search_budget": -1},
-    {"enabled": True, "search_budget": float("nan")},
-    {"enabled": True, "search_budget": float("inf")},
-    {"enabled": True, "typo": True},
-    {"enabled": False, "beam_width": 8},
+    {"beam_width": 0},
+    {"search_budget": -1},
+    {"search_budget": float("nan")},
+    {"search_budget": float("inf")},
+    {"typo": True},
+    {"enabled": False},
 ])
 def test_invalid_scheduler_options_are_rejected_before_launch(tmp_path, options):
     path, document = _release_copy(tmp_path)
-    document["variants"][1]["workloads"][0]["execution"] = {"clifft_scheduler": options}
+    document["variants"][1]["execution"]["clifft_scheduler"] = {**_scheduler_options(), **options}
     write_json(path, document)
     with pytest.raises(ValueError):
         load_suite(path)
@@ -54,7 +44,7 @@ def test_invalid_scheduler_options_are_rejected_before_launch(tmp_path, options)
 
 def test_scheduler_options_cannot_be_silently_ignored_by_another_adapter(tmp_path):
     path, document = _release_copy(tmp_path)
-    document["variants"][2]["execution"]["clifft_scheduler"] = {"enabled": True}
+    document["variants"][2]["execution"]["clifft_scheduler"] = _scheduler_options()
     write_json(path, document)
     with pytest.raises(ValueError, match="Clifft compiler options"):
         load_suite(path)
@@ -68,7 +58,7 @@ def test_requested_scheduler_is_rejected_on_older_clifft(tmp_path, monkeypatch):
         ClifftAdapter().prepare(
             artifact_path=tmp_path / "unused.stim",
             workload={"semantics": {"reference_convention": "raw-record-parity"}},
-            execution={"clifft_scheduler": {"enabled": True}},
+            execution={"clifft_scheduler": _scheduler_options()},
         )
 
 
@@ -87,8 +77,17 @@ def test_release_scheduler_configuration_preserves_workload_inputs(tmp_path):
     for before, after in zip(original.cases, scheduled.cases):
         if after.definition["variant_id"] == "clifft-current":
             assert after.definition["execution"]["batch_size"] == "calibrate"
-            assert after.definition["execution"]["clifft_scheduler"] == scheduler_configuration(
-                {"clifft_scheduler": {"enabled": True}}
-            )
+            assert after.definition["execution"]["clifft_scheduler"] == _scheduler_options()
         else:
             assert after.definition == before.definition
+
+
+@pytest.mark.parametrize("missing", tuple(_scheduler_options()))
+def test_scheduler_requires_every_option(tmp_path, missing):
+    path, document = _release_copy(tmp_path)
+    options = _scheduler_options()
+    options.pop(missing)
+    document["variants"][1]["execution"]["clifft_scheduler"] = options
+    write_json(path, document)
+    with pytest.raises(ValueError, match="required property"):
+        load_suite(path)

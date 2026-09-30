@@ -222,7 +222,7 @@ def test_finalize_records_and_validates_clifft_scheduler(tmp_path: Path) -> None
     assert json.loads(row["candidate_clifft_scheduler"]) == options
     assert float(row["candidate_compile_seconds"]) == 0.125
 
-    candidate["execution"]["clifft_scheduler"] = {"enabled": False}
+    candidate["execution"].pop("clifft_scheduler")
     raw_path.write_text(json.dumps(raw))
     with pytest.raises(ValueError, match="configuration does not match manifest"):
         finalize_execution(

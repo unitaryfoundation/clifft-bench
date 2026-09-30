@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import os
 import sys
-from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.compiler import scheduler_configuration
 from clifft_bench.schema import SchemaValidationError, validate_path
 
 
@@ -95,9 +94,7 @@ def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
                     "workload_id": workload["workload_id"],
                     "implementation_id": variant["implementation_id"],
                     "shots_per_call": workload["shots_per_call"],
-                    "execution": deepcopy({
-                        **variant["execution"], **workload.get("execution", {})
-                    }),
+                    "execution": dict(variant["execution"]),
                 }
             )
     return definitions
@@ -181,7 +178,9 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 raise SchemaValidationError(
                     f"case {identifier!r} requests Clifft compiler options for {adapter!r}"
                 )
-            scheduler_configuration(execution)
+            budget = execution["clifft_scheduler"]["search_budget"]
+            if budget is not None and not math.isfinite(budget):
+                raise SchemaValidationError("clifft_scheduler search_budget must be finite or null")
         if execution["batch_size"] == "calibrate":
             if execution["mode"] != "throughput":
                 raise SchemaValidationError(

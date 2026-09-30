@@ -95,7 +95,6 @@ def _list(run_manifest: Path, as_json: bool) -> int:
                 "mode": case.definition["execution"]["mode"],
                 "batch_size": case.definition["execution"]["batch_size"],
                 "shots_per_call": case.definition["shots_per_call"],
-                "clifft_scheduler": case.definition["execution"].get("clifft_scheduler"),
             }
         )
     if as_json:
@@ -105,8 +104,7 @@ def _list(run_manifest: Path, as_json: bool) -> int:
             print(
                 f"{row['case_id']}: variant={row['variant']} workload={row['workload']} "
                 f"implementation={row['implementation']} mode={row['mode']} "
-                f"batch={row['batch_size']} shots/call={row['shots_per_call']} "
-                f"scheduler={row['clifft_scheduler']}"
+                f"batch={row['batch_size']} shots/call={row['shots_per_call']}"
             )
     return 0
 

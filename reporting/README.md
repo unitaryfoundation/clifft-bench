@@ -62,10 +62,9 @@ relative-only figure. No rates are reconstructed from rounded labels or ratios.
 
 ## Refresh after an RC campaign
 
-Report the [compiler configuration](../docs/compiler-configuration.md) alongside
-the results, including any per-workload overrides. Finalized CSVs record the
-settings and compilation costs. Scheduler-enabled results measure an opt-in
-configuration; retain the exact RC identity in the evidence.
+Finalized CSVs record the
+[compiler configuration](../docs/benchmark-contract.md#compiler-configuration)
+and compilation costs; retain the exact RC identity in the evidence.
 
 First edit [`sources.json`](sources.json). Append the newly reviewed
 `results/release-v1/<execution-id>` path to `release_executions` in release

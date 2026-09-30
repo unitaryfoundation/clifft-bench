@@ -4,7 +4,6 @@
   "batch_size": "calibrate",
   "sample_chunk_shots": 0,
   "clifft_scheduler": {
-    "enabled": true,
     "beam_width": 8,
     "search_budget": 16.0,
     "noise_transparent": true,

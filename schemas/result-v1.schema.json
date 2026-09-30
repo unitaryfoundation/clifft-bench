@@ -16,16 +16,13 @@
     "clifftScheduler": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["enabled"],
+      "required": ["beam_width", "search_budget", "noise_transparent", "sink_neutral_rotations"],
       "properties": {
-        "enabled": {"type": "boolean"},
         "beam_width": {"type": "integer", "minimum": 1},
         "search_budget": {"type": ["number", "null"], "minimum": 0},
         "noise_transparent": {"type": "boolean"},
         "sink_neutral_rotations": {"type": "boolean"}
-      },
-      "if": {"properties": {"enabled": {"const": false}}},
-      "then": {"maxProperties": 1}
+      }
     },
     "nullableString": {"type": ["string", "null"]},
     "counts": {

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -87,9 +88,8 @@ def test_logical_errors_use_raw_record_parity(
 
 
 @pytest.mark.parametrize("batch_size", [1, 32])
-@pytest.mark.parametrize("search_budget", [16.0, None])
 def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
-    tmp_path, batch_size, search_budget,
+    tmp_path, batch_size,
 ):
     clifft = pytest.importorskip("clifft")
     if not hasattr(clifft, "ActiveWidthSchedulePass"):
@@ -107,6 +107,9 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
     )
     artifact = tmp_path / "noisy.stim"
     artifact.write_text(source + "DETECTOR rec[-2]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    config_path = (Path(__file__).resolve().parents[1] /
+                   "campaigns/release-v1/clifft-scheduled-execution.json")
+    options = json.loads(config_path.read_text())["clifft_scheduler"]
     prepared = load_adapter("clifft").prepare(
         artifact_path=artifact,
         workload={"semantics": {
@@ -116,7 +119,7 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
         execution={
             "batch_enabled": batch_size > 1, "batch_size": batch_size,
             "sample_chunk_shots": 0,
-            "clifft_scheduler": {"enabled": True, "search_budget": search_budget},
+            "clifft_scheduler": options,
         },
     )
     stats = prepared.runtime_metadata["scheduler_statistics"]
