@@ -17,21 +17,23 @@ See the [Performance guide](https://unitaryfoundation.github.io/clifft/stable/gu
 for interpretation, methodology, and longer-term performance history.
 
 These figures use the reviewed
-[Clifft 0.10.0 release-candidate results](results/release-v1/release-v1-20260903-133252/).
-Plot labels show the intended release version; the measurements used 0.10.0rc1.
+[Clifft 0.11.0 release-candidate results](results/release-v1/release-v1-20260930-180134/).
+Plot labels show the intended release versions; the measurements used
+0.11.0rc1 with active-width scheduling and the 0.10.0rc1 baseline, with batch
+size calibrated independently for each workload and implementation.
 
 ### Did Clifft get faster in the latest release?
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/v010-vs-v009-dark.png">
-  <img src="reporting/figures/web/v010-vs-v009-light.png" alt="Clifft 0.10.0 throughput relative to 0.9.0 across QEC workloads">
+  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/v011-vs-v010-dark.png">
+  <img src="reporting/figures/web/v011-vs-v010-light.png" alt="Clifft 0.11.0 throughput relative to 0.10.0 across QEC workloads">
 </picture>
 
 ### How does Clifft compare with other simulators?
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/clifft-symft-throughput-dark.png">
-  <img src="reporting/figures/web/clifft-symft-throughput-light.png" alt="Clifft 0.10.0 and SymFT 0.1.0 attempted shots per second, with Clifft/SymFT speedup ratios for each workload">
+  <img src="reporting/figures/web/clifft-symft-throughput-light.png" alt="Clifft 0.11.0 and SymFT 0.1.1 attempted shots per second, with Clifft/SymFT speedup ratios for each workload">
 </picture>
 
 ## Reproduce or contribute

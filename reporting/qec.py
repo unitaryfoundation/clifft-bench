@@ -572,7 +572,7 @@ WEB_QEC_FIGURES = (
     "clifft-symft-throughput",
     "clifft-vs-symft",
     "performance-over-time",
-    "v010-vs-v009",
+    "v011-vs-v010",
 )
 
 
@@ -635,7 +635,7 @@ def _plot_web_ratios(
     xlabel: str,
     ticks: tuple[float, ...],
 ) -> None:
-    from matplotlib.ticker import FixedLocator, FuncFormatter
+    from matplotlib.ticker import FixedLocator, FuncFormatter, NullFormatter
 
     points.sort(key=lambda point: point[1])
     figure, axis = plt.subplots(figsize=(9.6, 4.5))
@@ -678,6 +678,7 @@ def _plot_web_ratios(
     axis.set_xlim(0.88, upper)
     axis.xaxis.set_major_locator(FixedLocator([tick for tick in ticks if tick <= upper]))
     axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:g}x"))
+    axis.xaxis.set_minor_formatter(NullFormatter())
     axis.set_yticks(
         positions,
         labels=[WORKLOAD_LABELS[workload] for workload, _ratio, _packed in points],
@@ -724,7 +725,7 @@ def _plot_web_release_comparison(
         ],
         output=output,
         xlabel=f"Clifft v{current} throughput relative to v{previous}",
-        ticks=(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000),
+        ticks=(1, 1.5, 2, 3, 5, 10, 20, 50, 100, 200, 500, 1000),
     )
 
 
@@ -794,6 +795,9 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
 
     positions = list(range(len(report.history.versions)))
     medians = report.history.medians
+    symbolic_index = report.history.versions.index("0.8.0")
+    packing_index = report.history.versions.index("0.10.0")
+    scheduling_index = report.history.versions.index("0.11.0")
     figure, axis = plt.subplots(figsize=(9.6, 3.8))
     axis.axhline(1, color=theme.muted, linewidth=1.2, linestyle=(0, (3, 3)))
     axis.plot(
@@ -812,7 +816,7 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     axis.annotate(
         f"{medians[-1]:.0f}x median speedup",
         (positions[-1], medians[-1]),
-        xytext=(-26, -22),
+        xytext=(0, 18),
         textcoords="offset points",
         ha="right",
         color=theme.blue,
@@ -822,7 +826,7 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     )
     axis.annotate(
         "symbolic plans",
-        (positions[-3], medians[-3]),
+        (positions[symbolic_index], medians[symbolic_index]),
         xytext=(0, 28),
         textcoords="offset points",
         ha="center",
@@ -832,7 +836,7 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
     )
     axis.annotate(
         "packing + compiler",
-        (positions[-1], medians[-1]),
+        (positions[packing_index], medians[packing_index]),
         xytext=(-72, 20),
         textcoords="offset points",
         ha="center",
@@ -840,9 +844,22 @@ def _plot_web_history(plt: Any, theme: WebTheme, report: Report, output: Path) -
         fontsize=10,
         arrowprops={"arrowstyle": "-", "color": theme.grid, "linewidth": 1},
     )
+    axis.annotate(
+        "scheduling\n+ sampling",
+        (positions[scheduling_index], medians[scheduling_index]),
+        xytext=(8, -65),
+        textcoords="offset points",
+        ha="right",
+        color=theme.muted,
+        fontsize=10,
+        arrowprops={"arrowstyle": "-", "color": theme.grid, "linewidth": 1},
+    )
     axis.set_yscale("log", base=2)
-    axis.set_ylim(0.72, 10.5)
-    axis.yaxis.set_major_locator(FixedLocator([1, 2, 4, 8]))
+    upper = max(10.5, max(medians) * 1.6)
+    axis.set_ylim(0.72, upper)
+    axis.yaxis.set_major_locator(
+        FixedLocator([2**power for power in range(math.floor(math.log2(upper)) + 1)])
+    )
     axis.yaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:g}x"))
     axis.set_xticks(
         positions,
@@ -972,7 +989,7 @@ def render_web(report: Report, output_dir: Path) -> list[Path]:
             plt, theme, report, output_dir / f"performance-over-time-{suffix}.png"
         )
         _plot_web_release_comparison(
-            plt, theme, report, output_dir / f"v010-vs-v009-{suffix}.png"
+            plt, theme, report, output_dir / f"v011-vs-v010-{suffix}.png"
         )
         _plot_web_combined_throughput(
             plt, theme, report, output_dir / f"clifft-symft-throughput-{suffix}.png"
