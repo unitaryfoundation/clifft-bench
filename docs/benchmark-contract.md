@@ -22,6 +22,23 @@ records, which the adapter reduces to the same counts; both materialization and
 reduction are included in its sampling time. This is a comparison of available
 aggregate endpoints, not identical internal work or a decoder benchmark.
 
+## Release workload selection
+
+The recurring release campaign and headline QEC figures use six workloads:
+cultivation d3 and d5, 85q distillation, Clifford surface code d7/r7, and
+coherent surface code d3/r3 and d5/r5.
+
+The coherent d3/r1 and d5/r1 circuits are excluded from this core. Their
+single-round Z rotations do not affect the measured outcomes, and active-width
+scheduling can reduce their non-Clifford work to zero. This is a useful compiler
+simplification case, but does not measure sustained coherent-noise simulation.
+The immutable circuit fixtures, workload identities, historical backfill, and
+archived results remain available for reproduction and compiler diagnostics.
+
+Reporting selects the same six workloads from every historical execution and
+recomputes the median at each version. Comparisons must not mix an older
+eight-workload aggregate with a newer six-workload aggregate.
+
 ## Timed boundaries
 
 | Phase | Timed as execution? |
@@ -125,7 +142,7 @@ using the capabilities available in each release. It applies calibration to
 both releases, allowing an older release without batching support to select
 scalar execution after unsupported candidates fail. The
 `alternatives-vs-current` comparison applies the same calibration policy to
-current Clifft and SymFT across all eight workloads. The separate
+current Clifft and SymFT across all six release workloads. The separate
 `stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
 compatible surface-code workload. Keeping the anchor separate preserves the
 existing Clifft/SymFT comparison identity and its downstream consumers. All

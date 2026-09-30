@@ -19,12 +19,15 @@ for interpretation, methodology, and longer-term performance history.
 These figures use the reviewed
 [Clifft 0.10.0 release-candidate results](results/release-v1/release-v1-20260903-133252/).
 Plot labels show the intended release version; the measurements used 0.10.0rc1.
+All QEC figures use the six-workload release core, including historical points.
+The single-round coherent circuits remain in the archived results but are
+excluded from these figures; see the [workload selection](docs/benchmark-contract.md#release-workload-selection).
 
 ### Did Clifft get faster in the latest release?
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/v010-vs-v009-dark.png">
-  <img src="reporting/figures/web/v010-vs-v009-light.png" alt="Clifft 0.10.0 throughput relative to 0.9.0 across eight near-Clifford workloads">
+  <img src="reporting/figures/web/v010-vs-v009-light.png" alt="Clifft 0.10.0 throughput relative to 0.9.0 across six near-Clifford workloads">
 </picture>
 
 ### How does Clifft compare with other simulators?

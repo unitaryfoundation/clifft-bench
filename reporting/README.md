@@ -18,6 +18,14 @@ The joins validate execution identities, workload coverage, equal per-workload
 shot counts, the release chain, and reuse of the same current Clifft cases in
 both release comparisons.
 
+The reporting core matches the six workloads in the recurring release campaign.
+The archived eight-workload executions are filtered to this same core before
+computing historical medians, release ratios, or cross-tool figures. Every
+selected version and release comparison must still cover all six workloads.
+The coherent d3/r1 and d5/r1 rows remain in the original evidence, but are no
+longer headline workloads because their non-Clifford work simplifies away;
+see the [workload selection](../docs/benchmark-contract.md#release-workload-selection).
+
 ## Publication figures
 
 The paper-style QEC figures remain in `figures/`. Generate them from the

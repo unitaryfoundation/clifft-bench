@@ -21,9 +21,7 @@ CURRENT_COMPARISON = "current-vs-previous"
 ALTERNATIVES_COMPARISON = "alternatives-vs-current"
 
 WORKLOAD_LABELS = {
-    "coherent-surface-d3-r1-p1e-3-rz2e-2": "Coherent d3, r1",
     "coherent-surface-d3-r3-p1e-3-rz2e-2": "Coherent d3, r3",
-    "coherent-surface-d5-r1-p1e-3-rz2e-2": "Coherent d5, r1",
     "coherent-surface-d5-r5-p1e-3-rz2e-2": "Coherent d5, r5",
     "distillation-color-code-85q-p5e-2": "85q distillation",
     "msc-d3-inject-cultivate-p1e-3": "Cultivation d3",
@@ -144,7 +142,10 @@ def _single_ints(
 def _select_comparison(
     rows: list[dict[str, str]], comparison_id: str, execution_id: str
 ) -> list[dict[str, str]]:
-    selected = [row for row in rows if row["comparison_id"] == comparison_id]
+    selected = [
+        row for row in rows
+        if row["comparison_id"] == comparison_id and row["workload_id"] in WORKLOAD_ORDER
+    ]
     if {row["workload_id"] for row in selected} != set(WORKLOAD_ORDER):
         raise ValueError(f"{execution_id} {comparison_id} does not cover the reporting core")
     if any(
@@ -259,11 +260,18 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
     history_versions = tuple(
         dict.fromkeys(row["simulator_display_version"] for row in history_rows)
     )
+    # Archived executions retain retired workloads; every plotted version uses
+    # the same core so a corpus change cannot move the aggregate by itself.
+    history_rows = [row for row in history_rows if row["workload_id"] in WORKLOAD_ORDER]
     history_rates = _median_rates(
         history_rows,
         ("workload_id", "simulator_display_version"),
         "median_attempted_shots_per_second",
     )
+    if set(history_rates) != {
+        (workload, version) for workload in WORKLOAD_ORDER for version in history_versions
+    }:
+        raise ValueError(f"history execution {history_path.name} does not cover the reporting core")
     history_shots = _single_ints(history_rows, "shots_per_call", "historical shots_per_call")
     releases = tuple(_load_release(path) for path in selected.releases)
     if any(release.shots_per_call != history_shots for release in releases):
