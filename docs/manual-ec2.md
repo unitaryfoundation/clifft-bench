@@ -110,16 +110,18 @@ jq -r '
 Confirm that `current-vs-previous` compares calibrated previous and current
 Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT.
 The separate `stim-anchor-vs-current` comparison contributes only the
-surface-code row; five non-Clifford release workloads are outside Stim's supported
-domain. The current campaign has 19 cases; the anchor reuses current Clifft's
-surface-code measurement.
+surface-code row; the five non-Clifford QEC workloads and the adder are outside
+Stim's supported domain. The campaign has 21 cases, including the two Clifft
+adder cases for the next 0.12.0rc-versus-0.11.0 collection; first complete the
+[release pin update](../CONTRIBUTING.md#preparing-a-release-campaign).
+The anchor reuses current Clifft's surface-code measurement.
 Within every row, confirm that baseline and candidate use the same
 `shots_per_call`.
 
 The bootstrap reads the new pinned SymFT source and Stim wheel environments from
 the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, Stim 1.16.0, and
 Stim's loaded native extension and chunk calibration in the raw setup metadata.
-Five 30-second samples across 19 cases require at least 47.5 minutes of sampling,
+Five 30-second samples across 21 cases require at least 52.5 minutes of sampling,
 plus setup/calibration and call overruns. The Tsim GPU study has separate
 [instructions](../experiments/tsim-gpu/README.md); do not run this CPU playbook
 on its GPU host.

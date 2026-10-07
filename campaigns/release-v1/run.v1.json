@@ -65,7 +65,8 @@
         {"workload_id": "distillation-color-code-85q-p5e-2", "shots_per_call": 100000},
         {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2", "shots_per_call": 100000},
-        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1}
+        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1},
+        {"workload_id": "draper-adder-m16-basis", "shots_per_call": 2048}
       ]
     },
     {
@@ -89,7 +90,8 @@
         {"workload_id": "distillation-color-code-85q-p5e-2", "shots_per_call": 100000},
         {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2", "shots_per_call": 100000},
-        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1}
+        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1},
+        {"workload_id": "draper-adder-m16-basis", "shots_per_call": 2048}
       ]
     },
     {
