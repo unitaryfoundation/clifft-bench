@@ -435,6 +435,52 @@
         "license": "Apache-2.0",
         "notes": "Generated with Qiskit 2.5.1 and seed 42; OBSERVABLE_INCLUDE(0) rec[-1] was appended to expose a shared aggregate output."
       }
+    },
+    {
+      "id": "draper-adder-m16-basis",
+      "family": "prepared-basis-arithmetic",
+      "description": "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise or postselection.",
+      "artifact": {
+        "path": "../workloads/circuits/draper_adder_16_basis.stim",
+        "sha256": "c62c0d7210be01315fbaad3ff6114c14524a40477c5246fe0ae65fae36b31289"
+      },
+      "dialect": "clifft-symft-extended-stim",
+      "angle_convention": "half-turns",
+      "parameters": {
+        "bits_per_operand": 16,
+        "input_a": 37449,
+        "input_b": 18724,
+        "output_a": 37449,
+        "output_b": 56173,
+        "mqt_bench_version": "2.3.0",
+        "qiskit_version": "2.5.2",
+        "optimization_level": 0
+      },
+      "semantics": {
+        "logical_work": "Execute the full prepared-basis-input adder once per attempted shot, preserving a and computing b=(a+b) mod 65536. Measure qubits 0..31 in order, with each 16-bit register little-endian; observable 0 is the raw parity of the two most significant sum bits and is zero. Reductions on these fixed basis inputs do not describe arbitrary superposition inputs.",
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "observable_index": 0,
+        "reference_convention": "raw-record-parity",
+        "postselect_all_detectors": false,
+        "throughput_numerator": "attempted shots",
+        "batch_semantics": "A batch repeats the same prepared-input circuit with independent shots; every attempted shot remains one complete addition."
+      },
+      "expected_metadata": {
+        "num_qubits": 32,
+        "num_measurements": 32,
+        "num_detectors": 0,
+        "num_observables": 1
+      },
+      "compatible_adapters": [
+        "clifft"
+      ],
+      "provenance": {
+        "source_url": "https://github.com/munich-quantum-toolkit/bench",
+        "source_commit": "2cd3f3b08d5d8866595948fbce955e701e86a5df",
+        "source_path": "src/mqt/bench/benchmarks/draper_qft_adder.py",
+        "license": "Apache-2.0",
+        "notes": "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0. The Apache-2.0 exported fixture was copied unchanged from tools/bench/fixtures/draper_adder_16_basis.stim in Clifft commit 037551a9b38258fe4f8465bcb4670e7f3e888d99."
+      }
     }
   ]
 }

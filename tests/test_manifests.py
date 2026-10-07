@@ -30,8 +30,8 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 19
-    assert len({case.id for case in suite.cases}) == 19
+    assert len(suite.cases) == 21
+    assert len({case.id for case in suite.cases}) == 21
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
@@ -91,7 +91,11 @@ def test_release_manifest_expands_named_variants() -> None:
         ]
         for variant_id in ("clifft-previous", "clifft-current", "symft-current")
     }
-    assert all(len(cases) == 6 for cases in calibrated_by_variant.values())
+    assert {variant: len(cases) for variant, cases in calibrated_by_variant.items()} == {
+        "clifft-previous": 7,
+        "clifft-current": 7,
+        "symft-current": 6,
+    }
     for cases in calibrated_by_variant.values():
         assert all(
             case.definition["execution"]["batch_enabled"] is True
@@ -131,10 +135,11 @@ def test_release_manifest_expands_named_variants() -> None:
         ("coherent-surface-d3-r3-p1e-3-rz2e-2", 100000),
         ("coherent-surface-d5-r5-p1e-3-rz2e-2", 1),
     }
-    assert all(
-        signature == expected_signature
-        for signature in signatures_by_variant.values()
-    )
+    assert signatures_by_variant["symft-current"] == expected_signature
+    for variant in ("clifft-previous", "clifft-current"):
+        assert signatures_by_variant[variant] == expected_signature | {
+            ("draper-adder-m16-basis", 2048),
+        }
 
 
 def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:

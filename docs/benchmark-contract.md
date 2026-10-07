@@ -24,13 +24,24 @@ aggregate endpoints, not identical internal work or a decoder benchmark.
 
 ## Release workload selection
 
-The recurring release campaign and QEC figures cover cultivation d3 and d5,
-85q distillation, Clifford surface code d7/r7, and coherent surface code d3/r3
+The QEC cases in the recurring release campaign and figures cover cultivation
+d3 and d5, 85q distillation, Clifford surface code d7/r7, and coherent surface code d3/r3
 and d5/r5. The coherent memory workloads use repeated syndrome-extraction
 rounds. One-off experiments define their own workload sets.
 
-Reporting uses this same workload set across all plotted releases and computes
-the median at each version.
+QEC reporting uses this same workload set across all plotted releases and
+computes the median at each version.
+
+The Clifft release comparison also includes `draper-adder-m16-basis`, a
+fixed-input 16-bit addition on 32 qubits without noise or postselection.
+Each attempted shot executes the entire addition. Its results describe prepared
+basis inputs and are reported separately from the historical QEC figures and medians.
+
+Use the existing `cases.csv` compilation and throughput columns when reporting
+the adder. For a stated shot count N, `compile_seconds + N / rate` estimates
+compilation plus steady-state sampling, where rate is
+`median_attempted_shots_per_second`. This estimate excludes parsing, calibration,
+and warmup; `setup_seconds` records the full measured setup separately.
 
 ## Timed boundaries
 

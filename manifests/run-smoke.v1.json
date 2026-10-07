@@ -19,6 +19,19 @@
   },
   "cases": [
     {
+      "id": "draper-adder-smoke-clifft",
+      "variant_id": "clifft-current",
+      "workload_id": "draper-adder-m16-basis",
+      "implementation_id": "clifft-0.11.0rc1",
+      "shots_per_call": 2,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
       "id": "msc-d3-smoke-clifft-calibrated",
       "variant_id": "clifft-current",
       "workload_id": "msc-d3-inject-cultivate-p1e-3",

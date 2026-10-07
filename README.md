@@ -8,6 +8,9 @@ This repository tracks Clifft's performance across releases and compares it
 with other simulators on the same workloads. It contains the benchmarks,
 reviewed results, and scripts that generate the figures below.
 
+The workloads include a Draper adder generated with
+[MQT Bench](https://github.com/munich-quantum-toolkit/bench).
+
 Looking to use Clifft? Start with the
 [Clifft documentation](https://unitaryfoundation.github.io/clifft/stable/).
 

@@ -59,7 +59,10 @@ def copied_sources(tmp_path: Path) -> Path:
 def test_reporting_selects_the_release_core_from_archived_results(copied_sources: Path) -> None:
     expected = build_report(SOURCES)
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    core = {case.workload.id for case in suite.cases}
+    core = {
+        case.workload.id for case in suite.cases
+        if case.workload.definition["family"] != "prepared-basis-arithmetic"
+    }
     assert len(core) == 6
     assert set(WORKLOAD_ORDER) == core
     assert set(expected.history.speedups) == core
