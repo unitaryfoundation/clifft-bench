@@ -43,5 +43,4 @@ size calibrated independently for each workload and implementation.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including
   [Quantum Volume comparisons](experiments/qv/README.md) and the
-  [Tsim GPU study](experiments/tsim-gpu/README.md), with results pushed back from the GPU host,
-  and the [whole-machine CPU comparison](experiments/whole-machine/README.md).
+  [Tsim GPU study](experiments/tsim-gpu/README.md), with results pushed back from the GPU host.
