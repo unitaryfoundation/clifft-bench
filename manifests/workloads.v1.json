@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/workloads/v1",
-  "suite_version": "0.2.3",
+  "suite_version": "0.2.4",
   "workloads": [
     {
       "id": "msc-d3-inject-cultivate-p1e-3",
@@ -483,6 +483,50 @@
         "source_path": "src/mqt/bench/benchmarks/draper_qft_adder.py",
         "license": "Apache-2.0",
         "notes": "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0. The Apache-2.0 exported fixture was copied unchanged from tools/bench/fixtures/draper_adder_16_basis.stim in Clifft commit 037551a9b38258fe4f8465bcb4670e7f3e888d99."
+      }
+    },
+    {
+      "id": "distillation-15to1-rm15-p1e-3",
+      "family": "magic-state-distillation",
+      "description": "15-to-1 [[15,1,3]] Reed-Muller T-state distillation with T-gate Z noise and ideal output verification.",
+      "artifact": {
+        "path": "../workloads/circuits/distillation_15to1_rm15_p1e-3.stim",
+        "sha256": "129448f2e283019fc181046ef8e65bd80f78d1001628c5a351eb9be113d686f4"
+      },
+      "dialect": "clifft-symft-extended-stim",
+      "angle_convention": "none",
+      "parameters": {
+        "code": "[[15,1,3]] quantum Reed-Muller",
+        "physical_error_rate": 0.001,
+        "noise_model": "independent Z after each physical T; ideal preparation, checks, and verification",
+        "readout": "inverse transversal T followed by logical X parity"
+      },
+      "semantics": {
+        "logical_work": "Execute 15-to-1 Reed-Muller distillation and ideal inverse-T logical-X verification; discard any of four X-check detector events and count observable-0 raw parity among survivors.",
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "observable_index": 0,
+        "reference_convention": "raw-record-parity",
+        "postselect_all_detectors": true,
+        "throughput_numerator": "attempted shots",
+        "batch_semantics": "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
+      },
+      "expected_metadata": {
+        "num_qubits": 15,
+        "num_measurements": 15,
+        "num_detectors": 4,
+        "num_observables": 1
+      },
+      "compatible_adapters": [
+        "clifft",
+        "symft",
+        "xtim"
+      ],
+      "provenance": {
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "source_commit": "29454071fb20fbcffd258559ad0644676e44a8f9",
+        "source_path": "examples/distillation_15_1_3.stim",
+        "license": "Apache-2.0",
+        "notes": "Preserve all source instructions except the two PAULI_EXPECTATION declarations; replace non-ASCII comments with this ASCII attribution header. Append T_DAG on qubits 0..14, MPP X0*...*X14, and OBSERVABLE_INCLUDE(0) rec[-1]. This ideal output verification supplies a deterministic noiseless measurement contract shared by all three simulators; it is not expectation-value/fidelity estimation."
       }
     }
   ]

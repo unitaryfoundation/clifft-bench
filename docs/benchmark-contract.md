@@ -38,6 +38,16 @@ fixed-input 16-bit addition on 32 qubits without noise or postselection.
 Each attempted shot executes the entire addition. Its results describe prepared
 basis inputs and are reported separately from the historical QEC figures and medians.
 
+The campaign also includes `distillation-15to1-rm15-p1e-3` for both Clifft
+releases, SymFT, and xtim. It retains xtim's 15-to-1 Reed-Muller preparation,
+T-gate phase noise at p=0.001, and four postselected X checks. An ideal inverse-T
+logical-X readout replaces expectation declarations so observable 0 measures
+accepted logical phase errors under the shared raw-parity contract. Preparation,
+checks, and verification are noiseless; the verification gates are timed.
+Its measurements are included in the finalized result tables. Plot selection is
+deferred until the next results are collected. See the
+[corpus notes](../workloads/README.md) for provenance and validation.
+
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates
 compilation plus steady-state sampling, where rate is
@@ -201,8 +211,8 @@ release wheel; the recorded extension identifies the SIMD implementation used.
 
 ## xtim comparison
 
-`xtim-vs-current` reuses the current Clifft cases on cultivation d3/d5 and
-Clifford surface code d7/r7. Unsupported rotations remain
+`xtim-vs-current` reuses the current Clifft cases on cultivation d3/d5,
+Clifford surface code d7/r7, and 15-to-1 distillation. Unsupported rotations remain
 outside xtim's domain.
 Separate comparison identities preserve the paired ratios in the result tables.
 The existing plots remain unchanged; presentation of the new results is deferred

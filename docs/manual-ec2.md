@@ -111,10 +111,10 @@ Confirm that `current-vs-previous` compares calibrated previous and current
 Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT.
 The separate `stim-anchor-vs-current` comparison contributes only the
 surface-code row; the five non-Clifford QEC workloads and the adder are outside
-Stim's supported domain. The campaign has 24 cases, including two Clifft
-adder cases.
+Stim's supported domain. The campaign has 28 cases, including two Clifft
+adder cases and four 15-to-1 distillation cases (two Clifft releases, SymFT, xtim).
 The anchor reuses current Clifft's surface-code measurement.
-`xtim-vs-current` reuses current Clifft on cultivation d3/d5 and surface code.
+`xtim-vs-current` reuses current Clifft on cultivation d3/d5, surface code, and 15-to-1.
 Check sampler setup timing and `peak_rss_bytes` in the raw samples, following
 the [xtim measurement policy](benchmark-contract.md#xtim-comparison).
 Within every row, confirm that baseline and candidate use the same
@@ -124,7 +124,7 @@ The bootstrap reads the new pinned SymFT source and Stim wheel environments from
 the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, xtim 3.1.4 at
 `2945407` with the manifest's portable build flags, Stim 1.16.0, and
 Stim's loaded native extension and chunk calibration in the raw setup metadata.
-Five 30-second samples across 24 cases require at least 60 minutes of sampling,
+Five 30-second samples across 28 cases require at least 70 minutes of sampling,
 plus setup/calibration and call overruns. The Tsim GPU study has separate
 [instructions](../experiments/tsim-gpu/README.md); do not run this CPU playbook
 on its GPU host.

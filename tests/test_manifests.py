@@ -30,8 +30,8 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 24
-    assert len({case.id for case in suite.cases}) == 24
+    assert len(suite.cases) == 28
+    assert len({case.id for case in suite.cases}) == 28
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
@@ -99,9 +99,9 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in ("clifft-previous", "clifft-current", "symft-current")
     }
     assert {variant: len(cases) for variant, cases in calibrated_by_variant.items()} == {
-        "clifft-previous": 7,
-        "clifft-current": 7,
-        "symft-current": 6,
+        "clifft-previous": 8,
+        "clifft-current": 8,
+        "symft-current": 7,
     }
     for cases in calibrated_by_variant.values():
         assert all(
@@ -135,6 +135,7 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in variant_ids
     }
     expected_signature = {
+        ("distillation-15to1-rm15-p1e-3", 100000),
         ("msc-d3-inject-cultivate-p1e-3", 100000),
         ("msc-d5-inject-cultivate-p1e-3", 20000),
         ("distillation-color-code-85q-p5e-2", 100000),
