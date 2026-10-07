@@ -343,7 +343,7 @@ def test_adapters_reject_unsupported_reference_convention(adapter, tmp_path: Pat
 def test_symft_verifies_installed_git_identity_even_for_same_version(monkeypatch, mismatch):
     import json
 
-    from clifft_bench.adapters import symft as module
+    from clifft_bench.adapters import _shared as module
 
     commit = "c" * 40
     direct_url = {

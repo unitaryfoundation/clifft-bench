@@ -6,8 +6,9 @@ This contract governs the official single-core QEC campaigns under
 ## Question and logical work
 
 For the same versioned circuit and output contract, how many independent
-attempted shots per second can a simulator execute in steady state on one
-pinned logical CPU?
+attempted shots per second can a simulator execute on one pinned logical CPU?
+The default is steady-state sampling. For xtim, report the fixed-duration average
+starting with an empty plan cache, as defined below.
 
 One attempted shot is one complete circuit execution. Each simulator returns
 aggregate counts for attempted shots, detector-postselected discards, accepted
@@ -17,7 +18,7 @@ uses attempted shots as the numerator.
 Every workload declares `reference_convention` as `raw-record-parity`.
 Detector events and logical errors are the XOR parity of their declared
 measurement records without a noiseless-reference correction. Clifft and SymFT
-return native aggregate counts. Stim's public detector sampler returns packed
+return native aggregate counts. Stim and xtim's public detector samplers return packed
 records, which the adapter reduces to the same counts; both materialization and
 reduction are included in its sampling time. This is a comparison of available
 aggregate endpoints, not identical internal work or a decoder benchmark.
@@ -49,6 +50,7 @@ and warmup; `setup_seconds` records the full measured setup separately.
 |---|---:|
 | Installation and import | No |
 | Parse, plan, compile, and sampler setup | No; recorded separately |
+| Lazy plan construction during sampling | Yes |
 | Warmup | No; recorded separately |
 | Correctness check | No; recorded separately |
 | Repeated sampling calls, transfer and aggregate reduction | Yes |
@@ -150,7 +152,7 @@ current Clifft and SymFT across the release workloads. The separate
 `stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
 compatible surface-code workload. Keeping the anchor separate preserves the
 existing Clifft/SymFT comparison identity and its downstream consumers. All
-three comparisons reuse the same collected current-Clifft cases.
+comparisons, including `xtim-vs-current`, reuse the same collected current-Clifft cases.
 
 ## Compiler configuration
 
@@ -196,6 +198,53 @@ disables AVX2 pending [Stim issue #432](https://github.com/quantumlib/Stim/issue
 Retain upstream's build configuration and select the best measured packed-record
 chunk size on the reference host. These measurements describe the official
 release wheel; the recorded extension identifies the SIMD implementation used.
+
+## xtim comparison
+
+`xtim-vs-current` reuses the current Clifft cases on cultivation d3/d5 and
+Clifford surface code d7/r7. Unsupported rotations remain
+outside xtim's domain.
+Separate comparison identities preserve the paired ratios in the result tables.
+The existing plots remain unchanged; presentation of the new results is deferred
+until collection and review.
+
+Use `compile_twirl_sampler(text, selfcheck=0, disk_cache=False)` and reseed
+in place once per harness call. Internal chunks continue that call's stream
+with `seed=None`. Do not use `Circuit.compile_detector_sampler()` for repeated
+calls: the pinned version replays its compile seed. Reject gauge/anti detectors,
+refused observables, and any declared observable not certified deterministic in
+the noiseless circuit. The pinned twirl API also requires a detector channel.
+`PAULI_EXPECTATION` is outside this suite's aggregate-count contract.
+
+The sampler returns reference-relative bits. Setup obtains an exact noiseless
+raw measurement trajectory from xtim and converts the declared record parities
+using Stim's record converter. The converter sees a layout-only copy with the
+extended unitary gates replaced by identities; all simulated physics comes from
+the original immutable circuit in xtim. The packed offsets are XORed into each
+sample before postselection. Metadata counts source qubits, with xtim's internal
+ancilla-expanded count recorded separately as `native_num_qubits`.
+
+Each repetition compiles a fresh sampler before timing, using the same
+`begin_sample` boundary as Stim. No plan cache carries over from warmup,
+correctness checks, calibration, or a previous repetition. Sampling retains the
+cache across calls within the normal 30-second measurement window; lazy plan
+construction is timed, while compilation is recorded as `stream_setup_seconds`.
+These rates describe a fixed-duration run starting with an empty cache, not
+established steady-state throughput. The final call can overrun the window.
+
+xtim has no public cache eviction API. Retain the existing 12 GiB address-space
+limit and check process peak RSS on the reference host. Raw samples record
+`peak_rss_bytes`, the worker's lifetime high-water mark including setup and
+calibration; `cases.csv` exposes its maximum. Resetting each repetition limits
+cache lifetime but does not guarantee a particular memory footprint. Chunk
+calibration uses the normal short probes and Stim's candidate sizes; its cache
+warmup horizon is shorter than the release measurement window.
+
+Pin xtim 3.1.4 to source commit `29454071fb20fbcffd258559ad0644676e44a8f9`.
+Use `QECCORE_PORTABLE=1` (`-O3 -funroll-loops`, without `-march=native`) to
+retain the portable build policy of Clifft's release wheels. Record
+`CXXFLAGS=-include cstdint`, the pinned source's GCC missing-include workaround.
+The adapter verifies the installed PEP 610 repository and commit before setup.
 
 ## Correctness and identity
 

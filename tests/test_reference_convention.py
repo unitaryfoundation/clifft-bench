@@ -30,7 +30,7 @@ def _prepare(
             "batch_size": 32,
             "sample_chunk_shots": 32,
         }
-    if adapter_name == "stim":
+    if adapter_name in {"stim", "xtim"}:
         execution["sample_chunk_shots"] = 0
     prepared = load_adapter(adapter_name).prepare(
         artifact_path=artifact_path,
@@ -47,7 +47,7 @@ def _prepare(
     return prepared
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim"])
 def test_detector_postselection_uses_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
@@ -67,14 +67,15 @@ def test_detector_postselection_uses_raw_record_parity(
     assert counts.logical_errors == 0
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim"])
 def test_logical_errors_use_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
     prepared = _prepare(
         adapter_name,
         tmp_path,
-        circuit="X 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
+        circuit=("X 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+                 + ("M 1\nDETECTOR rec[-1]\n" if adapter_name == "xtim" else "")),
         postselect=False,
     )
 

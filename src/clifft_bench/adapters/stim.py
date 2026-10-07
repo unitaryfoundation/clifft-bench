@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from clifft_bench.adapters._shared import PackedCountsReducer
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
 
 
@@ -15,11 +16,8 @@ class _PreparedStim(PreparedAdapter):
         import numpy as np
         import stim
 
-        self._np = np
         self._circuit = circuit
         self._chunk = chunk
-        self._postselect = postselect
-        self._observable = observable
         self._sampler = None
         # Stim returns flips relative to its reference trajectory. Convert that
         # reference to *raw* parity once, including nonzero deterministic bits.
@@ -27,10 +25,11 @@ class _PreparedStim(PreparedAdapter):
         det_ref, obs_ref = circuit.compile_m2d_converter(skip_reference_sample=True).convert(
             measurements=reference[None, :], separate_observables=True
         )
-        self._det_ref = np.packbits(det_ref, axis=1, bitorder="little")
-        self._obs_ref = np.packbits(obs_ref, axis=1, bitorder="little")
-        self._has_det_ref = bool(np.any(det_ref))
-        self._has_obs_ref = bool(np.any(obs_ref))
+        self._counts = PackedCountsReducer(
+            np.packbits(det_ref, axis=1, bitorder="little"),
+            np.packbits(obs_ref, axis=1, bitorder="little"),
+            observable=observable, postselect=postselect,
+        )
         self.runtime_metadata = {
             "name": "stim",
             "version": stim.__version__,
@@ -61,21 +60,15 @@ class _PreparedStim(PreparedAdapter):
         del seed
         if self._sampler is None:
             raise RuntimeError("Stim random stream must be initialized before timing")
-        np = self._np
         accepted = errors = 0
         for offset in range(0, shots, self._chunk):
             n = min(self._chunk, shots - offset)
             detectors, observables = self._sampler.sample(
                 n, separate_observables=True, bit_packed=True
             )
-            if self._has_det_ref:
-                detectors ^= self._det_ref
-            if self._has_obs_ref:
-                observables ^= self._obs_ref
-            keep = ~np.any(detectors, axis=1) if self._postselect else np.ones(n, dtype=bool)
-            accepted += int(np.count_nonzero(keep))
-            logical = (observables[:, self._observable // 8] >> (self._observable % 8)) & 1
-            errors += int(np.count_nonzero(logical[keep]))
+            kept, logical_errors = self._counts.count(detectors, observables)
+            accepted += kept
+            errors += logical_errors
         return Counts(shots, accepted, shots - accepted, errors)
 
 

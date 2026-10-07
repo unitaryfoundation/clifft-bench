@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/workloads/v1",
-  "suite_version": "0.2.2",
+  "suite_version": "0.2.3",
   "workloads": [
     {
       "id": "msc-d3-inject-cultivate-p1e-3",
@@ -37,7 +37,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "xtim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -82,7 +83,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "xtim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -126,7 +128,8 @@
       "compatible_adapters": [
         "clifft",
         "symft",
-        "stim"
+        "stim",
+        "xtim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
