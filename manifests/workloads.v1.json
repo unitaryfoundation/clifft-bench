@@ -475,11 +475,11 @@
         "clifft"
       ],
       "provenance": {
-        "source_url": "https://github.com/unitaryfoundation/clifft",
-        "source_commit": "037551a9b38258fe4f8465bcb4670e7f3e888d99",
-        "source_path": "tools/bench/fixtures/draper_adder_16_basis.stim",
+        "source_url": "https://github.com/munich-quantum-toolkit/bench",
+        "source_commit": "2cd3f3b08d5d8866595948fbce955e701e86a5df",
+        "source_path": "src/mqt/bench/benchmarks/draper_qft_adder.py",
         "license": "Apache-2.0",
-        "notes": "Byte-for-byte upstream fixture, generated with MQT Bench's fixed Draper QFT adder and Qiskit at optimization level 0. License retained in workloads/circuits/LICENSE-Clifft. Initially qualified for the Clifft release comparison only; other adapters are not included. Stim cannot represent the arbitrary-angle rotations."
+        "notes": "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0. The Apache-2.0 exported fixture was copied unchanged from tools/bench/fixtures/draper_adder_16_basis.stim in Clifft commit 037551a9b38258fe4f8465bcb4670e7f3e888d99."
       }
     }
   ]

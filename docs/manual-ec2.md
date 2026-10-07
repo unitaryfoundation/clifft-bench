@@ -111,9 +111,8 @@ Confirm that `current-vs-previous` compares calibrated previous and current
 Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT.
 The separate `stim-anchor-vs-current` comparison contributes only the
 surface-code row; the five non-Clifford QEC workloads and the adder are outside
-Stim's supported domain. The campaign has 21 cases, including the two Clifft
-adder cases for the next 0.12.0rc-versus-0.11.0 collection; first complete the
-[release pin update](../CONTRIBUTING.md#preparing-a-release-campaign).
+Stim's supported domain. The campaign has 21 cases, including two Clifft
+adder cases.
 The anchor reuses current Clifft's surface-code measurement.
 Within every row, confirm that baseline and candidate use the same
 `shots_per_call`.

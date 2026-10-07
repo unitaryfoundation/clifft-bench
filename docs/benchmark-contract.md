@@ -32,12 +32,10 @@ rounds. One-off experiments define their own workload sets.
 QEC reporting uses this same workload set across all plotted releases and
 computes the median at each version.
 
-The Clifft release comparison also includes `draper-adder-m16-basis`, starting
-with 0.12.0rc versus 0.11.0. This is a fixed-input 16-bit addition on 32 qubits,
-with no noise or postselection. Each attempted shot executes the entire circuit
-and computes `37449 + 18724 = 56173`, preserving the first operand. Its results
-describe prepared basis inputs, not arbitrary superpositions. The adder is
-separate from the historical QEC figures and medians.
+The Clifft release comparison also includes `draper-adder-m16-basis`, a
+fixed-input 16-bit addition on 32 qubits without noise or postselection.
+Each attempted shot executes the entire addition. Its results describe prepared
+basis inputs and are reported separately from the historical QEC figures and medians.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates

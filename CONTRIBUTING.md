@@ -48,14 +48,6 @@ For a new Clifft release:
    requires it; batch size remains a separately calibrated implementation choice.
 5. Validate locally, then follow the [EC2 collection procedure](docs/manual-ec2.md).
 
-For the next release, pin the published **0.12.0rc** candidate against **0.11.0**.
-The manifest already includes `draper-adder-m16-basis` in both Clifft variants,
-with 2048 attempted shots per call and independent batch calibration. Its first
-official comparison belongs to that release update; the current software pins
-still describe the previous campaign. Use the same scheduler configuration for
-both scheduler-capable versions. The adder is included only in the Clifft
-release comparison, alongside the existing QEC cases.
-
 For a release candidate, keep its exact prerelease value in `version` and its
 environment lock, record the immutable `source_tag` and commit, and set
 `display_version` to the intended final release label. Runtime checks and raw
