@@ -57,6 +57,7 @@ CASE_FIELDS = [
     "clifft_scheduler",
     "compile_seconds",
     "peak_active_width",
+    "peak_rss_bytes",
 ]
 
 COMPARISON_FIELDS = [
@@ -198,6 +199,10 @@ def _case_rows(
                     ),
                     "compile_seconds": metadata.get("compile_seconds", ""),
                     "peak_active_width": metadata.get("peak_active_width", ""),
+                    "peak_rss_bytes": max(
+                        (s["peak_rss_bytes"] for s in case["samples"] if "peak_rss_bytes" in s),
+                        default="",
+                    ),
                 }
             )
     return case_rows

@@ -18,6 +18,10 @@ def load_adapter(name: str) -> Adapter:
         from clifft_bench.adapters.stim import StimAdapter
 
         return StimAdapter()
+    if name == "xtim":
+        from clifft_bench.adapters.xtim import XtimAdapter
+
+        return XtimAdapter()
     if name == "fixture":
         from clifft_bench.adapters.fixture import FixtureAdapter
 

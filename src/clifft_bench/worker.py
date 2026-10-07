@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import resource
 import signal
 import statistics
 import sys
@@ -134,6 +135,8 @@ def aggregate_sample(
         "seed_first": seed,
         "seed_last": seed + calls - 1,
         "adapter_timing_totals": dict(sorted(adapter_timing_totals.items())),
+        "peak_rss_bytes": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+        * (1 if sys.platform == "darwin" else 1024),
     }
 
 

@@ -1,0 +1,3 @@
+numpy==2.5.2
+stim==1.16.0
+xtim @ git+https://github.com/ikim-quantum/xtim.git@29454071fb20fbcffd258559ad0644676e44a8f9
