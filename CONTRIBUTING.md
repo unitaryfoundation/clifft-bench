@@ -29,6 +29,8 @@ recurring campaign definition. It compares calibrated previous and current
 Clifft configurations, then calibrated current Clifft and SymFT configurations,
 with Stim in a separate `stim-anchor-vs-current` comparison on the unchanged
 Clifford surface-code circuit.
+It also includes `xtim-vs-current` on the compatible subset, with calibrated
+packed-record chunks and the documented cache measurement policy.
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 

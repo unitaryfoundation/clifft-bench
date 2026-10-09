@@ -30,18 +30,20 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 21
-    assert len({case.id for case in suite.cases}) == 21
+    assert len(suite.cases) == 28
+    assert len({case.id for case in suite.cases}) == 28
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
         "symft-current",
         "stim-current",
+        "xtim-current",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
         "symft",
         "stim",
+        "xtim",
     }
     versions_by_variant = {
         variant_id: {
@@ -63,9 +65,19 @@ def test_release_manifest_expands_named_variants() -> None:
     assert candidate["version"] == "0.12.0rc1"
     assert candidate["display_version"] == "0.12.0"
     assert candidate["source_tag"] == "v0.12.0rc1"
+    smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    assert {
+        case.implementation.id for case in smoke.cases
+        if case.definition["variant_id"] == "clifft-current"
+    } == {candidate["id"]}
 
     comparisons = {item["id"]: item for item in suite.run["comparisons"]}
     assert comparisons == {
+        "xtim-vs-current": {
+            "id": "xtim-vs-current",
+            "baseline_variant": "clifft-current",
+            "candidate_variants": ["xtim-current"],
+        },
         "current-vs-previous": {
             "id": "current-vs-previous",
             "baseline_variant": "clifft-previous",
@@ -92,9 +104,9 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in ("clifft-previous", "clifft-current", "symft-current")
     }
     assert {variant: len(cases) for variant, cases in calibrated_by_variant.items()} == {
-        "clifft-previous": 7,
-        "clifft-current": 7,
-        "symft-current": 6,
+        "clifft-previous": 8,
+        "clifft-current": 8,
+        "symft-current": 7,
     }
     for cases in calibrated_by_variant.values():
         assert all(
@@ -128,6 +140,7 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in variant_ids
     }
     expected_signature = {
+        ("distillation-15to1-rm15-p1e-3", 100000),
         ("msc-d3-inject-cultivate-p1e-3", 100000),
         ("msc-d5-inject-cultivate-p1e-3", 20000),
         ("distillation-color-code-85q-p5e-2", 100000),
@@ -165,7 +178,7 @@ def test_release_preserves_scheduled_previous_configuration() -> None:
         if case.definition["variant_id"] != "clifft-previous":
             continue
         if case.workload.id not in previous_cases:
-            continue  # The adder was added after the reviewed 0.11 QEC run.
+            continue  # The adder and 15-to-1 postdate the reviewed 0.11 QEC run.
         archived = previous_cases[case.workload.id]
         assert case.implementation.definition["version"] == archived["simulator"]["version"]
         assert case.definition["execution"]["clifft_scheduler"] == (
@@ -205,6 +218,21 @@ def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -
         for case in suite.cases
     }
     assert len({frozenset(items) for items in case_signatures.values()}) == 1
+
+
+def test_xtim_release_selection_matches_declared_compatibility():
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    cases = [c for c in suite.cases if c.implementation.definition["adapter"] == "xtim"]
+    compatible = {
+        w["id"] for w in suite.workloads_document["workloads"]
+        if "xtim" in w["compatible_adapters"]
+    }
+    assert {c.workload.id for c in cases} == compatible
+    assert all(c.definition["execution"]["batch_size"] == "calibrate" for c in cases)
+    clifft = {c.workload.id: c for c in suite.cases
+              if c.definition["variant_id"] == "clifft-current"}
+    assert all(c.definition["shots_per_call"] == clifft[c.workload.id].definition["shots_per_call"]
+               for c in cases)
 
 
 @pytest.mark.parametrize("adapter", ["clifft", "symft"])

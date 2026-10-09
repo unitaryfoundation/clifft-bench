@@ -14,9 +14,10 @@ checkout clean and fixed throughout collection.
 
 | Variant | Exact implementation | Configuration | Cases |
 | --- | --- | --- | ---: |
-| Previous Clifft | `0.11.0rc1` | Default pipeline plus active-width scheduling; calibrated batching | 7 |
-| Current Clifft | `0.12.0rc1` | New default pipeline plus the same scheduler; calibrated batching | 7 |
-| SymFT | `0.1.1` at `c89b985` | Existing native CPU build; calibrated batching | 6 |
+| Previous Clifft | `0.11.0rc1` | Default pipeline plus active-width scheduling; calibrated batching | 8 |
+| Current Clifft | `0.12.0rc1` | New default pipeline plus the same scheduler; calibrated batching | 8 |
+| SymFT | `0.1.1` at `c89b985` | Existing native CPU build; calibrated batching | 7 |
+| xtim | `3.1.4` at `2945407` | Pinned portable build; calibrated chunks; fresh cache per repetition | 4 |
 | Stim anchor | `1.16.0` | Existing wheel; calibrated packed-record chunks | 1 |
 
 Both Clifft variants use the checked-in
@@ -26,13 +27,18 @@ reviewed 0.11 QEC execution, continuing the paired history. Each release uses
 its own default passes. In 0.12 those include `PhasePolynomialPass` and
 `RotationSimplificationPass`; no adapter override is needed.
 
-Workload files and shots per call are unchanged. The six QEC workloads feed the
-historical figures; the fixed-input 32-qubit Draper adder is a separate seventh
-Clifft workload. Keep the coherent d5/r5 workload at one shot per call on both
+Workload files and shots per call retain the definitions merged in
+[PR #71](https://github.com/unitaryfoundation/clifft-bench/pull/71). Both Clifft
+releases include the six historical QEC workloads, the fixed-input 32-qubit
+Draper adder, and the new 15-to-1 Reed–Muller distillation circuit. SymFT also
+includes 15-to-1; xtim covers cultivation d3/d5, Clifford surface code, and
+15-to-1. The existing historical figures still select the six-workload core;
+plot selection for the additional results follows collection and review.
+Keep the coherent d5/r5 workload at one shot per call on both
 sides, even if the candidate becomes much faster.
 
-The run retains five samples of at least 30 seconds for each of 21 cases:
-**52.5 minutes minimum sampling**, plus compilation, calibration, and final-call
+The run retains five samples of at least 30 seconds for each of 28 cases:
+**70 minutes minimum sampling**, plus compilation, calibration, and final-call
 overruns. The placement timeout is six hours and each worker has a 12 GiB
 address-space ceiling. Bootstrap installs the pinned RC wheel automatically.
 
@@ -52,9 +58,10 @@ integration checks, not release performance evidence.
 
 ## Review the evidence
 
-- Confirm seven `current-vs-previous` rows, six `alternatives-vs-current` rows,
-  and one `stim-anchor-vs-current` row, with equal shots per call within each
-  pair. The alternatives and anchor reuse the current-Clifft measurements.
+- Confirm eight `current-vs-previous` rows, seven `alternatives-vs-current` rows,
+  four `xtim-vs-current` rows, and one `stim-anchor-vs-current` row, with equal
+  shots per call within each pair. All tool comparisons reuse the
+  current-Clifft measurements.
 - Review every failure and calibrated batch selection, both Clifft scheduler
   configurations/statistics, and the exact package/commit identities.
 - Report `compile_seconds`, `peak_active_width`, and
@@ -72,6 +79,13 @@ integration checks, not release performance evidence.
   release comparison collected here.
 - Treat paired changes at or below 1.1% as inconclusive under the existing
   [reference-host convention](reference-host.md).
+- For xtim, report fixed-duration averages beginning with an empty cache each
+  repetition. Lazy plan construction remains timed; these are not established
+  steady-state rates. Review peak RSS alongside throughput and retain the
+  [xtim measurement policy](benchmark-contract.md#xtim-comparison).
+- For 15-to-1, retain the shared logical-error readout: ideal inverse-T and
+  logical-X verification are part of each timed shot. Review the acceptance
+  and logical-error counts for both Clifft versions, SymFT, and xtim.
 
 Keep the harness calibration for this release. The new public
 `batch_size="tune"` API would answer a separate tuning question: repeatedly
@@ -91,7 +105,9 @@ setup.
 3. Copy the refreshed QEC figures to Clifft's docs. Update its README,
    performance guide, and release update with the reviewed QEC ratios,
    separate adder compilation/sampling results, exact RC identity, and links
-   to this execution. Update references to the release-specific image stem.
+   to this execution. Review presentation of the new xtim and 15-to-1 results
+   without silently changing the historical median's workload set. Update
+   references to the release-specific image stem.
 4. Incorporate the separately collected triorthogonal plot/results in the
    release update. Keep same-version pass ablations clearly distinct from
    release-over-release timing claims.

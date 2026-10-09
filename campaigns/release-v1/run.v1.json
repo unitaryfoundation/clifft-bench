@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.2",
+  "suite_version": "0.2.4",
   "profile_id": "release-v1",
   "title": "Recurring single-core Clifft release benchmark",
   "classification": "official",
@@ -22,6 +22,11 @@
     "memory_limit_gib": 12
   },
   "comparisons": [
+    {
+      "id": "xtim-vs-current",
+      "baseline_variant": "clifft-current",
+      "candidate_variants": ["xtim-current"]
+    },
     {
       "id": "current-vs-previous",
       "baseline_variant": "clifft-previous",
@@ -72,7 +77,8 @@
         {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1},
-        {"workload_id": "draper-adder-m16-basis", "shots_per_call": 2048}
+        {"workload_id": "draper-adder-m16-basis", "shots_per_call": 2048},
+        {"workload_id": "distillation-15to1-rm15-p1e-3", "shots_per_call": 100000}
       ]
     },
     {
@@ -97,7 +103,8 @@
         {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1},
-        {"workload_id": "draper-adder-m16-basis", "shots_per_call": 2048}
+        {"workload_id": "draper-adder-m16-basis", "shots_per_call": 2048},
+        {"workload_id": "distillation-15to1-rm15-p1e-3", "shots_per_call": 100000}
       ]
     },
     {
@@ -115,7 +122,8 @@
         {"workload_id": "distillation-color-code-85q-p5e-2", "shots_per_call": 100000},
         {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000},
         {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2", "shots_per_call": 100000},
-        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1}
+        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 1},
+        {"workload_id": "distillation-15to1-rm15-p1e-3", "shots_per_call": 100000}
       ]
     },
     {
@@ -129,6 +137,31 @@
       },
       "workloads": [
         {"workload_id": "surface-code-d7-r7-p1e-3", "shots_per_call": 100000}
+      ]
+    },
+    {
+      "id": "xtim-current",
+      "implementation_id": "xtim-3.1.4-2945407",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0
+      },
+      "workloads": [
+        {
+          "workload_id": "msc-d3-inject-cultivate-p1e-3",
+          "shots_per_call": 100000
+        },
+        {
+          "workload_id": "msc-d5-inject-cultivate-p1e-3",
+          "shots_per_call": 20000
+        },
+        {
+          "workload_id": "surface-code-d7-r7-p1e-3",
+          "shots_per_call": 100000
+        },
+        {"workload_id": "distillation-15to1-rm15-p1e-3", "shots_per_call": 100000}
       ]
     }
   ]

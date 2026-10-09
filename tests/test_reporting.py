@@ -63,6 +63,7 @@ def test_reporting_selects_the_release_core_from_archived_results(copied_sources
     core = {
         case.workload.id for case in suite.cases
         if case.workload.definition["family"] != "prepared-basis-arithmetic"
+        and case.workload.id != "distillation-15to1-rm15-p1e-3"
     }
     assert len(core) == 6
     assert set(WORKLOAD_ORDER) == core

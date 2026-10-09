@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.2",
+  "suite_version": "0.2.4",
   "profile_id": "adapter-smoke",
   "classification": "smoke",
   "seed": 20260808,
@@ -18,6 +18,58 @@
     "repetitions": 2
   },
   "cases": [
+    {
+      "id": "distillation-15to1-smoke-clifft",
+      "variant_id": "clifft-current",
+      "workload_id": "distillation-15to1-rm15-p1e-3",
+      "implementation_id": "clifft-0.12.0rc1",
+      "shots_per_call": 10000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 1024,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "distillation-15to1-smoke-symft",
+      "variant_id": "symft-current",
+      "workload_id": "distillation-15to1-rm15-p1e-3",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 10000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 1024,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "distillation-15to1-smoke-xtim",
+      "variant_id": "xtim-current",
+      "workload_id": "distillation-15to1-rm15-p1e-3",
+      "implementation_id": "xtim-3.1.4-2945407",
+      "shots_per_call": 10000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 1024,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "msc-d3-smoke-xtim",
+      "variant_id": "xtim-current",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3",
+      "implementation_id": "xtim-3.1.4-2945407",
+      "shots_per_call": 10000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0
+      }
+    },
     {
       "id": "draper-adder-smoke-clifft",
       "variant_id": "clifft-current",

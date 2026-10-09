@@ -47,6 +47,27 @@ def test_aggregate_sample_stops_before_reusing_the_next_repetition_seed(monkeypa
         )
 
 
+def test_aggregate_sample_excludes_stream_setup_and_records_peak_rss(monkeypatch):
+    calls = []
+
+    def sample(_prepared, shots, seed):
+        calls.append(seed)
+        return Counts(shots, shots, 0, 0), 0.1
+
+    monkeypatch.setattr(worker, "timed_sample", sample)
+    monkeypatch.setattr(worker, "begin_sample", lambda *_: 2.0)
+    prepared = SimpleNamespace()
+    result = worker.aggregate_sample(
+        prepared, shots_per_call=10, min_seconds=0.4, seed=1,
+        postselect=False, max_api_calls=10,
+    )
+    assert calls == [1, 2, 3, 4]
+    assert result["attempted_shots"] == 40
+    assert result["duration_seconds"] == pytest.approx(0.4)
+    assert result["stream_setup_seconds"] == 2.0
+    assert result["peak_rss_bytes"] > 0
+
+
 class _CalibrationAdapter:
     def __init__(self) -> None:
         self.prepared_batch_sizes: list[int] = []
