@@ -1,9 +1,5 @@
 # Manual EC2 release collection
 
-The current campaign targets **0.12.0rc1 versus 0.11.0rc1**. See the
-[0.12.0 RC checklist](release-0.12.0.md) for compiler configuration, result
-review, and the documentation handoff.
-
 You launch, stop, and restart the reference instance in the AWS console. The
 scripts require no IAM role or AWS credentials. They verify launch identity
 through IMDSv2, install isolated tool environments, spool results outside the

@@ -52,9 +52,7 @@ For a new Clifft release:
 
 Preserve the previously reviewed current configuration when moving it to
 `clifft-previous`, including optional compiler passes and per-workload shot
-counts. This keeps the paired performance-history chain continuous. For the
-current candidate's run and publication checklist, see
-[Clifft 0.12.0 RC collection](docs/release-0.12.0.md).
+counts. This keeps the paired performance-history chain continuous.
 
 For a release candidate, keep its exact prerelease value in `version` and its
 environment lock, record the immutable `source_tag` and commit, and set
