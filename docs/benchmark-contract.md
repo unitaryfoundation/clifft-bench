@@ -138,6 +138,11 @@ They also record `batch_size_effective`, the maximum lanes available to one
 public call after capping the selected capacity by `shots_per_call`. A fixed
 numeric batch size remains supported for cases that do not request calibration.
 
+Clifft 0.12's public `batch_size="tune"` is a separate, budgeted tuning API.
+The recurring campaign retains this harness's calibration for both releases
+and SymFT. Timed calls receive the selected numeric size, so they do not repeat
+Clifft's internal tuning or charge it to steady-state throughput.
+
 For Clifft/SymFT, `batch_size` is the internal number of shots processed together.
 For Stim it is the adapter's chunk size passed to the public detector sampler,
 not a claim about Stim's SIMD width.
@@ -165,6 +170,13 @@ existing Clifft/SymFT comparison identity and its downstream consumers. All
 comparisons, including `xtim-vs-current`, reuse the same collected current-Clifft cases.
 
 ## Compiler configuration
+
+Each release uses its own default HIR pipeline before the optional scheduler.
+Clifft 0.12 adds `PhasePolynomialPass` and `RotationSimplificationPass` to that
+pipeline; the adapter's call to `default_hir_pass_manager()` includes them
+automatically. Both the 0.11 baseline and 0.12 candidate retain the scheduled
+configuration. Release-over-release results therefore include the new defaults;
+they are not a same-version pass ablation.
 
 Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
 pipeline. When pinning a scheduler-capable RC, set `clifft-current.execution`

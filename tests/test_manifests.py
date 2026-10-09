@@ -54,17 +54,22 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in ("clifft-previous", "clifft-current")
     }
     assert versions_by_variant == {
-        "clifft-previous": {"0.10.0rc1"},
-        "clifft-current": {"0.11.0rc1"},
+        "clifft-previous": {"0.11.0rc1"},
+        "clifft-current": {"0.12.0rc1"},
     }
     candidate = next(
         case.implementation.definition
         for case in suite.cases
         if case.definition["variant_id"] == "clifft-current"
     )
-    assert candidate["version"] == "0.11.0rc1"
-    assert candidate["display_version"] == "0.11.0"
-    assert candidate["source_tag"] == "v0.11.0rc1"
+    assert candidate["version"] == "0.12.0rc1"
+    assert candidate["display_version"] == "0.12.0"
+    assert candidate["source_tag"] == "v0.12.0rc1"
+    smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    assert {
+        case.implementation.id for case in smoke.cases
+        if case.definition["variant_id"] == "clifft-current"
+    } == {candidate["id"]}
 
     comparisons = {item["id"]: item for item in suite.run["comparisons"]}
     assert comparisons == {
@@ -148,6 +153,38 @@ def test_release_manifest_expands_named_variants() -> None:
         assert signatures_by_variant[variant] == expected_signature | {
             ("draper-adder-m16-basis", 2048),
         }
+
+
+def test_release_preserves_scheduled_previous_configuration() -> None:
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    scheduled = json.loads(
+        (ROOT / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
+    )
+    variants = {variant["id"]: variant for variant in suite.run["variants"]}
+    for variant_id in ("clifft-previous", "clifft-current"):
+        assert variants[variant_id]["execution"] == scheduled
+
+    # The paired history must continue from the configuration measured for 0.11.
+    previous_result = json.loads((
+        ROOT / "results/release-v1/release-v1-20260930-180134/raw/"
+        "release-v1-p01-r01-raw.json"
+    ).read_text())
+    previous_cases = {
+        case["workload"]["id"]: case
+        for case in previous_result["cases"]
+        if case["variant_id"] == "clifft-current"
+    }
+    for case in suite.cases:
+        if case.definition["variant_id"] != "clifft-previous":
+            continue
+        if case.workload.id not in previous_cases:
+            continue  # The adder and 15-to-1 postdate the reviewed 0.11 QEC run.
+        archived = previous_cases[case.workload.id]
+        assert case.implementation.definition["version"] == archived["simulator"]["version"]
+        assert case.definition["execution"]["clifft_scheduler"] == (
+            archived["execution"]["clifft_scheduler"]
+        )
+        assert case.definition["shots_per_call"] == archived["execution"]["shots_per_call"]
 
 
 def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:
@@ -240,8 +277,8 @@ def test_official_implementations_require_unique_python_variables(
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     software = copy.deepcopy(suite.software_document)
     implementations = {item["id"]: item for item in software["implementations"]}
-    implementations["clifft-0.10.0rc1"]["python_executable_env"] = implementations[
-        "clifft-0.11.0rc1"
+    implementations["clifft-0.11.0rc1"]["python_executable_env"] = implementations[
+        "clifft-0.12.0rc1"
     ]["python_executable_env"]
     for implementation in implementations.values():
         environment = implementation.get("environment")
