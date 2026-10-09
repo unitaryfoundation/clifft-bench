@@ -5,6 +5,7 @@ import json
 import math
 import statistics
 import struct
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -266,7 +267,7 @@ def test_combined_throughput_uses_both_calibrated_absolute_rates() -> None:
 
 
 def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
-    assert {path.name for path in web_output_paths(tmp_path)} == {
+    assert {path.name for path in web_output_paths(tmp_path, build_report(SOURCES))} == {
         "clifft-throughput-light.png",
         "clifft-throughput-dark.png",
         "clifft-symft-throughput-light.png",
@@ -280,9 +281,22 @@ def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
     }
 
 
+def test_web_release_filenames_follow_selected_evidence(tmp_path: Path) -> None:
+    reviewed = build_report(SOURCES)
+    next_release = replace(reviewed, clifft_version="0.12.0", previous_clifft_version="0.11.0")
+    current_paths = {path.name for path in web_output_paths(tmp_path, reviewed)}
+    next_paths = {path.name for path in web_output_paths(tmp_path, next_release)}
+    assert next_paths - current_paths == {
+        "v012-vs-v011-light.png", "v012-vs-v011-dark.png",
+    }
+    assert current_paths - next_paths == {
+        "v011-vs-v010-light.png", "v011-vs-v010-dark.png",
+    }
+
+
 def test_checked_in_web_assets_cover_reporting_outputs() -> None:
     output_dir = ROOT / "reporting/figures/web"
-    expected = {path.name for path in web_output_paths(output_dir)} | {
+    expected = {path.name for path in web_output_paths(output_dir, build_report(SOURCES))} | {
         "quantum-volume-light.png",
         "quantum-volume-dark.png",
     }

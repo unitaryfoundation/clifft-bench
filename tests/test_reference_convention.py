@@ -131,3 +131,31 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
         expected[0] + expected[1], abs=0.015
     )
     assert counts.logical_errors / counts.attempted_shots == pytest.approx(expected[1], abs=0.015)
+
+
+@pytest.mark.parametrize("batch_size", [1, 32])
+@pytest.mark.parametrize("scheduled", [False, True])
+def test_clifft_default_pipeline_reduces_prepared_adder(batch_size, scheduled):
+    clifft = pytest.importorskip("clifft")
+    if not hasattr(clifft, "RotationSimplificationPass"):
+        pytest.skip("this Clifft release predates rotation simplification")
+    root = Path(__file__).resolve().parents[1]
+    manifest = json.loads((root / "manifests/workloads.v1.json").read_text())
+    workload = next(
+        item for item in manifest["workloads"] if item["id"] == "draper-adder-m16-basis"
+    )
+    execution = json.loads(
+        (root / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
+    )
+    execution["batch_size"] = batch_size
+    if not scheduled:
+        execution.pop("clifft_scheduler")
+    prepared = load_adapter("clifft").prepare(
+        artifact_path=root / "manifests" / workload["artifact"]["path"],
+        workload=workload,
+        execution=execution,
+    )
+    assert prepared.runtime_metadata["peak_active_width"] == 0
+    counts = prepared.sample(shots=32, seed=7)
+    assert counts.attempted_shots == counts.accepted_shots == 32
+    assert counts.discarded_shots == counts.logical_errors == 0

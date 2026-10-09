@@ -51,7 +51,9 @@ The web-ready, transparent light/dark figures are checked in under
   is not consumed by Clifft's documentation.
 - `performance-over-time-{light,dark}.png`: median Clifft speedup since v0.1.0.
 - `v011-vs-v010-{light,dark}.png`: current release throughput relative to the
-  previous release, retaining packed/scalar marker fill.
+  previous release, retaining packed/scalar marker fill. This stem follows the
+  selected evidence; the reviewed 0.12/0.11 run will produce
+  `v012-vs-v011-{light,dark}.png`.
 - `quantum-volume-{light,dark}.png`: median execution time for Clifft, Qiskit
   Aer, qsim, and Qulacs from the selected QV execution.
 
@@ -131,9 +133,10 @@ The filenames are unchanged by the copy: each
 absolute-throughput figure, while the guide uses the new combined figure. Do not
 copy the optional relative-only `clifft-vs-symft` pair.
 Review both light and dark variants
-in the Clifft pull request. For a later release pair, update the release-specific
-`v011-vs-v010` output stem and its Clifft references as part of that release's
-report refresh.
+in the Clifft pull request. For a later release pair, use the generated
+release-specific stem in the copy command and update its README and Clifft
+references as part of that release's report refresh. The
+[0.12 RC checklist](../docs/release-0.12.0.md) covers the next handoff.
 
 ## How the QEC history is combined
 

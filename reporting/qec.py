@@ -572,14 +572,19 @@ WEB_QEC_FIGURES = (
     "clifft-symft-throughput",
     "clifft-vs-symft",
     "performance-over-time",
-    "v011-vs-v010",
 )
 
 
-def web_output_paths(output_dir: Path) -> tuple[Path, ...]:
+def _release_figure_stem(report: Report) -> str:
+    current = _web_version(report.clifft_version).replace(".", "")
+    previous = _web_version(report.previous_clifft_version).replace(".", "")
+    return f"v{current}-vs-v{previous}"
+
+
+def web_output_paths(output_dir: Path, report: Report) -> tuple[Path, ...]:
     return tuple(
         output_dir / f"{figure}-{theme.name}.png"
-        for figure in WEB_QEC_FIGURES
+        for figure in (*WEB_QEC_FIGURES, _release_figure_stem(report))
         for theme in WEB_THEMES
     )
 
@@ -989,12 +994,12 @@ def render_web(report: Report, output_dir: Path) -> list[Path]:
             plt, theme, report, output_dir / f"performance-over-time-{suffix}.png"
         )
         _plot_web_release_comparison(
-            plt, theme, report, output_dir / f"v011-vs-v010-{suffix}.png"
+            plt, theme, report, output_dir / f"{_release_figure_stem(report)}-{suffix}.png"
         )
         _plot_web_combined_throughput(
             plt, theme, report, output_dir / f"clifft-symft-throughput-{suffix}.png"
         )
-    return list(web_output_paths(output_dir))
+    return list(web_output_paths(output_dir, report))
 
 
 def _parser() -> argparse.ArgumentParser:

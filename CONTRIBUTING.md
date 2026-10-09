@@ -48,6 +48,12 @@ For a new Clifft release:
    requires it; batch size remains a separately calibrated implementation choice.
 5. Validate locally, then follow the [EC2 collection procedure](docs/manual-ec2.md).
 
+Preserve the previously reviewed current configuration when moving it to
+`clifft-previous`, including optional compiler passes and per-workload shot
+counts. This keeps the paired performance-history chain continuous. For the
+current candidate's run and publication checklist, see
+[Clifft 0.12.0 RC collection](docs/release-0.12.0.md).
+
 For a release candidate, keep its exact prerelease value in `version` and its
 environment lock, record the immutable `source_tag` and commit, and set
 `display_version` to the intended final release label. Runtime checks and raw
