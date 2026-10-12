@@ -29,6 +29,23 @@ WORKLOAD_LABELS = {
     "surface-code-d7-r7-p1e-3": "Surface code d7, r7",
 }
 WORKLOAD_ORDER = tuple(WORKLOAD_LABELS)
+DISTILLATION_WORKLOAD = "distillation-15to1-rm15-p1e-3"
+ADDER_WORKLOAD = "draper-adder-m16-basis"
+CURRENT_WORKLOAD_ORDER = (*WORKLOAD_ORDER, DISTILLATION_WORKLOAD)
+WORKLOAD_LABELS[DISTILLATION_WORKLOAD] = "15-to-1 distillation"
+TOOL_COMPARISONS = {
+    "SymFT": (ALTERNATIVES_COMPARISON, CURRENT_WORKLOAD_ORDER),
+    "xtim": (
+        "xtim-vs-current",
+        (
+            "msc-d3-inject-cultivate-p1e-3",
+            "msc-d5-inject-cultivate-p1e-3",
+            "surface-code-d7-r7-p1e-3",
+            DISTILLATION_WORKLOAD,
+        ),
+    ),
+    "Stim": ("stim-anchor-vs-current", ("surface-code-d7-r7-p1e-3",)),
+}
 
 
 @dataclass(frozen=True)
@@ -69,9 +86,18 @@ class ThroughputPoint:
 @dataclass(frozen=True)
 class ToolThroughputPoint:
     workload_id: str
-    clifft_rate: float
-    alternative_rate: float
-    clifft_over_alternative: float
+    rates: dict[str, float]
+
+
+@dataclass(frozen=True)
+class AdderComparison:
+    previous_rate: float
+    current_rate: float
+    current_over_previous: float
+    previous_compile_seconds: float
+    current_compile_seconds: float
+    previous_peak_active_width: int
+    current_peak_active_width: int
 
 
 @dataclass(frozen=True)
@@ -87,6 +113,8 @@ class Report:
     relative_points: tuple[RelativePoint, ...]
     throughput_points: tuple[ThroughputPoint, ...]
     tool_throughput_points: tuple[ToolThroughputPoint, ...]
+    tool_versions: dict[str, str]
+    adder: AdderComparison
     release_points: tuple[ReleaseComparisonPoint, ...]
     clifft_version: str
     previous_clifft_version: str
@@ -124,7 +152,10 @@ def _median_rates(
 ) -> dict[tuple[str, ...], float]:
     grouped: dict[tuple[str, ...], list[float]] = defaultdict(list)
     for row in rows:
-        grouped[tuple(row[field] for field in key_fields)].append(float(row[value_field]))
+        value = float(row[value_field])
+        if not math.isfinite(value) or value <= 0:
+            raise ValueError(f"{value_field} must be finite and positive")
+        grouped[tuple(row[field] for field in key_fields)].append(value)
     return {key: statistics.median(values) for key, values in grouped.items()}
 
 
@@ -140,13 +171,14 @@ def _single_ints(
 
 
 def _select_comparison(
-    rows: list[dict[str, str]], comparison_id: str, execution_id: str
+    rows: list[dict[str, str]], comparison_id: str, execution_id: str,
+    workloads: tuple[str, ...] = WORKLOAD_ORDER,
 ) -> list[dict[str, str]]:
     selected = [
         row for row in rows
-        if row["comparison_id"] == comparison_id and row["workload_id"] in WORKLOAD_ORDER
+        if row["comparison_id"] == comparison_id and row["workload_id"] in workloads
     ]
-    if {row["workload_id"] for row in selected} != set(WORKLOAD_ORDER):
+    if {row["workload_id"] for row in selected} != set(workloads):
         raise ValueError(f"{execution_id} {comparison_id} does not cover the reporting core")
     if any(
         row["baseline_shots_per_call"] != row["candidate_shots_per_call"]
@@ -156,14 +188,14 @@ def _select_comparison(
     return selected
 
 
-def _load_release(path: Path) -> ReleaseData:
+def _load_release(path: Path, workloads: tuple[str, ...] = WORKLOAD_ORDER) -> ReleaseData:
     index = json.loads((path / "index.json").read_text())
     execution_id = str(index["execution_id"])
     if execution_id != path.name or index["campaign_id"] != "release-v1":
         raise ValueError(f"release identity mismatch in {path}")
     rows = _read_csv(path / "comparisons.csv")
-    current = _select_comparison(rows, CURRENT_COMPARISON, execution_id)
-    alternatives = _select_comparison(rows, ALTERNATIVES_COMPARISON, execution_id)
+    current = _select_comparison(rows, CURRENT_COMPARISON, execution_id, workloads)
+    alternatives = _select_comparison(rows, ALTERNATIVES_COMPARISON, execution_id, workloads)
 
     if _one(current, "baseline_simulator_name", "previous simulator") != "Clifft":
         raise ValueError(f"{execution_id} previous simulator is not Clifft")
@@ -229,6 +261,96 @@ def _load_release(path: Path) -> ReleaseData:
         alternative_ratios={key[0]: value for key, value in alternative_ratios.items()},
         alternative_rates={key[0]: value for key, value in alternative_rates.items()},
         shots_per_call=_single_ints(current, "baseline_shots_per_call", "shots_per_call"),
+    )
+
+
+def _case_map(
+    rows: list[dict[str, str]], side: str,
+) -> dict[tuple[str, ...], tuple[str, ...]]:
+    cases = {}
+    for row in rows:
+        key = tuple(row[field] for field in ("placement", "replica", "workload_id"))
+        if key in cases:
+            raise ValueError(f"duplicate comparison for {key}")
+        cases[key] = tuple(row[f"{side}_{field}"] for field in (
+            "result_id", "case_id", "simulator_name", "simulator_version",
+            "simulator_display_version", "rate", "batch_size_effective", "shots_per_call",
+        ))
+    return cases
+
+
+def _load_current_tools(
+    path: Path, release: ReleaseData,
+) -> tuple[tuple[ToolThroughputPoint, ...], dict[str, str]]:
+    rows = _read_csv(path / "comparisons.csv")
+    current = _select_comparison(
+        rows, CURRENT_COMPARISON, path.name, CURRENT_WORKLOAD_ORDER
+    )
+    current_cases = _case_map(current, "candidate")
+    versions = {"Clifft": release.current_version}
+    rates = {workload: {"Clifft": release.current_rates[workload]}
+             for workload in CURRENT_WORKLOAD_ORDER}
+    for tool, (comparison, workloads) in TOOL_COMPARISONS.items():
+        selected = _select_comparison(rows, comparison, path.name, workloads)
+        if _one(selected, "candidate_simulator_name", "alternative simulator") != tool:
+            raise ValueError(f"{path.name} {comparison} does not measure {tool}")
+        expected = {key: value for key, value in current_cases.items() if key[2] in workloads}
+        if _case_map(selected, "baseline") != expected:
+            raise ValueError(f"{path.name} {comparison} does not reuse current Clifft")
+        versions[tool] = _one(
+            selected, "candidate_simulator_display_version", f"{tool} version"
+        )
+        tool_rates = _median_rates(selected, ("workload_id",), "candidate_rate")
+        for (workload,), rate in tool_rates.items():
+            rates[workload][tool] = rate
+    return (
+        tuple(ToolThroughputPoint(workload, rates[workload])
+              for workload in CURRENT_WORKLOAD_ORDER),
+        versions,
+    )
+
+
+def _load_adder(path: Path, release: ReleaseData) -> AdderComparison:
+    comparisons = _select_comparison(
+        _read_csv(path / "comparisons.csv"), CURRENT_COMPARISON, path.name, (ADDER_WORKLOAD,)
+    )
+    cases = [row for row in _read_csv(path / "cases.csv") if row["workload_id"] == ADDER_WORKLOAD]
+    measurements = []
+    for side, variant, version in (
+        ("baseline", "clifft-previous", release.previous_version),
+        ("candidate", "clifft-current", release.current_version),
+    ):
+        selected = [row for row in cases if row["variant_id"] == variant]
+        if not selected or any(row["status"] != "success" for row in selected):
+            raise ValueError(f"{path.name} is missing successful adder cases for {variant}")
+        if _one(selected, "simulator_display_version", "adder Clifft version") != version:
+            raise ValueError(f"{path.name} adder version does not match current release pair")
+        # Join compile/width evidence to the exact throughput cases being plotted.
+        adapted = [{
+            **{key: row[key] for key in ("placement", "replica", "workload_id")},
+            **{f"{side}_{key}": row[key] for key in (
+                "result_id", "case_id", "simulator_name", "simulator_version",
+                "simulator_display_version", "batch_size_effective", "shots_per_call",
+            )},
+            f"{side}_rate": row["median_attempted_shots_per_second"],
+        } for row in selected]
+        if _case_map(adapted, side) != _case_map(comparisons, side):
+            raise ValueError(f"{path.name} adder cases do not match comparison")
+        compile_times = [float(row["compile_seconds"]) for row in selected]
+        if any(not math.isfinite(value) or value < 0 for value in compile_times):
+            raise ValueError("adder compile_seconds must be finite and nonnegative")
+        widths = _single_ints(selected, "peak_active_width", "adder peak_active_width")
+        width = widths[ADDER_WORKLOAD]
+        if width < 0 or _one(selected, "simulator_name", "adder simulator") != "Clifft":
+            raise ValueError("invalid adder Clifft evidence")
+        rate = _median_rates(comparisons, ("workload_id",), f"{side}_rate")[(ADDER_WORKLOAD,)]
+        measurements.append((rate, statistics.median(compile_times), width))
+    previous, current = measurements
+    ratio = _median_rates(
+        comparisons, ("workload_id",), "ratio_candidate_over_baseline"
+    )[(ADDER_WORKLOAD,)]
+    return AdderComparison(
+        previous[0], current[0], ratio, previous[1], current[1], previous[2], current[2]
     )
 
 
@@ -307,34 +429,29 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         statistics.median(speedups[workload][index] for workload in WORKLOAD_ORDER)
         for index in range(len(versions))
     )
-    latest = releases[-1]
+    # New workloads belong in current comparisons, never retroactively in the
+    # fixed six-workload history or its median.
+    latest = _load_release(selected.releases[-1], CURRENT_WORKLOAD_ORDER)
     points = tuple(
         RelativePoint(
             workload,
             1 / latest.alternative_ratios[workload],
         )
-        for workload in WORKLOAD_ORDER
+        for workload in CURRENT_WORKLOAD_ORDER
     )
     throughput_points = tuple(
         ThroughputPoint(workload, latest.current_rates[workload])
-        for workload in WORKLOAD_ORDER
+        for workload in CURRENT_WORKLOAD_ORDER
     )
-    tool_throughput_points = tuple(
-        ToolThroughputPoint(
-            workload,
-            latest.current_rates[workload],
-            latest.alternative_rates[workload],
-            1 / latest.alternative_ratios[workload],
-        )
-        for workload in WORKLOAD_ORDER
-    )
+    tool_throughput_points, tool_versions = _load_current_tools(selected.releases[-1], latest)
+    adder = _load_adder(selected.releases[-1], latest)
     release_points = tuple(
         ReleaseComparisonPoint(
             workload,
             latest.current_ratios[workload],
             latest.current_packed[workload],
         )
-        for workload in WORKLOAD_ORDER
+        for workload in CURRENT_WORKLOAD_ORDER
     )
     return Report(
         HistorySeries(
@@ -346,6 +463,8 @@ def build_report(sources_path: Path = DEFAULT_SOURCES) -> Report:
         points,
         throughput_points,
         tool_throughput_points,
+        tool_versions,
+        adder,
         release_points,
         latest.current_version,
         latest.previous_version,
@@ -452,6 +571,8 @@ def _plot_relative(axis: Any, report: Report) -> None:
 
 
 def _throughput_tick(value: float, _position: float) -> str:
+    if value >= 1_000_000_000:
+        return f"{value / 1_000_000_000:g}B"
     if value >= 1_000_000:
         return f"{value / 1_000_000:g}M"
     if value >= 1_000:
@@ -561,18 +682,23 @@ class WebTheme:
     grid: str
     blue: str
     orange: str
+    green: str
+    purple: str
 
 
 WEB_THEMES = (
-    WebTheme("light", "#172033", "#64748B", "#CBD5E1", "#3C64B4", "#C26713"),
-    WebTheme("dark", "#E6EDF7", "#AAB6C8", "#526077", "#83A7F2", "#F2A65A"),
+    WebTheme("light", "#172033", "#64748B", "#CBD5E1", "#3C64B4", "#C26713",
+             "#167568", "#8750A6"),
+    WebTheme("dark", "#E6EDF7", "#AAB6C8", "#526077", "#83A7F2", "#F2A65A",
+             "#66CCB6", "#C8A0E5"),
 )
 WEB_QEC_FIGURES = (
     "clifft-throughput",
-    "clifft-symft-throughput",
+    "simulator-throughput",
     "clifft-vs-symft",
     "performance-over-time",
-    "v011-vs-v010",
+    "v012-vs-v011",
+    "draper-adder",
 )
 
 
@@ -714,19 +840,42 @@ def _plot_web_tool_comparison(
 def _plot_web_release_comparison(
     plt: Any, theme: WebTheme, report: Report, output: Path
 ) -> None:
-    current = _web_version(report.clifft_version)
-    previous = _web_version(report.previous_clifft_version)
-    _plot_web_ratios(
-        plt,
-        theme,
-        points=[
-            (point.workload_id, point.current_over_previous, point.current_packed)
-            for point in report.release_points
-        ],
-        output=output,
-        xlabel=f"Clifft v{current} throughput relative to v{previous}",
-        ticks=(1, 1.5, 2, 3, 5, 10, 20, 50, 100, 200, 500, 1000),
+    from matplotlib.ticker import FuncFormatter, MaxNLocator
+
+    points = sorted(report.release_points, key=lambda point: point.current_over_previous)
+    changes = [100 * (point.current_over_previous - 1) for point in points]
+    extent = max(2.5, max(abs(value) for value in changes) * 1.5)
+    figure, axis = plt.subplots(figsize=(9.6, 4.5))
+    axis.axvline(0, color=theme.muted, linewidth=1.2, linestyle=(0, (3, 3)))
+    for position, (point, change) in enumerate(zip(points, changes, strict=True)):
+        axis.plot([0, change], [position, position], color=theme.blue, linewidth=4.5, alpha=0.32)
+        axis.scatter(
+            change, position, s=88, edgecolor=theme.blue,
+            facecolor=theme.blue if point.current_packed else "none", linewidth=2, zorder=3,
+        )
+        axis.annotate(
+            f"{change:+.2f}%", (change, position),
+            xytext=(9 if change >= 0 else -9, 0), textcoords="offset points",
+            ha="left" if change >= 0 else "right", va="center", fontweight="bold",
+        )
+    axis.set_xlim(-extent, extent)
+    axis.set_ylim(-0.5, len(points) - 0.5)
+    axis.xaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:+g}%"))
+    axis.set_yticks(range(len(points)), labels=[WORKLOAD_LABELS[p.workload_id] for p in points])
+    axis.set_xlabel(
+        f"Clifft v{_web_version(report.clifft_version)} throughput change "
+        f"from v{_web_version(report.previous_clifft_version)}", labelpad=12,
     )
+    _clean_web_axis(axis, theme)
+    figure.text(
+        0.24, 0.035,
+        "Filled: packed batch   ·   Open: scalar   ·   Prepared-basis adder shown separately",
+        fontsize=8.5, color=theme.muted,
+    )
+    figure.subplots_adjust(left=0.24, right=0.98, top=0.96, bottom=0.22)
+    figure.savefig(output, dpi=200, transparent=True)
+    plt.close(figure)
 
 
 def _web_throughput_label(value: float) -> str:
@@ -878,21 +1027,27 @@ def _plot_web_combined_throughput(
     from matplotlib.lines import Line2D
     from matplotlib.ticker import FixedLocator, FuncFormatter
 
-    points = sorted(report.tool_throughput_points, key=lambda point: point.clifft_rate)
-    rates = [rate for point in points for rate in (point.clifft_rate, point.alternative_rate)]
+    points = sorted(report.tool_throughput_points, key=lambda point: point.rates["Clifft"])
+    rates = [rate for point in points for rate in point.rates.values()]
     lower_power = math.floor(math.log10(min(rates)))
     upper_power = math.ceil(math.log10(max(rates)))
     lower = 10 ** (lower_power - 0.1)
     # Reserve room after the fastest marker for its absolute-rate label.
-    upper = max(rates) * 7
+    upper = max(rates) * 9
     positions = list(range(len(points)))
-    figure, axis = plt.subplots(figsize=(9.6, 5.4))
+    figure, axis = plt.subplots(figsize=(9.6, 7))
+    styles = (
+        ("Clifft", 0.30, theme.blue, "o"),
+        ("SymFT", 0.10, theme.orange, "s"),
+        ("xtim", -0.10, theme.green, "D"),
+        ("Stim", -0.30, theme.purple, "^"),
+    )
 
     for position, point in zip(positions, points, strict=True):
-        for rate, offset, color, marker in (
-            (point.clifft_rate, 0.18, theme.blue, "o"),
-            (point.alternative_rate, -0.18, theme.orange, "s"),
-        ):
+        for tool, offset, color, marker in styles:
+            if tool not in point.rates:
+                continue
+            rate = point.rates[tool]
             y = position + offset
             axis.plot(
                 [lower, rate],
@@ -910,24 +1065,15 @@ def _plot_web_combined_throughput(
                 textcoords="offset points",
                 va="center",
                 color=color,
-                fontsize=10,
+                fontsize=9,
                 fontweight="bold",
             )
-        axis.text(
-            1.13,
-            position,
-            _web_ratio_label(point.clifft_over_alternative),
-            transform=axis.get_yaxis_transform(),
-            ha="center",
-            va="center",
-            color=theme.foreground,
-            fontsize=11,
-            fontweight="bold",
-        )
+        if position > 0:
+            axis.axhline(position - 0.5, color=theme.grid, linewidth=0.6, alpha=0.35)
 
     axis.set_xscale("log")
     axis.set_xlim(lower, upper)
-    axis.set_ylim(-0.55, len(points) - 0.45)
+    axis.set_ylim(-0.5, len(points) - 0.5)
     axis.xaxis.set_major_locator(
         FixedLocator([10**power for power in range(lower_power, upper_power + 1)])
     )
@@ -937,32 +1083,88 @@ def _plot_web_combined_throughput(
     axis.legend(
         handles=[
             Line2D(
-                [], [], color=theme.blue, marker="o", linewidth=2.2, markersize=5.5,
-                label=f"Clifft v{_web_version(report.clifft_version)}",
-            ),
-            Line2D(
-                [], [], color=theme.orange, marker="s", linewidth=2.2, markersize=5.5,
-                label=f"{report.alternative_name} v{_web_version(report.alternative_version)}",
-            ),
+                [], [], color=color, marker=marker, linewidth=2.2, markersize=5.5,
+                label=f"{tool} v{_web_version(report.tool_versions[tool])}",
+            ) for tool, _offset, color, marker in styles
         ],
         loc="lower left",
         bbox_to_anchor=(0, 1.035),
         frameon=False,
-        ncols=2,
+        ncols=4,
+        fontsize=9,
         handletextpad=0.6,
-        columnspacing=1.8,
+        columnspacing=1.4,
         borderaxespad=0,
     )
-    axis.plot(
-        [1.035, 1.035], [0, 1], transform=axis.transAxes,
-        color=theme.grid, linewidth=0.8, alpha=0.48, clip_on=False,
-    )
-    axis.text(
-        1.13, 1.045, f"Clifft / {report.alternative_name}", transform=axis.transAxes,
-        ha="center", va="bottom", color=theme.muted, fontsize=10,
-    )
     _clean_web_axis(axis, theme)
-    figure.subplots_adjust(left=0.24, right=0.855, top=0.87, bottom=0.14)
+    figure.text(
+        0.24, 0.935, "One pinned CPU  ·  Calibrated batching  ·  Median of five ≥30 s samples",
+        fontsize=8.5, color=theme.muted,
+    )
+    figure.text(
+        0.24, 0.035,
+        "xtim: each sample starts with an empty cache; lazy plan construction is timed.\n"
+        "Absent markers: no measurement in this campaign. Rates count attempted shots.",
+        fontsize=8.5, color=theme.muted, linespacing=1.6,
+    )
+    figure.subplots_adjust(left=0.24, right=0.98, top=0.87, bottom=0.17)
+    figure.savefig(output, dpi=200, transparent=True)
+    plt.close(figure)
+
+
+def _plot_web_adder(plt: Any, theme: WebTheme, report: Report, output: Path) -> None:
+    from matplotlib.ticker import FixedLocator, FuncFormatter
+
+    adder = report.adder
+    figure, axis = plt.subplots(figsize=(9.6, 4.5))
+    figure.text(0.06, 0.93, "16-bit Draper adder", fontsize=17, fontweight="bold")
+    figure.text(
+        0.06, 0.865, "32 qubits  ·  Prepared basis input  ·  No noise or postselection",
+        fontsize=10, color=theme.muted,
+    )
+    figure.text(
+        0.96, 0.92, f"{adder.current_over_previous:,.0f}×", fontsize=23,
+        color=theme.blue, ha="right", fontweight="bold",
+    )
+    figure.text(0.96, 0.865, "throughput gain", fontsize=10, ha="right", color=theme.muted)
+    rates = (adder.previous_rate, adder.current_rate)
+    lower_power = math.floor(math.log10(min(rates)))
+    upper_power = math.ceil(math.log10(max(rates)))
+    lower = 10 ** (lower_power - 0.1)
+    for position, (rate, color) in enumerate(zip(rates, (theme.orange, theme.blue), strict=True)):
+        axis.plot([lower, rate], [position, position], color=color, linewidth=4.5, alpha=0.32)
+        axis.scatter(rate, position, color=color, s=88, zorder=3)
+        axis.annotate(
+            _web_throughput_label(rate), (rate, position), xytext=(9, 0),
+            textcoords="offset points", va="center", fontweight="bold", color=color,
+        )
+    axis.set_xscale("log")
+    axis.set_xlim(lower, max(rates) * 15)
+    axis.set_ylim(-0.6, 1.6)
+    axis.xaxis.set_major_locator(FixedLocator(
+        [10**power for power in range(lower_power, upper_power + 1, 2)]
+    ))
+    axis.xaxis.set_major_formatter(FuncFormatter(_throughput_tick))
+    axis.set_yticks((0, 1), labels=(
+        f"Clifft v{_web_version(report.previous_clifft_version)}",
+        f"Clifft v{_web_version(report.clifft_version)}",
+    ))
+    axis.set_xlabel("Attempted shots per second", labelpad=10)
+    _clean_web_axis(axis, theme)
+    figure.subplots_adjust(left=0.21, right=0.98, top=0.77, bottom=0.39)
+    for x, label, value in (
+        (0.21, "Compile time", f"{adder.previous_compile_seconds * 1000:.2f} ms → "
+         f"{adder.current_compile_seconds * 1000:.2f} ms"),
+        (0.65, "Peak active width", f"{adder.previous_peak_active_width} → "
+         f"{adder.current_peak_active_width} qubits"),
+    ):
+        figure.text(x, 0.19, label, fontsize=10, color=theme.muted)
+        figure.text(x, 0.12, value, fontsize=13, fontweight="bold")
+    figure.text(
+        0.06, 0.03,
+        "Fixed basis inputs: 37449 + 18724. Compilation is measured separately from sampling.",
+        fontsize=8.5, color=theme.muted,
+    )
     figure.savefig(output, dpi=200, transparent=True)
     plt.close(figure)
 
@@ -989,10 +1191,13 @@ def render_web(report: Report, output_dir: Path) -> list[Path]:
             plt, theme, report, output_dir / f"performance-over-time-{suffix}.png"
         )
         _plot_web_release_comparison(
-            plt, theme, report, output_dir / f"v011-vs-v010-{suffix}.png"
+            plt, theme, report, output_dir / f"v012-vs-v011-{suffix}.png"
         )
         _plot_web_combined_throughput(
-            plt, theme, report, output_dir / f"clifft-symft-throughput-{suffix}.png"
+            plt, theme, report, output_dir / f"simulator-throughput-{suffix}.png"
+        )
+        _plot_web_adder(
+            plt, theme, report, output_dir / f"draper-adder-{suffix}.png"
         )
     return list(web_output_paths(output_dir))
 

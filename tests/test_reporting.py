@@ -12,7 +12,16 @@ import pytest
 from clifft_bench.manifest import load_suite
 from clifft_bench.results import COMPARISON_FIELDS
 from clifft_bench.results import _comparison_rows as collect_comparisons
-from reporting.qec import WORKLOAD_ORDER, _load_release, build_report, web_output_paths
+from reporting.qec import (
+    ADDER_WORKLOAD,
+    CURRENT_WORKLOAD_ORDER,
+    DISTILLATION_WORKLOAD,
+    TOOL_COMPARISONS,
+    WORKLOAD_ORDER,
+    _load_release,
+    build_report,
+    web_output_paths,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "reporting/sources.json"
@@ -47,7 +56,7 @@ def copied_sources(tmp_path: Path) -> Path:
         source = ROOT / relative
         destination = tmp_path / source.name
         destination.mkdir()
-        for name in ("comparisons.csv", "index.json"):
+        for name in ("comparisons.csv", "cases.csv", "index.json"):
             (destination / name).write_bytes((source / name).read_bytes())
         releases.append(str(destination))
     document["release_executions"] = releases
@@ -80,14 +89,17 @@ def test_reporting_selects_the_release_core_from_archived_results(copied_sources
         with path.open(newline="") as stream:
             rows = list(csv.DictReader(stream))
         archived_extras.update({row["workload_id"] for row in rows} - core)
-        _write_rows(path, [row for row in rows if row["workload_id"] in core])
+        _write_rows(path, [row for row in rows
+                           if row["workload_id"] in core | {DISTILLATION_WORKLOAD, ADDER_WORKLOAD}])
     assert archived_extras == {
         "coherent-surface-d3-r1-p1e-3-rz2e-2",
         "coherent-surface-d5-r1-p1e-3-rz2e-2",
+        DISTILLATION_WORKLOAD,
+        ADDER_WORKLOAD,
     }
 
-    # A future six-workload execution and the archived eight-workload evidence
-    # must produce the same view when the shared measurements are identical.
+    # Retired workloads do not affect the report; new workloads are required
+    # only for current figures, while the historical median retains its core.
     assert build_report(copied_sources) == expected
 
 
@@ -130,11 +142,13 @@ def test_reporting_chains_calibrated_release_onto_scalar_history() -> None:
         "0.9.0",
         "0.10.0",
         "0.11.0",
+        "0.12.0",
     )
     assert report.history.source_executions[8:] == (
         "clifft-history-v1-20260902",
         "release-v1-20260903-133252",
         "release-v1-20260930-180134",
+        "release-v1-20261009-192718",
     )
     assert set(report.history.speedups) == set(WORKLOAD_ORDER)
     assert all(
@@ -161,8 +175,8 @@ def test_reporting_uses_latest_calibrated_cross_tool_comparison() -> None:
 
     latest_release = ROOT / _source_document()["release_executions"][-1]
     assert report.release_executions[-1] == latest_release.name
-    assert len(report.relative_points) == len(WORKLOAD_ORDER)
-    assert len(report.throughput_points) == len(WORKLOAD_ORDER)
+    assert len(report.relative_points) == len(CURRENT_WORKLOAD_ORDER)
+    assert len(report.throughput_points) == len(CURRENT_WORKLOAD_ORDER)
 
     alternative_row = next(
         row
@@ -231,53 +245,109 @@ def test_reporting_exposes_release_comparison_and_qv_source() -> None:
     source_document = _source_document()
 
     assert report.qv_execution == Path(source_document["qv_execution"]).name
-    assert len(report.release_points) == len(WORKLOAD_ORDER)
+    assert len(report.release_points) == len(CURRENT_WORKLOAD_ORDER)
     release_points = {point.workload_id: point for point in report.release_points}
     assert release_points["distillation-color-code-85q-p5e-2"].current_packed
     assert not release_points["coherent-surface-d5-r5-p1e-3-rz2e-2"].current_packed
 
 
-def test_combined_throughput_uses_both_calibrated_absolute_rates() -> None:
+def test_combined_throughput_uses_measured_rates_and_sparse_tool_coverage() -> None:
     report = build_report(SOURCES)
     latest_release = ROOT / _source_document()["release_executions"][-1]
-    rows = [
-        row for row in _comparison_rows(latest_release)
-        if row["comparison_id"] == "alternatives-vs-current"
-    ]
+    rows = _comparison_rows(latest_release)
     points = {point.workload_id: point for point in report.tool_throughput_points}
-    assert set(points) == set(WORKLOAD_ORDER)
+    assert set(points) == set(CURRENT_WORKLOAD_ORDER)
+    assert report.tool_versions == {
+        "Clifft": "0.12.0", "SymFT": "0.1.1", "xtim": "3.1.4", "Stim": "1.16.0",
+    }
     for workload, point in points.items():
-        selected = [row for row in rows if row["workload_id"] == workload]
-        assert point.clifft_rate == statistics.median(
-            float(row["baseline_rate"]) for row in selected
-        )
-        assert point.alternative_rate == statistics.median(
-            float(row["candidate_rate"]) for row in selected
-        )
-        assert point.clifft_over_alternative == 1 / statistics.median(
-            float(row["ratio_candidate_over_baseline"]) for row in selected
-        )
+        current = [row for row in rows if row["workload_id"] == workload
+                   and row["comparison_id"] == "current-vs-previous"]
+        assert point.rates["Clifft"] == statistics.median(float(row["candidate_rate"])
+                                                         for row in current)
+        for tool, (comparison, workloads) in TOOL_COMPARISONS.items():
+            if workload not in workloads:
+                assert tool not in point.rates  # No zeros or synthetic missing-tool rates.
+                continue
+            selected = [row for row in rows if row["workload_id"] == workload
+                        and row["comparison_id"] == comparison]
+            assert point.rates[tool] == statistics.median(float(row["candidate_rate"])
+                                                         for row in selected)
+    assert sum(len(point.rates) for point in points.values()) == 19
+    assert points[DISTILLATION_WORKLOAD].rates["xtim"] > 53_000_000
+    assert "Stim" not in points[DISTILLATION_WORKLOAD].rates
 
-    near_tie = points["msc-d3-inject-cultivate-p1e-3"]
-    assert round(near_tie.clifft_over_alternative, 2) == 1.06
-    outlier = points["coherent-surface-d5-r5-p1e-3-rz2e-2"]
-    assert round(outlier.clifft_rate) == 12893
-    assert round(outlier.alternative_rate) == 64
-    assert round(outlier.clifft_over_alternative, 1) == 200.9
+
+@pytest.mark.parametrize("comparison,workload", [
+    ("current-vs-previous", DISTILLATION_WORKLOAD),
+    ("alternatives-vs-current", DISTILLATION_WORKLOAD),
+    ("xtim-vs-current", DISTILLATION_WORKLOAD),
+    ("stim-anchor-vs-current", "surface-code-d7-r7-p1e-3"),
+    ("current-vs-previous", ADDER_WORKLOAD),
+])
+def test_current_figures_reject_missing_measurements(
+    copied_sources: Path, comparison: str, workload: str,
+) -> None:
+    path = Path(json.loads(copied_sources.read_text())["release_executions"][-1])
+    rows = _comparison_rows(path)
+    _write_rows(path / "comparisons.csv", [row for row in rows if not (
+        row["comparison_id"] == comparison and row["workload_id"] == workload
+    )])
+    with pytest.raises(ValueError, match="does not cover the reporting core"):
+        build_report(copied_sources)
+
+
+@pytest.mark.parametrize("field", [
+    "baseline_case_id", "baseline_rate", "baseline_batch_size_effective",
+    "baseline_simulator_version", "baseline_result_id",
+])
+def test_new_tools_must_reuse_the_current_clifft_case(copied_sources: Path, field: str) -> None:
+    path = Path(json.loads(copied_sources.read_text())["release_executions"][-1])
+    rows = _comparison_rows(path)
+    row = next(row for row in rows if row["comparison_id"] == "xtim-vs-current")
+    row[field] = "123"
+    _write_rows(path / "comparisons.csv", rows)
+    with pytest.raises(ValueError, match="does not reuse current Clifft"):
+        build_report(copied_sources)
+
+
+def test_adder_uses_paired_rates_and_compiler_evidence() -> None:
+    report = build_report(SOURCES)
+    adder = report.adder
+    assert adder.previous_rate == pytest.approx(6584.225081387494)
+    assert adder.current_rate == pytest.approx(217607772.89363268)
+    assert adder.current_over_previous == pytest.approx(33049.86847360027)
+    assert adder.previous_compile_seconds == pytest.approx(0.003413411)
+    assert adder.current_compile_seconds == pytest.approx(0.002063026)
+    assert (adder.previous_peak_active_width, adder.current_peak_active_width) == (15, 0)
+    assert ADDER_WORKLOAD not in report.history.speedups
+    assert ADDER_WORKLOAD not in {point.workload_id for point in report.release_points}
+
+
+def test_adder_rejects_mismatched_compiler_case(copied_sources: Path) -> None:
+    path = Path(json.loads(copied_sources.read_text())["release_executions"][-1]) / "cases.csv"
+    with path.open(newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    next(row for row in rows if row["workload_id"] == ADDER_WORKLOAD)["case_id"] = "different"
+    _write_rows(path, rows)
+    with pytest.raises(ValueError, match="adder cases do not match comparison"):
+        build_report(copied_sources)
 
 
 def test_web_output_paths_cover_all_qec_assets(tmp_path: Path) -> None:
     assert {path.name for path in web_output_paths(tmp_path)} == {
         "clifft-throughput-light.png",
         "clifft-throughput-dark.png",
-        "clifft-symft-throughput-light.png",
-        "clifft-symft-throughput-dark.png",
+        "simulator-throughput-light.png",
+        "simulator-throughput-dark.png",
         "clifft-vs-symft-light.png",
         "clifft-vs-symft-dark.png",
         "performance-over-time-light.png",
         "performance-over-time-dark.png",
-        "v011-vs-v010-light.png",
-        "v011-vs-v010-dark.png",
+        "v012-vs-v011-light.png",
+        "v012-vs-v011-dark.png",
+        "draper-adder-light.png",
+        "draper-adder-dark.png",
     }
 
 
@@ -298,8 +368,8 @@ def test_checked_in_web_assets_cover_reporting_outputs() -> None:
             assert height == 760
         elif path.name.startswith("quantum-volume"):
             assert height == 940
-        elif path.name.startswith("clifft-symft-throughput"):
-            assert height == 1080
+        elif path.name.startswith("simulator-throughput"):
+            assert height == 1400
         else:
             assert height == 900
         assert data[25] == 6  # RGBA
