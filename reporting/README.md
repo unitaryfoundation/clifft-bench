@@ -10,20 +10,24 @@ set.
 - `history_execution` supplies scalar Clifft 0.1.0 through 0.9.0 QEC results.
 - `release_executions` is an ordered chain of finalized recurring release runs.
   Each run extends the history with its paired `current-vs-previous` ratios, and
-  the latest run supplies absolute Clifft throughput, Clifft/SymFT ratios, and
-  the current-versus-previous release comparison.
+  the latest run supplies absolute throughput for Clifft, SymFT, xtim, and Stim,
+  Clifft/SymFT ratios, and the current-versus-previous release comparison.
+  Adder compile times and peak active widths come from that run's `cases.csv`.
 - `qv_execution` supplies the four-tool Quantum Volume measurements.
 
 The joins validate execution identities, workload coverage, equal per-workload
 shot counts, the release chain, and reuse of the same current Clifft cases in
-both release comparisons.
+all cross-tool comparisons. Adder compiler evidence must join to the exact
+cases used for its paired throughput comparison. Missing expected measurements
+are rejected; unsupported combinations are left absent.
 
 QEC figures use the recurring campaign's
 [workload set](../docs/benchmark-contract.md#release-workload-selection) for
-historical medians, release ratios, and cross-tool comparisons. Every selected
-version and comparison must cover the full set. Source executions may contain
-additional workloads; reporting selects the current set without modifying the
-archived evidence.
+historical medians: the same six workloads at every version, now through 0.12.0.
+Current figures cover those six plus 15-to-1 distillation. The prepared-basis
+adder has a separate figure and never enters the QEC median or release-change
+axis. Source executions may contain retired workloads; reporting selects its
+defined sets without modifying the archived evidence.
 
 ## Publication figures
 
@@ -41,24 +45,35 @@ The web-ready, transparent light/dark figures are checked in under
 
 - `clifft-throughput-{light,dark}.png`: absolute attempted shots per second for
   the latest Clifft release configuration, used by Clifft's README.
-- `clifft-symft-throughput-{light,dark}.png`: both tools' absolute attempted-shot
-  rates on one logarithmic axis, with Clifft/SymFT ratios in a right-hand column.
-  This combined figure replaces the Clifft-only figure and rate/ratio table on
-  Clifft's performance guide. Workloads retain the README's descending Clifft
-  throughput order; circles and squares distinguish the tools even without color.
+- `simulator-throughput-{light,dark}.png`: Clifft, SymFT, xtim, and Stim absolute
+  attempted-shot rates on one logarithmic axis. Workloads follow descending
+  Clifft throughput order; each tool has its own marker shape and color. This
+  replaces the former `clifft-symft-throughput` pair.
 - `clifft-vs-symft-{light,dark}.png`: latest calibrated Clifft throughput
   relative to calibrated SymFT. This optional pair remains available here but
   is not consumed by Clifft's documentation.
 - `performance-over-time-{light,dark}.png`: median Clifft speedup since v0.1.0.
-- `v011-vs-v010-{light,dark}.png`: current release throughput relative to the
-  previous release, retaining packed/scalar marker fill.
+- `v012-vs-v011-{light,dark}.png`: current QEC throughput changes from the
+  previous release, on a linear percentage axis with packed/scalar marker fill.
+- `draper-adder-{light,dark}.png`: previous/current Clifft throughput for the
+  fixed-input 16-bit adder, with compilation time and peak active width.
 - `quantum-volume-{light,dark}.png`: median execution time for Clifft, Qiskit
   Aer, qsim, and Qulacs from the selected QV execution.
 
-The combined figure reads each tool's absolute rates directly from the latest
-`alternatives-vs-current` rows. Per-workload rates are medians across the selected
-rows, and the speedup column uses the same paired-ratio statistic as the existing
-relative-only figure. No rates are reconstructed from rounded labels or ratios.
+The combined figure reads absolute rates directly from the latest
+`alternatives-vs-current`, `xtim-vs-current`, and `stim-anchor-vs-current` rows.
+All reuse the current Clifft cases in `current-vs-previous`. Per-workload rates
+are medians across the selected rows; no rates are reconstructed from rounded
+labels or ratios. The optional Clifft/SymFT figure retains its paired-ratio
+statistic. xtim's four measured workloads and Stim's single surface-code anchor
+are shown without inventing values for other combinations.
+
+These are available aggregate-count endpoints on one pinned logical CPU.
+xtim samples begin with an empty plan cache and time lazy plan construction;
+its plotted rate is a fixed-duration average. The exact pinned builds and
+measurement boundaries remain in the [contract](../docs/benchmark-contract.md).
+The separately measured Tsim GPU and Quantum Volume experiments retain their
+own evidence and figures.
 
 ## Refresh after an RC campaign
 
@@ -78,6 +93,7 @@ web assets:
 ```bash
 uv run --extra report python reporting/qec.py --check
 uv run --extra report python reporting/qec.py --style web
+uv run --extra report python reporting/qec.py
 ```
 
 The QV pair remains based on the reviewed 0.10.0rc1 execution; the QEC release
@@ -107,20 +123,23 @@ The QEC release-history calculation uses paired ratios between versions rather
 than comparing absolute rates from different EC2 boots. Audit the latest
 `current-vs-previous` rows before publishing to confirm they compare the best
 current Clifft configuration with the supported previous configuration. Also
-confirm that `alternatives-vs-current` compares the calibrated configuration of
-each tool and reuses the current Clifft cases.
+confirm that every cross-tool comparison uses calibrated configurations and
+reuses the current Clifft cases. Small release changes on a single host do not
+establish a release-wide speedup.
 
 ## Update the Clifft documentation copy
 
 Clifft checks in rendered copies only. With `CLIFFT_CHECKOUT` set to a local
-Clifft checkout, update the five consumed light/dark pairs (ten assets) with:
+Clifft checkout, copy the six light/dark pairs (twelve assets) for the updated
+README and performance guide with:
 
 ```bash
 CLIFFT_CHECKOUT=/path/to/clifft
 cp reporting/figures/web/clifft-throughput-{light,dark}.png \
-  reporting/figures/web/clifft-symft-throughput-{light,dark}.png \
+  reporting/figures/web/simulator-throughput-{light,dark}.png \
   reporting/figures/web/performance-over-time-{light,dark}.png \
-  reporting/figures/web/v011-vs-v010-{light,dark}.png \
+  reporting/figures/web/v012-vs-v011-{light,dark}.png \
+  reporting/figures/web/draper-adder-{light,dark}.png \
   reporting/figures/web/quantum-volume-{light,dark}.png \
   "$CLIFFT_CHECKOUT/docs/assets/performance/"
 ```
@@ -128,11 +147,13 @@ cp reporting/figures/web/clifft-throughput-{light,dark}.png \
 The filenames are unchanged by the copy: each
 `reporting/figures/web/<name>.png` maps directly to
 `clifft/docs/assets/performance/<name>.png`. The README retains the Clifft-only
-absolute-throughput figure, while the guide uses the new combined figure. Do not
+absolute-throughput figure, while the guide uses the four-tool combined figure
+and a separate adder section. Update the old `clifft-symft-throughput` and
+`v011-vs-v010` references and remove those superseded copies in the Clifft PR. Do not
 copy the optional relative-only `clifft-vs-symft` pair.
 Review both light and dark variants
 in the Clifft pull request. For a later release pair, update the release-specific
-`v011-vs-v010` output stem and its Clifft references as part of that release's
+`v012-vs-v011` output stem and its Clifft references as part of that release's
 report refresh.
 
 ## How the QEC history is combined

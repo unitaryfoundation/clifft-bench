@@ -25,13 +25,15 @@ aggregate endpoints, not identical internal work or a decoder benchmark.
 
 ## Release workload selection
 
-The QEC cases in the recurring release campaign and figures cover cultivation
+The historical QEC figures cover cultivation
 d3 and d5, 85q distillation, Clifford surface code d7/r7, and coherent surface code d3/r3
 and d5/r5. The coherent memory workloads use repeated syndrome-extraction
 rounds. One-off experiments define their own workload sets.
 
-QEC reporting uses this same workload set across all plotted releases and
-computes the median at each version.
+The performance-history figure uses this same six-workload set across all
+plotted releases and computes the median at each version. Current throughput,
+cross-tool comparisons, and release-change figures also include 15-to-1
+distillation. Adding it to current figures does not alter historical medians.
 
 The Clifft release comparison also includes `draper-adder-m16-basis`, a
 fixed-input 16-bit addition on 32 qubits without noise or postselection.
@@ -44,8 +46,11 @@ T-gate phase noise at p=0.001, and four postselected X checks. An ideal inverse-
 logical-X readout replaces expectation declarations so observable 0 measures
 accepted logical phase errors under the shared raw-parity contract. Preparation,
 checks, and verification are noiseless; the verification gates are timed.
-Its measurements are included in the finalized result tables. Plot selection is
-deferred until the next results are collected. See the
+Its measurements are included in the finalized result tables and current QEC
+figures. The combined throughput chart shows Clifft and SymFT on all seven QEC
+workloads, xtim on its four measured workloads, and Stim on its surface-code
+anchor. An absent marker means no measurement in the selected campaign; it is
+never represented as zero throughput. See the
 [corpus notes](../workloads/README.md) for provenance and validation.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
