@@ -373,3 +373,52 @@ def test_checked_in_web_assets_cover_reporting_outputs() -> None:
         else:
             assert height == 900
         assert data[25] == 6  # RGBA
+
+
+@pytest.fixture
+def sources_with_tsim(copied_sources: Path) -> Path:
+    path = Path(json.loads(copied_sources.read_text())["release_executions"][-1])
+    rows = _comparison_rows(path)
+    # Synthetic rates test selection only; never used as publication evidence.
+    tsim = [{**row, "comparison_id": "tsim-vs-current",
+             "candidate_simulator_name": "Tsim", "candidate_simulator_version": "0.1.5",
+             "candidate_simulator_display_version": "0.1.5+e9406ed"}
+            for row in rows if row["comparison_id"] == "alternatives-vs-current"]
+    bulk = [{**row, "comparison_id": "bulk-alternatives-vs-current",
+             "baseline_shots_per_call": "4096", "candidate_shots_per_call": "4096",
+             "candidate_rate": "999999999"} for row in tsim]
+    _write_rows(path / "comparisons.csv", rows + tsim + bulk)
+    return copied_sources
+
+
+def test_reporting_includes_tsim_without_mixing_bulk_or_changing_history(sources_with_tsim):
+    old = build_report(SOURCES)
+    new = build_report(sources_with_tsim)
+    assert new.tool_versions == {**old.tool_versions, "Tsim": "0.1.5+e9406ed"}
+    assert new.history == old.history
+    assert new.release_points == old.release_points
+    for before, after in zip(old.tool_throughput_points, new.tool_throughput_points, strict=True):
+        assert before.workload_id == after.workload_id
+        assert after.rates == {**before.rates, "Tsim": before.rates["SymFT"]}
+
+
+@pytest.mark.parametrize("problem, message", [
+    ("missing", "does not cover the reporting core"),
+    ("baseline", "does not reuse current Clifft"),
+    ("shots", "unequal shots_per_call"),
+])
+def test_reporting_rejects_incomplete_or_unmatched_tsim(sources_with_tsim, problem, message):
+    path = Path(json.loads(sources_with_tsim.read_text())["release_executions"][-1])
+    rows = _comparison_rows(path)
+    tsim = [row for row in rows if row["comparison_id"] == "tsim-vs-current"]
+    if problem == "missing":
+        rows = [row for row in rows if not (
+            row in tsim and row["workload_id"] == DISTILLATION_WORKLOAD
+        )]
+    elif problem == "baseline":
+        tsim[0]["baseline_case_id"] = "wrong-case"
+    else:
+        tsim[0]["candidate_shots_per_call"] = "4096"
+    _write_rows(path / "comparisons.csv", rows)
+    with pytest.raises(ValueError, match=message):
+        build_report(sources_with_tsim)

@@ -49,8 +49,9 @@ checks, and verification are noiseless; the verification gates are timed.
 Its measurements are included in the finalized result tables and current QEC
 figures. The combined throughput chart shows Clifft and SymFT on all seven QEC
 workloads, xtim on its four measured workloads, and Stim on its surface-code
-anchor. An absent marker means no measurement in the selected campaign; it is
-never represented as zero throughput. See the
+anchor. It includes Tsim on all seven QEC workloads once the selected release
+contains the new comparison. An absent marker means no measurement in the
+selected campaign; it is never represented as zero throughput. See the
 [corpus notes](../workloads/README.md) for provenance and validation.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting

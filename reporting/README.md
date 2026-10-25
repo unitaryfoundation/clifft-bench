@@ -177,7 +177,10 @@ The raw setup metadata retains source verification, Numba threads, seed policy,
 and complete calibration evidence. Kernel warmup is also part of total setup,
 so do not add it again to that total.
 
-Existing published figures continue to use reviewed evidence. New Tsim/bulk
-figures should be selected after matched reference-host results are collected
-and reviewed; local smoke/probe timings are not publication data. Broader
-finite-shot reporting is tracked in issue #79.
+Existing published figures continue to use reviewed evidence. The current-tool
+chart includes Tsim when the selected release has complete `tsim-vs-current`
+coverage, verifying that it reuses the exact current-Clifft baseline cases.
+It labels the source commit as well as the distribution version and never
+reads bulk rows. Select new evidence only after matched reference-host results
+are collected and reviewed; local smoke/probe timings are not publication data.
+Bulk charts and broader finite-shot reporting are tracked in issue #79.

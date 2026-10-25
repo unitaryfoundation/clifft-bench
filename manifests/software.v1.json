@@ -434,7 +434,8 @@
     },
     {
       "id": "tsim-0.1.5-e9406ed",
-      "name": "Tsim active statevector",
+      "display_version": "0.1.5+e9406ed",
+      "name": "Tsim",
       "adapter": "tsim",
       "distribution": "bloqade-tsim",
       "version": "0.1.5",

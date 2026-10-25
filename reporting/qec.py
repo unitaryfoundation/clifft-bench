@@ -290,7 +290,12 @@ def _load_current_tools(
     versions = {"Clifft": release.current_version}
     rates = {workload: {"Clifft": release.current_rates[workload]}
              for workload in CURRENT_WORKLOAD_ORDER}
-    for tool, (comparison, workloads) in TOOL_COMPARISONS.items():
+    comparisons = dict(TOOL_COMPARISONS)
+    # Archived campaigns predate Tsim. Once selected, require the same complete
+    # current-workload coverage and exact baseline cases as the other tools.
+    if any(row["comparison_id"] == "tsim-vs-current" for row in rows):
+        comparisons["Tsim"] = ("tsim-vs-current", CURRENT_WORKLOAD_ORDER)
+    for tool, (comparison, workloads) in comparisons.items():
         selected = _select_comparison(rows, comparison, path.name, workloads)
         if _one(selected, "candidate_simulator_name", "alternative simulator") != tool:
             raise ValueError(f"{path.name} {comparison} does not measure {tool}")
@@ -684,13 +689,14 @@ class WebTheme:
     orange: str
     green: str
     purple: str
+    red: str
 
 
 WEB_THEMES = (
     WebTheme("light", "#172033", "#64748B", "#CBD5E1", "#3C64B4", "#C26713",
-             "#167568", "#8750A6"),
+             "#167568", "#8750A6", "#B33D50"),
     WebTheme("dark", "#E6EDF7", "#AAB6C8", "#526077", "#83A7F2", "#F2A65A",
-             "#66CCB6", "#C8A0E5"),
+             "#66CCB6", "#C8A0E5", "#F28C9B"),
 )
 WEB_QEC_FIGURES = (
     "clifft-throughput",
@@ -1042,6 +1048,15 @@ def _plot_web_combined_throughput(
         ("xtim", -0.10, theme.green, "D"),
         ("Stim", -0.30, theme.purple, "^"),
     )
+    has_tsim = "Tsim" in report.tool_versions
+    if has_tsim:
+        styles = (
+            ("Clifft", 0.34, theme.blue, "o"),
+            ("SymFT", 0.17, theme.orange, "s"),
+            ("xtim", 0, theme.green, "D"),
+            ("Stim", -0.17, theme.purple, "^"),
+            ("Tsim", -0.34, theme.red, "v"),
+        )
 
     for position, point in zip(positions, points, strict=True):
         for tool, offset, color, marker in styles:
@@ -1090,7 +1105,7 @@ def _plot_web_combined_throughput(
         loc="lower left",
         bbox_to_anchor=(0, 1.035),
         frameon=False,
-        ncols=4,
+        ncols=3 if has_tsim else 4,
         fontsize=9,
         handletextpad=0.6,
         columnspacing=1.4,
@@ -1098,16 +1113,21 @@ def _plot_web_combined_throughput(
     )
     _clean_web_axis(axis, theme)
     figure.text(
-        0.24, 0.935, "One pinned CPU  ·  Calibrated batching  ·  Median of five ≥30 s samples",
+        0.24, 0.95 if has_tsim else 0.935,
+        "One pinned CPU  ·  Calibrated batching  ·  Median of five ≥30 s samples",
         fontsize=8.5, color=theme.muted,
     )
     figure.text(
         0.24, 0.035,
         "xtim: each sample starts with an empty cache; lazy plan construction is timed.\n"
-        "Absent markers: no measurement in this campaign. Rates count attempted shots.",
+        "Absent markers: no measurement in this campaign. Rates count attempted shots."
+        + ("\nTsim: CPU active_statevector backend." if has_tsim else ""),
         fontsize=8.5, color=theme.muted, linespacing=1.6,
     )
-    figure.subplots_adjust(left=0.24, right=0.98, top=0.87, bottom=0.17)
+    figure.subplots_adjust(
+        left=0.24, right=0.98, top=0.82 if has_tsim else 0.87,
+        bottom=0.21 if has_tsim else 0.17,
+    )
     figure.savefig(output, dpi=200, transparent=True)
     plt.close(figure)
 
