@@ -12,6 +12,7 @@ from typing import Any
 
 THREAD_LIMIT_ENVIRONMENT = {
     "OMP_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
     "OPENBLAS_NUM_THREADS": "1",
     "MKL_NUM_THREADS": "1",
     "NUMEXPR_NUM_THREADS": "1",

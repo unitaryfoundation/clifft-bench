@@ -86,3 +86,23 @@ jobs:
         env:
           JAX_PLATFORMS: cpu
         run: .venv/bin/python -m pytest -q
+
+  tsim-cpu:
+    runs-on: ubuntu-latest
+    env:
+      NUMBA_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      JAX_PLATFORMS: cpu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --no-deps -r environments/tsim-0.1.5-e9406ed.txt
+      - run: python -m pip install -e '.[test]'
+      - run: python -m pip check
+      - run: python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py tests/test_runner.py -k 'tsim or hamming'
+      - run: clifft-bench run --run-manifest manifests/run-tsim-smoke.v1.json --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/tsim-smoke.json
+      - run: clifft-bench validate /tmp/tsim-smoke.json

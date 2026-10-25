@@ -238,3 +238,33 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
             output_path=tmp_path / "invalid-timeout.json",
             min_sample_seconds=5,
         )
+
+
+def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
+    pytest.importorskip("tsim")
+    run_path, run, software = _write_fixture_suite(tmp_path)
+    workloads = json.loads((tmp_path / "workloads.json").read_text())
+    workloads["workloads"][0]["compatible_adapters"] = ["tsim"]
+    _write(tmp_path / "workloads.json", workloads)
+    implementation = software["implementations"][0]
+    implementation.update(
+        adapter="tsim", name="Tsim", distribution="bloqade-tsim", version="0.1.5",
+        commit_sha="e9406ed5bb49fcff1b04b65534cf56bbb756b3a6",
+        source_url="https://github.com/QuEraComputing/tsim",
+    )
+    _write(tmp_path / "software.json", software)
+    run["cases"] = run["cases"][:1]
+    run["measurement"]["setup_timeout_seconds"] = 120
+    run["measurement"]["request_timeout_seconds"] = 120
+    _write(run_path, run)
+    result = run_suite(load_suite(run_path), output_path=tmp_path / "result.json")
+    validate_document(result)
+    case = result["cases"][0]
+    assert case["status"] == "success", case["error"]
+    metadata = case["setup"]["runtime_metadata"]
+    assert metadata["initial_seed"] == run["seed"] - 1
+    assert metadata["threads"] == 1
+    assert metadata["installed_source_commit"] == implementation["commit_sha"]
+    assert case["warmup"]["attempted_shots"] == 8
+    assert metadata["kernel_warmup_seconds"] >= 0
+    assert metadata["compile_seconds"] >= 0

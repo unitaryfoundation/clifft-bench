@@ -56,8 +56,9 @@ class Adapter(ABC):
         artifact_path: Path,
         workload: dict[str, Any],
         execution: dict[str, Any],
+        seed: int = 0,
     ) -> PreparedAdapter:
-        """Parse and compile the workload outside every timed sample."""
+        """Parse and compile outside timing; seed compilation-only RNG APIs here."""
 
 
 def validate_counts(counts: Counts, *, postselect: bool) -> list[str]:

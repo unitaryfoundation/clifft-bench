@@ -57,6 +57,10 @@ CASE_FIELDS = [
     "clifft_scheduler",
     "compile_seconds",
     "peak_active_width",
+    "sampling_backend",
+    "trajectory_sharing",
+    "kernel_warmup_seconds",
+    "warmup_seconds",
     "peak_rss_bytes",
 ]
 
@@ -199,6 +203,10 @@ def _case_rows(
                     ),
                     "compile_seconds": metadata.get("compile_seconds", ""),
                     "peak_active_width": metadata.get("peak_active_width", ""),
+                    "sampling_backend": metadata.get("sampling_backend", ""),
+                    "trajectory_sharing": metadata.get("trajectory_sharing", ""),
+                    "kernel_warmup_seconds": metadata.get("kernel_warmup_seconds", ""),
+                    "warmup_seconds": (case.get("warmup") or {}).get("duration_seconds", ""),
                     "peak_rss_bytes": max(
                         (s["peak_rss_bytes"] for s in case["samples"] if "peak_rss_bytes" in s),
                         default="",
@@ -418,6 +426,25 @@ def _validate_execution(
                 statistics = metadata.get("scheduler_statistics")
                 if not isinstance(statistics, dict) or type(statistics.get("applied")) is not bool:
                     raise ValueError(f"raw case {expected.id!r} is missing scheduler statistics")
+            if (
+                expected.implementation.definition["adapter"] == "tsim"
+                and case["status"] == "success"
+            ):
+                metadata = (case.get("setup") or {}).get("runtime_metadata", {})
+                sharing = expected.definition["execution"].get("tsim_trajectory_sharing", True)
+                if (
+                    metadata.get("sampling_backend") != "active_statevector"
+                    or metadata.get("threads") != 1
+                    or metadata.get("trajectory_sharing") is not sharing
+                    or metadata.get("installed_source_commit")
+                    != expected.implementation.definition["commit_sha"]
+                ):
+                    raise ValueError(
+                        f"raw case {expected.id!r} has invalid Tsim runtime provenance"
+                    )
+                warm_shots = (case.get("warmup") or {}).get("attempted_shots", 0)
+                if warm_shots < expected.definition["shots_per_call"]:
+                    raise ValueError(f"raw case {expected.id!r} did not warm a full Tsim call")
             _validate_calibration_record(expected, case)
             observed_memory_limit = case["execution"].get("memory_limit_bytes")
             if observed_memory_limit != expected_memory_limit_bytes:

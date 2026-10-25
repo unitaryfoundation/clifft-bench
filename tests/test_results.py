@@ -300,3 +300,38 @@ def test_comparison_rejects_duplicate_variant_and_workload() -> None:
 
     with pytest.raises(ValueError, match="multiple successful baseline cases"):
         _comparison_rows(_suite(), "execution", rows)
+
+
+@pytest.mark.parametrize("field,value", [
+    (None, None), ("threads", 2), ("sampling_backend", "cat5"),
+    ("trajectory_sharing", False), ("installed_source_commit", "d" * 40),
+    ("warmup_shots", 1),
+])
+def test_tsim_finalizer_checks_runtime_identity_and_full_warmup(tmp_path, field, value):
+    suite = _suite()
+    expected = suite.cases[1]
+    expected.implementation.definition.update(adapter="tsim", commit_sha="c" * 40)
+    expected.definition["execution"]["tsim_trajectory_sharing"] = True
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    observed = raw["cases"][1]
+    observed["simulator"]["adapter"] = "tsim"
+    observed["setup"]["runtime_metadata"].update(
+        sampling_backend="active_statevector", threads=1, trajectory_sharing=True,
+        installed_source_commit="c" * 40,
+    )
+    observed["warmup"].update(
+        attempted_shots=64, accepted_shots=64, discarded_shots=0, logical_errors=0,
+    )
+    if field == "warmup_shots":
+        observed["warmup"].update(attempted_shots=value, accepted_shots=value)
+    elif field:
+        observed["setup"]["runtime_metadata"][field] = value
+    raw_path.write_text(json.dumps(raw))
+    args = dict(execution_id="test-execution", raw_paths=[raw_path],
+                output_dir=tmp_path / "finalized")
+    if field:
+        with pytest.raises(ValueError, match="Tsim"):
+            finalize_execution(suite, **args)
+    else:
+        finalize_execution(suite, **args)

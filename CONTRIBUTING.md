@@ -31,6 +31,11 @@ with Stim in a separate `stim-anchor-vs-current` comparison on the unchanged
 Clifford surface-code circuit.
 It also includes `xtim-vs-current` on the compatible subset, with calibrated
 packed-record chunks and the documented cache measurement policy.
+It also includes `tsim-vs-current` with CPU active-statevector sampling and
+trajectory sharing. `bulk-alternatives-vs-current` separately compares Clifft,
+SymFT, and Tsim at 4096 attempted shots per call on coherent d5/r5, preserving
+the historical one-shot configuration. See the
+[Tsim measurement contract](docs/benchmark-contract.md#tsim-active-statevector-cpu-comparison).
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 
@@ -46,7 +51,7 @@ For a new Clifft release:
    `clifft-current.execution` to the checked-in
    [scheduler configuration](campaigns/release-v1/clifft-scheduled-execution.json).
 4. Keep each workload's `shots_per_call` aligned across every variant and
-   release. Update those workload-level values only when measurement evidence
+   release within each comparison. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.
 5. Validate locally, then follow the [EC2 collection procedure](docs/manual-ec2.md).
 
@@ -86,3 +91,24 @@ For self-contained studies outside the recurring release campaign, see the
 [experiment guidelines](experiments/README.md).
 The [Tsim GPU study](experiments/tsim-gpu/README.md) has its own locked
 environment, bounded preparation, and finalize/commit/push workflow for results.
+
+
+## Tsim CPU adapter checks
+
+Use the pinned source environment; the released 0.1.5 wheel lacks this backend:
+
+```bash
+uv venv --python 3.12 .campaign-envs/tsim
+uv pip install --python .campaign-envs/tsim/bin/python -r environments/tsim-0.1.5-e9406ed.txt
+uv pip install --python .campaign-envs/tsim/bin/python -e '.[test]'
+NUMBA_NUM_THREADS=1 .campaign-envs/tsim/bin/python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py -k 'tsim or hamming'
+.campaign-envs/tsim/bin/python -m clifft_bench run \
+  --run-manifest manifests/run-tsim-smoke.v1.json \
+  --min-sample-seconds 0.01 --repetitions 1 --output /tmp/tsim-smoke.json
+.campaign-envs/tsim/bin/python -m clifft_bench validate /tmp/tsim-smoke.json
+```
+
+The runner applies thread restrictions before starting each worker. Linux CI
+also exercises the campaign's 12 GiB address-space ceiling. Local timings are
+installation/correctness diagnostics, not official performance results. The
+older `experiments/tsim-gpu` environment remains independently pinned.

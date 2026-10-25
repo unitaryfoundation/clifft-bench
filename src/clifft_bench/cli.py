@@ -64,7 +64,7 @@ def _default_validation_paths() -> list[Path]:
     return [
         root / "manifests/workloads.v1.json",
         root / "manifests/software.v1.json",
-        root / "manifests/run-smoke.v1.json",
+        *sorted(root.glob("manifests/run-*.v1.json")),
         root / "examples/result.v1.json",
         *sorted(root.glob("campaigns/*/run.v1.json")),
     ]

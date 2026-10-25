@@ -71,12 +71,14 @@ def test_aggregate_sample_excludes_stream_setup_and_records_peak_rss(monkeypatch
 class _CalibrationAdapter:
     def __init__(self) -> None:
         self.prepared_batch_sizes: list[int] = []
+        self.prepared_seeds: list[int] = []
 
-    def prepare(self, *, artifact_path, workload, execution):
+    def prepare(self, *, artifact_path, workload, execution, seed=0):
         del artifact_path, workload
         batch_size = int(execution["batch_size"])
         assert execution["batch_enabled"] is (batch_size > 1)
         self.prepared_batch_sizes.append(batch_size)
+        self.prepared_seeds.append(seed)
         return SimpleNamespace(
             batch_size=batch_size,
             runtime_metadata={
@@ -110,6 +112,7 @@ def test_batch_calibration_selects_best_median_and_records_probes(monkeypatch) -
 
     calibration = prepared.runtime_metadata["batch_calibration"]
     assert adapter.prepared_batch_sizes == [1, 32, 32]
+    assert adapter.prepared_seeds == [3000010, 3000010, 0]
     assert calibration["candidates"] == [1, 32]
     assert calibration["selected_batch_size"] == 32
     assert calibration["selection_statistic"] == "median_attempted_shots_per_second"
@@ -148,7 +151,7 @@ def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
     monkeypatch,
 ) -> None:
     class ScalarOnlyAdapter(_CalibrationAdapter):
-        def prepare(self, *, artifact_path, workload, execution):
+        def prepare(self, *, artifact_path, workload, execution, seed=0):
             if execution["batch_size"] != 1:
                 raise TypeError("batch_size is unsupported")
             return super().prepare(

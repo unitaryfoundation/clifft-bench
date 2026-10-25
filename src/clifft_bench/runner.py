@@ -106,6 +106,7 @@ class WorkerClient:
         memory_limit_gib: float | None = None,
         *,
         seed: int,
+        sampling_seed: int = 0,
     ) -> dict[str, Any]:
         definition = self.case.implementation.definition
         return self.request(
@@ -117,6 +118,7 @@ class WorkerClient:
                 "execution": self.case.definition["execution"],
                 "shots_per_call": self.case.definition["shots_per_call"],
                 "seed": seed,
+                "sampling_seed": sampling_seed,
                 "expected_version": definition["version"],
                 "expected_commit": definition["commit_sha"],
                 "source_url": definition["source_url"],
@@ -348,6 +350,7 @@ def run_suite(
                         float(measurement["setup_timeout_seconds"]),
                         memory_limit_gib,
                         seed=calibration_seed,
+                        sampling_seed=suite.run["seed"] - 1,
                     )
                     result["setup"] = {
                         "duration_seconds": setup["duration_seconds"],
@@ -367,10 +370,13 @@ def run_suite(
 
                 if result["status"] == "running":
                     try:
+                        warmup_shots = int(measurement["warmup_shots"])
+                        if setup["runtime_metadata"].get("warmup_full_call"):
+                            warmup_shots = max(warmup_shots, case.definition["shots_per_call"])
                         warmup = client.request(
                             {
                                 "command": "warmup",
-                                "shots": measurement["warmup_shots"],
+                                "shots": warmup_shots,
                                 "seed": suite.run["seed"] - 1,
                             },
                             timeout_seconds=request_timeout,

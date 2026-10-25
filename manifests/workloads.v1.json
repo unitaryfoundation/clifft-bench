@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/workloads/v1",
-  "suite_version": "0.2.4",
+  "suite_version": "0.2.5",
   "workloads": [
     {
       "id": "msc-d3-inject-cultivate-p1e-3",
@@ -38,7 +38,8 @@
       "compatible_adapters": [
         "clifft",
         "symft",
-        "xtim"
+        "xtim",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -84,7 +85,8 @@
       "compatible_adapters": [
         "clifft",
         "symft",
-        "xtim"
+        "xtim",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -129,7 +131,8 @@
         "clifft",
         "symft",
         "stim",
-        "xtim"
+        "xtim",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -171,7 +174,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -214,7 +218,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -257,7 +262,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -300,7 +306,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -343,7 +350,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -386,7 +394,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -429,7 +438,8 @@
       },
       "compatible_adapters": [
         "clifft",
-        "symft"
+        "symft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/unitaryfoundation/clifft-paper",
@@ -475,7 +485,8 @@
         "num_observables": 1
       },
       "compatible_adapters": [
-        "clifft"
+        "clifft",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/munich-quantum-toolkit/bench",
@@ -519,7 +530,8 @@
       "compatible_adapters": [
         "clifft",
         "symft",
-        "xtim"
+        "xtim",
+        "tsim"
       ],
       "provenance": {
         "source_url": "https://github.com/ikim-quantum/xtim",

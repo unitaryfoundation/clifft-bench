@@ -173,6 +173,8 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"workload {workload_id!r}"
             )
         execution = definition["execution"]
+        if "tsim_trajectory_sharing" in execution and adapter != "tsim":
+            raise SchemaValidationError("tsim_trajectory_sharing requires the tsim adapter")
         if "clifft_scheduler" in execution:
             if adapter != "clifft":
                 raise SchemaValidationError(
@@ -190,7 +192,7 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 raise SchemaValidationError(
                     f"case {identifier!r} requests batch calibration with batching disabled"
                 )
-            if adapter not in {"clifft", "symft", "stim", "xtim"}:
+            if adapter not in {"clifft", "symft", "stim", "xtim", "tsim"}:
                 raise SchemaValidationError(
                     f"case {identifier!r} requests unsupported batch calibration for "
                     f"adapter {adapter!r}"
@@ -211,6 +213,22 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"comparison {comparison['id']!r} references unknown variants: "
                 + ", ".join(unknown)
             )
+
+    for comparison in run.get("comparisons", []):
+        baseline = {
+            c.workload.id: c.definition["shots_per_call"] for c in cases
+            if c.definition["variant_id"] == comparison["baseline_variant"]
+        }
+        for case in cases:
+            if (
+                case.definition["variant_id"] in comparison["candidate_variants"]
+                and case.workload.id in baseline
+                and case.definition["shots_per_call"] != baseline[case.workload.id]
+            ):
+                raise SchemaValidationError(
+                    f"comparison {comparison['id']!r} has unequal shots_per_call "
+                    f"for workload {case.workload.id!r}"
+                )
 
     if run["classification"] == "official":
         used_implementations = {case.implementation.id: case.implementation for case in cases}

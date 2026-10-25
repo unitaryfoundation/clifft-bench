@@ -51,3 +51,8 @@ def test_explicit_run_provenance_overrides_ci_detection(monkeypatch) -> None:
     monkeypatch.delenv(RUN_PROVENANCE_ENVIRONMENT["run_id"])
     with pytest.raises(ValueError, match="CLIFFT_BENCH_RUN_ID"):
         collect_workflow_metadata()
+
+
+def test_restricted_environment_overrides_numba_thread_budget(monkeypatch):
+    monkeypatch.setenv("NUMBA_NUM_THREADS", "8")
+    assert system.restricted_environment()["NUMBA_NUM_THREADS"] == "1"

@@ -5,6 +5,8 @@ STIM_CHUNK_CANDIDATES = (256, 1024, 4096, 16384, 65536)
 
 
 def calibration_candidates(adapter: str, shots_per_call: int) -> list[int]:
+    if adapter == "tsim":
+        return sorted({min(n, shots_per_call) for n in (256, 1024, 8192, 65536)})
     if adapter in {"stim", "xtim"}:
         # Also test an unchunked call; cache effects depend on the reference host.
         return sorted({min(n, shots_per_call) for n in STIM_CHUNK_CANDIDATES}

@@ -162,6 +162,7 @@ def calibrate_batch_size(
     execution: dict[str, Any],
     shots_per_call: int,
     seed: int,
+    sampling_seed: int = 0,
 ) -> Any:
     candidates = calibration_candidates(getattr(adapter, "name", ""), shots_per_call)
     postselect = bool(workload["semantics"]["postselect_all_detectors"])
@@ -177,6 +178,7 @@ def calibrate_batch_size(
                 artifact_path=artifact_path,
                 workload=workload,
                 execution=candidate_execution,
+                seed=_calibration_seed(seed, BATCH_CALIBRATION_REPETITIONS),
             )
             begin_sample(prepared, _calibration_seed(seed, BATCH_CALIBRATION_REPETITIONS))
             warm_counts, _ = timed_sample(
@@ -250,6 +252,7 @@ def calibrate_batch_size(
         artifact_path=artifact_path,
         workload=workload,
         execution=_candidate_execution(execution, selected_batch_size),
+        seed=sampling_seed,
     )
     prepared.runtime_metadata["batch_calibration"] = {
         "candidates": candidates,
@@ -303,12 +306,14 @@ def main() -> int:
                                 execution=execution,
                                 shots_per_call=int(request["shots_per_call"]),
                                 seed=int(request["seed"]),
+                                sampling_seed=int(request["sampling_seed"]),
                             )
                         else:
                             prepared = adapter.prepare(
                                 artifact_path=artifact_path,
                                 workload=workload,
                                 execution=execution,
+                                seed=int(request["sampling_seed"]),
                             )
                 duration = time.perf_counter() - started
                 expected_version = str(request["expected_version"])

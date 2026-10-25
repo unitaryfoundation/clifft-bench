@@ -163,3 +163,21 @@ are chained from recurring release runs. For example, each workload's 0.10.0
 speedup is its historical 0.9.0/0.1.0 speedup multiplied by the corrected
 release campaign's calibrated 0.10.0/0.9.0 ratio. This preserves common
 workloads while allowing each newer release to use its best supported approach.
+
+
+## Tsim CPU and bulk comparison tables
+
+The recurring release finalizer now produces `tsim-vs-current` rows for the
+existing current-Clifft inputs and `bulk-alternatives-vs-current` rows for
+coherent d5/r5 at 4096 attempted shots per call. Select the comparison ID
+explicitly; do not combine the bulk rows with the historical one-shot series.
+`cases.csv` includes the sampling backend, trajectory-sharing setting,
+compilation time, kernel-warmup time, full-call warmup time, and active width.
+The raw setup metadata retains source verification, Numba threads, seed policy,
+and complete calibration evidence. Kernel warmup is also part of total setup,
+so do not add it again to that total.
+
+Existing published figures continue to use reviewed evidence. New Tsim/bulk
+figures should be selected after matched reference-host results are collected
+and reviewed; local smoke/probe timings are not publication data. Broader
+finite-shot reporting is tracked in issue #79.

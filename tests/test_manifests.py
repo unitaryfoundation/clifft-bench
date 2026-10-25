@@ -18,6 +18,7 @@ ROOT = repository_root()
         "manifests/workloads.v1.json",
         "manifests/software.v1.json",
         "manifests/run-smoke.v1.json",
+        "manifests/run-tsim-smoke.v1.json",
         "campaigns/release-v1/run.v1.json",
         "campaigns/clifft-history-v1/run.v1.json",
     ],
@@ -30,20 +31,25 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 28
-    assert len({case.id for case in suite.cases}) == 28
+    assert len(suite.cases) == 39
+    assert len({case.id for case in suite.cases}) == 39
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
         "symft-current",
         "stim-current",
         "xtim-current",
+        "tsim-current",
+        "clifft-bulk",
+        "symft-bulk",
+        "tsim-bulk",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
         "symft",
         "stim",
         "xtim",
+        "tsim",
     }
     versions_by_variant = {
         variant_id: {
@@ -72,6 +78,14 @@ def test_release_manifest_expands_named_variants() -> None:
     } == {candidate["id"]}
 
     comparisons = {item["id"]: item for item in suite.run["comparisons"]}
+    assert comparisons.pop("tsim-vs-current") == {
+        "id": "tsim-vs-current", "baseline_variant": "clifft-current",
+        "candidate_variants": ["tsim-current"],
+    }
+    assert comparisons.pop("bulk-alternatives-vs-current") == {
+        "id": "bulk-alternatives-vs-current", "baseline_variant": "clifft-bulk",
+        "candidate_variants": ["symft-bulk", "tsim-bulk"],
+    }
     assert comparisons == {
         "xtim-vs-current": {
             "id": "xtim-vs-current",
@@ -363,3 +377,27 @@ def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) ->
 
     with pytest.raises(SchemaValidationError, match="observable index 1 is outside"):
         load_suite(run_path)
+
+
+def test_tsim_bulk_comparison_preserves_historical_single_shot_case():
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    workload = "coherent-surface-d5-r5-p1e-3-rz2e-2"
+    cases = {c.definition["variant_id"]: c for c in suite.cases if c.workload.id == workload}
+    for variant in ("clifft-previous", "clifft-current", "symft-current", "tsim-current"):
+        assert cases[variant].definition["shots_per_call"] == 1
+    for variant in ("clifft-bulk", "symft-bulk", "tsim-bulk"):
+        assert cases[variant].definition["shots_per_call"] == 4096
+        assert cases[variant].definition["execution"]["batch_size"] == "calibrate"
+    assert cases["tsim-bulk"].definition["execution"]["tsim_trajectory_sharing"] is True
+
+
+def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    run = copy.deepcopy(suite.run)
+    next(v for v in run["variants"] if v["id"] == "tsim-bulk")["workloads"][0]["shots_per_call"] = 1
+    run["workloads_manifest"] = str(suite.workloads_path)
+    run["software_manifest"] = str(suite.software_path)
+    path = tmp_path / "mismatch.json"
+    path.write_text(json.dumps(run))
+    with pytest.raises(SchemaValidationError, match="unequal shots_per_call"):
+        load_suite(path)

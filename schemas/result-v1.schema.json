@@ -193,7 +193,8 @@
             "request_timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
             "repetitions": {"type": "integer", "minimum": 1},
             "postselection": {"type": "boolean"},
-            "clifft_scheduler": {"$ref": "#/$defs/clifftScheduler"}
+            "clifft_scheduler": {"$ref": "#/$defs/clifftScheduler"},
+            "tsim_trajectory_sharing": {"type": "boolean"}
           },
           "additionalProperties": false
         },

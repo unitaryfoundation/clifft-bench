@@ -76,7 +76,8 @@ class StimAdapter(Adapter):
     name = "stim"
 
     def prepare(
-        self, *, artifact_path: Path, workload: dict[str, Any], execution: dict[str, Any]
+        self, *, artifact_path: Path, workload: dict[str, Any], execution: dict[str, Any],
+        seed: int = 0,
     ) -> PreparedAdapter:
         import stim
 
