@@ -49,9 +49,12 @@ checks, and verification are noiseless; the verification gates are timed.
 Its measurements are included in the finalized result tables and current QEC
 figures. The combined throughput chart shows Clifft and SymFT on all seven QEC
 workloads, xtim on its four measured workloads, and Stim on its surface-code
-anchor. It includes Tsim on all seven QEC workloads once the selected release
-contains the new comparison. An absent marker means no measurement in the
-selected campaign; it is never represented as zero throughput. See the
+anchor. It includes Tsim once the selected release records outcomes for all
+seven QEC workloads. Recorded failures are labelled in the chart and never
+represented as zero throughput. If any placement or replica fails for a Tsim
+workload, its aggregate rate is withheld rather than computed from only the
+successful subset. An unlabelled absent marker means no measurement was planned
+for that tool and workload in the selected campaign. See the
 [corpus notes](../workloads/README.md) for provenance and validation.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
@@ -79,7 +82,10 @@ derived conveniences.
 
 A request deadline prevents a stalled simulator from blocking the campaign.
 Setup, warmup, correctness, and sampling failures are recorded with their phase
-instead of being converted into throughput values.
+instead of being converted into throughput values. A setup failure before the
+worker returns metadata can be finalized without a selected batch size or
+calibration record. Successful setup still requires complete calibration
+evidence, including when warmup, correctness, or sampling later fails.
 
 ## Resources and ordering
 
@@ -342,10 +348,14 @@ Tsim returns raw detector and observable arrays. Both reference-sample flags
 are explicitly false. The adapter passes an all-detector postselection mask
 when the workload requests it, allowing native early rejection. All attempted
 rows are returned, but rejected rows may have later outputs cleared. The adapter
-reapplies the detector mask and counts observable 0 only on survivors. Array
-materialization, mask reduction, and aggregate counting are inside execution
-time. This preserves the aggregate endpoint contract already used for Stim and
-xtim while allowing each tool's native optimizations.
+reapplies the detector mask and counts observable 0 only on survivors. Dense
+boolean array materialization and the adapter's NumPy mask reduction and
+aggregate counting are inside execution time. Clifft returns native aggregate
+counts, so the tools can spend different fractions of their call time producing
+the shared aggregate endpoint. This is the same timing boundary used for Stim
+and xtim. Any reported postprocessing percentage must come from a separate,
+reproducible profile specifying the workload, shots per call, batch capacity,
+hardware, and software versions; it is not a universal adapter overhead.
 
 The sampler is compiled and seeded once per prepared configuration. Tsim has no
 public per-call reseeding API: one continuous stream advances through its
@@ -364,8 +374,13 @@ probes and smaller-capacity tie break. A fixed numeric capacity remains
 supported. With direct-detector postselection, this capacity applies to the
 survivors passed to the statevector backend. Fully direct circuits bypass that
 backend; the recorded capacity is the API setting, not a claim that quantum
-lanes were allocated. Raw metadata records component widths, strategy, sharing,
-precision, seed policy, and effective threads. Setting
+lanes were allocated. Raw metadata and `cases.csv` expose
+`batch_parameter=statevector-batch-shots` and `batch_size_applicable`: false for
+a fully direct compiled program, true when statevector components exist. This
+flag describes the compiled program, not whether any shots survive postselection
+in a particular call. A blank flag in older data means unknown. Raw metadata
+also records component widths, strategy, sharing, precision, seed policy, and
+effective threads. Setting
 `tsim_trajectory_sharing=false` explicitly supports diagnostic manifests only;
 the primary campaign enables sharing.
 
@@ -374,9 +389,11 @@ a one-shot sample without postselection warms quantum kernels even when all
 later warmup shots could be rejected by direct detectors. Its
 `kernel_warmup_seconds` includes execution and any first-use JIT or cache load;
 it is not a pure JIT compiler measurement. The usual warmup then executes at
-least one full public call with the actual postselection settings. Both steps
-are excluded from final sampling. Upstream's Numba disk cache is retained, so
-these setup measurements must not be described as uniformly cold builds.
+least one full public call with the actual postselection settings. Calibration
+warms separate candidate samplers; it does not warm the freshly prepared final
+sampler. The full-call warmup is therefore retained to exercise its actual call
+shape before timing. Both warmup steps are excluded from final sampling.
+Upstream's Numba disk cache is retained, so these setup measurements must not be described as uniformly cold builds.
 
 ### Matched bulk sampling
 

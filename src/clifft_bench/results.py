@@ -37,6 +37,8 @@ CASE_FIELDS = [
     "mode",
     "batch_enabled",
     "batch_size_effective",
+    "batch_parameter",
+    "batch_size_applicable",
     "shots_per_call",
     "cpu_model",
     "instance_type",
@@ -172,12 +174,17 @@ def _case_rows(
         for case in result["cases"]:
             common = _common_row(suite, execution_id, result, case)
             error = case.get("error") or {}
-            summary = case.get("summary") or {}
+            summary = (case.get("summary") or {}) if case["status"] == "success" else {}
             metadata = (case.get("setup") or {}).get("runtime_metadata", {})
             case_rows.append(
                 {
                     **common,
                     "status": case["status"],
+                    "batch_parameter": metadata.get("batch_parameter", ""),
+                    "batch_size_applicable": (
+                        str(metadata["batch_size_applicable"]).lower()
+                        if "batch_size_applicable" in metadata else ""
+                    ),
                     "error_phase": error.get("phase", ""),
                     "error_type": error.get("type", ""),
                     "error_message": error.get("message", ""),
@@ -337,6 +344,11 @@ def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> No
 
     case_id = expected.id
     setup = observed.get("setup")
+    # A worker can fail during calibration or preparation before returning any
+    # setup metadata. Preserve that explicit failure without inventing a winner.
+    if (setup is None and observed["status"] == "error"
+            and (observed.get("error") or {}).get("phase") == "setup"):
+        return
     calibration = (
         setup.get("runtime_metadata", {}).get("batch_calibration")
         if isinstance(setup, dict)

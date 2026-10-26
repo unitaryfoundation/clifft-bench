@@ -173,14 +173,28 @@ coherent d5/r5 at 256 attempted shots per call. Select the comparison ID
 explicitly; do not combine the bulk rows with the historical one-shot series.
 `cases.csv` includes the sampling backend, trajectory-sharing setting,
 compilation time, kernel-warmup time, full-call warmup time, and active width.
+It also includes `batch_parameter` and `batch_size_applicable`, distinguishing
+Tsim's configured statevector batch capacity from fully direct programs where
+that setting is ignored. Blank applicability means unknown in older records.
 The raw setup metadata retains source verification, Numba threads, seed policy,
 and complete calibration evidence. Kernel warmup is also part of total setup,
 so do not add it again to that total.
 
 Existing published figures continue to use reviewed evidence. The current-tool
-chart includes Tsim when the selected release has complete `tsim-vs-current`
-coverage, verifying that it reuses the exact current-Clifft baseline cases.
-It labels the source commit as well as the distribution version and never
-reads bulk rows. Select new evidence only after matched reference-host results
-are collected and reviewed; local smoke/probe timings are not publication data.
+chart detects Tsim through `tsim-current` outcomes in `cases.csv`, including
+runs with no successful Tsim comparisons. It requires an explicit outcome for
+every current QEC workload, placement, and replica. Successful comparisons must
+match those case records and reuse the exact current-Clifft baseline cases with
+equal shots per call. Missing or mismatched data still raises an error.
+
+Recorded setup, warmup, correctness, or sampling failures do not stop the
+report. Their Tsim markers are replaced by failure counts (for example,
+`1/2 failed`); details remain in `cases.csv` and raw JSON. If any replica fails,
+the workload's Tsim aggregate is withheld to avoid silently selecting only
+successful replicas. Other workloads and tools retain their rates. An
+unlabelled absent marker means the tool/workload was not measured in that
+campaign. No failure is represented as zero throughput. The chart labels the
+source commit as well as the distribution version and never reads bulk rows.
+Select new evidence only after matched reference-host results are collected and
+reviewed; local smoke/probe timings are not publication data.
 Bulk charts and broader finite-shot reporting are tracked in issue #79.

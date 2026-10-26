@@ -9,7 +9,7 @@ import json
 import math
 import statistics
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -87,6 +87,7 @@ class ThroughputPoint:
 class ToolThroughputPoint:
     workload_id: str
     rates: dict[str, float]
+    failures: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -265,18 +266,73 @@ def _load_release(path: Path, workloads: tuple[str, ...] = WORKLOAD_ORDER) -> Re
 
 
 def _case_map(
-    rows: list[dict[str, str]], side: str,
+    rows: list[dict[str, str]], side: str | None,
 ) -> dict[tuple[str, ...], tuple[str, ...]]:
+    fields = (
+        "result_id", "case_id", "simulator_name", "simulator_version",
+        "simulator_display_version", "rate", "batch_size_effective", "shots_per_call",
+    )
+    if side is not None:
+        fields = tuple(f"{side}_{name}" for name in fields)
+    else:
+        fields = tuple("median_attempted_shots_per_second" if name == "rate" else name
+                       for name in fields)
     cases = {}
     for row in rows:
-        key = tuple(row[field] for field in ("placement", "replica", "workload_id"))
+        key = tuple(row[name] for name in ("placement", "replica", "workload_id"))
         if key in cases:
-            raise ValueError(f"duplicate comparison for {key}")
-        cases[key] = tuple(row[f"{side}_{field}"] for field in (
-            "result_id", "case_id", "simulator_name", "simulator_version",
-            "simulator_display_version", "rate", "batch_size_effective", "shots_per_call",
-        ))
+            raise ValueError(f"duplicate case for {key}")
+        cases[key] = tuple(row[name] for name in fields)
     return cases
+
+
+def _load_current_tsim(
+    path: Path, rows: list[dict[str, str]], current_cases: dict[tuple[str, ...], tuple[str, ...]],
+) -> tuple[dict[str, float], dict[str, str], str | None]:
+    # cases.csv retains failures even when no successful comparison can be made.
+    cases = [row for row in _read_csv(path / "cases.csv")
+             if row["variant_id"] == "tsim-current"
+             and row["workload_id"] in CURRENT_WORKLOAD_ORDER]
+    comparisons = [row for row in rows if row["comparison_id"] == "tsim-vs-current"
+                   and row["workload_id"] in CURRENT_WORKLOAD_ORDER]
+    if not cases and not comparisons:
+        return {}, {}, None  # Archived campaigns predate this variant.
+    if set(_case_map(cases, None)) != set(current_cases):
+        raise ValueError(f"{path.name} Tsim cases do not cover the reporting core")
+    if _one(cases, "simulator_name", "Tsim simulator") != "Tsim":
+        raise ValueError(f"{path.name} tsim-current does not measure Tsim")
+    version = _one(cases, "simulator_display_version", "Tsim version")
+    successful = []
+    failed: dict[str, int] = defaultdict(int)
+    totals: dict[str, int] = defaultdict(int)
+    for case in cases:
+        key = tuple(case[name] for name in ("placement", "replica", "workload_id"))
+        if case["shots_per_call"] != current_cases[key][-1]:
+            raise ValueError(f"{path.name} Tsim has unequal shots_per_call")
+        workload = case["workload_id"]
+        totals[workload] += 1
+        if case["status"] == "success":
+            successful.append(case)
+        elif (case["status"] in {"error", "interrupted"}
+              and case["error_phase"] and case["error_type"]):
+            failed[workload] += 1
+        else:
+            raise ValueError(f"{path.name} Tsim has no terminal outcome for {key}")
+    if any(row["baseline_shots_per_call"] != row["candidate_shots_per_call"]
+           for row in comparisons):
+        raise ValueError(f"{path.name} tsim-vs-current has unequal shots_per_call")
+    candidates = _case_map(comparisons, "candidate")
+    if candidates != _case_map(successful, None):
+        raise ValueError(f"{path.name} tsim-vs-current does not match successful Tsim cases")
+    expected = {key: current_cases[key] for key in candidates}
+    if _case_map(comparisons, "baseline") != expected:
+        raise ValueError(f"{path.name} tsim-vs-current does not reuse current Clifft")
+    measured = _median_rates(comparisons, ("workload_id",), "candidate_rate")
+    # Do not silently report only the replicas that happened to finish.
+    rates = {key[0]: rate for key, rate in measured.items() if key[0] not in failed}
+    failures = {workload: f"{count}/{totals[workload]} failed"
+                for workload, count in failed.items()}
+    return rates, failures, version
 
 
 def _load_current_tools(
@@ -290,12 +346,7 @@ def _load_current_tools(
     versions = {"Clifft": release.current_version}
     rates = {workload: {"Clifft": release.current_rates[workload]}
              for workload in CURRENT_WORKLOAD_ORDER}
-    comparisons = dict(TOOL_COMPARISONS)
-    # Archived campaigns predate Tsim. Once selected, require the same complete
-    # current-workload coverage and exact baseline cases as the other tools.
-    if any(row["comparison_id"] == "tsim-vs-current" for row in rows):
-        comparisons["Tsim"] = ("tsim-vs-current", CURRENT_WORKLOAD_ORDER)
-    for tool, (comparison, workloads) in comparisons.items():
+    for tool, (comparison, workloads) in TOOL_COMPARISONS.items():
         selected = _select_comparison(rows, comparison, path.name, workloads)
         if _one(selected, "candidate_simulator_name", "alternative simulator") != tool:
             raise ValueError(f"{path.name} {comparison} does not measure {tool}")
@@ -308,9 +359,16 @@ def _load_current_tools(
         tool_rates = _median_rates(selected, ("workload_id",), "candidate_rate")
         for (workload,), rate in tool_rates.items():
             rates[workload][tool] = rate
+    tsim_rates, tsim_failures, tsim_version = _load_current_tsim(path, rows, current_cases)
+    if tsim_version is not None:
+        versions["Tsim"] = tsim_version
+    for workload, rate in tsim_rates.items():
+        rates[workload]["Tsim"] = rate
     return (
-        tuple(ToolThroughputPoint(workload, rates[workload])
-              for workload in CURRENT_WORKLOAD_ORDER),
+        tuple(ToolThroughputPoint(
+            workload, rates[workload],
+            {"Tsim": tsim_failures[workload]} if workload in tsim_failures else {},
+        ) for workload in CURRENT_WORKLOAD_ORDER),
         versions,
     )
 
@@ -1060,6 +1118,12 @@ def _plot_web_combined_throughput(
 
     for position, point in zip(positions, points, strict=True):
         for tool, offset, color, marker in styles:
+            if tool in point.failures:
+                axis.text(
+                    0.01, position + offset, point.failures[tool],
+                    transform=axis.get_yaxis_transform(), va="center", color=color, fontsize=8,
+                )
+                continue
             if tool not in point.rates:
                 continue
             rate = point.rates[tool]
@@ -1121,7 +1185,8 @@ def _plot_web_combined_throughput(
         0.24, 0.035,
         "xtim: each sample starts with an empty cache; lazy plan construction is timed.\n"
         "Absent markers: no measurement in this campaign. Rates count attempted shots."
-        + ("\nTsim: CPU active_statevector backend." if has_tsim else ""),
+        + ("\nTsim: CPU active_statevector. Failed cases labelled; details in cases.csv."
+           if has_tsim else ""),
         fontsize=8.5, color=theme.muted, linespacing=1.6,
     )
     figure.subplots_adjust(

@@ -104,6 +104,7 @@ class TsimAdapter(Adapter):
             "sampling_backend": "active_statevector", "trajectory_sharing": sharing,
             "batch_enabled": batch > 1, "effective_batch_size": batch,
             "batch_parameter": "statevector-batch-shots",
+            "batch_size_applicable": bool(sampler._program.components),
             "seed_policy": "continuous-stream-seeded-at-prepare",
             "initial_seed": seed,
             "record_materialization": "boolean-detectors-and-observables",

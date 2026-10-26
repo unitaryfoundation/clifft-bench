@@ -335,3 +335,84 @@ def test_tsim_finalizer_checks_runtime_identity_and_full_warmup(tmp_path, field,
             finalize_execution(suite, **args)
     else:
         finalize_execution(suite, **args)
+
+
+@pytest.mark.parametrize("error_type", ["WorkerTimeout", "MemoryError", "ValueError"])
+def test_finalize_preserves_failed_setup_without_calibration(tmp_path, error_type):
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    candidate = raw["cases"][1]
+    candidate.update(status="error", setup=None, warmup=None, correctness=None,
+                     samples=[], summary=None,
+                     error={"phase": "setup", "type": error_type, "message": "setup failed"})
+    candidate["execution"].update(batch_size="calibrate")
+    candidate["execution"].pop("batch_size_effective")
+    raw_path.write_text(json.dumps(raw))
+    output = tmp_path / "finalized"
+    finalize_execution(_suite(calibrated_candidate=True), execution_id="test-execution",
+                       raw_paths=[raw_path], output_dir=output)
+    with (output / "cases.csv").open(newline="") as stream:
+        row = next(row for row in csv.DictReader(stream) if row["variant_id"] == "candidate")
+    assert row["status"] == "error"
+    assert row["error_phase"] == "setup"
+    assert row["error_type"] == error_type
+    assert row["error_message"] == "setup failed"
+    assert row["median_attempted_shots_per_second"] == ""
+    assert row["batch_size_effective"] == ""
+    with (output / "comparisons.csv").open(newline="") as stream:
+        assert list(csv.DictReader(stream)) == []
+    assert json.loads(raw_path.read_text()) == raw
+
+
+@pytest.mark.parametrize("phase,has_setup", [
+    ("setup", True), ("warmup", False), ("correctness", True), ("sampling", True),
+])
+def test_finalize_still_requires_calibration_after_setup(tmp_path, phase, has_setup):
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    candidate = raw["cases"][1]
+    candidate.update(status="error", summary=None,
+                     error={"phase": phase, "type": "WorkerTimeout", "message": "timeout"})
+    if not has_setup:
+        candidate["setup"] = None
+    raw_path.write_text(json.dumps(raw))
+    with pytest.raises(ValueError, match="has no batch_calibration metadata"):
+        finalize_execution(_suite(calibrated_candidate=True), execution_id="test-execution",
+                           raw_paths=[raw_path], output_dir=tmp_path / "rejected")
+
+
+def test_finalize_does_not_export_partial_failure_throughput(tmp_path):
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    # A stale/partial summary must not turn an unsuccessful case into a rate.
+    raw["cases"][1].update(status="error", error={
+        "phase": "sampling", "type": "WorkerTimeout", "message": "later repetition failed",
+    })
+    raw_path.write_text(json.dumps(raw))
+    output = tmp_path / "finalized"
+    finalize_execution(_suite(), execution_id="test-execution",
+                       raw_paths=[raw_path], output_dir=output)
+    with (output / "cases.csv").open(newline="") as stream:
+        row = next(row for row in csv.DictReader(stream) if row["variant_id"] == "candidate")
+    assert row["median_attempted_shots_per_second"] == ""
+    assert row["min_attempted_shots_per_second"] == ""
+    assert row["max_attempted_shots_per_second"] == ""
+    assert row["sample_count"] == "0"
+
+
+@pytest.mark.parametrize("applicable", [True, False, None])
+def test_finalize_exports_batch_parameter_applicability(tmp_path, applicable):
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    metadata = raw["cases"][1]["setup"]["runtime_metadata"]
+    if applicable is not None:
+        metadata.update(batch_parameter="statevector-batch-shots", batch_size_applicable=applicable)
+    raw_path.write_text(json.dumps(raw))
+    output = tmp_path / "finalized"
+    finalize_execution(_suite(), execution_id="test-execution",
+                       raw_paths=[raw_path], output_dir=output)
+    with (output / "cases.csv").open(newline="") as stream:
+        row = next(row for row in csv.DictReader(stream) if row["variant_id"] == "candidate")
+    assert row["batch_parameter"] == ("" if applicable is None else "statevector-batch-shots")
+    assert row["batch_size_applicable"] == ("" if applicable is None else str(applicable).lower())
+    assert row["batch_size_effective"] == "32"

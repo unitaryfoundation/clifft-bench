@@ -73,6 +73,7 @@ def test_tsim_joint_quantum_noise_and_postselection_law(tmp_path, sharing, posts
         assert counts.logical_errors / shots == pytest.approx(q, abs=.015)
     assert p.runtime_metadata["trajectory_sharing"] is sharing
     assert p.runtime_metadata["precision"] == "complex-fp64"
+    assert p.runtime_metadata["batch_size_applicable"] is True
 
 
 def test_tsim_continuous_seeded_stream_does_not_recompile_or_replay(tmp_path, monkeypatch):
@@ -148,5 +149,7 @@ def test_tsim_release_circuit_metadata_and_counts(workload_id):
     assert not validate_counts(
         counts, postselect=case.workload.definition["semantics"]["postselect_all_detectors"]
     )
+    if workload_id in {"surface-code-d7-r7-p1e-3", "draper-adder-m16-basis"}:
+        assert p.runtime_metadata["batch_size_applicable"] is False
     if workload_id == "draper-adder-m16-basis":
         assert counts.accepted_shots == 17 and counts.logical_errors == 0

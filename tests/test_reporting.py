@@ -380,13 +380,24 @@ def sources_with_tsim(copied_sources: Path) -> Path:
     path = Path(json.loads(copied_sources.read_text())["release_executions"][-1])
     rows = _comparison_rows(path)
     # Synthetic rates test selection only; never used as publication evidence.
-    tsim = [{**row, "comparison_id": "tsim-vs-current",
-             "candidate_simulator_name": "Tsim", "candidate_simulator_version": "0.1.5",
-             "candidate_simulator_display_version": "0.1.5+e9406ed"}
-            for row in rows if row["comparison_id"] == "alternatives-vs-current"]
+    with (path / "cases.csv").open(newline="") as stream:
+        cases = list(csv.DictReader(stream))
+    tsim_cases = [{**row, "variant_id": "tsim-current", "adapter": "tsim",
+                   "case_id": f"{row['workload_id']}--tsim-current",
+                   "implementation_id": "tsim-0.1.5-e9406ed", "simulator_name": "Tsim",
+                   "simulator_version": "0.1.5", "simulator_display_version": "0.1.5+e9406ed"}
+                  for row in cases if row["variant_id"] == "symft-current"]
+    cases += tsim_cases
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    tsim = [row for row in collect_comparisons(suite, path.name, cases)
+            if row["comparison_id"] == "tsim-vs-current"]
     bulk = [{**row, "comparison_id": "bulk-alternatives-vs-current",
+             "candidate_variant_id": "tsim-bulk",
              "baseline_shots_per_call": "4096", "candidate_shots_per_call": "4096",
              "candidate_rate": "999999999"} for row in tsim]
+    cases.append({**tsim_cases[0], "variant_id": "tsim-bulk",
+                  "case_id": "bulk--tsim", "shots_per_call": "4096"})
+    _write_rows(path / "cases.csv", cases)
     _write_rows(path / "comparisons.csv", rows + tsim + bulk)
     return copied_sources
 
@@ -403,7 +414,9 @@ def test_reporting_includes_tsim_without_mixing_bulk_or_changing_history(sources
 
 
 @pytest.mark.parametrize("problem, message", [
-    ("missing", "does not cover the reporting core"),
+    ("missing", "does not match successful Tsim cases"),
+    ("candidate", "does not match successful Tsim cases"),
+    ("duplicate", "duplicate case"),
     ("baseline", "does not reuse current Clifft"),
     ("shots", "unequal shots_per_call"),
 ])
@@ -417,8 +430,93 @@ def test_reporting_rejects_incomplete_or_unmatched_tsim(sources_with_tsim, probl
         )]
     elif problem == "baseline":
         tsim[0]["baseline_case_id"] = "wrong-case"
+    elif problem == "candidate":
+        tsim[0]["candidate_case_id"] = "wrong-case"
+    elif problem == "duplicate":
+        rows.append(tsim[0].copy())
     else:
         tsim[0]["candidate_shots_per_call"] = "4096"
     _write_rows(path / "comparisons.csv", rows)
+    with pytest.raises(ValueError, match=message):
+        build_report(sources_with_tsim)
+
+
+def _fail_tsim_cases(path, workloads, phase, *, replica=None):
+    with (path / "cases.csv").open(newline="") as stream:
+        cases = list(csv.DictReader(stream))
+    for row in cases:
+        if (row["variant_id"] == "tsim-current" and row["workload_id"] in workloads
+                and (replica is None or row["replica"] == replica)):
+            row.update(status="error", error_phase=phase, error_type="WorkerTimeout",
+                       error_message="synthetic timeout", median_attempted_shots_per_second="")
+            if phase == "setup":
+                row.update(batch_size_effective="", setup_seconds="")
+    _write_rows(path / "cases.csv", cases)
+    # Use the real finalizer's join: failed cases have no comparison row.
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite.run["collection"]["replicas_per_placement"] = max(int(row["replica"]) for row in cases)
+    _write_rows(path / "comparisons.csv", collect_comparisons(suite, path.name, cases))
+
+
+@pytest.mark.parametrize("phase", ["setup", "warmup", "correctness", "sampling"])
+@pytest.mark.parametrize("all_failed", [False, True])
+def test_reporting_keeps_recorded_tsim_failures(sources_with_tsim, phase, all_failed):
+    before = build_report(sources_with_tsim)
+    path = Path(json.loads(sources_with_tsim.read_text())["release_executions"][-1])
+    failed = set(CURRENT_WORKLOAD_ORDER) if all_failed else {DISTILLATION_WORKLOAD}
+    _fail_tsim_cases(path, failed, phase)
+    after = build_report(sources_with_tsim)
+    assert after.tool_versions == before.tool_versions
+    assert after.history == before.history
+    assert after.release_points == before.release_points
+    for old, new in zip(before.tool_throughput_points, after.tool_throughput_points, strict=True):
+        if new.workload_id in failed:
+            assert new.failures == {"Tsim": "1/1 failed"}
+            assert new.rates == {tool: rate for tool, rate in old.rates.items() if tool != "Tsim"}
+        else:
+            assert new == old
+
+
+def test_reporting_labels_mixed_tsim_replica_outcomes(sources_with_tsim):
+    path = Path(json.loads(sources_with_tsim.read_text())["release_executions"][-1])
+    with (path / "cases.csv").open(newline="") as stream:
+        cases = list(csv.DictReader(stream))
+    cases += [{**row, "replica": "2", "result_id": "second-replica"} for row in cases]
+    _write_rows(path / "cases.csv", cases)
+    _fail_tsim_cases(path, {DISTILLATION_WORKLOAD}, "sampling", replica="1")
+    report = build_report(sources_with_tsim)
+    for point in report.tool_throughput_points:
+        if point.workload_id == DISTILLATION_WORKLOAD:
+            assert point.failures == {"Tsim": "1/2 failed"}
+            assert "Tsim" not in point.rates  # Never silently select only successful replicas.
+        else:
+            assert point.failures == {}
+            assert "Tsim" in point.rates
+
+
+@pytest.mark.parametrize("problem,message", [
+    ("missing", "cases do not cover the reporting core"),
+    ("duplicate", "duplicate case"),
+    ("running", "no terminal outcome"),
+    ("no-error", "no terminal outcome"),
+    ("shots", "unequal shots_per_call"),
+])
+def test_reporting_rejects_incomplete_tsim_outcomes(sources_with_tsim, problem, message):
+    path = Path(json.loads(sources_with_tsim.read_text())["release_executions"][-1])
+    _fail_tsim_cases(path, {DISTILLATION_WORKLOAD}, "setup")
+    with (path / "cases.csv").open(newline="") as stream:
+        cases = list(csv.DictReader(stream))
+    failed = next(row for row in cases if row["status"] == "error")
+    if problem == "missing":
+        cases.remove(failed)
+    elif problem == "duplicate":
+        cases.append(failed.copy())
+    elif problem == "running":
+        failed["status"] = "running"
+    elif problem == "no-error":
+        failed["error_type"] = ""
+    else:
+        failed["shots_per_call"] = "4096"
+    _write_rows(path / "cases.csv", cases)
     with pytest.raises(ValueError, match=message):
         build_report(sources_with_tsim)
