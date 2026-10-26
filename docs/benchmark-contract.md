@@ -41,7 +41,7 @@ Each attempted shot executes the entire addition. Its results describe prepared
 basis inputs and are reported separately from the historical QEC figures and medians.
 
 The campaign also includes `distillation-15to1-rm15-p1e-3` for both Clifft
-releases, SymFT, and xtim. It retains xtim's 15-to-1 Reed-Muller preparation,
+releases, SymFT, xtim, and Tsim. It retains xtim's 15-to-1 Reed-Muller preparation,
 T-gate phase noise at p=0.001, and four postselected X checks. An ideal inverse-T
 logical-X readout replaces expectation declarations so observable 0 measures
 accepted logical phase errors under the shared raw-parity contract. Preparation,
@@ -49,8 +49,12 @@ checks, and verification are noiseless; the verification gates are timed.
 Its measurements are included in the finalized result tables and current QEC
 figures. The combined throughput chart shows Clifft and SymFT on all seven QEC
 workloads, xtim on its four measured workloads, and Stim on its surface-code
-anchor. An absent marker means no measurement in the selected campaign; it is
-never represented as zero throughput. See the
+anchor. It includes Tsim once the selected release records outcomes for all
+seven QEC workloads. Recorded failures are labelled in the chart and never
+represented as zero throughput. If any placement or replica fails for a Tsim
+workload, its aggregate rate is withheld rather than computed from only the
+successful subset. An unlabelled absent marker means no measurement was planned
+for that tool and workload in the selected campaign. See the
 [corpus notes](../workloads/README.md) for provenance and validation.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
@@ -78,7 +82,10 @@ derived conveniences.
 
 A request deadline prevents a stalled simulator from blocking the campaign.
 Setup, warmup, correctness, and sampling failures are recorded with their phase
-instead of being converted into throughput values.
+instead of being converted into throughput values. A setup failure before the
+worker returns metadata can be finalized without a selected batch size or
+calibration record. Successful setup still requires complete calibration
+evidence, including when warmup, correctness, or sampling later fails.
 
 ## Resources and ordering
 
@@ -86,7 +93,8 @@ Cases execute serially in manifest order. Every case gets a fresh worker
 process using the Python environment recorded for its implementation. The
 worker requests one logical CPU and receives a single-thread environment:
 `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`,
-`NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, and `BLIS_NUM_THREADS` are 1.
+`NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, `BLIS_NUM_THREADS`, and
+`NUMBA_NUM_THREADS` are 1.
 
 Linux affinity is applied with `sched_setaffinity` and the outcome is recorded.
 Official workers receive the campaign's 12 GiB address-space ceiling, leaving
@@ -129,6 +137,10 @@ worker:
 5. freshly prepares the selected configuration and uses it for all timed
    repetitions.
 
+Each trial sampler is released before constructing the next trial or the final
+configuration, including after failures, so their native state buffers do not
+overlap during calibration.
+
 Clifft and SymFT use the same procedure. Stim calibrates public sampler chunks
 of 256, 1024, 4096, 16384, and 65536 shots, capped by `shots_per_call`, plus an
 unchunked call. Its compiled circuit detector sampler is reused across calls;
@@ -156,7 +168,8 @@ recorded because changing either can change amortization.
 
 The recurring campaign treats `shots_per_call` as a workload measurement
 parameter, chosen to produce meaningful throughput samples and kept identical
-across tools, releases, and batching modes. Batch calibration then selects an
+across tools within each comparison. Separately named comparison variants may
+measure different public call sizes without replacing the historical series. Batch calibration then selects an
 internal optimization for that fixed public call. The active-wide coherent
 d5/r5 workload intentionally retains one shot per call; its calibrated cases
 therefore consider only candidate `1` and record a scalar selection.
@@ -171,8 +184,10 @@ scalar execution after unsupported candidates fail. The
 current Clifft and SymFT across the release workloads. The separate
 `stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
 compatible surface-code workload. Keeping the anchor separate preserves the
-existing Clifft/SymFT comparison identity and its downstream consumers. All
-comparisons, including `xtim-vs-current`, reuse the same collected current-Clifft cases.
+existing Clifft/SymFT comparison identity and its downstream consumers. The
+historical comparisons, including `xtim-vs-current` and `tsim-vs-current`,
+reuse the same collected current-Clifft cases. The separately named bulk
+comparison collects its own current-Clifft case.
 
 ## Compiler configuration
 
@@ -310,3 +325,87 @@ campaign requests multiple placements, and the declared memory ceiling.
 `manifests/run-smoke.v1.json` is only a short developer correctness check. A
 release execution becomes official evidence after finalization and review of
 its results change.
+
+
+## Tsim active-statevector CPU comparison
+
+`tsim-vs-current` adds the pinned upstream Tsim source at
+`e9406ed5bb49fcff1b04b65534cf56bbb756b3a6` to all eight current-Clifft release
+workloads. The distribution still identifies as `bloqade-tsim 0.1.5`; its
+active-statevector implementation is newer than that PyPI release. The adapter
+checks the installed Git URL and complete commit, so installing a same-version
+release wheel fails verification. Dependencies, including Numba/LLVM and
+zxparam, are locked in `environments/tsim-0.1.5-e9406ed.txt`.
+
+Compilation explicitly requests `strategy="active_statevector"` and
+`trajectory_sharing=True`. This is a complex128 CPU implementation; it does not
+need CUDA. The worker sets `NUMBA_NUM_THREADS=1` before imports, and the adapter
+checks Numba's effective thread count. The existing Linux affinity, 12 GiB
+address-space ceiling, and preparation/request deadlines also apply. There is
+no fallback to a different Tsim strategy when preparation or sampling fails.
+
+Tsim returns raw detector and observable arrays. Both reference-sample flags
+are explicitly false. The adapter passes an all-detector postselection mask
+when the workload requests it, allowing native early rejection. All attempted
+rows are returned, but rejected rows may have later outputs cleared. The adapter
+reapplies the detector mask and counts observable 0 only on survivors. Dense
+boolean array materialization and the adapter's NumPy mask reduction and
+aggregate counting are inside execution time. Clifft returns native aggregate
+counts, so the tools can spend different fractions of their call time producing
+the shared aggregate endpoint. This is the same timing boundary used for Stim
+and xtim. Any reported postprocessing percentage must come from a separate,
+reproducible profile specifying the workload, shots per call, batch capacity,
+hardware, and software versions; it is not a universal adapter overhead.
+
+The sampler is compiled and seeded once per prepared configuration. Tsim has no
+public per-call reseeding API: one continuous stream advances through its
+kernel warmup, full-call warmup, correctness check, and final repetitions.
+`initial_seed` is the manifest seed minus one for the final configuration;
+per-call and repetition seed fields are audit identifiers for this adapter.
+Calibration uses a separate initial seed from the reserved calibration range,
+shared across candidates for replay, and advances continuously across each
+candidate's probes. The selected configuration is freshly prepared with the
+final initial seed. No private RNG fields are changed and no compilation is
+performed inside timed calls.
+
+Calibration probes batch capacities 256, 1024, 8192, and 65536, each capped by
+shots per call and deduplicated. Each uses the existing three warmed one-second
+probes and smaller-capacity tie break. A fixed numeric capacity remains
+supported. With direct-detector postselection, this capacity applies to the
+survivors passed to the statevector backend. Fully direct circuits bypass that
+backend; the recorded capacity is the API setting, not a claim that quantum
+lanes were allocated. Raw metadata and `cases.csv` expose
+`batch_parameter=statevector-batch-shots` and `batch_size_applicable`: false for
+a fully direct compiled program, true when statevector components exist. This
+flag describes the compiled program, not whether any shots survive postselection
+in a particular call. A blank flag in older data means unknown. Raw metadata
+also records component widths, strategy, sharing, precision, seed policy, and
+effective threads. Setting
+`tsim_trajectory_sharing=false` explicitly supports diagnostic manifests only;
+the primary campaign enables sharing.
+
+Parsing and ZX compilation/planning have separate timers. During preparation,
+a one-shot sample without postselection warms quantum kernels even when all
+later warmup shots could be rejected by direct detectors. Its
+`kernel_warmup_seconds` includes execution and any first-use JIT or cache load;
+it is not a pure JIT compiler measurement. The usual warmup then executes at
+least one full public call with the actual postselection settings. Calibration
+warms separate candidate samplers; it does not warm the freshly prepared final
+sampler. The full-call warmup is therefore retained to exercise its actual call
+shape before timing. Both warmup steps are excluded from final sampling.
+Upstream's Numba disk cache is retained, so these setup measurements must not be described as uniformly cold builds.
+
+### Matched bulk sampling
+
+`bulk-alternatives-vs-current` compares `clifft-bulk`, `symft-bulk`, and
+`tsim-bulk` on the unchanged coherent d5/r5 circuit at 256 attempted shots per
+call. Each tool independently calibrates its internal batching under the same
+resource ceiling. The manifest validator rejects unequal public call sizes
+within a comparison. Failed candidates/cases remain recorded under the normal
+calibration and deadline policies.
+
+The historical current/previous/alternative comparisons retain one shot per
+call for d5/r5. Keeping the bulk case separately named preserves those earlier
+measurements while allowing sharing across shots in the new comparison.
+Bulk results must not be joined into the historical one-shot QEC series.
+The multicore and expanded-workload follow-ups are separate campaigns/work.

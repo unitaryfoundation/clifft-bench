@@ -88,7 +88,9 @@ class XtimAdapter(Adapter):
             self.name, expected_commit=expected_commit, source_url=source_url
         )
 
-    def prepare(self, *, artifact_path: Path, workload: dict, execution: dict) -> PreparedAdapter:
+    def prepare(
+        self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
+    ) -> PreparedAdapter:
         import numpy as np
         import xtim
 

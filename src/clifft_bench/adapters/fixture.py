@@ -41,6 +41,7 @@ class FixtureAdapter(Adapter):
         artifact_path: Path,
         workload: dict[str, Any],
         execution: dict[str, Any],
+        seed: int = 0,
     ) -> PreparedAdapter:
         parameters = dict(workload["parameters"])
         if parameters.get("write_native_stdout"):

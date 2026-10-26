@@ -134,7 +134,8 @@
           ]
         },
         "sample_chunk_shots": {"type": "integer", "minimum": 0},
-        "clifft_scheduler": {"$ref": "#/$defs/clifftScheduler"}
+        "clifft_scheduler": {"$ref": "#/$defs/clifftScheduler"},
+        "tsim_trajectory_sharing": {"type": "boolean"}
       }
     },
     "workloadSelection": {

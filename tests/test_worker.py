@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import weakref
 from types import SimpleNamespace
 
 import pytest
@@ -71,12 +72,14 @@ def test_aggregate_sample_excludes_stream_setup_and_records_peak_rss(monkeypatch
 class _CalibrationAdapter:
     def __init__(self) -> None:
         self.prepared_batch_sizes: list[int] = []
+        self.prepared_seeds: list[int] = []
 
-    def prepare(self, *, artifact_path, workload, execution):
+    def prepare(self, *, artifact_path, workload, execution, seed=0):
         del artifact_path, workload
         batch_size = int(execution["batch_size"])
         assert execution["batch_enabled"] is (batch_size > 1)
         self.prepared_batch_sizes.append(batch_size)
+        self.prepared_seeds.append(seed)
         return SimpleNamespace(
             batch_size=batch_size,
             runtime_metadata={
@@ -110,6 +113,7 @@ def test_batch_calibration_selects_best_median_and_records_probes(monkeypatch) -
 
     calibration = prepared.runtime_metadata["batch_calibration"]
     assert adapter.prepared_batch_sizes == [1, 32, 32]
+    assert adapter.prepared_seeds == [3000010, 3000010, 0]
     assert calibration["candidates"] == [1, 32]
     assert calibration["selected_batch_size"] == 32
     assert calibration["selection_statistic"] == "median_attempted_shots_per_second"
@@ -148,7 +152,7 @@ def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
     monkeypatch,
 ) -> None:
     class ScalarOnlyAdapter(_CalibrationAdapter):
-        def prepare(self, *, artifact_path, workload, execution):
+        def prepare(self, *, artifact_path, workload, execution, seed=0):
             if execution["batch_size"] != 1:
                 raise TypeError("batch_size is unsupported")
             return super().prepare(
@@ -238,3 +242,40 @@ def test_installation_is_verified_before_any_calibration(monkeypatch):
     )
     assert worker.main() == 1
     assert emitted[0]["error"]["message"] == "source identity mismatch"
+
+
+def test_calibration_releases_native_state_before_preparing_another_trial(monkeypatch):
+    class Prepared:
+        def __init__(self, batch):
+            self.batch_size = batch
+            self.runtime_metadata = {"batch_enabled": batch > 1, "effective_batch_size": batch}
+
+    class Adapter:
+        previous = None
+        batches = []
+
+        def prepare(self, *, execution, **kwargs):
+            assert self.previous is None or self.previous() is None
+            prepared = Prepared(execution["batch_size"])
+            self.previous = weakref.ref(prepared)
+            self.batches.append(prepared.batch_size)
+            return prepared
+
+    def sample(prepared, shots, seed):
+        if prepared.batch_size == 32:
+            raise MemoryError("native allocation failed during warmup")
+        return Counts(shots, shots, 0, 0), 1.0
+
+    monkeypatch.setattr(worker, "timed_sample", sample)
+    adapter = Adapter()
+    prepared = worker.calibrate_batch_size(
+        adapter, artifact_path=None,
+        workload={"semantics": {"postselect_all_detectors": False}},
+        execution={"batch_size": "calibrate", "batch_enabled": True},
+        shots_per_call=256, seed=10,
+    )
+    assert adapter.batches == [1, 32, 256, 1]
+    assert prepared.batch_size == 1
+    assert [r["status"] for r in prepared.runtime_metadata["batch_calibration"]["results"]] == [
+        "success", "error", "success",
+    ]

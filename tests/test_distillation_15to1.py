@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from collections import Counter
 from pathlib import Path
 
@@ -17,6 +18,8 @@ NOISE = "Z_ERROR(0.001) " + " ".join(map(str, range(15)))
 
 
 def _prepare(adapter, tmp_path, text):
+    if adapter == "tsim":
+        os.environ["NUMBA_NUM_THREADS"] = "1"
     module = pytest.importorskip(adapter)
     path = tmp_path / "distillation.stim"
     path.write_text(text)
@@ -69,7 +72,7 @@ def test_circuit_checks_match_hamming_matrix_and_cubic_error_floor():
     assert counts[3] == 35
 
 
-@pytest.mark.parametrize("adapter", ["clifft", "symft", "xtim"])
+@pytest.mark.parametrize("adapter", ["clifft", "symft", "xtim", "tsim"])
 @pytest.mark.parametrize("faults,accepted,logical", [
     ([], True, 0), ([0], False, 0), ([0, 1], False, 0),
     ([0, 1, 2], True, 1), ([0, 1, 3, 6], True, 0),
@@ -85,7 +88,7 @@ def test_exact_fault_patterns_verify_postselection_and_logical_readout(
     assert result.logical_errors == logical * 32
 
 
-@pytest.mark.parametrize("adapter", ["clifft", "symft", "xtim"])
+@pytest.mark.parametrize("adapter", ["clifft", "symft", "xtim", "tsim"])
 def test_noisy_distribution_matches_exhaustive_phase_fault_enumeration(adapter, tmp_path):
     probability = 0.05  # Enough accepted logical faults for a useful statistical check.
     text = ARTIFACT.read_text().replace("Z_ERROR(0.001)", f"Z_ERROR({probability})")

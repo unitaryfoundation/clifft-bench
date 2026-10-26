@@ -27,10 +27,14 @@ raw results or release manifest.
 
 - `cases.csv` contains one row per case, placement, and replica, including
   failures, median/MAD summaries, the exact simulator version, and its public
-  display version.
+  display version. Failed cases retain `error_phase`, `error_type`, and
+  `error_message`; their throughput summary fields are blank, including when
+  raw JSON retains samples collected before a later failure. Setup failures
+  may have no calibration record or selected batch size.
 - `comparisons.csv` joins manifest-declared baseline and candidate variants for
   the same workload, placement, and replica. It carries both sides' mode,
   batching, shots-per-call configuration, exact versions, and display versions.
+  Only successful pairs produce comparison rows.
 
 Individual samples remain only in raw JSON. Plotting and reports should consume
 the long-form CSV tables rather than add another checked-in data representation.
@@ -40,6 +44,14 @@ otherwise blank), `compile_seconds`, and `peak_active_width`.
 Missing costs in older raw records remain blank; omitted Clifft scheduler
 settings mean disabled. Full search counters and calibration timings remain
 in raw JSON.
+
+`batch_parameter` names the adapter's batching control; for Tsim it is
+`statevector-batch-shots`. `batch_size_applicable` is `false` when a compiled
+Tsim program has only direct outputs and ignores that control, and `true` when
+statevector components exist. It describes the program, not the survivors in
+an individual call. The numeric `batch_size_effective` remains the configured
+API capacity, not a count of allocated quantum lanes. Missing applicability
+metadata is exported as blank (unknown), preserving older records.
 
 Plots, tables, and prose use `simulator_display_version` in `cases.csv` and the
 corresponding `baseline_simulator_display_version` and

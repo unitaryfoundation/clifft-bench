@@ -111,10 +111,16 @@ Confirm that `current-vs-previous` compares calibrated previous and current
 Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT.
 The separate `stim-anchor-vs-current` comparison contributes only the
 surface-code row; the five non-Clifford QEC workloads and the adder are outside
-Stim's supported domain. The campaign has 28 cases, including two Clifft
-adder cases and four 15-to-1 distillation cases (two Clifft releases, SymFT, xtim).
+Stim's supported domain. The campaign has 39 cases, including three adder
+cases and five 15-to-1 distillation cases (two Clifft releases, SymFT, xtim, Tsim).
 The anchor reuses current Clifft's surface-code measurement.
 `xtim-vs-current` reuses current Clifft on cultivation d3/d5, surface code, and 15-to-1.
+`tsim-vs-current` reuses all eight current-Clifft cases with the pinned CPU
+active-statevector backend and trajectory sharing. The three additional bulk
+cases compare Clifft, SymFT, and Tsim on coherent d5/r5 at 256 shots per call.
+Keep that comparison separate from the historical one-shot rows. Check Tsim
+source identity, effective Numba threads, and full-call warmup evidence before
+accepting the results.
 Check sampler setup timing and `peak_rss_bytes` in the raw samples, following
 the [xtim measurement policy](benchmark-contract.md#xtim-comparison).
 Within every row, confirm that baseline and candidate use the same
@@ -122,9 +128,9 @@ Within every row, confirm that baseline and candidate use the same
 
 The bootstrap reads the new pinned SymFT source and Stim wheel environments from
 the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, xtim 3.1.4 at
-`2945407` with the manifest's portable build flags, Stim 1.16.0, and
-Stim's loaded native extension and chunk calibration in the raw setup metadata.
-Five 30-second samples across 28 cases require at least 70 minutes of sampling,
+`2945407` with the manifest's portable build flags, Stim 1.16.0, and Tsim 0.1.5
+at `e9406ed`. Inspect the runtime source identity and calibration evidence.
+Five 30-second samples across 39 cases require at least 97.5 minutes of sampling,
 plus setup/calibration and call overruns. The Tsim GPU study has separate
 [instructions](../experiments/tsim-gpu/README.md); do not run this CPU playbook
 on its GPU host.

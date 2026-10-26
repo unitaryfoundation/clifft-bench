@@ -1,0 +1,5 @@
+bloqade-tsim @ git+https://github.com/QuEraComputing/tsim.git@e9406ed5bb49fcff1b04b65534cf56bbb756b3a6
+numba==0.65.0
+numpy==2.4.4
+stim==1.16.0
+zxparam==0.1.0

@@ -46,6 +46,7 @@ class ClifftAdapter(Adapter):
         artifact_path: Path,
         workload: dict[str, Any],
         execution: dict[str, Any],
+        seed: int = 0,
     ) -> PreparedAdapter:
         reference_convention = str(workload["semantics"]["reference_convention"])
         if reference_convention != "raw-record-parity":

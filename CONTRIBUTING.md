@@ -31,6 +31,11 @@ with Stim in a separate `stim-anchor-vs-current` comparison on the unchanged
 Clifford surface-code circuit.
 It also includes `xtim-vs-current` on the compatible subset, with calibrated
 packed-record chunks and the documented cache measurement policy.
+It also includes `tsim-vs-current` with CPU active-statevector sampling and
+trajectory sharing. `bulk-alternatives-vs-current` separately compares Clifft,
+SymFT, and Tsim at 256 attempted shots per call on coherent d5/r5, preserving
+the historical one-shot configuration. See the
+[Tsim measurement contract](docs/benchmark-contract.md#tsim-active-statevector-cpu-comparison).
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 
@@ -46,7 +51,7 @@ For a new Clifft release:
    `clifft-current.execution` to the checked-in
    [scheduler configuration](campaigns/release-v1/clifft-scheduled-execution.json).
 4. Keep each workload's `shots_per_call` aligned across every variant and
-   release. Update those workload-level values only when measurement evidence
+   release within each comparison. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.
 5. Validate locally, then follow the [EC2 collection procedure](docs/manual-ec2.md).
 
@@ -86,3 +91,59 @@ For self-contained studies outside the recurring release campaign, see the
 [experiment guidelines](experiments/README.md).
 The [Tsim GPU study](experiments/tsim-gpu/README.md) has its own locked
 environment, bounded preparation, and finalize/commit/push workflow for results.
+
+
+## Tsim CPU adapter checks
+
+Use the pinned source environment; the released 0.1.5 wheel lacks this backend:
+
+```bash
+uv venv --python 3.12 .campaign-envs/tsim
+uv pip install --python .campaign-envs/tsim/bin/python -r environments/tsim-0.1.5-e9406ed.txt
+uv pip install --python .campaign-envs/tsim/bin/python -e '.[test]'
+NUMBA_NUM_THREADS=1 .campaign-envs/tsim/bin/python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py -k 'tsim or hamming'
+.campaign-envs/tsim/bin/python -m clifft_bench run \
+  --run-manifest manifests/run-tsim-smoke.v1.json \
+  --min-sample-seconds 0.01 --repetitions 1 --output /tmp/tsim-smoke.json
+.campaign-envs/tsim/bin/python -m clifft_bench validate /tmp/tsim-smoke.json
+```
+
+The runner applies thread restrictions before starting each worker. Linux CI
+also exercises the campaign's 12 GiB address-space ceiling. Local timings are
+installation/correctness diagnostics, not official performance results. The
+older `experiments/tsim-gpu` environment remains independently pinned.
+
+
+## Bounded three-tool CPU pilot
+
+`manifests/run-tsim-pilot.v1.json` reuses the release cases for coherent d5/r5
+bulk sampling and the 85q distillation control across Clifft, SymFT, and Tsim.
+It uses three samples of at least three seconds, with 180-second preparation
+and 60-second request deadlines. The bulk calls contain 256 attempted shots;
+all historical one-shot cases remain unchanged.
+
+After installing the three pinned environments, set their
+`CLIFFT_BENCH_CLIFFT_0_12_0RC1_PYTHON`, `CLIFFT_BENCH_SYMFT_C89B985_PYTHON`, and
+`CLIFFT_BENCH_TSIM_E9406ED_PYTHON` variables to the corresponding Python
+executables. Run on Linux to enforce the reference memory limit:
+
+```bash
+uv run clifft-bench run --run-manifest manifests/run-tsim-pilot.v1.json \
+  --memory-limit-gib 12 --output /tmp/tsim-pilot.json
+uv run clifft-bench validate /tmp/tsim-pilot.json
+```
+
+Review candidate failures, selected batch sizes, peak RSS, individual call
+costs, and accepted/error counts. Calibration still chooses internal batch
+sizes on the measurement host. The 256-shot bulk size was chosen after a local
+pilot: 4096-shot SymFT calls took approximately 78–99 seconds, while 256-shot
+calls took approximately 5–6 seconds and retained about 95% of Tsim throughput.
+These are feasibility observations on an Apple M4 Pro, not reference-host
+performance results.
+
+macOS does not enforce this harness's Linux address-space ceiling or affinity.
+In the local pilot, an external RSS watchdog stopped SymFT's 256-lane trial
+above 8 GiB; smaller trials remained usable. Linux CI exercises the automatic
+calibration path under the actual 12 GiB address-space ceiling and retains its
+raw pilot artifacts. A killed local trial must remain recorded as a resource
+failure; it must not be substituted for a successful calibration result.
