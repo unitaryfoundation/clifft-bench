@@ -169,7 +169,7 @@ workloads while allowing each newer release to use its best supported approach.
 
 The recurring release finalizer now produces `tsim-vs-current` rows for the
 existing current-Clifft inputs and `bulk-alternatives-vs-current` rows for
-coherent d5/r5 at 4096 attempted shots per call. Select the comparison ID
+coherent d5/r5 at 256 attempted shots per call. Select the comparison ID
 explicitly; do not combine the bulk rows with the historical one-shot series.
 `cases.csv` includes the sampling backend, trajectory-sharing setting,
 compilation time, kernel-warmup time, full-call warmup time, and active width.

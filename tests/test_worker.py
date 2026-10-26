@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import weakref
 from types import SimpleNamespace
 
 import pytest
@@ -241,3 +242,40 @@ def test_installation_is_verified_before_any_calibration(monkeypatch):
     )
     assert worker.main() == 1
     assert emitted[0]["error"]["message"] == "source identity mismatch"
+
+
+def test_calibration_releases_native_state_before_preparing_another_trial(monkeypatch):
+    class Prepared:
+        def __init__(self, batch):
+            self.batch_size = batch
+            self.runtime_metadata = {"batch_enabled": batch > 1, "effective_batch_size": batch}
+
+    class Adapter:
+        previous = None
+        batches = []
+
+        def prepare(self, *, execution, **kwargs):
+            assert self.previous is None or self.previous() is None
+            prepared = Prepared(execution["batch_size"])
+            self.previous = weakref.ref(prepared)
+            self.batches.append(prepared.batch_size)
+            return prepared
+
+    def sample(prepared, shots, seed):
+        if prepared.batch_size == 32:
+            raise MemoryError("native allocation failed during warmup")
+        return Counts(shots, shots, 0, 0), 1.0
+
+    monkeypatch.setattr(worker, "timed_sample", sample)
+    adapter = Adapter()
+    prepared = worker.calibrate_batch_size(
+        adapter, artifact_path=None,
+        workload={"semantics": {"postselect_all_detectors": False}},
+        execution={"batch_size": "calibrate", "batch_enabled": True},
+        shots_per_call=256, seed=10,
+    )
+    assert adapter.batches == [1, 32, 256, 1]
+    assert prepared.batch_size == 1
+    assert [r["status"] for r in prepared.runtime_metadata["batch_calibration"]["results"]] == [
+        "success", "error", "success",
+    ]

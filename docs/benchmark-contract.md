@@ -131,6 +131,10 @@ worker:
 5. freshly prepares the selected configuration and uses it for all timed
    repetitions.
 
+Each trial sampler is released before constructing the next trial or the final
+configuration, including after failures, so their native state buffers do not
+overlap during calibration.
+
 Clifft and SymFT use the same procedure. Stim calibrates public sampler chunks
 of 256, 1024, 4096, 16384, and 65536 shots, capped by `shots_per_call`, plus an
 unchunked call. Its compiled circuit detector sampler is reused across calls;
@@ -377,7 +381,7 @@ these setup measurements must not be described as uniformly cold builds.
 ### Matched bulk sampling
 
 `bulk-alternatives-vs-current` compares `clifft-bulk`, `symft-bulk`, and
-`tsim-bulk` on the unchanged coherent d5/r5 circuit at 4096 attempted shots per
+`tsim-bulk` on the unchanged coherent d5/r5 circuit at 256 attempted shots per
 call. Each tool independently calibrates its internal batching under the same
 resource ceiling. The manifest validator rejects unequal public call sizes
 within a comparison. Failed candidates/cases remain recorded under the normal

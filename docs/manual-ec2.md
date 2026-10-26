@@ -117,7 +117,7 @@ The anchor reuses current Clifft's surface-code measurement.
 `xtim-vs-current` reuses current Clifft on cultivation d3/d5, surface code, and 15-to-1.
 `tsim-vs-current` reuses all eight current-Clifft cases with the pinned CPU
 active-statevector backend and trajectory sharing. The three additional bulk
-cases compare Clifft, SymFT, and Tsim on coherent d5/r5 at 4096 shots per call.
+cases compare Clifft, SymFT, and Tsim on coherent d5/r5 at 256 shots per call.
 Keep that comparison separate from the historical one-shot rows. Check Tsim
 source identity, effective Numba threads, and full-call warmup evidence before
 accepting the results.

@@ -215,7 +215,7 @@
         }
       },
       "workloads": [
-        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 4096}
+        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 256}
       ]
     },
     {
@@ -228,7 +228,7 @@
         "sample_chunk_shots": 2048
       },
       "workloads": [
-        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 4096}
+        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 256}
       ]
     },
     {
@@ -242,7 +242,7 @@
         "tsim_trajectory_sharing": true
       },
       "workloads": [
-        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 4096}
+        {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 256}
       ]
     }
   ]

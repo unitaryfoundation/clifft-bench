@@ -386,7 +386,7 @@ def test_tsim_bulk_comparison_preserves_historical_single_shot_case():
     for variant in ("clifft-previous", "clifft-current", "symft-current", "tsim-current"):
         assert cases[variant].definition["shots_per_call"] == 1
     for variant in ("clifft-bulk", "symft-bulk", "tsim-bulk"):
-        assert cases[variant].definition["shots_per_call"] == 4096
+        assert cases[variant].definition["shots_per_call"] == 256
         assert cases[variant].definition["execution"]["batch_size"] == "calibrate"
     assert cases["tsim-bulk"].definition["execution"]["tsim_trajectory_sharing"] is True
 
@@ -401,3 +401,16 @@ def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
     path.write_text(json.dumps(run))
     with pytest.raises(SchemaValidationError, match="unequal shots_per_call"):
         load_suite(path)
+
+
+
+def test_tsim_pilot_reuses_exact_release_cases():
+    release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    pilot = load_suite(ROOT / "manifests/run-tsim-pilot.v1.json")
+    expected = {case.id: case.definition for case in release.cases}
+    assert pilot.run["classification"] == "smoke"
+    assert len(pilot.cases) == 6
+    assert {case.implementation.definition["adapter"] for case in pilot.cases} == {
+        "clifft", "symft", "tsim",
+    }
+    assert all(case.definition == expected[case.id] for case in pilot.cases)

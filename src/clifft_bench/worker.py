@@ -173,6 +173,7 @@ def calibrate_batch_size(
     for candidate in candidates:
         candidate_started = time.perf_counter()
         candidate_execution = _candidate_execution(execution, candidate)
+        prepared = None
         try:
             prepared = adapter.prepare(
                 artifact_path=artifact_path,
@@ -244,6 +245,10 @@ def calibrate_batch_size(
                     "error": {"type": type(error).__name__, "message": str(error)},
                 }
             )
+        finally:
+            # Native samplers may own gigabytes of state. Release each trial
+            # before constructing the next trial or the selected configuration.
+            prepared = None
 
     if not successful:
         raise RuntimeError("batch calibration failed for every candidate")

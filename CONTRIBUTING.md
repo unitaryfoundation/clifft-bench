@@ -33,7 +33,7 @@ It also includes `xtim-vs-current` on the compatible subset, with calibrated
 packed-record chunks and the documented cache measurement policy.
 It also includes `tsim-vs-current` with CPU active-statevector sampling and
 trajectory sharing. `bulk-alternatives-vs-current` separately compares Clifft,
-SymFT, and Tsim at 4096 attempted shots per call on coherent d5/r5, preserving
+SymFT, and Tsim at 256 attempted shots per call on coherent d5/r5, preserving
 the historical one-shot configuration. See the
 [Tsim measurement contract](docs/benchmark-contract.md#tsim-active-statevector-cpu-comparison).
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
@@ -112,3 +112,38 @@ The runner applies thread restrictions before starting each worker. Linux CI
 also exercises the campaign's 12 GiB address-space ceiling. Local timings are
 installation/correctness diagnostics, not official performance results. The
 older `experiments/tsim-gpu` environment remains independently pinned.
+
+
+## Bounded three-tool CPU pilot
+
+`manifests/run-tsim-pilot.v1.json` reuses the release cases for coherent d5/r5
+bulk sampling and the 85q distillation control across Clifft, SymFT, and Tsim.
+It uses three samples of at least three seconds, with 180-second preparation
+and 60-second request deadlines. The bulk calls contain 256 attempted shots;
+all historical one-shot cases remain unchanged.
+
+After installing the three pinned environments, set their
+`CLIFFT_BENCH_CLIFFT_0_12_0RC1_PYTHON`, `CLIFFT_BENCH_SYMFT_C89B985_PYTHON`, and
+`CLIFFT_BENCH_TSIM_E9406ED_PYTHON` variables to the corresponding Python
+executables. Run on Linux to enforce the reference memory limit:
+
+```bash
+uv run clifft-bench run --run-manifest manifests/run-tsim-pilot.v1.json \
+  --memory-limit-gib 12 --output /tmp/tsim-pilot.json
+uv run clifft-bench validate /tmp/tsim-pilot.json
+```
+
+Review candidate failures, selected batch sizes, peak RSS, individual call
+costs, and accepted/error counts. Calibration still chooses internal batch
+sizes on the measurement host. The 256-shot bulk size was chosen after a local
+pilot: 4096-shot SymFT calls took approximately 78–99 seconds, while 256-shot
+calls took approximately 5–6 seconds and retained about 95% of Tsim throughput.
+These are feasibility observations on an Apple M4 Pro, not reference-host
+performance results.
+
+macOS does not enforce this harness's Linux address-space ceiling or affinity.
+In the local pilot, an external RSS watchdog stopped SymFT's 256-lane trial
+above 8 GiB; smaller trials remained usable. Linux CI exercises the automatic
+calibration path under the actual 12 GiB address-space ceiling and retains its
+raw pilot artifacts. A killed local trial must remain recorded as a resource
+failure; it must not be substituted for a successful calibration result.
