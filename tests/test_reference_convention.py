@@ -160,3 +160,38 @@ def test_clifft_default_pipeline_reduces_prepared_adder(batch_size, scheduled):
     counts = prepared.sample(shots=32, seed=7)
     assert counts.attempted_shots == counts.accepted_shots == 32
     assert counts.discarded_shots == counts.logical_errors == 0
+
+
+@pytest.mark.parametrize("postselect", [False, True])
+def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect):
+    import math
+
+    prepared = _prepare(
+        "clifft", tmp_path,
+        circuit=("H 0\nDEPOLARIZE1(0.05) 0 1\nT 0\nCX 1 0\nT_DAG 0\n"
+                 "CX 1 0\nM 1\nDETECTOR rec[-1]\nH 0\nM 0\n"
+                 "OBSERVABLE_INCLUDE(0) rec[-1]\n"),
+        postselect=postselect,
+    )
+    import clifft
+
+    # Check the native binding as well as Python mocks: nanobind may report
+    # (*args, **kwargs) to inspect.signature despite accepting named arguments.
+    if "batch_size:" in (clifft.sample_survivors.__doc__ or ""):
+        assert prepared._batch_size == 1
+        assert prepared.runtime_metadata["batch_control"] == "explicit"
+    shots = 16384
+    counts = prepared.sample(shots, 901)
+    # With detector 0, the two independent depolarizing faults give joint
+    # (d,o) probabilities 841/900, 29/900, 1/60, 1/60 in lexicographic order.
+    acceptance = 29/30 if postselect else 1.0
+    observable_ones = 29/900 if postselect else 11/225
+    for actual, probability in ((counts.accepted_shots, acceptance),
+                                (counts.logical_errors, observable_ones)):
+        assert abs(actual - shots*probability) < (
+            6 * math.sqrt(shots * probability * (1-probability)) + 1
+        )
+    if prepared.runtime_metadata["postselection_before_optimization"]:
+        assert prepared.runtime_metadata["peak_active_width"] == (0 if postselect else 1)
+        if postselect:
+            assert prepared.runtime_metadata["optimized_t_gates"] == 0
