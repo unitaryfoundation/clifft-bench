@@ -307,7 +307,9 @@ chunk-invariant counts and the correct noisy selected/unselected law. Historical
 3.1.4 identities and measurements remain preserved; new collections use 3.2.2.
 Use `QECCORE_PORTABLE=1` (`-O3 -funroll-loops`, without `-march=native`) to
 retain the portable build policy of Clifft's release wheels. Record
-`CXXFLAGS=-include cstdint`, retaining the established GCC build setting.
+`CXXFLAGS=-include cstdint`, retained from the earlier pin's missing-header
+workaround on GCC. Whether 3.2.2 still needs this flag has not been tested;
+the recorded build keeps it for continuity.
 The adapter verifies the installed PEP 610 repository and commit before setup.
 
 ## Correctness and identity

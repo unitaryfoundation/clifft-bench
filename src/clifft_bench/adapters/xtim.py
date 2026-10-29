@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import re
 import time
 from pathlib import Path
@@ -103,7 +102,6 @@ class XtimAdapter(Adapter):
         import numpy as np
         import xtim
 
-        os.environ.setdefault("XTIM_QUIET", "1")
         semantics = workload["semantics"]
         if semantics["reference_convention"] != "raw-record-parity":
             raise ValueError("xtim adapter requires raw-record-parity")
