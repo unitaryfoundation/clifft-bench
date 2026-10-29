@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/workloads/v1",
-  "suite_version": "0.2.5",
+  "suite_version": "0.2.6",
   "workloads": [
     {
       "id": "msc-d3-inject-cultivate-p1e-3",
@@ -539,6 +539,128 @@
         "source_path": "examples/distillation_15_1_3.stim",
         "license": "Apache-2.0",
         "notes": "Preserve all source instructions except the two PAULI_EXPECTATION declarations; replace non-ASCII comments with this ASCII attribution header. Append T_DAG on qubits 0..14, MPP X0*...*X14, and OBSERVABLE_INCLUDE(0) rec[-1]. This ideal output verification supplies a deterministic noiseless measurement contract shared by all three simulators; it is not expectation-value/fidelity estimation."
+      }
+    },
+    {
+      "id": "bt27-direct-x",
+      "family": "code-switching",
+      "description": "Noiseless BT27 code switching on 135 qubits with direct logical-X readout.",
+      "artifact": {
+        "path": "../workloads/circuits/bt27_direct_x.stim",
+        "sha256": "28339beeffe1b18f81b3be07c24210a77ba7f1edb2292ccd0afc47e8cb745a64"
+      },
+      "dialect": "clifft-symft-extended-stim",
+      "angle_convention": "half-turns",
+      "parameters": {
+        "physical_error_rate": 0,
+        "readout": "direct-X"
+      },
+      "semantics": {
+        "logical_work": "Sample the complete circuit and count raw observable-0 ones; these stochastic outcomes are not logical errors.",
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "observable_index": 0,
+        "reference_convention": "raw-record-parity",
+        "postselect_all_detectors": false,
+        "throughput_numerator": "attempted shots",
+        "batch_semantics": "Independent attempted shots."
+      },
+      "expected_metadata": {
+        "num_qubits": 135,
+        "num_measurements": 135,
+        "num_detectors": 72,
+        "num_observables": 9
+      },
+      "compatible_adapters": [
+        "clifft"
+      ],
+      "provenance": {
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+        "source_path": "tests/fixtures/merlin_bt27.stim",
+        "license": "Apache-2.0",
+        "notes": "Merlin generator 097380fac1a3968ca47925146e211fe990f4c396, p_phys=0, target_scoring=False. Append MX and nine observable declarations on decoded logical qubits 0,1,2,27,28,29,54,55,56."
+      }
+    },
+    {
+      "id": "bt81-direct-x",
+      "family": "code-switching",
+      "description": "Noiseless BT81 code switching on 405 qubits with direct logical-X readout.",
+      "artifact": {
+        "path": "../workloads/circuits/bt81_direct_x.stim",
+        "sha256": "12a3a86a310ff52dbcbc2525554fd3f1dd87b2da8a0c5a27ee84f9c5271b5abe"
+      },
+      "dialect": "clifft-symft-extended-stim",
+      "angle_convention": "half-turns",
+      "parameters": {
+        "physical_error_rate": 0,
+        "readout": "direct-X"
+      },
+      "semantics": {
+        "logical_work": "Sample the complete circuit and count raw observable-0 ones; these stochastic outcomes are not logical errors.",
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "observable_index": 0,
+        "reference_convention": "raw-record-parity",
+        "postselect_all_detectors": false,
+        "throughput_numerator": "attempted shots",
+        "batch_semantics": "Independent attempted shots."
+      },
+      "expected_metadata": {
+        "num_qubits": 405,
+        "num_measurements": 405,
+        "num_detectors": 234,
+        "num_observables": 9
+      },
+      "compatible_adapters": [
+        "clifft"
+      ],
+      "provenance": {
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+        "source_path": "tests/fixtures/merlin_bt81_direct_x.stim",
+        "license": "Apache-2.0",
+        "notes": "Unmodified direct-X fixture from the same Merlin generator as BT27; no inverse scoring."
+      }
+    },
+    {
+      "id": "reed-muller-measured",
+      "family": "reed-muller",
+      "description": "Measured 15-qubit Reed-Muller preparation, feedback, transversal T, and logical-X readout.",
+      "artifact": {
+        "path": "../workloads/circuits/reed_muller_measured_sampling.stim",
+        "sha256": "9732e97dd0f5f59185f76eec4dfbc284ad9cfd81b985b759aae60cb450bda8c2"
+      },
+      "dialect": "clifft-symft-extended-stim",
+      "angle_convention": "half-turns",
+      "parameters": {
+        "physical_error_rate": 0,
+        "readout": "direct-X"
+      },
+      "semantics": {
+        "logical_work": "Sample the complete circuit and count raw observable-0 ones; these stochastic outcomes are not logical errors.",
+        "output_contract": "aggregate detector-discard and logical-observable counts",
+        "observable_index": 0,
+        "reference_convention": "raw-record-parity",
+        "postselect_all_detectors": false,
+        "throughput_numerator": "attempted shots",
+        "batch_semantics": "Independent attempted shots."
+      },
+      "expected_metadata": {
+        "num_qubits": 15,
+        "num_measurements": 11,
+        "num_detectors": 0,
+        "num_observables": 1
+      },
+      "compatible_adapters": [
+        "clifft",
+        "symft",
+        "tsim"
+      ],
+      "provenance": {
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+        "source_path": "tests/fixtures/reed_muller_measured.stim",
+        "license": "Apache-2.0",
+        "notes": "Remove EXP_VAL declarations; retain all preparation, feedback, T gates, and logical-X measurement."
       }
     }
   ]

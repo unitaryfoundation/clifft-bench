@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.5",
+  "suite_version": "0.2.6",
   "seed": 20260819,
   "resources": {
     "logical_cpu": null
@@ -22,7 +22,7 @@
       "id": "distillation-color-code-85q-p5e-2--clifft-current",
       "variant_id": "clifft-current",
       "workload_id": "distillation-color-code-85q-p5e-2",
-      "implementation_id": "clifft-0.12.0rc1",
+      "implementation_id": "clifft-63cd885",
       "shots_per_call": 100000,
       "execution": {
         "mode": "throughput",
@@ -68,7 +68,7 @@
       "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk",
       "variant_id": "clifft-bulk",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
-      "implementation_id": "clifft-0.12.0rc1",
+      "implementation_id": "clifft-63cd885",
       "shots_per_call": 256,
       "execution": {
         "mode": "throughput",
