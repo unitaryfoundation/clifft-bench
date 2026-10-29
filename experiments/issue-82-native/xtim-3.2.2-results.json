@@ -1,0 +1,4914 @@
+{
+  "complete": true,
+  "classification": "correctness-diagnostic-not-throughput",
+  "timestamp": "2026-10-29T17:52:08.367690+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "python": "3.12.13 (main, Aug  7 2026, 02:15:23) [Clang 22.1.3 ]",
+  "packages": {
+    "xtim": {
+      "version": "3.2.2",
+      "direct_url": {
+        "url": "https://github.com/ikim-quantum/xtim.git",
+        "vcs_info": {
+          "vcs": "git",
+          "commit_id": "edf0dd0cff804ac0228d517889e49b0c286cb19a",
+          "requested_revision": "edf0dd0cff804ac0228d517889e49b0c286cb19a"
+        }
+      }
+    }
+  },
+  "shots": 131072,
+  "seeds": [
+    1,
+    42,
+    74
+  ],
+  "with_adapters": false,
+  "source_sha256": {
+    "repro.py": "f597f36f6d7b61aa05bbca8da2a83e194748bfb3370dbcde85fe83e495eb643a",
+    "circuit.stim": "7ad68b3fc5794f076b79da26e7599b4fac799f16593a79d59e2b4ad58aa687a8"
+  },
+  "joint_order": [
+    "D0O0",
+    "D0O1",
+    "D1O0",
+    "D1O1"
+  ],
+  "expected_joint": [
+    0.9344444444444444,
+    0.03222222222222222,
+    0.016666666666666666,
+    0.016666666666666666
+  ],
+  "expected_forced_joint": [
+    0,
+    0,
+    0.5,
+    0.5
+  ],
+  "rows": [
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 1,
+      "joint": [
+        122652,
+        4188,
+        2075,
+        2157
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118426,
+          "fast": 12644,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 131072,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.925072309799064,
+        -0.5541970909158527,
+        -2.363287651885851,
+        -0.5940583081125111
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 32,
+      "joint": [
+        122652,
+        4188,
+        2075,
+        2157
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118426,
+          "fast": 12644,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.925072309799064,
+        -0.5541970909158527,
+        -2.363287651885851,
+        -0.5940583081125111
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 2048,
+      "joint": [
+        122652,
+        4188,
+        2075,
+        2157
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118426,
+          "fast": 12644,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 64,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.925072309799064,
+        -0.5541970909158527,
+        -2.363287651885851,
+        -0.5940583081125111
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 131072,
+      "joint": [
+        122652,
+        4188,
+        2075,
+        2157
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118426,
+          "fast": 12644,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.925072309799064,
+        -0.5541970909158527,
+        -2.363287651885851,
+        -0.5940583081125111
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 1,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2051,
+        2045
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.09375,
+        -0.09375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 32,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2051,
+        2045
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.09375,
+        -0.09375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 4096,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2051,
+        2045
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.09375,
+        -0.09375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 1,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2051,
+        2045
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.09375,
+        -0.09375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 32,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2051,
+        2045
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4064,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 32
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 32,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.09375,
+        -0.09375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 4096,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2051,
+        2045
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 2096,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2000
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2000,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.09375,
+        -0.09375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "exact-measurements",
+      "seed": 1,
+      "joint": [
+        122401,
+        4206,
+        2190,
+        2275
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -0.8760834846948906,
+        -0.272649396709981,
+        0.11794862291822333,
+        1.9519058695125395
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 1,
+      "joint": [
+        122556,
+        4148,
+        2210,
+        2158
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118382,
+          "fast": 12688,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 131072,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.8537139182794639,
+        -1.1798586335955674,
+        0.5494679750580624,
+        -0.5724823405055192
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 32,
+      "joint": [
+        122556,
+        4148,
+        2210,
+        2158
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118382,
+          "fast": 12688,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.8537139182794639,
+        -1.1798586335955674,
+        0.5494679750580624,
+        -0.5724823405055192
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 2048,
+      "joint": [
+        122556,
+        4148,
+        2210,
+        2158
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118382,
+          "fast": 12688,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "calls": 64,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.8537139182794639,
+        -1.1798586335955674,
+        0.5494679750580624,
+        -0.5724823405055192
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 131072,
+      "joint": [
+        122556,
+        4148,
+        2210,
+        2158
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118382,
+          "fast": 12688,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.8537139182794639,
+        -1.1798586335955674,
+        0.5494679750580624,
+        -0.5724823405055192
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 1,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2054,
+        2042
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.1875,
+        -0.1875
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 32,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2054,
+        2042
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.1875,
+        -0.1875
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 4096,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2054,
+        2042
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.1875,
+        -0.1875
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 1,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2054,
+        2042
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.1875,
+        -0.1875
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 32,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2054,
+        2042
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4064,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 32
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 32,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.1875,
+        -0.1875
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 4096,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2054,
+        2042
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 2096,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2000
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2000,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.1875,
+        -0.1875
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "exact-measurements",
+      "seed": 42,
+      "joint": [
+        122465,
+        4180,
+        2230,
+        2197
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -0.16184455701515718,
+        -0.6793293994517956,
+        0.9809873271979015,
+        0.268980396167167
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 1,
+      "joint": [
+        122485,
+        4139,
+        2189,
+        2259
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118266,
+          "fast": 12804,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 131072,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.061355107884759515,
+        -1.3206324806985033,
+        0.09637265531123138,
+        1.6066903878006682
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 32,
+      "joint": [
+        122485,
+        4139,
+        2189,
+        2259
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118266,
+          "fast": 12804,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.061355107884759515,
+        -1.3206324806985033,
+        0.09637265531123138,
+        1.6066903878006682
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 2048,
+      "joint": [
+        122485,
+        4139,
+        2189,
+        2259
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118266,
+          "fast": 12804,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      "calls": 64,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.061355107884759515,
+        -1.3206324806985033,
+        0.09637265531123138,
+        1.6066903878006682
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 131072,
+      "joint": [
+        122485,
+        4139,
+        2189,
+        2259
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 118266,
+          "fast": 12804,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2
+        },
+        "counters": {
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 516,
+          "plan_misses": 2,
+          "plan_misses_kappa0": 2,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 131072,
+        "plans": 2,
+        "plan_misses": {
+          "kappa0": 2,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2,
+        "rec": {
+          "tables": 2,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            2
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 516,
+          "peak_bytes": 516,
+          "overshoot_bytes": 0,
+          "header_bytes": 262416,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.061355107884759515,
+        -1.3206324806985033,
+        0.09637265531123138,
+        1.6066903878006682
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 1,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2091,
+        2005
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        1.34375,
+        -1.34375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 32,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2091,
+        2005
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        1.34375,
+        -1.34375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 4096,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2091,
+        2005
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        1.34375,
+        -1.34375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 1,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2091,
+        2005
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4095,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 1
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 1,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        1.34375,
+        -1.34375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 32,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2091,
+        2005
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 4064,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 32
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 32,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        1.34375,
+        -1.34375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 4096,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2091,
+        2005
+      ],
+      "report": {
+        "classes": {
+          "detectors": {
+            "0": "deterministic"
+          },
+          "observables": {
+            "0": "deterministic"
+          },
+          "decisions": {}
+        },
+        "nondeterministic_detectors": [],
+        "nondeterministic_observables": [],
+        "route_counts": {
+          "clean": 0,
+          "fast": 2096,
+          "fast_accumulator": 0,
+          "record_kappa_pos": 0,
+          "retain_kappa0": 0,
+          "retain_kappa_pos": 0,
+          "slow_kappa0": 2000
+        },
+        "counters": {
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "payload_evictions": 0,
+          "payload_resident_bytes": 284,
+          "plan_misses": 1,
+          "plan_misses_kappa0": 1,
+          "plan_misses_kappa_pos": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "trie_nodes": 0,
+          "trie_walks": 0
+        },
+        "used": 4096,
+        "plans": 1,
+        "plan_misses": {
+          "kappa0": 1,
+          "kappa_pos": 0,
+          "fallback": 0
+        },
+        "born_trie": {
+          "walks": 0,
+          "steps": 0,
+          "nodes": 0,
+          "node_evals": 0,
+          "chi_j": 0,
+          "max_depth": 0,
+          "passes": 0,
+          "max_support": 0,
+          "root_memo_hits": 0
+        },
+        "structural_shots": 2000,
+        "rec": {
+          "tables": 1,
+          "extras": 0,
+          "pivots_from_extras": 0,
+          "dirs_from_extras": 0,
+          "kappa_rec_hist": [
+            1
+          ],
+          "obs_draws": {
+            "record": 0
+          }
+        },
+        "plan_memory": {
+          "budget": 536870912,
+          "resident_bytes": 284,
+          "peak_bytes": 284,
+          "overshoot_bytes": 0,
+          "header_bytes": 262280,
+          "payload_builds": 0,
+          "evictions": 0,
+          "reader_lookups": 0,
+          "reader_tables": 0,
+          "reader_bytes": 0,
+          "reader_peak_bytes": 0,
+          "reader_overshoot_bytes": 0,
+          "reader_evictions": 0
+        },
+        "disk_path": "",
+        "feedback_hoisted": 0,
+        "semantic_oracle_shots": 0,
+        "term_route": {
+          "shots_kind2": 0,
+          "plans_kind2": 0,
+          "shots_kind0_general": 0,
+          "plans_kind0_general": 0,
+          "shots_framed": 0,
+          "shots_record_d": 0,
+          "key_bytes": 0,
+          "key_evictions": 0
+        },
+        "branches": {
+          "branches": 1,
+          "distinct_emin": 0,
+          "map_probes": 0,
+          "provenance": false,
+          "engine_branches": 0,
+          "branch_shots": 0,
+          "branch_map_probes": 0,
+          "branch_tries": 0,
+          "branch_trie_nodes": 0,
+          "branch_trie_node_evals": 0,
+          "branches_with_delta": 0,
+          "branch_resident": 0,
+          "branch_evictions": 0,
+          "branch_resupplies": 0,
+          "perE_evictions": 0,
+          "perE_resupplies": 0,
+          "branches_with_port_delta": 0
+        },
+        "branch_table_digest": null
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        1.34375,
+        -1.34375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "exact-measurements",
+      "seed": 74,
+      "joint": [
+        122577,
+        4178,
+        2163,
+        2154
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.0880735664243764,
+        -0.7106124765857814,
+        -0.4646025024705594,
+        -0.658786210933487
+      ]
+    }
+  ]
+}

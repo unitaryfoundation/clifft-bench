@@ -1,0 +1,2952 @@
+{
+  "complete": true,
+  "classification": "correctness-diagnostic-not-throughput",
+  "timestamp": "2026-10-29T17:52:10.139636+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "python": "3.12.13 (main, Aug  7 2026, 02:15:23) [Clang 22.1.3 ]",
+  "packages": {
+    "symft": {
+      "version": "0.1.1",
+      "direct_url": {
+        "url": "https://github.com/haoliri0/SOFT.git",
+        "vcs_info": {
+          "vcs": "git",
+          "commit_id": "c89b98514a919240b8afa53a271e08d926d3c987",
+          "requested_revision": "c89b98514a919240b8afa53a271e08d926d3c987"
+        },
+        "subdirectory": "python"
+      }
+    },
+    "xtim": {
+      "version": "3.1.4",
+      "direct_url": {
+        "url": "https://github.com/ikim-quantum/xtim.git",
+        "vcs_info": {
+          "vcs": "git",
+          "commit_id": "29454071fb20fbcffd258559ad0644676e44a8f9",
+          "requested_revision": "29454071fb20fbcffd258559ad0644676e44a8f9"
+        }
+      }
+    }
+  },
+  "shots": 131072,
+  "seeds": [
+    1,
+    42,
+    74
+  ],
+  "with_adapters": true,
+  "source_sha256": {
+    "repro.py": "f597f36f6d7b61aa05bbca8da2a83e194748bfb3370dbcde85fe83e495eb643a",
+    "circuit.stim": "7ad68b3fc5794f076b79da26e7599b4fac799f16593a79d59e2b4ad58aa687a8"
+  },
+  "joint_order": [
+    "D0O0",
+    "D0O1",
+    "D1O0",
+    "D1O1"
+  ],
+  "expected_joint": [
+    0.9344444444444444,
+    0.03222222222222222,
+    0.016666666666666666,
+    0.016666666666666666
+  ],
+  "expected_forced_joint": [
+    0,
+    0,
+    0.5,
+    0.5
+  ],
+  "rows": [
+    {
+      "tool": "symft",
+      "case": "deterministic-detector",
+      "batch_size": 1,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 8,
+        "accepted_shots": 0,
+        "discarded_shots": 8,
+        "logical_errors": 0
+      }
+    },
+    {
+      "tool": "symft",
+      "case": "deterministic-detector",
+      "batch_size": 1,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 8,
+        "accepted_shots": 0,
+        "discarded_shots": 8,
+        "logical_errors": 0
+      }
+    },
+    {
+      "tool": "symft",
+      "case": "raw-measurements",
+      "batch_size": 1,
+      "seed": 1,
+      "joint": [
+        122351,
+        4220,
+        2263,
+        2238
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -1.4340826469446823,
+        -0.053667856772080816,
+        1.692994258228636,
+        1.1535950680538372
+      ]
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 1,
+      "batch_size": 1,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 1,
+      "batch_size": 1,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "raw-measurements",
+      "batch_size": 1,
+      "seed": 42,
+      "joint": [
+        122525,
+        4169,
+        2229,
+        2149
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.5077544376845929,
+        -0.8513863236887173,
+        0.9594113595909095,
+        -0.7666660489684468
+      ]
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 42,
+      "batch_size": 1,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 42,
+      "batch_size": 1,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "raw-measurements",
+      "batch_size": 1,
+      "seed": 74,
+      "joint": [
+        122549,
+        4149,
+        2189,
+        2185
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.775594035564493,
+        -1.1642170950285746,
+        0.09637265531123138,
+        0.010068784883263565
+      ]
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 74,
+      "batch_size": 1,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 74,
+      "batch_size": 1,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "deterministic-detector",
+      "batch_size": 32,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 8,
+        "accepted_shots": 0,
+        "discarded_shots": 8,
+        "logical_errors": 0
+      }
+    },
+    {
+      "tool": "symft",
+      "case": "deterministic-detector",
+      "batch_size": 32,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 8,
+        "accepted_shots": 0,
+        "discarded_shots": 8,
+        "logical_errors": 0
+      }
+    },
+    {
+      "tool": "symft",
+      "case": "raw-measurements",
+      "batch_size": 32,
+      "seed": 1,
+      "joint": [
+        122481,
+        4192,
+        2180,
+        2219
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.016715174904776177,
+        -0.4916309366478812,
+        -0.0978110531516962,
+        0.74365168352099
+      ]
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 1,
+      "batch_size": 32,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 1,
+      "batch_size": 32,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126721,
+        "discarded_shots": 4351,
+        "logical_errors": 4247
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "raw-measurements",
+      "batch_size": 32,
+      "seed": 42,
+      "joint": [
+        122526,
+        4220,
+        2214,
+        2112
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.5189144209295887,
+        -0.053667856772080816,
+        0.6357718454860303,
+        -1.564976850427149
+      ]
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 42,
+      "batch_size": 32,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 42,
+      "batch_size": 32,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126697,
+        "discarded_shots": 4375,
+        "logical_errors": 4209
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "raw-measurements",
+      "batch_size": 32,
+      "seed": 74,
+      "joint": [
+        122476,
+        4173,
+        2230,
+        2193
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -0.039084741320203,
+        -0.7888201694207457,
+        0.9809873271979015,
+        0.1826765257391992
+      ]
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 74,
+      "batch_size": 32,
+      "postselect_detectors": false,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "symft",
+      "case": "aggregate",
+      "seed": 74,
+      "batch_size": 32,
+      "postselect_detectors": true,
+      "native_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_counts": {
+        "attempted_shots": 131072,
+        "accepted_shots": 126691,
+        "discarded_shots": 4381,
+        "logical_errors": 4243
+      },
+      "adapter_matches_native": true
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 1,
+      "joint": [
+        122571,
+        4161,
+        133,
+        4207
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 131072,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        1.0211136669544014,
+        -0.9765186322246602,
+        -44.263816744664226,
+        43.63667528622099
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 8368
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 8368
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126732,
+            "discarded_shots": 4340,
+            "logical_errors": 4161
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126732,
+            "discarded_shots": 4340,
+            "logical_errors": 4161
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 32,
+      "joint": [
+        122555,
+        4159,
+        2043,
+        2315
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.842553935034468,
+        -1.007801709358646,
+        -3.053718615309594,
+        2.8149445737922174
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6474
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6474
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126714,
+            "discarded_shots": 4358,
+            "logical_errors": 4159
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126714,
+            "discarded_shots": 4358,
+            "logical_errors": 4159
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 2048,
+      "joint": [
+        122609,
+        4243,
+        2070,
+        2150
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 64,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.445193030264243,
+        0.30608753026875524,
+        -2.471167489920811,
+        -0.7450900813614548
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6393
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6393
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126852,
+            "discarded_shots": 4220,
+            "logical_errors": 4243
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126852,
+            "discarded_shots": 4220,
+            "logical_errors": 4243
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 1,
+      "chunk": 131072,
+      "joint": [
+        122567,
+        4210,
+        2170,
+        2125
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.9764737339744181,
+        -0.21008324244200952,
+        -0.3135707292216157,
+        -1.2844892715362537
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6335
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6335
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126777,
+            "discarded_shots": 4295,
+            "logical_errors": 4210
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126777,
+            "discarded_shots": 4295,
+            "logical_errors": 4210
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 1,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        0,
+        4096
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -64.0,
+        64.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 32,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        1920,
+        2176
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        -4.0,
+        4.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 4096,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2078,
+        2018
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.9375,
+        -0.9375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 1,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        0,
+        4096
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -64.0,
+        64.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 32,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        1920,
+        2176
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 31,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        -4.0,
+        4.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 1,
+      "chunk": 4096,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2078,
+        2018
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 1999,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.9375,
+        -0.9375
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "exact-measurements",
+      "seed": 1,
+      "joint": [
+        122401,
+        4206,
+        2190,
+        2275
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -0.8760834846948906,
+        -0.272649396709981,
+        0.11794862291822333,
+        1.9519058695125395
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 1,
+      "joint": [
+        122490,
+        4185,
+        145,
+        4252
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 131072,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        0.1171550241097387,
+        -0.6011217066168313,
+        -44.00490513338032,
+        44.607593828535634
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 8437
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 8437
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126675,
+            "discarded_shots": 4397,
+            "logical_errors": 4185
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126675,
+            "discarded_shots": 4397,
+            "logical_errors": 4185
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 32,
+      "joint": [
+        122480,
+        4304,
+        1919,
+        2369
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.005555191659780341,
+        1.2602213828553204,
+        -5.729138598576596,
+        3.980046824569783
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6673
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6673
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126784,
+            "discarded_shots": 4288,
+            "logical_errors": 4304
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126784,
+            "discarded_shots": 4288,
+            "logical_errors": 4304
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 2048,
+      "joint": [
+        122559,
+        4164,
+        2209,
+        2140
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 64,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.8871938680144513,
+        -0.9295940165236816,
+        0.5278920074510705,
+        -0.9608497574313744
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6304
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6304
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126723,
+            "discarded_shots": 4349,
+            "logical_errors": 4164
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126723,
+            "discarded_shots": 4349,
+            "logical_errors": 4164
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 42,
+      "chunk": 131072,
+      "joint": [
+        122547,
+        4126,
+        2210,
+        2189
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.7532740690745013,
+        -1.5239724820694107,
+        0.5494679750580624,
+        0.09637265531123138
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6315
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6315
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126673,
+            "discarded_shots": 4399,
+            "logical_errors": 4126
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126673,
+            "discarded_shots": 4399,
+            "logical_errors": 4126
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 1,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        0,
+        4096
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -64.0,
+        64.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 32,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        1792,
+        2304
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -8.0,
+        8.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 4096,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2072,
+        2024
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.75,
+        -0.75
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 1,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        0,
+        4096
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -64.0,
+        64.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 32,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        1792,
+        2304
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 31,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -8.0,
+        8.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 42,
+      "chunk": 4096,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2072,
+        2024
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 1999,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.75,
+        -0.75
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "exact-measurements",
+      "seed": 42,
+      "joint": [
+        122465,
+        4180,
+        2230,
+        2197
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -0.16184455701515718,
+        -0.6793293994517956,
+        0.9809873271979015,
+        0.268980396167167
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 1,
+      "joint": [
+        122443,
+        4208,
+        4277,
+        144
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 131072,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        -0.40736418840506555,
+        -0.24136631957599528,
+        45.14699301871043,
+        -44.02648110098731
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 4352
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 4352
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126651,
+            "discarded_shots": 4421,
+            "logical_errors": 4208
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126651,
+            "discarded_shots": 4421,
+            "logical_errors": 4208
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 32,
+      "joint": [
+        122456,
+        4150,
+        1700,
+        2766
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        -0.2622844062201197,
+        -1.1485755564615818,
+        -10.454275504507834,
+        12.545705964545588
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6916
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6916
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126606,
+            "discarded_shots": 4466,
+            "logical_errors": 4150
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126606,
+            "discarded_shots": 4466,
+            "logical_errors": 4150
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 2048,
+      "joint": [
+        122453,
+        4176,
+        2228,
+        2215
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "calls": 64,
+      "all_chunks_repeat_first": false,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        -0.2957643559551072,
+        -0.7418955537197671,
+        0.9378353919839176,
+        0.6573478130930221
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6391
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6391
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126629,
+            "discarded_shots": 4443,
+            "logical_errors": 4176
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126629,
+            "discarded_shots": 4443,
+            "logical_errors": 4176
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "noisy",
+      "seed": 74,
+      "chunk": 131072,
+      "joint": [
+        122567,
+        4128,
+        2211,
+        2166
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 2,
+        "plan_hits": 0,
+        "plan_misses": 2,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 131072,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        0.9764737339744181,
+        -1.492689404935425,
+        0.5710439426650543,
+        -0.39987459964958355
+      ],
+      "adapter_comparisons": [
+        {
+          "postselect": false,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6294
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 131072,
+            "discarded_shots": 0,
+            "logical_errors": 6294
+          },
+          "adapter_matches_native": true
+        },
+        {
+          "postselect": true,
+          "native_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126695,
+            "discarded_shots": 4377,
+            "logical_errors": 4128
+          },
+          "adapter_counts": {
+            "attempted_shots": 131072,
+            "accepted_shots": 126695,
+            "discarded_shots": 4377,
+            "logical_errors": 4128
+          },
+          "adapter_matches_native": true
+        }
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 1,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        4096,
+        0
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        64.0,
+        -64.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 32,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        1536,
+        2560
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -16.0,
+        16.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 4096,
+      "selfcheck": 0,
+      "joint": [
+        0,
+        0,
+        2074,
+        2022
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.8125,
+        -0.8125
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 1,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        4096,
+        0
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 0,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0
+      ],
+      "calls": 4096,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        64.0,
+        -64.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 32,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        1536,
+        2560
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 31,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "calls": 128,
+      "all_chunks_repeat_first": true,
+      "six_sigma_pass": false,
+      "joint_z_scores": [
+        null,
+        null,
+        -16.0,
+        16.0
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "forced-X1",
+      "seed": 74,
+      "chunk": 4096,
+      "selfcheck": 2000,
+      "joint": [
+        0,
+        0,
+        2074,
+        2022
+      ],
+      "report": {
+        "deterministic_detectors": [
+          0
+        ],
+        "gauge_detectors": [],
+        "anti_detectors": [],
+        "refused_observables": [],
+        "deterministic_observables": [
+          0
+        ],
+        "num_channels": 2,
+        "plans": 1,
+        "plan_hits": 1999,
+        "plan_misses": 1,
+        "ppr_plans": 0,
+        "fallback_shots": 0,
+        "exact_shots": 0,
+        "used": 4096,
+        "disk_path": "",
+        "sink_kind": "dets_pack"
+      },
+      "first_observable_bits": [
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "calls": 1,
+      "all_chunks_repeat_first": null,
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        null,
+        null,
+        0.8125,
+        -0.8125
+      ]
+    },
+    {
+      "tool": "xtim",
+      "case": "exact-measurements",
+      "seed": 74,
+      "joint": [
+        122577,
+        4178,
+        2163,
+        2154
+      ],
+      "six_sigma_pass": true,
+      "joint_z_scores": [
+        1.0880735664243764,
+        -0.7106124765857814,
+        -0.4646025024705594,
+        -0.658786210933487
+      ]
+    }
+  ],
+  "adapter_source_sha256": {
+    "_shared.py": "0c01aeae0ac52310839b57aff0d07db9d22fda135b125ee70802efc8d45112bd",
+    "base.py": "7cce193e88ea1493221d2daaf505aa25125350f345076258007c8a322a23962a",
+    "symft.py": "941542222b39a1ef231f18e3e42b1eb68f73952137b037c9b1fafeced599bb89",
+    "xtim.py": "223d9e14ffeb4b97df296e12548d3186e17a4853ff6d5ff53b214f1350b97412"
+  }
+}
