@@ -38,7 +38,7 @@ def prepare(tmp_path, text, *, batch=1, observable=0, postselect=False):
 
 
 @pytest.mark.parametrize("batch", [1, 32])
-@pytest.mark.parametrize("observable,ones", [(0, 0), (8, 0), (9, 67)])
+@pytest.mark.parametrize("observable,ones", [(0, 0), (7, 0), (8, 0), (9, 67)])
 def test_unselected_fired_detector_preserves_observable_parity(
     tmp_path,
     batch,
@@ -50,6 +50,7 @@ def test_unselected_fired_detector_preserves_observable_parity(
     text = (
         "X 0\nM 0\nDETECTOR rec[-1]\nM 1 2 3 4 5 6 7 8\nX 9\nM 9\n"
         "OBSERVABLE_INCLUDE(0) rec[-9]\n"
+        "OBSERVABLE_INCLUDE(8) rec[-10] rec[-1]\n"
         "OBSERVABLE_INCLUDE(9) rec[-10] rec[-1]\n"
         "OBSERVABLE_INCLUDE(9) rec[-1]\n"
         "OBSERVABLE_INCLUDE(9) rec[-10] rec[-10]\n"

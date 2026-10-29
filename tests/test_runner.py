@@ -240,6 +240,60 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
         )
 
 
+def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
+    pytest.importorskip("symft")
+    run_path, run, software = _write_fixture_suite(tmp_path)
+    artifact = tmp_path / "tiny.stim"
+    # Both raw parities are one. Native aggregate counts would discard every
+    # shot even with early postselection disabled; the record path must keep all.
+    artifact.write_text(
+        "X 0 1\nT 1\nM 0\nDETECTOR rec[-1]\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+    )
+    workloads = json.loads((tmp_path / "workloads.json").read_text())
+    workload = workloads["workloads"][0]
+    workload["artifact"]["sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    workload["compatible_adapters"] = ["symft"]
+    workload["expected_metadata"].update(num_qubits=2, num_measurements=2, num_detectors=1)
+    _write(tmp_path / "workloads.json", workloads)
+    implementation = software["implementations"][0]
+    implementation.update(
+        adapter="symft", name="SymFT", distribution="symft", version="0.1.1",
+        commit_sha="c89b98514a919240b8afa53a271e08d926d3c987",
+        source_url="https://github.com/haoliri0/SOFT",
+    )
+    _write(tmp_path / "software.json", software)
+    run["cases"] = run["cases"][:1]
+    run["cases"][0]["shots_per_call"] = 67
+    run["cases"][0]["execution"].update(
+        batch_enabled=True, batch_size="calibrate", sample_chunk_shots=2048,
+    )
+    run["measurement"]["setup_timeout_seconds"] = 60
+    _write(run_path, run)
+
+    output = tmp_path / "result.json"
+    result = run_suite(load_suite(run_path), output_path=output, memory_limit_gib=1)
+    validate_document(json.loads(output.read_text()))
+    case = result["cases"][0]
+    assert case["status"] == "success", case["error"]
+    metadata = case["setup"]["runtime_metadata"]
+    assert metadata["installed_source_commit"] == implementation["commit_sha"]
+    assert metadata["sampling_backend"] == "compile_sampler"
+    assert metadata["record_materialization"] == "bit-packed-measurements"
+    calibration = metadata["batch_calibration"]
+    assert calibration["candidates"] == [1, 32]
+    assert all(trial["status"] == "success" for trial in calibration["results"])
+    selected = calibration["selected_batch_size"]
+    assert selected in (1, 32)
+    assert case["execution"]["batch_size"] == selected
+    assert metadata["sample_chunk_shots"] == (2048 if selected == 1 else 0)
+    assert case["correctness"]["status"] == "passed"
+    for counts in [case["warmup"], case["correctness"]["details"], *case["samples"]]:
+        assert counts["attempted_shots"] > 0
+        assert counts["accepted_shots"] == counts["attempted_shots"]
+        assert counts["logical_errors"] == counts["attempted_shots"]
+        assert counts["discarded_shots"] == 0
+
+
 def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
     pytest.importorskip("tsim")
     run_path, run, software = _write_fixture_suite(tmp_path)
