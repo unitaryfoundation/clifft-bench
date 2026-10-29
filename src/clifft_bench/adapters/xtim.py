@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import re
 import time
 from pathlib import Path
@@ -28,19 +27,28 @@ def _record_layout(text: str) -> Any:
 def _compile(text: str) -> Any:
     import xtim
 
-    sampler = xtim.compile_twirl_sampler(
-        text, selfcheck=0, disk_cache=False, skip_refused_observables=False
-    )
-    report = sampler.channel_report()
+    sampler = xtim.compile_twirl_sampler(text, selfcheck=0, disk_cache=False)
+    if not hasattr(sampler, "record_report"):
+        raise ValueError("xtim requires the pinned 3.2.2 record API with fixed stream continuation")
+    report = sampler.record_report()
     declared_observables = {
         int(index) for index in re.findall(r"OBSERVABLE_INCLUDE\s*\(\s*(\d+)\s*\)", text, re.I)
     }
     if (
-        report["gauge_detectors"]
-        or report["anti_detectors"]
-        or report["refused_observables"]
-        or sorted(report["deterministic_detectors"]) != list(range(sampler.num_detectors))
-        or set(report["deterministic_observables"]) != declared_observables
+        report["nondeterministic_detectors"]
+        or report["nondeterministic_observables"]
+        or {
+            int(index)
+            for index, kind in report["classes"]["detectors"].items()
+            if kind == "deterministic"
+        }
+        != set(range(sampler.num_detectors))
+        or {
+            int(index)
+            for index, kind in report["classes"]["observables"].items()
+            if kind == "deterministic"
+        }
+        != declared_observables
     ):
         raise ValueError(
             f"xtim requires deterministic noiseless detectors and observables: {report}"
@@ -94,7 +102,6 @@ class XtimAdapter(Adapter):
         import numpy as np
         import xtim
 
-        os.environ.setdefault("XTIM_QUIET", "1")
         semantics = workload["semantics"]
         if semantics["reference_convention"] != "raw-record-parity":
             raise ValueError("xtim adapter requires raw-record-parity")
@@ -113,7 +120,7 @@ class XtimAdapter(Adapter):
         parse_seconds = time.perf_counter() - started
         started = time.perf_counter()
         sampler = _compile(text)
-        report = sampler.channel_report()
+        report = sampler.record_report()
         del sampler
         compile_seconds = time.perf_counter() - started
 
@@ -132,27 +139,38 @@ class XtimAdapter(Adapter):
             measurements=records, separate_observables=True
         )
         metadata = {
-            "name": "xtim", "version": xtim.__version__, "threads": 1,
-            "precision": "complex-fp64", "reference_convention": "raw-record-parity",
-            "batch_enabled": chunk > 1, "effective_batch_size": chunk,
+            "name": "xtim",
+            "version": xtim.__version__,
+            "threads": 1,
+            "precision": "complex-fp64",
+            "reference_convention": "raw-record-parity",
+            "batch_enabled": chunk > 1,
+            "effective_batch_size": chunk,
             "batch_parameter": "public-twirl-sampler-chunk-shots",
             "seed_policy": "per-call-seed-with-continuous-chunks",
             "sampling_backend": "compile_twirl_sampler",
             "record_materialization": "bit-packed-detectors-and-observables",
             "cache_policy": "fresh-per-repetition-with-untimed-compilation",
-            "disk_cache": False, "selfcheck": 0,
-            "channel_report": report,
-            "parse_seconds": parse_seconds, "compile_seconds": compile_seconds,
+            "disk_cache": False,
+            "selfcheck": 0,
+            "record_report": report,
+            "parse_seconds": parse_seconds,
+            "compile_seconds": compile_seconds,
             "reference_setup_seconds": time.perf_counter() - started,
             "raw_reference_detector_ones": int(det_ref.sum()),
             "raw_reference_observable_ones": int(obs_ref.sum()),
             "native_num_qubits": circuit.num_qubits,
-            **{key: getattr(layout, key) for key in (
-                "num_qubits", "num_measurements", "num_detectors", "num_observables"
-            )},
+            **{
+                key: getattr(layout, key)
+                for key in ("num_qubits", "num_measurements", "num_detectors", "num_observables")
+            },
         }
         return _PreparedXtim(
-            text, chunk, observable, bool(semantics["postselect_all_detectors"]),
+            text,
+            chunk,
+            observable,
+            bool(semantics["postselect_all_detectors"]),
             np.packbits(det_ref, axis=1, bitorder="little"),
-            np.packbits(obs_ref, axis=1, bitorder="little"), metadata,
+            np.packbits(obs_ref, axis=1, bitorder="little"),
+            metadata,
         )

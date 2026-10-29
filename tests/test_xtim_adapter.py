@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -14,7 +15,8 @@ from clifft_bench.manifest import load_suite
 ROOT = Path(__file__).resolve().parents[1]
 EXECUTION = {"batch_enabled": True, "batch_size": 32, "sample_chunk_shots": 0}
 SEMANTICS = {
-    "observable_index": 0, "postselect_all_detectors": True,
+    "observable_index": 0,
+    "postselect_all_detectors": True,
     "reference_convention": "raw-record-parity",
 }
 
@@ -25,9 +27,13 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, initiali
     artifact.write_text(text)
     prepared = adapter.XtimAdapter().prepare(
         artifact_path=artifact,
-        workload={"semantics": {
-            **SEMANTICS, "observable_index": observable, "postselect_all_detectors": postselect,
-        }},
+        workload={
+            "semantics": {
+                **SEMANTICS,
+                "observable_index": observable,
+                "postselect_all_detectors": postselect,
+            }
+        },
         execution={**EXECUTION, "batch_size": chunk},
     )
 
@@ -45,7 +51,8 @@ def test_packed_padding_nonzero_reference_and_selected_observable(tmp_path):
 
 
 def test_noise_counts_and_fresh_per_call_streams(tmp_path):
-    p = prepare(tmp_path,
+    p = prepare(
+        tmp_path,
         "X_ERROR(0.2) 0\nM 0\nDETECTOR rec[-1]\n"
         "X_ERROR(0.3) 1\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
         chunk=1024,
@@ -60,8 +67,9 @@ def test_noise_counts_and_fresh_per_call_streams(tmp_path):
 @pytest.mark.parametrize("channel", ["DETECTOR rec[-1]", "OBSERVABLE_INCLUDE(0) rec[-1]"])
 def test_refuses_nondeterministic_channels(tmp_path, channel):
     with pytest.raises((ValueError, RuntimeError), match="deterministic|anti|refused"):
-        prepare(tmp_path, f"H 0\nM 0\n{channel}\nM 1\nOBSERVABLE_INCLUDE(1) rec[-1]\n",
-                observable=1)
+        prepare(
+            tmp_path, f"H 0\nM 0\n{channel}\nM 1\nOBSERVABLE_INCLUDE(1) rec[-1]\n", observable=1
+        )
 
 
 def test_refuses_expectation_payload(tmp_path):
@@ -79,9 +87,13 @@ def test_cache_persists_within_repetition_and_compiles_before_timing(tmp_path, m
         return sampler
 
     monkeypatch.setattr(adapter, "_compile", track_compile)
-    p = prepare(tmp_path,
-                "X_ERROR(0.3) 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
-                postselect=False, chunk=65536, initialize=False)
+    p = prepare(
+        tmp_path,
+        "X_ERROR(0.3) 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
+        postselect=False,
+        chunk=65536,
+        initialize=False,
+    )
     assert len(compiled) == 1  # prepare validates once; construction does not compile.
     assert p._sampler is None
     with pytest.raises(RuntimeError, match="initialized before timing"):
@@ -103,14 +115,21 @@ def test_cache_persists_within_repetition_and_compiles_before_timing(tmp_path, m
 @pytest.mark.parametrize("mismatch", ["wheel", "commit", "repository", None])
 def test_verifies_source_identity(monkeypatch, mismatch):
     commit = "c" * 40
-    direct = {"url": "https://github.com/ikim-quantum/xtim.git",
-              "vcs_info": {"vcs": "git", "commit_id": commit}}
+    direct = {
+        "url": "https://github.com/ikim-quantum/xtim.git",
+        "vcs_info": {"vcs": "git", "commit_id": commit},
+    }
     if mismatch == "commit":
         direct["vcs_info"]["commit_id"] = "d" * 40
     if mismatch == "repository":
         direct["url"] = "https://example.com/other"
-    monkeypatch.setattr(_shared, "distribution", lambda _: SimpleNamespace(
-        read_text=lambda _: None if mismatch == "wheel" else json.dumps(direct)))
+    monkeypatch.setattr(
+        _shared,
+        "distribution",
+        lambda _: SimpleNamespace(
+            read_text=lambda _: None if mismatch == "wheel" else json.dumps(direct)
+        ),
+    )
     args = {"expected_commit": commit, "source_url": "https://github.com/ikim-quantum/xtim"}
     if mismatch:
         with pytest.raises(RuntimeError, match="source identity mismatch"):
@@ -120,10 +139,59 @@ def test_verifies_source_identity(monkeypatch, mismatch):
         assert result["installed_source_commit"] == commit
 
 
-@pytest.mark.parametrize("workload_id", [
-    "msc-d3-inject-cultivate-p1e-3", "msc-d5-inject-cultivate-p1e-3",
-    "surface-code-d7-r7-p1e-3",
-])
+@pytest.mark.parametrize("seed", [1, 42, 74])
+def test_continuation_keeps_independent_coins_across_chunks(tmp_path, seed):
+    # A certain X fault on q1 makes D=1 and O a fair coin. In the old pin,
+    # sample(1, seed=None) replayed the same coin, producing 0 or 4096 ones.
+    text = (
+        "H 0\nX_ERROR(1) 1\nT 0\nCX 1 0\nT_DAG 0\nCX 1 0\n"
+        "M 1\nDETECTOR rec[-1]\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+    )
+    results = []
+    for chunk in [1, 32, 4096]:
+        p = prepare(tmp_path, text, postselect=False, chunk=chunk)
+        counts = p.sample(4096, seed)
+        assert counts.accepted_shots == 4096
+        assert counts.discarded_shots == 0
+        assert abs(counts.logical_errors - 2048) <= 6 * math.sqrt(1024)
+        results.append(counts)
+    assert results[0] == results[1] == results[2]
+
+
+@pytest.mark.parametrize("seed", [1, 42, 74])
+@pytest.mark.parametrize("postselect", [False, True])
+def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed, postselect):
+    text = (
+        "H 0\nDEPOLARIZE1(0.05) 0 1\nT 0\nCX 1 0\nT_DAG 0\nCX 1 0\n"
+        "M 1\nDETECTOR rec[-1]\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+    )
+    shots = 131072
+    results = []
+    for chunk in [1, 32, 2048, shots]:
+        p = prepare(tmp_path, text, postselect=postselect, chunk=chunk)
+        counts = p.sample(shots, seed)
+        for observed, probability in [
+            (counts.accepted_shots, 29 / 30 if postselect else 1),
+            (counts.logical_errors, 29 / 900 if postselect else 11 / 225),
+        ]:
+            assert abs(observed - shots * probability) <= (
+                6 * math.sqrt(shots * probability * (1 - probability)) + 1
+            )
+        assert counts.accepted_shots + counts.discarded_shots == shots
+        if not postselect:
+            assert counts.discarded_shots == 0
+        results.append(counts)
+    assert all(counts == results[0] for counts in results)
+
+
+@pytest.mark.parametrize(
+    "workload_id",
+    [
+        "msc-d3-inject-cultivate-p1e-3",
+        "msc-d5-inject-cultivate-p1e-3",
+        "surface-code-d7-r7-p1e-3",
+    ],
+)
 def test_release_workload_metadata_and_acceptance_agree_with_clifft(workload_id):
     pytest.importorskip("xtim")
     pytest.importorskip("clifft")

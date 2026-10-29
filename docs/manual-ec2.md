@@ -129,8 +129,8 @@ Within every row, confirm that baseline and candidate use the same
 `shots_per_call`.
 
 The bootstrap reads the new pinned SymFT source and Stim wheel environments from
-the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, xtim 3.1.4 at
-`2945407` with the manifest's portable build flags, Stim 1.16.0, and Tsim 0.1.5
+the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, xtim 3.2.2 at
+`edf0dd0` with the manifest's portable build flags, Stim 1.16.0, and Tsim 0.1.5
 at `e9406ed`. Inspect the runtime source identity and calibration evidence.
 Five 30-second samples across 45 cases require at least 112.5 minutes of sampling,
 plus setup/calibration and call overruns. The Tsim GPU study has separate
