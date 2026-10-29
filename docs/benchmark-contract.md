@@ -277,9 +277,32 @@ The sampler returns reference-relative bits. Setup obtains an exact noiseless
 raw measurement trajectory from xtim and converts the declared record parities
 using Stim's record converter. The converter sees a layout-only copy with the
 extended unitary gates replaced by identities; all simulated physics comes from
-the original immutable circuit in xtim. The packed offsets are XORed into each
-sample before postselection. Metadata counts source qubits, with xtim's internal
+the original immutable circuit in xtim. The packed offsets restore raw parities.
+Metadata counts source qubits, with xtim's internal
 ancilla-expanded count recorded separately as `native_num_qubits`.
+
+For postselected workloads with all-zero raw detector references, pass an all-true
+boolean detector mask to `TwirlSampler.sample(..., postselect=mask)`. This enables
+native early rejection before plan work when possible; the returned packed rows
+contain only accepted shots. Read and validate the returned `attempts`, `passed`,
+`discarded`, and `early` counters for each chunk. Throughput still counts every
+attempted shot, including early rejects. Apply observable reference offsets and
+reduce observable ones over accepted rows inside the sampling timer.
+
+If any raw detector reference is one, retain unmasked sampling followed by raw
+parity conversion and detector filtering in the adapter: the native mask selects
+zero reference-relative bits and cannot express that raw-zero condition.
+Unselected workloads also use unmasked sampling. Metadata records the actual
+`postselection_backend` (`native-twirl-sampler`, `adapter-raw-record-parity`, or
+`disabled`) and whether packed records contain only accepted shots. The four
+enabled xtim workloads have zero raw detector references and use native filtering.
+Regressions compare their counts with same-seed unmasked samples filtered afterward.
+Do not use `record_report().used` as attempts or accepted shots; native early
+rejection and later filtering give that counter different semantics.
+
+Native postselection changes the timed work and cache population. Collect new
+throughput measurements for this path and identify it through the metadata above;
+existing results retain the sampling behavior of their recorded harness revision.
 
 Each repetition compiles a fresh sampler before timing, using the same
 `begin_sample` boundary as Stim. No plan cache carries over from warmup,
