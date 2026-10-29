@@ -18,7 +18,13 @@ from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
-from clifft_bench.calibration import calibration_candidates
+from clifft_bench.calibration import (
+    BOUNDED_POLICY,
+    LEGACY_POLICY,
+    NATIVE_TUNING_BUDGET_SECONDS,
+    TUNING_BUDGET_SECONDS,
+    calibration_candidates,
+)
 from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
 
 BATCH_CALIBRATION_REPETITIONS = 3
@@ -164,13 +170,41 @@ def calibrate_batch_size(
     seed: int,
     sampling_seed: int = 0,
 ) -> Any:
-    candidates = calibration_candidates(getattr(adapter, "name", ""), shots_per_call)
+    policy = execution.get("tuning_policy", LEGACY_POLICY)
+    adapter_name = getattr(adapter, "name", "")
+    # Validate before spending any setup time; historical calls retain their grid.
+    candidates = calibration_candidates(adapter_name, shots_per_call, policy)
     postselect = bool(workload["semantics"]["postselect_all_detectors"])
     calibration_started = time.perf_counter()
+    native = {"status": "unsupported"}
+    if policy == BOUNDED_POLICY:
+        propose = getattr(adapter, "native_batch_choices", None)
+        if propose is not None:
+            started = time.perf_counter()
+            try:
+                native = propose(
+                    artifact_path=artifact_path, workload=workload, execution=execution,
+                    shots=shots_per_call,
+                    seed=_calibration_seed(seed, BATCH_CALIBRATION_REPETITIONS),
+                    budget_seconds=NATIVE_TUNING_BUDGET_SECONDS,
+                )
+                candidates = calibration_candidates(adapter_name, shots_per_call, policy, native)
+            except Exception as error:  # noqa: BLE001
+                native = {"status": "error",
+                          "error": {"type": type(error).__name__, "message": str(error)}}
+            native["duration_seconds"] = time.perf_counter() - started
     results = []
     successful: list[tuple[float, int]] = []
 
     for candidate in candidates:
+        if (policy == BOUNDED_POLICY and results
+                and time.perf_counter() - calibration_started >= TUNING_BUDGET_SECONDS):
+            results.append({
+                "batch_size": candidate, "status": "budget-skipped",
+                "effective_batch_size": None, "median_attempted_shots_per_second": None,
+                "duration_seconds": 0.0, "samples": [], "error": None,
+            })
+            continue
         candidate_started = time.perf_counter()
         candidate_execution = _candidate_execution(execution, candidate)
         prepared = None
@@ -210,6 +244,7 @@ def calibrate_batch_size(
                         "attempted_shots": sample["attempted_shots"],
                         "seed_first": sample["seed_first"],
                         "seed_last": sample["seed_last"],
+                        "peak_rss_bytes": sample["peak_rss_bytes"],
                         "throughput_attempted_shots_per_second": sample[
                             "throughput_attempted_shots_per_second"
                         ],
@@ -253,6 +288,7 @@ def calibrate_batch_size(
     if not successful:
         raise RuntimeError("batch calibration failed for every candidate")
     selected_batch_size = max(successful, key=lambda item: (item[0], -item[1]))[1]
+    search_seconds = time.perf_counter() - calibration_started
     prepared = adapter.prepare(
         artifact_path=artifact_path,
         workload=workload,
@@ -260,6 +296,12 @@ def calibrate_batch_size(
         seed=sampling_seed,
     )
     prepared.runtime_metadata["batch_calibration"] = {
+        "policy": policy,
+        **({"budget_seconds": TUNING_BUDGET_SECONDS,
+            "search_seconds": search_seconds,
+            "budget_scope": "between-candidates",
+            "native_budget_seconds": NATIVE_TUNING_BUDGET_SECONDS,
+            "native": native} if policy == BOUNDED_POLICY else {}),
         "candidates": candidates,
         "probe_seconds": BATCH_CALIBRATION_SECONDS,
         "repetitions": BATCH_CALIBRATION_REPETITIONS,

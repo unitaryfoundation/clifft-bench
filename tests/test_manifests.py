@@ -31,8 +31,8 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 45
-    assert len({case.id for case in suite.cases}) == 45
+    assert len(suite.cases) == 85
+    assert len({case.id for case in suite.cases}) == 85
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
@@ -43,6 +43,8 @@ def test_release_manifest_expands_named_variants() -> None:
         "clifft-bulk",
         "symft-bulk",
         "tsim-bulk",
+        "clifft-tuned", "symft-tuned", "tsim-tuned", "xtim-tuned", "stim-tuned",
+        "clifft-bulk-tuned", "symft-bulk-tuned", "tsim-bulk-tuned",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
@@ -77,6 +79,9 @@ def test_release_manifest_expands_named_variants() -> None:
     } == {candidate["id"]}
 
     comparisons = {item["id"]: item for item in suite.run["comparisons"]}
+    for name in list(comparisons):
+        if name.endswith("-tuning-policy") or name.startswith("tuned-"):
+            comparisons.pop(name)  # Checked separately below.
     assert comparisons.pop("tsim-vs-current") == {
         "id": "tsim-vs-current", "baseline_variant": "clifft-current",
         "candidate_variants": ["tsim-current"],
@@ -410,8 +415,47 @@ def test_tsim_pilot_reuses_exact_release_cases():
     pilot = load_suite(ROOT / "manifests/run-tsim-pilot.v1.json")
     expected = {case.id: case.definition for case in release.cases}
     assert pilot.run["classification"] == "smoke"
-    assert len(pilot.cases) == 6
+    assert len(pilot.cases) == 8
     assert {case.implementation.definition["adapter"] for case in pilot.cases} == {
         "clifft", "symft", "tsim",
     }
     assert all(case.definition == expected[case.id] for case in pilot.cases)
+
+
+def test_transition_pairs_preserve_shots_compiler_settings_and_source_identity():
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    variants = {v["id"]: v for v in suite.run["variants"]}
+    pairs = [c for c in suite.run["comparisons"] if c["id"].endswith("-tuning-policy")]
+    assert len(pairs) == 8
+    assert sum(len(variants[p["candidate_variants"][0]]["workloads"]) for p in pairs) == 38
+    for pair in pairs:
+        baseline = variants[pair["baseline_variant"]]
+        tuned = variants[pair["candidate_variants"][0]]
+        assert baseline["implementation_id"] == tuned["implementation_id"]
+        assert baseline["workloads"] == tuned["workloads"]
+        assert "tuning_policy" not in baseline["execution"]
+        assert tuned["execution"] == dict(baseline["execution"], tuning_policy="bounded-v2")
+    assert "tuning_policy" not in variants["clifft-previous"]["execution"]
+
+
+def test_tuning_policy_cannot_be_applied_to_a_fixed_batch(tmp_path):
+    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    run = copy.deepcopy(suite.run)
+    run["cases"][0]["execution"].update(batch_size=32, tuning_policy="bounded-v2")
+    run["workloads_manifest"] = str(suite.workloads_path)
+    run["software_manifest"] = str(suite.software_path)
+    path = tmp_path / "invalid-policy.json"
+    path.write_text(json.dumps(run))
+    with pytest.raises(SchemaValidationError, match="tuning_policy requires"):
+        load_suite(path)
+
+
+def test_adder_bulk_comparison_keeps_the_original_short_call_rows():
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    cases = {c.definition["variant_id"]: c for c in suite.cases
+             if c.workload.id == "draper-adder-m16-basis"}
+    for variant in ("clifft-previous", "clifft-current", "tsim-current",
+                    "clifft-tuned", "tsim-tuned"):
+        assert cases[variant].definition["shots_per_call"] == 2048
+    for variant in ("clifft-bulk", "tsim-bulk", "clifft-bulk-tuned", "tsim-bulk-tuned"):
+        assert cases[variant].definition["shots_per_call"] == 100000

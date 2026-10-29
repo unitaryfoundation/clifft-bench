@@ -38,7 +38,8 @@ def _comparison_rows(execution: Path) -> list[dict[str, str]]:
 
 def _write_rows(path: Path, rows: list[dict[str, str]]) -> None:
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        fields = list(dict.fromkeys(key for row in rows for key in row))
+        writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
 
@@ -523,3 +524,22 @@ def test_reporting_rejects_incomplete_tsim_outcomes(sources_with_tsim, problem, 
     _write_rows(path / "cases.csv", cases)
     with pytest.raises(ValueError, match=message):
         build_report(sources_with_tsim)
+
+
+def test_transition_policy_comparisons_do_not_enter_historical_reports(copied_sources):
+    expected = build_report(copied_sources)
+    document = json.loads(copied_sources.read_text())
+    path = Path(document['release_executions'][-1]) / 'comparisons.csv'
+    with path.open() as stream:
+        rows = list(csv.DictReader(stream))
+    extra = []
+    for row in rows:
+        candidate = dict(row)
+        candidate['comparison_id'] = 'tuned-alternatives-vs-current'
+        candidate['baseline_variant_id'] = 'clifft-tuned'
+        candidate['candidate_variant_id'] += '-tuned'
+        candidate['candidate_rate'] = str(float(candidate['candidate_rate']) * 100)
+        candidate['ratio_candidate_over_baseline'] = '100'
+        extra.append(candidate)
+    _write_rows(path, rows + extra)
+    assert build_report(copied_sources) == expected

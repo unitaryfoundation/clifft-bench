@@ -82,6 +82,11 @@ def test_new_circuits_are_part_of_the_release_campaign():
         ("reed-muller-measured", "clifft-previous"),
         ("reed-muller-measured", "symft-current"),
         ("reed-muller-measured", "tsim-current"),
+        ("bt27-direct-x", "clifft-tuned"),
+        ("bt81-direct-x", "clifft-tuned"),
+        ("reed-muller-measured", "clifft-tuned"),
+        ("reed-muller-measured", "symft-tuned"),
+        ("reed-muller-measured", "tsim-tuned"),
     }
     for case in cases:
         assert not case.workload.definition["semantics"]["postselect_all_detectors"]

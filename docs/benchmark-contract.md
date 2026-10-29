@@ -140,8 +140,8 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-A throughput case may set `batch_size` to `"calibrate"`. During setup, the
-worker:
+A throughput case may set `batch_size` to `"calibrate"`. An omitted
+`tuning_policy` means the historical `grid-v1` policy. During setup, the worker:
 
 1. keeps the candidates from `1`, `32`, `256`, `1024`, and `2048` that do not
    exceed `shots_per_call`, treating `1` as scalar execution;
@@ -169,10 +169,27 @@ They also record `batch_size_effective`, the maximum lanes available to one
 public call after capping the selected capacity by `shots_per_call`. A fixed
 numeric batch size remains supported for cases that do not request calibration.
 
-Clifft 0.12's public `batch_size="tune"` is a separate, budgeted tuning API.
-The recurring campaign retains this harness's calibration for both releases
-and SymFT. Timed calls receive the selected numeric size, so they do not repeat
-Clifft's internal tuning or charge it to steady-state throughput.
+`tuning_policy="bounded-v2"` adds Tsim capacities 1 and 32. For Clifft with
+native tuning support, a native search with a requested 0.25-second budget
+supplies its recommended batch and its automatic/default batch. These numeric proposals are measured
+with the same warmed probes as the fixed grid, starting with the native
+recommendation; duplicate capacities are measured once. Native failure falls
+back to the fixed grid. The selected numeric batch is frozen before timing.
+
+The new search has a 60-second soft setup budget, checked between complete
+candidate trials. At least the first candidate is attempted; preparation,
+warmup, and complete probes can overrun the soft budget. The campaign's hard
+setup timeout and 12 GiB worker limit still apply. Untried candidates are marked
+`budget-skipped`. Raw metadata records the native report, failures, complete
+probes, search duration, and process peak RSS (a cumulative high-water mark).
+
+One transition sweep includes 47 grid-policy cases and 38 matched `bounded-v2`
+cases in the normal release campaign. Comparisons ending in `-tuning-policy`
+isolate the policy change on the same tool revision, circuit, compiler settings,
+and public call size. `tuned-alternatives-vs-current` and its bulk counterpart
+compare tools under the new policy. Choose the default after this reference-host
+sweep, then remove the duplicate cases. Historical report comparisons retain
+their original identities and policy.
 
 For Clifft/SymFT, `batch_size` is the internal number of shots processed together.
 For Stim it is the adapter's chunk size passed to the public detector sampler,
@@ -184,11 +201,13 @@ The recurring campaign treats `shots_per_call` as a workload measurement
 parameter, chosen to produce meaningful throughput samples and kept identical
 across tools within each comparison. Separately named comparison variants may
 measure different public call sizes without replacing the historical series. Batch calibration then selects an
-internal optimization for that fixed public call. The active-wide coherent
+internal optimization for that fixed public call. The bulk comparison includes
+100,000-shot adder calls for Clifft and Tsim to reduce call overhead, alongside
+the original 2,048-shot cases. The active-wide coherent
 d5/r5 workload intentionally retains one shot per call; its calibrated cases
 therefore consider only candidate `1` and record a scalar selection.
 
-Derived rows carry both sides' mode, effective batch size, and shots per call.
+Derived rows carry both sides' mode, tuning policy, effective batch size, and shots per call.
 
 The recurring `current-vs-previous` comparison asks whether Clifft improved
 using the capabilities available in each release. It applies calibration to
@@ -415,8 +434,9 @@ candidate's probes. The selected configuration is freshly prepared with the
 final initial seed. No private RNG fields are changed and no compilation is
 performed inside timed calls.
 
-Calibration probes batch capacities 256, 1024, 8192, and 65536, each capped by
-shots per call and deduplicated. Each uses the existing three warmed one-second
+The historical `grid-v1` calibration probes capacities 256, 1024, 8192, and
+65536; `bounded-v2` also probes 1 and 32. Capacities are capped by shots per
+call and deduplicated. Each uses the existing three warmed one-second
 probes and smaller-capacity tie break. A fixed numeric capacity remains
 supported. With direct-detector postselection, this capacity applies to the
 survivors passed to the statevector backend. Fully direct circuits bypass that

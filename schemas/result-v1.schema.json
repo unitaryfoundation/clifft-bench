@@ -183,6 +183,7 @@
                 {"const": "calibrate"}
               ]
             },
+            "tuning_policy": {"enum": ["grid-v1", "bounded-v2"]},
             "sample_chunk_shots": {"type": "integer", "minimum": 0},
             "threads_requested": {"const": 1},
             "memory_limit_bytes": {"type": ["integer", "null"], "minimum": 1},

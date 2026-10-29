@@ -416,3 +416,98 @@ def test_finalize_exports_batch_parameter_applicability(tmp_path, applicable):
     assert row["batch_parameter"] == ("" if applicable is None else "statevector-batch-shots")
     assert row["batch_size_applicable"] == ("" if applicable is None else str(applicable).lower())
     assert row["batch_size_effective"] == "32"
+
+
+def _bounded_calibration():
+    return {
+        "policy": "bounded-v2", "budget_seconds": 60.0,
+        "budget_scope": "between-candidates", "native_budget_seconds": 0.25,
+        "probe_seconds": 1.0, "repetitions": 3, "search_seconds": 10.0,
+        "selection_statistic": "median_attempted_shots_per_second",
+        "tie_break": "smaller_batch_size", "selected_batch_size": 64,
+        "duration_seconds": 11.0, "candidates": [64, 32, 1],
+        "native": {"status": "success", "report": {
+            "batch_size": 64, "baseline_batch_size": 32,
+            "shot_workers": 1, "intra_shot_workers": 1, "elapsed_seconds": 0.25,
+            "sufficient_measurements": True, "stop_reason": "completed", "trials": [],
+        }},
+        "results": [
+            {"batch_size": batch, "status": "success", "effective_batch_size": batch,
+             "median_attempted_shots_per_second": rate, "duration_seconds": 3.0,
+             "error": None,
+             "samples": [{"throughput_attempted_shots_per_second": rate,
+                          "peak_rss_bytes": 1024} for _ in range(3)]}
+            for batch, rate in ((64, 100.0), (32, 50.0), (1, 10.0))
+        ],
+    }
+
+
+def test_finalize_bounded_native_choice_and_export_policy_columns(tmp_path):
+    suite = _suite(calibrated_candidate=True)
+    suite.cases[1].definition["execution"]["tuning_policy"] = "bounded-v2"
+    suite.cases[1].implementation.definition["adapter"] = "clifft"
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    candidate = raw["cases"][1]
+    candidate["simulator"]["adapter"] = "clifft"
+    candidate["execution"].update(tuning_policy="bounded-v2", batch_size=64,
+                                  batch_size_effective=64)
+    candidate["setup"]["runtime_metadata"]["batch_calibration"] = _bounded_calibration()
+    raw_path.write_text(json.dumps(raw))
+    output = tmp_path / "bounded-result"
+    finalize_execution(
+        suite, execution_id="test-execution", raw_paths=[raw_path], output_dir=output,
+    )
+    with (output / "cases.csv").open() as stream:
+        rows = list(csv.DictReader(stream))
+    assert rows[1]["tuning_policy"] == "bounded-v2"
+    with (output / "comparisons.csv").open() as stream:
+        row = next(csv.DictReader(stream))
+    assert row["baseline_tuning_policy"] == "fixed"
+    assert row["candidate_tuning_policy"] == "bounded-v2"
+
+
+@pytest.mark.parametrize("damage", [
+    "policy", "native-workers", "missing-candidate", "wrong-winner", "partial-probe",
+    "missing-memory", "wrong-budget", "premature-skip",
+])
+def test_bounded_finalizer_rejects_incomplete_or_mismatched_tuning(damage):
+    from clifft_bench.results import _validate_calibration_record
+
+    expected = _expected_case("candidate", batch_size="calibrate")
+    expected.definition["execution"]["tuning_policy"] = "bounded-v2"
+    expected.implementation.definition["adapter"] = "clifft"
+    calibration = _bounded_calibration()
+    observed = {"status": "success", "execution": {
+        "batch_size": 64, "tuning_policy": "bounded-v2",
+    }, "setup": {"runtime_metadata": {"batch_calibration": calibration}}}
+    if damage == "policy":
+        observed["execution"]["tuning_policy"] = "grid-v1"
+    elif damage == "native-workers":
+        calibration["native"]["report"]["shot_workers"] = 2
+    elif damage == "missing-candidate":
+        calibration["results"].pop()
+    elif damage == "wrong-winner":
+        calibration["selected_batch_size"] = observed["execution"]["batch_size"] = 32
+    elif damage == "partial-probe":
+        calibration["results"][0]["samples"].pop()
+    elif damage == "missing-memory":
+        calibration["results"][0]["samples"][0].pop("peak_rss_bytes")
+    elif damage == "wrong-budget":
+        calibration["budget_seconds"] = 3600
+    else:
+        calibration["results"][-1].update(status="budget-skipped", samples=[])
+    with pytest.raises(ValueError):
+        _validate_calibration_record(expected, observed)
+
+
+def test_legacy_tsim_calibration_does_not_require_new_small_candidates():
+    from clifft_bench.results import _validate_calibration_record
+
+    expected = _expected_case("candidate", batch_size="calibrate")
+    expected.implementation.definition["adapter"] = "tsim"
+    observed = {"status": "success", "execution": {"batch_size": 64},
+                "setup": {"runtime_metadata": {"batch_calibration": {
+                    "candidates": [64], "selected_batch_size": 64,
+                }}}}
+    _validate_calibration_record(expected, observed)
