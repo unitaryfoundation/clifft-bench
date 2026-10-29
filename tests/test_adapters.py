@@ -33,6 +33,7 @@ class _Sampler:
 
 class _Circuit:
     num_observables = 1
+    num_detectors = 0
 
     def __init__(self, *, path: Path) -> None:
         self.path = path
