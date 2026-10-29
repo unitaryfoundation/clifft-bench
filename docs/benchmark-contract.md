@@ -17,8 +17,16 @@ uses attempted shots as the numerator.
 
 Every workload declares `reference_convention` as `raw-record-parity`.
 Detector events and logical errors are the XOR parity of their declared
-measurement records without a noiseless-reference correction. Clifft and SymFT
-return native aggregate counts. Stim and xtim's public detector samplers return packed
+measurement records without a noiseless-reference correction. Clifft returns
+native aggregate counts. SymFT uses native counts for selected or detector-free
+workloads. For unselected workloads containing detectors, it samples packed
+measurement records and reduces the selected observable's raw parity across all
+shots. SymFT's counts API always excludes detector-fired shots; its
+`postselect_detectors` argument only enables early termination. The raw-record
+path uses explicit scalar/batch settings, records its backend and materialization
+in runtime metadata, and includes record allocation and parity reduction in the
+timed call. Its batch API ignores `sample_chunk_shots`; metadata records that
+distinction and the requested value. Stim and xtim's public detector samplers return packed
 records, which the adapter reduces to the same counts; both materialization and
 reduction are included in its sampling time. This is a comparison of available
 aggregate endpoints, not identical internal work or a decoder benchmark.
