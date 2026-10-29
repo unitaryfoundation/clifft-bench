@@ -10,12 +10,13 @@ from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.selection import detector_mask, has_postselection
 
 MAX_BATCH_SIZE = 65536
 
 
 class _PreparedTsim(PreparedAdapter):
-    def __init__(self, sampler, *, batch, postselect, observable, metadata):
+    def __init__(self, sampler, *, batch, postselect, observable, metadata, selection=None):
         import numpy as np
 
         self._sampler = sampler
@@ -23,6 +24,9 @@ class _PreparedTsim(PreparedAdapter):
         self._observable = observable
         self._postselect = postselect
         self._mask = np.ones(sampler.circuit.num_detectors, dtype=bool) if postselect else None
+        self._partial_selection = selection is not None
+        if selection is not None:
+            self._mask = np.asarray(selection, dtype=bool)
         self.runtime_metadata = metadata
 
     def sample(self, shots: int, seed: int) -> Counts:
@@ -48,7 +52,8 @@ class _PreparedTsim(PreparedAdapter):
             raise RuntimeError("Tsim must return one detector/observable row per attempted shot")
         # Rejected rows retain the rejecting detector but later outputs can be
         # zero-filled. Only count the requested observable on surviving rows.
-        keep = ~np.any(detectors, axis=1) if self._postselect else np.ones(shots, dtype=bool)
+        checked = detectors[:, self._mask] if self._partial_selection else detectors
+        keep = ~np.any(checked, axis=1) if self._postselect else np.ones(shots, dtype=bool)
         accepted = int(np.count_nonzero(keep))
         errors = int(np.count_nonzero(observables[keep, self._observable]))
         return Counts(shots, accepted, shots - accepted, errors)
@@ -86,6 +91,7 @@ class TsimAdapter(Adapter):
             raise ValueError("tsim_trajectory_sharing must be boolean")
         started = time.perf_counter()
         circuit = tsim.Circuit(artifact_path.read_text())
+        selection = detector_mask(semantics, circuit.num_detectors)
         observable = int(semantics["observable_index"])
         if not 0 <= observable < circuit.num_observables:
             raise ValueError("observable index is outside the circuit")
@@ -128,6 +134,7 @@ class TsimAdapter(Adapter):
         metadata["kernel_warmup_seconds"] = time.perf_counter() - started
         metadata["kernel_warmup_shots"] = 1
         return _PreparedTsim(
-            sampler, batch=batch, postselect=bool(semantics["postselect_all_detectors"]),
+            sampler, batch=batch, postselect=has_postselection(semantics),
+            selection=selection if "postselection_detector_indices" in semantics else None,
             observable=observable, metadata=metadata,
         )

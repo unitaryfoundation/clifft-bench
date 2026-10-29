@@ -12,6 +12,7 @@ from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.selection import detector_mask
 
 
 def _accepts_keyword(function: Any, name: str) -> bool:
@@ -129,7 +130,6 @@ class ClifftAdapter(Adapter):
 
         batch_enabled = bool(execution["batch_enabled"])
         requested_batch_size = execution["batch_size"]
-        postselect = bool(workload["semantics"]["postselect_all_detectors"])
         call_batch_size: int | None = None
         if not batch_enabled and requested_batch_size == 1:
             # Early releases lack this argument. On newer releases omission
@@ -160,7 +160,7 @@ class ClifftAdapter(Adapter):
 
         compile_started = time.perf_counter()
         hir = clifft.trace(circuit)
-        mask = [1] * int(hir.num_detectors) if postselect else []
+        mask = detector_mask(workload["semantics"], int(hir.num_detectors))
         early_postselection = hasattr(hir, "postselection_mask")
         if early_postselection:
             # New HIR passes specialize on accepted detector outcomes. Set the

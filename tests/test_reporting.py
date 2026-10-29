@@ -75,6 +75,7 @@ def test_reporting_selects_the_release_core_from_archived_results(copied_sources
             "magic-state-cultivation", "magic-state-distillation",
             "surface-code-memory", "coherent-noise-surface-code",
         }
+        and case.definition["variant_id"] == "clifft-current"
         and case.workload.id != "distillation-15to1-rm15-p1e-3"
     }
     assert len(core) == 6

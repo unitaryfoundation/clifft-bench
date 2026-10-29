@@ -41,6 +41,13 @@ raw results or release manifest.
 `grid-v1` search, the new `bounded-v2` search, and fixed settings. Old calibrated
 records without a policy field remain `grid-v1`.
 
+Raw `workload.semantics` retains any explicit `postselection_detector_indices`.
+`execution.postselection` is true for all-detector or subset selection. The
+finalizer rejects semantics or selection flags that differ from the manifest.
+CSV workload IDs distinguish selected/unselected pairs; the raw record is the
+source of the exact mask. For the supplemental coverage workloads,
+`logical_errors` means raw observable-0 ones, not a decoded error estimate.
+
 Individual samples remain only in raw JSON. Plotting and reports should consume
 the long-form CSV tables rather than add another checked-in data representation.
 

@@ -31,8 +31,8 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 85
-    assert len({case.id for case in suite.cases}) == 85
+    assert len(suite.cases) == 108
+    assert len({case.id for case in suite.cases}) == 108
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
@@ -45,6 +45,7 @@ def test_release_manifest_expands_named_variants() -> None:
         "tsim-bulk",
         "clifft-tuned", "symft-tuned", "tsim-tuned", "xtim-tuned", "stim-tuned",
         "clifft-bulk-tuned", "symft-bulk-tuned", "tsim-bulk-tuned",
+        "clifft-coverage", "symft-coverage", "tsim-coverage", "xtim-coverage", "stim-coverage",
     }
     assert {case.implementation.definition["adapter"] for case in suite.cases} == {
         "clifft",
@@ -82,6 +83,10 @@ def test_release_manifest_expands_named_variants() -> None:
     for name in list(comparisons):
         if name.endswith("-tuning-policy") or name.startswith("tuned-"):
             comparisons.pop(name)  # Checked separately below.
+    assert comparisons.pop("coverage-alternatives-vs-current") == {
+        "id": "coverage-alternatives-vs-current", "baseline_variant": "clifft-coverage",
+        "candidate_variants": ["symft-coverage", "tsim-coverage", "xtim-coverage", "stim-coverage"],
+    }
     assert comparisons.pop("tsim-vs-current") == {
         "id": "tsim-vs-current", "baseline_variant": "clifft-current",
         "candidate_variants": ["tsim-current"],
@@ -250,7 +255,7 @@ def test_xtim_release_selection_matches_declared_compatibility():
     assert {c.workload.id for c in cases} == compatible
     assert all(c.definition["execution"]["batch_size"] == "calibrate" for c in cases)
     clifft = {c.workload.id: c for c in suite.cases
-              if c.definition["variant_id"] == "clifft-current"}
+              if c.definition["variant_id"] in {"clifft-current", "clifft-coverage"}}
     assert all(c.definition["shots_per_call"] == clifft[c.workload.id].definition["shots_per_call"]
                for c in cases)
 
@@ -382,6 +387,27 @@ def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) ->
     run_path.write_text(json.dumps(run))
 
     with pytest.raises(SchemaValidationError, match="observable index 1 is outside"):
+        load_suite(run_path)
+
+
+@pytest.mark.parametrize("change", ["range", "order", "all", "adapter"])
+def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
+    _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
+    workload = next(w for w in workloads["workloads"]
+                    if w["id"] == "msc-full-d5-cultivation-selected-p1e-3")
+    semantics = workload["semantics"]
+    if change == "range":
+        semantics["postselection_detector_indices"] = [2744]
+    elif change == "order":
+        semantics["postselection_detector_indices"] = [1, 0]
+    elif change == "all":
+        semantics["postselect_all_detectors"] = True
+    else:
+        workload["compatible_adapters"].append("symft")
+    workloads_path.write_text(json.dumps(workloads))
+    run_path = tmp_path / "run.json"
+    run_path.write_text(json.dumps(run))
+    with pytest.raises(SchemaValidationError, match="indices|select all|detector-subset"):
         load_suite(run_path)
 
 

@@ -15,6 +15,16 @@ aggregate counts for attempted shots, detector-postselected discards, accepted
 shots, and observable-0 logical errors among accepted shots. Throughput always
 uses attempted shots as the numerator.
 
+`postselect_all_detectors=true` requires every raw detector parity to be zero.
+With that flag false, optional `postselection_detector_indices` selects a
+nonempty, sorted, unique list of zero-based detectors; only those parities must
+be zero. Without a subset, false disables rejection. Subsets and the all-detector
+flag are mutually exclusive. The raw result retains the exact indices and records
+`execution.postselection=true` for either selection mode. Finalization checks
+the declared semantics and execution flag. Clifft and Tsim implement subsets;
+other adapters explicitly reject them. Tsim's subset-column materialization
+and count reduction are included in the sampling time.
+
 Every workload declares `reference_convention` as `raw-record-parity`.
 Detector events and logical errors are the XOR parity of their declared
 measurement records without a noiseless-reference correction. Clifft returns
@@ -70,6 +80,17 @@ unselected workloads. Counts are raw observable-0 ones rather than logical
 errors. BT runs on current Clifft; Reed-Muller also runs on previous Clifft,
 SymFT, and Tsim. Their results use the normal CSV tables and are kept outside
 the historical QEC figures and medians.
+
+The supplemental `*-coverage` cohort adds repeated QV10/QV20, paired
+postselection-off controls for cultivation d3, surface d7 and coherent d3,
+an unverified d7 MSC performance proxy, and full d5 cultivation with only its
+107 cultivation detectors selected. All count raw observable-0 ones; neither
+the proxy nor the full cultivation case estimates decoded logical error or
+fidelity. [Coverage notes](../workloads/coverage.md) specify public-call sizes,
+source limitations and adapter eligibility. These current-tool rows use
+`grid-v1` and stay outside both the historical QEC median and the temporary
+matched tuning-policy comparison. Repeated QV sampling is distinct from the
+setup-plus-one-shot experiment under `experiments/qv`.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates

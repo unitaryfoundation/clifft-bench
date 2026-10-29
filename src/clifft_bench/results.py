@@ -25,6 +25,7 @@ from clifft_bench.schema import (
     validate_path,
     write_json,
 )
+from clifft_bench.selection import has_postselection
 
 CASE_FIELDS = [
     "execution_id",
@@ -524,6 +525,10 @@ def _validate_execution(
             raise ValueError("raw result does not contain every declared campaign case")
         for case in result["cases"]:
             expected = expected_cases[case["case_id"]]
+            semantics = expected.workload.definition["semantics"]
+            if (case["workload"]["semantics"] != semantics
+                    or case["execution"]["postselection"] != has_postselection(semantics)):
+                raise ValueError(f"raw case {expected.id!r} has mismatched workload semantics")
             if (
                 "clifft_scheduler" in expected.definition["execution"]
                 and case["status"] == "success"

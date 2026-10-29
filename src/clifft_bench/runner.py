@@ -15,6 +15,7 @@ from typing import Any
 
 from clifft_bench.manifest import Case, Suite
 from clifft_bench.schema import repository_root, validate_document, write_json
+from clifft_bench.selection import has_postselection
 from clifft_bench.system import (
     choose_cpu,
     collect_runner_metadata,
@@ -205,9 +206,7 @@ def _new_case_result(
             "min_sample_seconds": measurement["min_sample_seconds"],
             "request_timeout_seconds": measurement["request_timeout_seconds"],
             "repetitions": measurement["repetitions"],
-            "postselection": bool(
-                case.workload.definition["semantics"]["postselect_all_detectors"]
-            ),
+            "postselection": has_postselection(case.workload.definition["semantics"]),
         }
     )
     return {

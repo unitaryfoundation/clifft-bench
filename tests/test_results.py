@@ -18,6 +18,9 @@ WORKLOAD_ID = "msc-d3-inject-cultivate-p1e-3"
 def _expected_case(variant: str, *, batch_size: int | str) -> SimpleNamespace:
     return SimpleNamespace(
         id=f"workload--{variant}",
+        workload=SimpleNamespace(definition=validate_path(
+            repository_root() / "examples/result.v1.json"
+        )["cases"][0]["workload"]),
         implementation=SimpleNamespace(definition={"adapter": "fixture"}),
         definition={
             "id": f"workload--{variant}",
@@ -116,6 +119,35 @@ def _result(tmp_path: Path) -> Path:
     path = tmp_path / "release-p01-r01-raw.json"
     path.write_text(json.dumps(document))
     return path
+
+
+@pytest.mark.parametrize("change", ["mask", "all", "reference", "execution"])
+def test_finalize_rejects_changed_selection_semantics(tmp_path, change):
+    suite = _suite()
+    raw_path = _result(tmp_path)
+    raw = json.loads(raw_path.read_text())
+    for expected, observed in zip(suite.cases, raw["cases"]):
+        semantics = expected.workload.definition["semantics"]
+        semantics.update(postselect_all_detectors=False, postselection_detector_indices=[0])
+        observed["workload"]["semantics"] = copy.deepcopy(semantics)
+        observed["execution"]["postselection"] = True
+    raw_path.write_text(json.dumps(raw))
+    finalize_execution(suite, execution_id="matched-mask", raw_paths=[raw_path],
+                       output_dir=tmp_path / "matched")
+    case = raw["cases"][0]
+    semantics = case["workload"]["semantics"]
+    if change == "mask":
+        semantics["postselection_detector_indices"] = [1]
+    elif change == "all":
+        semantics["postselect_all_detectors"] = True
+    elif change == "reference":
+        semantics["reference_convention"] = "reference-normalized"
+    else:
+        case["execution"]["postselection"] = False
+    raw_path.write_text(json.dumps(raw))
+    with pytest.raises(ValueError, match="mismatched workload semantics"):
+        finalize_execution(suite, execution_id="changed-mask", raw_paths=[raw_path],
+                           output_dir=tmp_path / "rejected")
 
 
 def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) -> None:

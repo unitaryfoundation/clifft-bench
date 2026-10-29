@@ -10,6 +10,7 @@ from typing import Any
 
 from clifft_bench.adapters._shared import PackedCountsReducer, verify_source_installation
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.selection import require_all_or_none
 
 
 def _record_layout(text: str) -> Any:
@@ -127,6 +128,7 @@ class XtimAdapter(Adapter):
         import xtim
 
         semantics = workload["semantics"]
+        require_all_or_none(semantics, self.name)
         if semantics["reference_convention"] != "raw-record-parity":
             raise ValueError("xtim adapter requires raw-record-parity")
         chunk = int(execution["batch_size"])

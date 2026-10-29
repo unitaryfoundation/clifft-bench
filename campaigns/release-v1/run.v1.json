@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.7",
+  "suite_version": "0.2.8",
   "profile_id": "release-v1",
   "title": "Recurring single-core Clifft release benchmark",
   "classification": "official",
@@ -18,7 +18,7 @@
   "collection": {
     "placements": 1,
     "replicas_per_placement": 1,
-    "run_timeout_minutes": 360,
+    "run_timeout_minutes": 420,
     "memory_limit_gib": 12
   },
   "comparisons": [
@@ -137,6 +137,16 @@
       "candidate_variants": [
         "symft-bulk-tuned",
         "tsim-bulk-tuned"
+      ]
+    },
+    {
+      "id": "coverage-alternatives-vs-current",
+      "baseline_variant": "clifft-coverage",
+      "candidate_variants": [
+        "symft-coverage",
+        "tsim-coverage",
+        "xtim-coverage",
+        "stim-coverage"
       ]
     }
   ],
@@ -481,6 +491,96 @@
       "workloads": [
         {"workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2", "shots_per_call": 256},
         {"workload_id": "draper-adder-m16-basis", "shots_per_call": 100000}
+      ]
+    },
+    {
+      "id": "clifft-coverage",
+      "implementation_id": "clifft-63cd885",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      },
+      "workloads": [
+        {"workload_id": "msc-d3-inject-cultivate-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "surface-code-d7-r7-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected", "shots_per_call": 100000},
+        {"workload_id": "quantum-volume-q10-seed42", "shots_per_call": 4096},
+        {"workload_id": "quantum-volume-q20-seed42", "shots_per_call": 32},
+        {"workload_id": "msc-d7-proxy-unverified-p1e-3", "shots_per_call": 20000},
+        {"workload_id": "msc-full-d5-cultivation-selected-p1e-3", "shots_per_call": 20000}
+      ]
+    },
+    {
+      "id": "symft-coverage",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 2048
+      },
+      "workloads": [
+        {"workload_id": "msc-d3-inject-cultivate-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "surface-code-d7-r7-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected", "shots_per_call": 100000},
+        {"workload_id": "quantum-volume-q10-seed42", "shots_per_call": 4096},
+        {"workload_id": "quantum-volume-q20-seed42", "shots_per_call": 32},
+        {"workload_id": "msc-d7-proxy-unverified-p1e-3", "shots_per_call": 20000}
+      ]
+    },
+    {
+      "id": "tsim-coverage",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      },
+      "workloads": [
+        {"workload_id": "msc-d3-inject-cultivate-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "surface-code-d7-r7-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected", "shots_per_call": 100000},
+        {"workload_id": "quantum-volume-q10-seed42", "shots_per_call": 4096},
+        {"workload_id": "quantum-volume-q20-seed42", "shots_per_call": 32},
+        {"workload_id": "msc-d7-proxy-unverified-p1e-3", "shots_per_call": 20000},
+        {"workload_id": "msc-full-d5-cultivation-selected-p1e-3", "shots_per_call": 20000}
+      ]
+    },
+    {
+      "id": "xtim-coverage",
+      "implementation_id": "xtim-3.2.2-edf0dd0",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0
+      },
+      "workloads": [
+        {"workload_id": "msc-d3-inject-cultivate-p1e-3-unselected", "shots_per_call": 100000},
+        {"workload_id": "surface-code-d7-r7-p1e-3-unselected", "shots_per_call": 100000}
+      ]
+    },
+    {
+      "id": "stim-coverage",
+      "implementation_id": "stim-1.16.0",
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0
+      },
+      "workloads": [
+        {"workload_id": "surface-code-d7-r7-p1e-3-unselected", "shots_per_call": 100000}
       ]
     }
   ]

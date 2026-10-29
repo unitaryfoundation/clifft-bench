@@ -50,6 +50,10 @@
             "output_contract": {"const": "aggregate detector-discard and logical-observable counts"},
             "observable_index": {"type": "integer", "minimum": 0},
             "postselect_all_detectors": {"type": "boolean"},
+            "postselection_detector_indices": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"type": "integer", "minimum": 0}
+            },
             "reference_convention": {"const": "raw-record-parity"},
             "throughput_numerator": {"const": "attempted shots"},
             "batch_semantics": {"type": "string", "minLength": 1}
