@@ -9,6 +9,7 @@ import pytest
 
 from clifft_bench.adapters import _shared
 from clifft_bench.adapters import xtim as adapter
+from clifft_bench.adapters.base import Counts
 from clifft_bench.adapters.clifft import ClifftAdapter
 from clifft_bench.manifest import load_suite
 
@@ -45,9 +46,90 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, initiali
 def test_packed_padding_nonzero_reference_and_selected_observable(tmp_path):
     text = "X 0\nM 0\n" + "DETECTOR rec[-1]\n" * 9 + "OBSERVABLE_INCLUDE(9) rec[-1]\n"
     p = prepare(tmp_path, text, observable=9, postselect=False, chunk=7)
+    assert p.runtime_metadata["postselection_backend"] == "disabled"
     assert p.sample(19, 42).logical_errors == 19
     p = prepare(tmp_path, text, observable=9, chunk=7)
+    assert p.runtime_metadata["postselection_backend"] == "adapter-raw-record-parity"
     assert p.sample(19, 42).discarded_shots == 19
+
+
+@pytest.mark.parametrize("raw_reference", [0, 1])
+@pytest.mark.parametrize("probability", [0, 0.25, 1])
+@pytest.mark.parametrize("chunk", [1, 7, 64])
+def test_postselection_matches_unmasked_raw_parity_filter(
+    tmp_path, raw_reference, probability, chunk
+):
+    np = pytest.importorskip("numpy")
+    text = (
+        ("X 0\n" if raw_reference else "")
+        + f"X_ERROR({probability}) 0\nM 0\n"
+        + "DETECTOR rec[-1]\n" * 9
+        + "X 1\nM 1\nOBSERVABLE_INCLUDE(9) rec[-1]\n"
+    )
+    p = prepare(tmp_path, text, observable=9, chunk=chunk)
+    assert p.runtime_metadata["postselection_backend"] == (
+        "adapter-raw-record-parity" if raw_reference else "native-twirl-sampler"
+    )
+    # Independent unmasked sample and unpacked raw-parity reduction. Includes
+    # empty/all accepted batches, a partial tail, padding and a nonzero O9 offset.
+    dets, obs = adapter._compile(text).sample(67, seed=74)
+    raw_dets = np.unpackbits(dets, axis=1, bitorder="little")[:, :9] ^ raw_reference
+    raw_obs = np.unpackbits(obs, axis=1, bitorder="little")[:, 9] ^ 1
+    keep = ~raw_dets.any(axis=1)
+    passed = int(keep.sum())
+    expected = Counts(67, passed, 67 - passed, int(raw_obs[keep].sum()))
+    assert p.sample(67, 74) == expected
+    assert p.sample(67, 74) == expected
+
+
+def test_native_postselection_counts_attempts_and_early_rejects(tmp_path):
+    p = prepare(
+        tmp_path,
+        "X_ERROR(0.5) 0\nM 0\nDETECTOR rec[-1]\n"
+        "X 1\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
+        chunk=32,
+    )
+    native_sample = p._sampler.sample
+    calls = []
+
+    def sample(shots, seed, *, postselect):
+        assert postselect.dtype == bool
+        assert postselect.tolist() == [True]
+        result = native_sample(shots, seed=seed, postselect=postselect)
+        calls.append((shots, seed, result[2]))
+        return result
+
+    p._sampler = SimpleNamespace(sample=sample)
+    counts = p.sample(103, 42)
+    assert [(n, seed) for n, seed, _ in calls] == [
+        (32, 42), (32, None), (32, None), (7, None)
+    ]
+    assert counts.attempted_shots == sum(c["attempts"] for _, _, c in calls) == 103
+    assert counts.accepted_shots == sum(c["passed"] for _, _, c in calls)
+    assert counts.discarded_shots == sum(c["discarded"] for _, _, c in calls)
+    assert sum(c["early"] for _, _, c in calls) > 0
+    assert counts.logical_errors == counts.accepted_shots
+
+
+def test_native_postselection_with_no_detectors_keeps_every_shot(tmp_path):
+    p = prepare(tmp_path, "X 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n", chunk=7)
+    assert p.runtime_metadata["postselection_backend"] == "native-twirl-sampler"
+    assert p.sample(19, 42) == Counts(19, 19, 0, 19)
+
+
+@pytest.mark.parametrize("counter", ["attempts", "passed", "discarded", "early"])
+def test_native_postselection_rejects_inconsistent_counters(tmp_path, counter):
+    p = prepare(tmp_path, "M 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    native_sample = p._sampler.sample
+
+    def sample(*args, **kwargs):
+        dets, obs, counts = native_sample(*args, **kwargs)
+        counts[counter] += 1
+        return dets, obs, counts
+
+    p._sampler = SimpleNamespace(sample=sample)
+    with pytest.raises(RuntimeError, match="inconsistent postselection counts"):
+        p.sample(19, 42)
 
 
 def test_noise_counts_and_fresh_per_call_streams(tmp_path):
@@ -182,6 +264,43 @@ def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed, postselect):
             assert counts.discarded_shots == 0
         results.append(counts)
     assert all(counts == results[0] for counts in results)
+
+
+@pytest.mark.parametrize(
+    "workload_id",
+    [
+        "msc-d3-inject-cultivate-p1e-3",
+        "msc-d5-inject-cultivate-p1e-3",
+        "surface-code-d7-r7-p1e-3",
+        "distillation-15to1-rm15-p1e-3",
+    ],
+)
+def test_release_native_postselection_matches_unmasked_stream(workload_id):
+    pytest.importorskip("xtim")
+    np = pytest.importorskip("numpy")
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    case = next(c for c in suite.cases if c.workload.id == workload_id)
+    p = adapter.XtimAdapter().prepare(
+        artifact_path=case.workload.artifact_path,
+        workload=case.workload.definition,
+        execution={**EXECUTION, "batch_size": 256},
+    )
+    assert p.runtime_metadata["postselection_backend"] == "native-twirl-sampler"
+    assert p.runtime_metadata["record_materialization"] == (
+        "bit-packed-accepted-detectors-and-observables"
+    )
+    assert p.runtime_metadata["raw_reference_detector_ones"] == 0
+    assert p.runtime_metadata["raw_reference_observable_ones"] == 0
+    shots, seed = 2049, 103
+    dets, obs = adapter._compile(case.workload.artifact_path.read_text()).sample(shots, seed)
+    keep = ~np.any(dets, axis=1)
+    observable = case.workload.definition["semantics"]["observable_index"]
+    logical = (obs[:, observable // 8] >> (observable % 8)) & 1
+    passed = int(keep.sum())
+    p.begin_sample(seed)
+    assert p.sample(shots, seed) == Counts(
+        shots, passed, shots - passed, int(logical[keep].sum())
+    )
 
 
 @pytest.mark.parametrize(
