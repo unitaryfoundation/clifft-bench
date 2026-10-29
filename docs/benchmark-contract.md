@@ -267,9 +267,10 @@ until collection and review.
 Use `compile_twirl_sampler(text, selfcheck=0, disk_cache=False)` and reseed
 in place once per harness call. Internal chunks continue that call's stream
 with `seed=None`. Do not use `Circuit.compile_detector_sampler()` for repeated
-calls: the pinned version replays its compile seed. Reject gauge/anti detectors,
-refused observables, and any declared observable not certified deterministic in
-the noiseless circuit. The pinned twirl API also requires a detector channel.
+calls: the pinned version replays its compile seed. Use the 3.2.2 `record_report()`
+API and require every detector and declared observable to be classified
+deterministic in the noiseless circuit. The newer engine can serve additional
+record classes, but those are outside this comparison's eligibility contract.
 `PAULI_EXPECTATION` is outside this suite's aggregate-count contract.
 
 The sampler returns reference-relative bits. Setup obtains an exact noiseless
@@ -288,18 +289,25 @@ construction is timed, while compilation is recorded as `stream_setup_seconds`.
 These rates describe a fixed-duration run starting with an empty cache, not
 established steady-state throughput. The final call can overrun the window.
 
-xtim has no public cache eviction API. Retain the existing 12 GiB address-space
-limit and check process peak RSS on the reference host. Raw samples record
+The pinned 3.2.2 engine defaults to a 512 MiB plan-payload budget; metadata's
+`record_report.plan_memory` records the effective budget. This is not a process
+memory ceiling: permanent plan headers and other allocations are additional.
+Retain the existing 12 GiB address-space limit and check process peak RSS on the
+reference host. Raw samples record
 `peak_rss_bytes`, the worker's lifetime high-water mark including setup and
 calibration; `cases.csv` exposes its maximum. Resetting each repetition limits
 cache lifetime but does not guarantee a particular memory footprint. Chunk
 calibration uses the normal short probes and Stim's candidate sizes; its cache
 warmup horizon is shorter than the release measurement window.
 
-Pin xtim 3.1.4 to source commit `29454071fb20fbcffd258559ad0644676e44a8f9`.
+Pin xtim 3.2.2 to source commit `edf0dd0cff804ac0228d517889e49b0c286cb19a`.
+The previous 3.1.4 pin restarted a per-shot coin counter on each unseeded call,
+so chunked sampling could repeat random outcomes (#82). Regressions require
+chunk-invariant counts and the correct noisy selected/unselected law. Historical
+3.1.4 identities and measurements remain preserved; new collections use 3.2.2.
 Use `QECCORE_PORTABLE=1` (`-O3 -funroll-loops`, without `-march=native`) to
 retain the portable build policy of Clifft's release wheels. Record
-`CXXFLAGS=-include cstdint`, the pinned source's GCC missing-include workaround.
+`CXXFLAGS=-include cstdint`, retaining the established GCC build setting.
 The adapter verifies the installed PEP 610 repository and commit before setup.
 
 ## Correctness and identity

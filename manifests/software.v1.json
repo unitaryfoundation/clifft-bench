@@ -433,6 +433,40 @@
       }
     },
     {
+      "id": "xtim-3.2.2-edf0dd0",
+      "name": "xtim",
+      "adapter": "xtim",
+      "distribution": "xtim",
+      "version": "3.2.2",
+      "commit_sha": "edf0dd0cff804ac0228d517889e49b0c286cb19a",
+      "commit_datetime": "2026-10-25T21:53:10Z",
+      "release_datetime": null,
+      "source_url": "https://github.com/ikim-quantum/xtim",
+      "dependency_distributions": ["numpy", "stim"],
+      "python_executable_env": "CLIFFT_BENCH_XTIM_EDF0DD0_PYTHON",
+      "environment": {
+        "requirements": "../environments/xtim-3.2.2-edf0dd0.txt",
+        "import_modules": ["xtim", "stim"],
+        "install_environment": {
+          "QECCORE_PORTABLE": "1",
+          "CXXFLAGS": "-include cstdint"
+        }
+      },
+      "build": {
+        "precision": "complex-fp64",
+        "compiler_flags": [
+          "-O3", "-funroll-loops", "QECCORE_PORTABLE=1", "CXXFLAGS=-include cstdint"
+        ],
+        "features": [
+          "CPU-only",
+          "portable source build without -march=native",
+          "pinned upstream source with cumulative-shot RNG streams",
+          "fresh plan cache per repetition with untimed compilation",
+          "upstream default 512 MiB plan-payload budget"
+        ]
+      }
+    },
+    {
       "id": "tsim-0.1.5-e9406ed",
       "display_version": "0.1.5+e9406ed",
       "name": "Tsim",

@@ -61,7 +61,7 @@ jobs:
         env:
           QECCORE_PORTABLE: "1"
           CXXFLAGS: "-include cstdint"
-        run: python -m pip install --no-deps -r environments/xtim-3.1.4-2945407.txt
+        run: python -m pip install --no-deps -r environments/xtim-3.2.2-edf0dd0.txt
       - run: python -m pip check
       - run: python -m pytest tests/test_reference_convention.py tests/test_symft_adapter.py tests/test_stim_adapter.py tests/test_xtim_adapter.py tests/test_distillation_15to1.py tests/test_code_switching.py
       - run: python -m pytest tests/test_runner.py -k symft
