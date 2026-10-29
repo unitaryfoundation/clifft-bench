@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.6",
+  "suite_version": "0.2.7",
   "profile_id": "tsim-adapter-smoke",
   "classification": "smoke",
   "seed": 20260808,
@@ -72,6 +72,21 @@
         "batch_size": "calibrate",
         "sample_chunk_shots": 0,
         "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "reed-muller-measured-smoke-tsim-tuned",
+      "variant_id": "tsim-tuned",
+      "workload_id": "reed-muller-measured",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 2048,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true,
+        "tuning_policy": "bounded-v2"
       }
     }
   ]

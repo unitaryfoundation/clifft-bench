@@ -195,3 +195,35 @@ def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect
         assert prepared.runtime_metadata["peak_active_width"] == (0 if postselect else 1)
         if postselect:
             assert prepared.runtime_metadata["optimized_t_gates"] == 0
+
+
+def test_clifft_native_tuning_proposals_preserve_one_core_and_freeze_batch(tmp_path):
+    clifft = pytest.importorskip("clifft")
+    if "tuning_budget_seconds" not in (clifft.sample_survivors.__doc__ or ""):
+        pytest.skip("this Clifft release predates native batch tuning")
+    from clifft_bench.adapters.clifft import ClifftAdapter
+
+    path = tmp_path / "native-tuning.stim"
+    path.write_text("H 0\nT 0\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    workload = {"semantics": {"reference_convention": "raw-record-parity",
+                              "observable_index": 0, "postselect_all_detectors": False}}
+    execution = {"batch_enabled": True, "batch_size": 32, "sample_chunk_shots": 0}
+    adapter = ClifftAdapter()
+    proposal = adapter.native_batch_choices(
+        artifact_path=path, workload=workload, execution=execution,
+        shots=1024, seed=901, budget_seconds=0.01,
+    )
+    assert proposal["status"] == "success"
+    report = proposal["report"]
+    assert report["shot_workers"] == report["intra_shot_workers"] == 1
+    assert report["trials"] and report["elapsed_seconds"] > 0
+    selected = report["batch_size"]
+    prepared = adapter.prepare(
+        artifact_path=path, workload=workload,
+        execution=dict(execution, batch_size=selected, batch_enabled=selected > 1),
+    )
+    assert prepared._batch_size == selected
+    assert type(prepared._batch_size) is int
+    counts = prepared.sample(16384, 902)
+    assert counts.accepted_shots == counts.attempted_shots == 16384
+    assert counts.logical_errors / 16384 == pytest.approx((1 - 2**-0.5)/2, abs=0.02)

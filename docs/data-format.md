@@ -36,6 +36,11 @@ raw results or release manifest.
   batching, shots-per-call configuration, exact versions, and display versions.
   Only successful pairs produce comparison rows.
 
+`tuning_policy` in `cases.csv`, and `baseline_tuning_policy` /
+`candidate_tuning_policy` in `comparisons.csv`, distinguish the historical
+`grid-v1` search, the new `bounded-v2` search, and fixed settings. Old calibrated
+records without a policy field remain `grid-v1`.
+
 Individual samples remain only in raw JSON. Plotting and reports should consume
 the long-form CSV tables rather than add another checked-in data representation.
 

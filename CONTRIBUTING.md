@@ -43,6 +43,10 @@ The campaign currently pins development Clifft `63cd885` against measured
 0.12.0 because BT27/BT81 need the newer compiler. Replace this source pin with
 the next RC when preparing that release.
 
+The next sweep compares `grid-v1` and `bounded-v2` once in the same campaign.
+The 38 extra cases differ only in tuning policy; review the `*-tuning-policy`
+rows before choosing the default and removing the duplicates.
+
 For a new Clifft release:
 
 1. Add its identity and install environment to
@@ -50,8 +54,8 @@ For a new Clifft release:
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
    Add the version to the adapter-smoke loop in [CI](.github/workflows/ci.yml)
    so the real-Clifft scheduler tests run against the published RC.
-3. Point `clifft-current` and `clifft-bulk` at the new implementation and
-   `clifft-previous` at the prior measured release in the release manifest.
+3. Point `clifft-current`, `clifft-bulk`, and their tuned counterparts at the
+   new implementation and `clifft-previous` at the prior measured release in the release manifest.
    Update the Clifft smoke and pilot cases and the `clifft-current` CI install
    to the same new implementation. For a scheduler-capable RC, set
    `clifft-current.execution` to the checked-in
@@ -123,10 +127,12 @@ older `experiments/tsim-gpu` environment remains independently pinned.
 ## Bounded three-tool CPU pilot
 
 `manifests/run-tsim-pilot.v1.json` reuses the release cases for coherent d5/r5
-bulk sampling and the 85q distillation control across Clifft, SymFT, and Tsim.
+bulk sampling under `bounded-v2` and the 85q distillation control under `grid-v1`
+across Clifft, SymFT, and Tsim. It also checks 100,000-shot bulk adder calls on
+Clifft and Tsim under the new policy.
 It uses three samples of at least three seconds, with 180-second preparation
-and 60-second request deadlines. The bulk calls contain 256 attempted shots;
-all historical one-shot cases remain unchanged.
+and 60-second request deadlines. Coherent d5/r5 bulk calls contain 256 attempted
+shots; the adder uses 100,000. Historical call sizes remain unchanged.
 
 After installing the three pinned environments, set their
 `CLIFFT_BENCH_CLIFFT_63CD885_PYTHON`, `CLIFFT_BENCH_SYMFT_C89B985_PYTHON`, and

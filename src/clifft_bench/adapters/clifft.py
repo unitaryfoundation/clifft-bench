@@ -71,6 +71,38 @@ class ClifftAdapter(Adapter):
             )
         return {}
 
+    def native_batch_choices(
+        self, *, artifact_path: Path, workload: dict[str, Any],
+        execution: dict[str, Any], shots: int, seed: int, budget_seconds: float,
+    ) -> dict[str, Any]:
+        import clifft
+
+        if not _accepts_keyword(clifft.sample_survivors, "tuning_budget_seconds"):
+            return {"status": "unsupported"}
+        prepared = self.prepare(
+            artifact_path=artifact_path, workload=workload,
+            execution={**execution, "batch_enabled": False, "batch_size": 1}, seed=seed,
+        )
+        result = clifft.sample_survivors(
+            prepared._program, shots, seed=seed, threads=1, keep_records=False,
+            batch_size="tune", tuning_budget_seconds=budget_seconds,
+        )
+        report = result.batch_tuning
+        fields = ("batch_size", "baseline_batch_size", "elapsed_seconds", "trial_shots",
+                  "sufficient_measurements", "stop_reason", "shot_workers",
+                  "intra_shot_workers")
+        trial_fields = ("batch_size", "elapsed_seconds", "setup_seconds", "shot_workers",
+                        "shots", "shots_per_second", "used_warmup", "warmup_seconds",
+                        "warmup_shots")
+        return {
+            "status": "success",
+            "report": {
+                **{name: getattr(report, name) for name in fields},
+                "trials": [{name: getattr(trial, name) for name in trial_fields}
+                           for trial in report.trials],
+            },
+        }
+
     def prepare(
         self,
         *,

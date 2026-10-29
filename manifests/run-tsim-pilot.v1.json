@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.6",
+  "suite_version": "0.2.7",
   "seed": 20260819,
   "resources": {
     "logical_cpu": null
@@ -65,8 +65,8 @@
       }
     },
     {
-      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk",
-      "variant_id": "clifft-bulk",
+      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk-tuned",
+      "variant_id": "clifft-bulk-tuned",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
       "implementation_id": "clifft-63cd885",
       "shots_per_call": 256,
@@ -80,12 +80,13 @@
           "search_budget": 16.0,
           "noise_transparent": true,
           "sink_neutral_rotations": true
-        }
+        },
+        "tuning_policy": "bounded-v2"
       }
     },
     {
-      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk",
-      "variant_id": "symft-bulk",
+      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk-tuned",
+      "variant_id": "symft-bulk-tuned",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
       "implementation_id": "symft-0.1.1-c89b985",
       "shots_per_call": 256,
@@ -93,12 +94,13 @@
         "mode": "throughput",
         "batch_enabled": true,
         "batch_size": "calibrate",
-        "sample_chunk_shots": 2048
+        "sample_chunk_shots": 2048,
+        "tuning_policy": "bounded-v2"
       }
     },
     {
-      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk",
-      "variant_id": "tsim-bulk",
+      "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk-tuned",
+      "variant_id": "tsim-bulk-tuned",
       "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
       "implementation_id": "tsim-0.1.5-e9406ed",
       "shots_per_call": 256,
@@ -107,7 +109,43 @@
         "batch_enabled": true,
         "batch_size": "calibrate",
         "sample_chunk_shots": 0,
-        "tsim_trajectory_sharing": true
+        "tsim_trajectory_sharing": true,
+        "tuning_policy": "bounded-v2"
+      }
+    },
+    {
+      "id": "draper-adder-m16-basis--clifft-bulk-tuned",
+      "variant_id": "clifft-bulk-tuned",
+      "workload_id": "draper-adder-m16-basis",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 100000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        },
+        "tuning_policy": "bounded-v2"
+      }
+    },
+    {
+      "id": "draper-adder-m16-basis--tsim-bulk-tuned",
+      "variant_id": "tsim-bulk-tuned",
+      "workload_id": "draper-adder-m16-basis",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 100000,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": "calibrate",
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true,
+        "tuning_policy": "bounded-v2"
       }
     }
   ]
