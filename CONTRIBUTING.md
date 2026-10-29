@@ -39,6 +39,10 @@ the historical one-shot configuration. See the
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
 A release without batching support selects scalar mode during calibration.
 
+The campaign currently pins development Clifft `63cd885` against measured
+0.12.0 because BT27/BT81 need the newer compiler. Replace this source pin with
+the next RC when preparing that release.
+
 For a new Clifft release:
 
 1. Add its identity and install environment to
@@ -46,8 +50,10 @@ For a new Clifft release:
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
    Add the version to the adapter-smoke loop in [CI](.github/workflows/ci.yml)
    so the real-Clifft scheduler tests run against the published RC.
-3. Point `clifft-current` at the new implementation and `clifft-previous` at
-   the prior release in the release manifest. For a scheduler-capable RC, set
+3. Point `clifft-current` and `clifft-bulk` at the new implementation and
+   `clifft-previous` at the prior measured release in the release manifest.
+   Update the Clifft smoke and pilot cases and the `clifft-current` CI install
+   to the same new implementation. For a scheduler-capable RC, set
    `clifft-current.execution` to the checked-in
    [scheduler configuration](campaigns/release-v1/clifft-scheduled-execution.json).
 4. Keep each workload's `shots_per_call` aligned across every variant and
@@ -123,7 +129,7 @@ and 60-second request deadlines. The bulk calls contain 256 attempted shots;
 all historical one-shot cases remain unchanged.
 
 After installing the three pinned environments, set their
-`CLIFFT_BENCH_CLIFFT_0_12_0RC1_PYTHON`, `CLIFFT_BENCH_SYMFT_C89B985_PYTHON`, and
+`CLIFFT_BENCH_CLIFFT_63CD885_PYTHON`, `CLIFFT_BENCH_SYMFT_C89B985_PYTHON`, and
 `CLIFFT_BENCH_TSIM_E9406ED_PYTHON` variables to the corresponding Python
 executables. Run on Linux to enforce the reference memory limit:
 

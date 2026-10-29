@@ -31,8 +31,8 @@ def test_release_manifest_expands_named_variants() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
 
     assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 39
-    assert len({case.id for case in suite.cases}) == 39
+    assert len(suite.cases) == 45
+    assert len({case.id for case in suite.cases}) == 45
     assert {case.definition["variant_id"] for case in suite.cases} == {
         "clifft-previous",
         "clifft-current",
@@ -60,17 +60,16 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in ("clifft-previous", "clifft-current")
     }
     assert versions_by_variant == {
-        "clifft-previous": {"0.11.0rc1"},
-        "clifft-current": {"0.12.0rc1"},
+        "clifft-previous": {"0.12.0rc1"},
+        "clifft-current": {"0.12.1.dev26+g63cd8854a"},
     }
     candidate = next(
         case.implementation.definition
         for case in suite.cases
         if case.definition["variant_id"] == "clifft-current"
     )
-    assert candidate["version"] == "0.12.0rc1"
-    assert candidate["display_version"] == "0.12.0"
-    assert candidate["source_tag"] == "v0.12.0rc1"
+    assert candidate["version"] == "0.12.1.dev26+g63cd8854a"
+    assert candidate["commit_sha"] == "63cd8854ad5de32515af6584eff33ea400ccc063"
     smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
     assert {
         case.implementation.id for case in smoke.cases
@@ -118,9 +117,9 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in ("clifft-previous", "clifft-current", "symft-current")
     }
     assert {variant: len(cases) for variant, cases in calibrated_by_variant.items()} == {
-        "clifft-previous": 8,
-        "clifft-current": 8,
-        "symft-current": 7,
+        "clifft-previous": 9,
+        "clifft-current": 11,
+        "symft-current": 8,
     }
     for cases in calibrated_by_variant.values():
         assert all(
@@ -154,6 +153,7 @@ def test_release_manifest_expands_named_variants() -> None:
         for variant_id in variant_ids
     }
     expected_signature = {
+        ("reed-muller-measured", 100000),
         ("distillation-15to1-rm15-p1e-3", 100000),
         ("msc-d3-inject-cultivate-p1e-3", 100000),
         ("msc-d5-inject-cultivate-p1e-3", 20000),
@@ -163,10 +163,11 @@ def test_release_manifest_expands_named_variants() -> None:
         ("coherent-surface-d5-r5-p1e-3-rz2e-2", 1),
     }
     assert signatures_by_variant["symft-current"] == expected_signature
-    for variant in ("clifft-previous", "clifft-current"):
-        assert signatures_by_variant[variant] == expected_signature | {
-            ("draper-adder-m16-basis", 2048),
-        }
+    clifft_signature = expected_signature | {("draper-adder-m16-basis", 2048)}
+    assert signatures_by_variant["clifft-previous"] == clifft_signature
+    assert signatures_by_variant["clifft-current"] == clifft_signature | {
+        ("bt27-direct-x", 2048), ("bt81-direct-x", 2048),
+    }
 
 
 def test_release_preserves_scheduled_previous_configuration() -> None:
@@ -178,9 +179,9 @@ def test_release_preserves_scheduled_previous_configuration() -> None:
     for variant_id in ("clifft-previous", "clifft-current"):
         assert variants[variant_id]["execution"] == scheduled
 
-    # The paired history must continue from the configuration measured for 0.11.
+    # The paired history must continue from the configuration measured for 0.12.
     previous_result = json.loads((
-        ROOT / "results/release-v1/release-v1-20260930-180134/raw/"
+        ROOT / "results/release-v1/release-v1-20261009-192718/raw/"
         "release-v1-p01-r01-raw.json"
     ).read_text())
     previous_cases = {
@@ -192,7 +193,7 @@ def test_release_preserves_scheduled_previous_configuration() -> None:
         if case.definition["variant_id"] != "clifft-previous":
             continue
         if case.workload.id not in previous_cases:
-            continue  # The adder and 15-to-1 postdate the reviewed 0.11 QEC run.
+            continue  # Newly added workloads have no previous release measurement.
         archived = previous_cases[case.workload.id]
         assert case.implementation.definition["version"] == archived["simulator"]["version"]
         assert case.definition["execution"]["clifft_scheduler"] == (
@@ -291,8 +292,8 @@ def test_official_implementations_require_unique_python_variables(
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     software = copy.deepcopy(suite.software_document)
     implementations = {item["id"]: item for item in software["implementations"]}
-    implementations["clifft-0.11.0rc1"]["python_executable_env"] = implementations[
-        "clifft-0.12.0rc1"
+    implementations["clifft-0.12.0rc1"]["python_executable_env"] = implementations[
+        "clifft-63cd885"
     ]["python_executable_env"]
     for implementation in implementations.values():
         environment = implementation.get("environment")

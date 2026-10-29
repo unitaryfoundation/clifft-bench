@@ -4,9 +4,7 @@ The checked-in `.stim` files are immutable benchmark inputs. Their SHA-256
 digests, semantic contracts, compatible adapters, and source commits live in
 [`manifests/workloads.v1.json`](../manifests/workloads.v1.json).
 
-The benchmark corpus contains the eight QEC inputs shared by the original
-Clifft and SymFT benchmark sets, two fixed Quantum Volume inputs, and a fixed-input
-arithmetic circuit, plus an adapted 15-to-1 distillation protocol from xtim:
+The benchmark corpus contains:
 
 - distance-3 and distance-5 magic-state cultivation,
 - 85-qubit color-code magic-state distillation,
@@ -14,8 +12,10 @@ arithmetic circuit, plus an adapted 15-to-1 distillation protocol from xtim:
 - coherent-noise surface-code circuits at `(d, rounds) = (3, 1), (3, 3),
   (5, 1), (5, 5)`,
 - a distance-7, seven-round pure-Clifford surface-code memory circuit,
-- fixed-seed Quantum Volume circuits at 10 and 20 qubits, and
-- a 16-bit Draper adder on 32 qubits with fixed basis inputs.
+- fixed-seed Quantum Volume circuits at 10 and 20 qubits,
+- a 16-bit Draper adder on 32 qubits with fixed basis inputs,
+- BT27 and BT81 code switching with direct logical-X readout, and
+- measured 15-qubit Reed-Muller preparation and transversal T.
 
 The near-Clifford and Quantum Volume files use the extended Clifft/SymFT
 Stim-like dialect. The pure surface-code file is a genuine Stim circuit.
@@ -53,3 +53,16 @@ patterns have zero XOR syndrome, and odd weight means a logical error. No single
 or double fault is accepted; there are 35 accepted weight-three faults, giving
 the familiar leading `35 p^3` conditional error rate at small p. All three
 adapters are checked against this distribution and representative exact faults.
+
+The BT27/BT81 and measured Reed-Muller circuits come from Clifft's public
+fixtures, with [Clifft/Merlin attribution](circuits/NOTICE-code-switching).
+BT27 adds direct-X readout on nine decoded logical qubits; BT81 is unchanged;
+Reed-Muller removes only the expectation-value declarations. All three sample
+without postselection and count observable-0 ones, not logical errors.
+Tests check probabilities 3/8 for BT and (1 − 1/√2)/2 for Reed-Muller; the BT
+reference is a logical-model prediction, not an independent full-circuit simulation.
+
+The regular release campaign runs BT27/BT81 on current Clifft, and Reed-Muller
+on both Clifft versions, SymFT, and Tsim. BT requires the post-0.12 compiler;
+peer tools are omitted where the smoke checks did not establish a usable run.
+Results appear in the normal CSV tables, outside the historical QEC figures.

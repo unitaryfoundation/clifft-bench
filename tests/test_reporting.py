@@ -70,7 +70,10 @@ def test_reporting_selects_the_release_core_from_archived_results(copied_sources
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     core = {
         case.workload.id for case in suite.cases
-        if case.workload.definition["family"] != "prepared-basis-arithmetic"
+        if case.workload.definition["family"] in {
+            "magic-state-cultivation", "magic-state-distillation",
+            "surface-code-memory", "coherent-noise-surface-code",
+        }
         and case.workload.id != "distillation-15to1-rm15-p1e-3"
     }
     assert len(core) == 6

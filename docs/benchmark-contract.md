@@ -57,6 +57,12 @@ successful subset. An unlabelled absent marker means no measurement was planned
 for that tool and workload in the selected campaign. See the
 [corpus notes](../workloads/README.md) for provenance and validation.
 
+BT27, BT81, and measured Reed-Muller join the regular release campaign as
+unselected workloads. Counts are raw observable-0 ones rather than logical
+errors. BT runs on current Clifft; Reed-Muller also runs on previous Clifft,
+SymFT, and Tsim. Their results use the normal CSV tables and are kept outside
+the historical QEC figures and medians.
+
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates
 compilation plus steady-state sampling, where rate is
