@@ -409,3 +409,30 @@ call for d5/r5. Keeping the bulk case separately named preserves those earlier
 measurements while allowing sharing across shots in the new comparison.
 Bulk results must not be joined into the historical one-shot QEC series.
 The multicore and expanded-workload follow-ups are separate campaigns/work.
+
+### Compatibility with newer Clifft APIs
+
+On Clifft versions exposing a writable HIR `postselection_mask`, the adapter
+sets the workload's raw-parity mask before running compiler passes and supplies
+it again to lowering. Earlier versions retain selection at lowering. A scalar
+configuration explicitly passes `batch_size=1` when the public sampling API
+supports it; omitting the argument on newer versions would request native
+`auto`. Historical releases without that keyword retain their scalar default.
+Runtime metadata records both decisions. Development/VCS builds also verify the
+full installed source URL and commit; release wheels retain version validation.
+The mask is part of compilation: an unselected variant must compile with an
+empty mask, rather than reuse a program optimized assuming detector selection.
+Runtime metadata records `postselection_before_optimization`, `batch_control`
+and, when available, `optimized_t_gates`.
+
+Historical exposure is narrower than the general API hazard. The batch-size
+keyword exists from Clifft 0.10; through 0.12.0/0.12.0rc1 native `auto` forces
+postselected programs to remain scalar. Candidate 1 in the published
+postselected QEC series therefore was scalar. The unselected QV10/QV20 and
+adder inputs could instead have used automatic packing under a scalar label
+on those batch-capable versions. Clifft #566 enables postselected automatic
+packing after 0.12.0, so future sweeps need the explicit scalar request too.
+Preserve recorded historical measurements and identify the corrected harness
+by its source revision; do not relabel old timings as newly measured results.
+The broader tuning-policy follow-up is tracked in
+[#81](https://github.com/unitaryfoundation/clifft-bench/issues/81).

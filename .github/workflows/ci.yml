@@ -124,3 +124,16 @@ jobs:
         with:
           name: cpu-pilot-tsim
           path: /tmp/bulk-tsim-pilot.json
+
+  clifft-current:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "4"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install 'clifft @ git+https://github.com/unitaryfoundation/clifft.git@63cd8854ad5de32515af6584eff33ea400ccc063' -e '.[test]'
+      - run: python -m pytest tests/test_adapters.py tests/test_reference_convention.py -k clifft

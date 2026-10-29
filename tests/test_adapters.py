@@ -371,3 +371,85 @@ def test_symft_verifies_installed_git_identity_even_for_same_version(monkeypatch
             "installed_source_commit": commit,
             "installed_direct_url": direct_url,
         }
+
+
+@pytest.mark.parametrize("modern", [False, True])
+@pytest.mark.parametrize("postselect", [False, True])
+def test_clifft_scalar_and_postselection_follow_available_api(
+    tmp_path, monkeypatch, modern, postselect,
+):
+    artifact = tmp_path / "control.stim"
+    artifact.write_text("M 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    hir = SimpleNamespace(num_qubits=1, num_measurements=1, num_detectors=1, num_observables=1)
+    if modern:
+        hir.postselection_mask = []
+    program = SimpleNamespace(peak_active_width=0)
+    mask = [1] if postselect else []
+
+    def optimize(value):
+        assert value is hir
+        if modern:
+            assert value.postselection_mask == mask
+
+    def lower(value, *, postselection_mask):
+        assert value is hir
+        assert postselection_mask == mask
+        return program
+
+    def legacy_sample(value, shots, *, seed, keep_records):
+        assert value is program
+        return SimpleNamespace(total_shots=shots, passed_shots=shots,
+                               discards=0, observable_ones=[0])
+
+    def modern_sample(value, shots, *, seed, keep_records, batch_size="auto"):
+        # Omitting this argument is a real behavior change on current Clifft.
+        assert batch_size == 1
+        return legacy_sample(value, shots, seed=seed, keep_records=keep_records)
+
+    monkeypatch.setitem(sys.modules, "clifft", SimpleNamespace(
+        sample_survivors=modern_sample if modern else legacy_sample,
+        trace=lambda circuit: hir, parse=lambda text: text,
+        default_hir_pass_manager=lambda: SimpleNamespace(run=optimize), lower=lower,
+        version=lambda: "test",
+    ))
+    prepared = ClifftAdapter().prepare(
+        artifact_path=artifact,
+        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect,
+                                "reference_convention": "raw-record-parity"}},
+        execution={"batch_enabled": False, "batch_size": 1},
+    )
+    assert prepared.sample(128, 7).attempted_shots == 128
+    assert prepared.runtime_metadata["postselection_before_optimization"] is modern
+    assert prepared.runtime_metadata["batch_control"] == (
+        "explicit" if modern else "legacy-scalar-default"
+    )
+
+
+def test_clifft_nanobind_keyword_detection():
+    from clifft_bench.adapters.clifft import _accepts_keyword
+
+    class BoundFunction:
+        def __call__(self, *args, **kwargs):
+            raise AssertionError("capability detection must not execute sampling")
+
+        __doc__ = "sample_survivors(program: Program, shots: int, batch_size: int | str = 'auto')"
+
+    assert _accepts_keyword(BoundFunction(), "batch_size")
+    assert not _accepts_keyword(BoundFunction(), "threads")
+    assert not _accepts_keyword(None, "batch_size")
+
+
+@pytest.mark.parametrize("dev", [False, True])
+def test_clifft_development_build_requires_full_source_identity(monkeypatch, dev):
+    import clifft_bench.adapters.clifft as module
+
+    monkeypatch.setattr(module, "distribution", lambda name: SimpleNamespace(
+        version="0.12.1.dev26+g63cd8854a" if dev else "0.12.0",
+        read_text=lambda filename: None,
+    ))
+    calls = []
+    monkeypatch.setattr(module, "verify_source_installation",
+                        lambda name, **kwargs: calls.append((name, kwargs)) or {"verified": True})
+    result = ClifftAdapter().verify_installation(expected_commit="a"*40, source_url="https://repo")
+    assert bool(calls) is dev
+    assert result == ({"verified": True} if dev else {})
