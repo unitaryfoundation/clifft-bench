@@ -1,6 +1,6 @@
 {
   "schema_version": "clifft-bench/run/v1",
-  "suite_version": "0.2.7",
+  "suite_version": "0.2.8",
   "profile_id": "tsim-adapter-smoke",
   "classification": "smoke",
   "seed": 20260808,

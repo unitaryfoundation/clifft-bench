@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from clifft_bench.adapters.clifft import ClifftAdapter, _PreparedClifft
+from clifft_bench.adapters.fixture import FixtureAdapter
 from clifft_bench.adapters.symft import SymftAdapter
 
 
@@ -29,6 +30,17 @@ class _Sampler:
             "max_active_qubits": 1,
         }
         self.preprocessing_timing = {}
+
+
+def test_fixture_rejects_detector_subsets(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="fixture does not support explicit detector subsets"):
+        FixtureAdapter().prepare(
+            artifact_path=tmp_path / "unused.stim",
+            workload={"semantics": {
+                "postselect_all_detectors": False, "postselection_detector_indices": [0],
+            }},
+            execution={},
+        )
 
 
 class _Circuit:

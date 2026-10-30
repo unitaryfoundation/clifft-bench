@@ -22,6 +22,11 @@ a manual, reviewed workflow. Before changing measurements or results, read the
 [benchmark contract](docs/benchmark-contract.md) and
 [data format](docs/data-format.md).
 
+Keep mainline additions focused on maintained benchmarks, their correctness
+checks, and input provenance. Temporary probes, local debugging output, and
+discussion of deferred work belong in PRs or issues. Keep reproducible input
+generators and official raw results with the benchmarking code they support.
+
 ## Preparing a release campaign
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
@@ -46,6 +51,8 @@ the next RC when preparing that release.
 The next sweep compares `grid-v1` and `bounded-v2` once in the same campaign.
 The 38 extra cases differ only in tuning policy; review the `*-tuning-policy`
 rows before choosing the default and removing the duplicates.
+The 23 `*-coverage` cases add sampling coverage under the existing grid policy;
+they do not expand that policy comparison. See [coverage notes](workloads/coverage.md).
 
 For a new Clifft release:
 
@@ -54,9 +61,9 @@ For a new Clifft release:
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
    Add the version to the adapter-smoke loop in [CI](.github/workflows/ci.yml)
    so the real-Clifft scheduler tests run against the published RC.
-3. Point `clifft-current`, `clifft-bulk`, and their tuned counterparts at the
+3. Point `clifft-current`, `clifft-bulk`, `clifft-coverage`, and the tuned variants at the
    new implementation and `clifft-previous` at the prior measured release in the release manifest.
-   Update the Clifft smoke and pilot cases and the `clifft-current` CI install
+   Update the Clifft smoke, coverage smoke and pilot cases and the `clifft-current` CI install
    to the same new implementation. For a scheduler-capable RC, set
    `clifft-current.execution` to the checked-in
    [scheduler configuration](campaigns/release-v1/clifft-scheduled-execution.json).

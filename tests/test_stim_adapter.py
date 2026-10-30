@@ -42,8 +42,11 @@ def test_surface_artifact_matches_paper_generator_and_declared_metadata():
     assert circuit == generated
     workloads = json.loads((ROOT / "manifests/workloads.v1.json").read_text())["workloads"]
     compatible = [w for w in workloads if "stim" in w["compatible_adapters"]]
-    assert [w["id"] for w in compatible] == ["surface-code-d7-r7-p1e-3"]
-    assert all(getattr(circuit, k) == v for k, v in compatible[0]["expected_metadata"].items())
+    assert [w["id"] for w in compatible] == [
+        "surface-code-d7-r7-p1e-3", "surface-code-d7-r7-p1e-3-unselected",
+    ]
+    assert all(getattr(circuit, k) == v for w in compatible
+               for k, v in w["expected_metadata"].items())
 
 
 def test_packed_padding_nonzero_reference_and_observable_beyond_first_byte(tmp_path):

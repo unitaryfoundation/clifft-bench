@@ -25,6 +25,7 @@ from clifft_bench.calibration import (
     TUNING_BUDGET_SECONDS,
     calibration_candidates,
 )
+from clifft_bench.selection import has_postselection
 from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
 
 BATCH_CALIBRATION_REPETITIONS = 3
@@ -174,7 +175,7 @@ def calibrate_batch_size(
     adapter_name = getattr(adapter, "name", "")
     # Validate before spending any setup time; historical calls retain their grid.
     candidates = calibration_candidates(adapter_name, shots_per_call, policy)
-    postselect = bool(workload["semantics"]["postselect_all_detectors"])
+    postselect = has_postselection(workload["semantics"])
     calibration_started = time.perf_counter()
     native = {"status": "unsupported"}
     if policy == BOUNDED_POLICY:
@@ -397,7 +398,7 @@ def main() -> int:
                 )
                 errors = validate_counts(
                     counts,
-                    postselect=bool(workload["semantics"]["postselect_all_detectors"]),
+                    postselect=has_postselection(workload["semantics"]),
                 )
                 if command == "correctness":
                     expected = workload["expected_metadata"]
@@ -425,7 +426,7 @@ def main() -> int:
                             shots_per_call=int(request["shots_per_call"]),
                             min_seconds=float(request["min_seconds"]),
                             seed=int(request["seed"]),
-                            postselect=bool(workload["semantics"]["postselect_all_detectors"]),
+                            postselect=has_postselection(workload["semantics"]),
                             max_api_calls=int(request["max_api_calls"]),
                         ),
                     }

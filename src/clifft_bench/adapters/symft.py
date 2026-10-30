@@ -9,6 +9,7 @@ from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.selection import require_all_or_none
 
 
 class _PreparedSymft(PreparedAdapter):
@@ -122,6 +123,7 @@ class SymftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
+        require_all_or_none(workload["semantics"], self.name)
         reference_convention = str(workload["semantics"]["reference_convention"])
         if reference_convention != "raw-record-parity":
             raise ValueError(

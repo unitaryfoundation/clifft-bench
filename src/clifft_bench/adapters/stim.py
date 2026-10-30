@@ -9,6 +9,7 @@ from typing import Any
 
 from clifft_bench.adapters._shared import PackedCountsReducer
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.selection import require_all_or_none
 
 
 class _PreparedStim(PreparedAdapter):
@@ -81,6 +82,7 @@ class StimAdapter(Adapter):
     ) -> PreparedAdapter:
         import stim
 
+        require_all_or_none(workload["semantics"], self.name)
         if workload["semantics"]["reference_convention"] != "raw-record-parity":
             raise ValueError("Stim adapter requires raw-record-parity")
         started = time.perf_counter()

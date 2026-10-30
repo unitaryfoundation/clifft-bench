@@ -17,12 +17,17 @@ The benchmark corpus contains:
 - BT27 and BT81 code switching with direct logical-X readout, and
 - measured 15-qubit Reed-Muller preparation and transversal T.
 
+The release campaign also includes postselection-off controls, repeated QV
+sampling, an explicitly unverified d7 MSC performance proxy, and full d5
+cultivation with a selective detector mask. See the [coverage notes](coverage.md)
+for provenance, exact semantics, eligibility, reproduction, and validation.
+
 The near-Clifford and Quantum Volume files use the extended Clifft/SymFT
 Stim-like dialect. The pure surface-code file is a genuine Stim circuit.
 Rotation arguments use half-turns, so `R_Z(0.02)` represents `0.02 * pi`
 radians.
 
-The eight QEC files are byte-for-byte copies from
+The original eight QEC files are byte-for-byte copies from
 [`unitaryfoundation/clifft-paper`](https://github.com/unitaryfoundation/clifft-paper)
 commit `db7dc9f13a2c2854690e92390c779048a1ac1400`. The Quantum Volume
 files were generated from that commit with Qiskit 2.5.1 and seed 42, then given

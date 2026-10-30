@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.schema import SchemaValidationError, validate_path
+from clifft_bench.selection import detector_mask
 
 
 @dataclass(frozen=True)
@@ -125,6 +126,15 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
 
     workloads: dict[str, Workload] = {}
     for identifier, definition in workload_definitions.items():
+        try:
+            detector_mask(definition["semantics"], definition["expected_metadata"]["num_detectors"])
+        except ValueError as error:
+            raise SchemaValidationError(f"workload {identifier!r}: {error}") from error
+        if ("postselection_detector_indices" in definition["semantics"]
+                and set(definition["compatible_adapters"]) - {"clifft", "tsim"}):
+            raise SchemaValidationError(
+                f"workload {identifier!r} declares an adapter without detector-subset support"
+            )
         observable_index = int(definition["semantics"]["observable_index"])
         num_observables = int(definition["expected_metadata"]["num_observables"])
         if observable_index >= num_observables:

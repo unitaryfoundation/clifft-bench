@@ -64,9 +64,12 @@ jobs:
         run: python -m pip install --no-deps -r environments/xtim-3.2.2-edf0dd0.txt
       - run: python -m pip check
       - run: python -m pytest tests/test_reference_convention.py tests/test_symft_adapter.py tests/test_stim_adapter.py tests/test_xtim_adapter.py tests/test_distillation_15to1.py tests/test_code_switching.py
+      - run: python -m pytest tests/test_workload_coverage.py -k 'not clifft'
       - run: python -m pytest tests/test_runner.py -k symft
       - run: clifft-bench run --case 'symft|xtim|stim' --min-sample-seconds 0.01 --repetitions 1 --output /tmp/adapter-smoke.json
       - run: clifft-bench validate /tmp/adapter-smoke.json
+      - run: clifft-bench run --run-manifest manifests/run-coverage-smoke.v1.json --case 'symft|xtim|stim' --memory-limit-gib 12 --output /tmp/coverage-peers.json
+      - run: clifft-bench validate /tmp/coverage-peers.json
       - name: Validate bulk SymFT calibration under the memory ceiling
         timeout-minutes: 5
         run: clifft-bench run --run-manifest manifests/run-tsim-pilot.v1.json --case symft-bulk --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/bulk-symft-pilot.json
@@ -75,7 +78,9 @@ jobs:
         if: always()
         with:
           name: cpu-pilot-symft
-          path: /tmp/bulk-symft-pilot.json
+          path: |
+            /tmp/bulk-symft-pilot.json
+            /tmp/coverage-peers.json
 
   tsim-experiment:
     runs-on: ubuntu-latest
@@ -113,9 +118,11 @@ jobs:
       - run: python -m pip install --no-deps -r environments/tsim-0.1.5-e9406ed.txt
       - run: python -m pip install -e '.[test]'
       - run: python -m pip check
-      - run: python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py tests/test_runner.py tests/test_code_switching.py -k 'tsim or hamming'
+      - run: python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py tests/test_runner.py tests/test_code_switching.py tests/test_workload_coverage.py -k 'tsim or hamming'
       - run: clifft-bench run --run-manifest manifests/run-tsim-smoke.v1.json --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/tsim-smoke.json
       - run: clifft-bench validate /tmp/tsim-smoke.json
+      - run: clifft-bench run --run-manifest manifests/run-coverage-smoke.v1.json --case 'tsim' --memory-limit-gib 12 --output /tmp/coverage-tsim.json
+      - run: clifft-bench validate /tmp/coverage-tsim.json
       - name: Validate bulk Tsim calibration under the memory ceiling
         timeout-minutes: 5
         run: clifft-bench run --run-manifest manifests/run-tsim-pilot.v1.json --case tsim-bulk --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/bulk-tsim-pilot.json
@@ -124,7 +131,9 @@ jobs:
         if: always()
         with:
           name: cpu-pilot-tsim
-          path: /tmp/bulk-tsim-pilot.json
+          path: |
+            /tmp/bulk-tsim-pilot.json
+            /tmp/coverage-tsim.json
 
   clifft-current:
     runs-on: ubuntu-latest
@@ -142,10 +151,12 @@ jobs:
       - name: Check current adapter and circuit correctness
         run: |
           ulimit -v 12582912
-          python -m pytest tests/test_adapters.py tests/test_reference_convention.py tests/test_code_switching.py
+          python -m pytest tests/test_adapters.py tests/test_reference_convention.py tests/test_code_switching.py tests/test_workload_coverage.py
       - name: Run current Clifft smoke cases
         run: clifft-bench run --case clifft --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/clifft-smoke.json
       - run: clifft-bench validate /tmp/clifft-smoke.json
+      - run: clifft-bench run --run-manifest manifests/run-coverage-smoke.v1.json --case 'clifft' --memory-limit-gib 12 --output /tmp/coverage-clifft.json
+      - run: clifft-bench validate /tmp/coverage-clifft.json
       - name: Validate bulk Clifft calibration under the memory ceiling
         timeout-minutes: 5
         run: clifft-bench run --run-manifest manifests/run-tsim-pilot.v1.json --case clifft-bulk --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/bulk-clifft-pilot.json
@@ -157,3 +168,4 @@ jobs:
           path: |
             /tmp/clifft-smoke.json
             /tmp/bulk-clifft-pilot.json
+            /tmp/coverage-clifft.json

@@ -1,0 +1,370 @@
+{
+  "schema_version": "clifft-bench/run/v1",
+  "suite_version": "0.2.8",
+  "profile_id": "coverage-smoke",
+  "classification": "smoke",
+  "seed": 20261029,
+  "workloads_manifest": "workloads.v1.json",
+  "software_manifest": "software.v1.json",
+  "resources": {
+    "logical_cpu": null
+  },
+  "measurement": {
+    "setup_timeout_seconds": 300,
+    "request_timeout_seconds": 120,
+    "warmup_shots": 1,
+    "correctness_shots": 4,
+    "min_sample_seconds": 0.01,
+    "repetitions": 1
+  },
+  "cases": [
+    {
+      "id": "msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3-unselected",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3-unselected--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "surface-code-d7-r7-p1e-3-unselected",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "quantum-volume-q10-seed42--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "quantum-volume-q10-seed42",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "quantum-volume-q20-seed42--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "quantum-volume-q20-seed42",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "msc-d7-proxy-unverified-p1e-3--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "msc-d7-proxy-unverified-p1e-3",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage",
+      "variant_id": "clifft-coverage",
+      "workload_id": "msc-full-d5-cultivation-selected-p1e-3",
+      "implementation_id": "clifft-63cd885",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "clifft_scheduler": {
+          "beam_width": 8,
+          "search_budget": 16.0,
+          "noise_transparent": true,
+          "sink_neutral_rotations": true
+        }
+      }
+    },
+    {
+      "id": "msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage",
+      "variant_id": "symft-coverage",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3-unselected",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3-unselected--symft-coverage",
+      "variant_id": "symft-coverage",
+      "workload_id": "surface-code-d7-r7-p1e-3-unselected",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage",
+      "variant_id": "symft-coverage",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "quantum-volume-q10-seed42--symft-coverage",
+      "variant_id": "symft-coverage",
+      "workload_id": "quantum-volume-q10-seed42",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "quantum-volume-q20-seed42--symft-coverage",
+      "variant_id": "symft-coverage",
+      "workload_id": "quantum-volume-q20-seed42",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "msc-d7-proxy-unverified-p1e-3--symft-coverage",
+      "variant_id": "symft-coverage",
+      "workload_id": "msc-d7-proxy-unverified-p1e-3",
+      "implementation_id": "symft-0.1.1-c89b985",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 2048
+      }
+    },
+    {
+      "id": "msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3-unselected",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3-unselected--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "surface-code-d7-r7-p1e-3-unselected",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "quantum-volume-q10-seed42--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "quantum-volume-q10-seed42",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "quantum-volume-q20-seed42--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "quantum-volume-q20-seed42",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 1,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": false,
+        "batch_size": 1,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "msc-d7-proxy-unverified-p1e-3--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "msc-d7-proxy-unverified-p1e-3",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "msc-full-d5-cultivation-selected-p1e-3--tsim-coverage",
+      "variant_id": "tsim-coverage",
+      "workload_id": "msc-full-d5-cultivation-selected-p1e-3",
+      "implementation_id": "tsim-0.1.5-e9406ed",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0,
+        "tsim_trajectory_sharing": true
+      }
+    },
+    {
+      "id": "msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage",
+      "variant_id": "xtim-coverage",
+      "workload_id": "msc-d3-inject-cultivate-p1e-3-unselected",
+      "implementation_id": "xtim-3.2.2-edf0dd0",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3-unselected--xtim-coverage",
+      "variant_id": "xtim-coverage",
+      "workload_id": "surface-code-d7-r7-p1e-3-unselected",
+      "implementation_id": "xtim-3.2.2-edf0dd0",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0
+      }
+    },
+    {
+      "id": "surface-code-d7-r7-p1e-3-unselected--stim-coverage",
+      "variant_id": "stim-coverage",
+      "workload_id": "surface-code-d7-r7-p1e-3-unselected",
+      "implementation_id": "stim-1.16.0",
+      "shots_per_call": 128,
+      "execution": {
+        "mode": "throughput",
+        "batch_enabled": true,
+        "batch_size": 32,
+        "sample_chunk_shots": 0
+      }
+    }
+  ]
+}
