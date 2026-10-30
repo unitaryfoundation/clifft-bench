@@ -5,6 +5,10 @@ PRs that leave the active workflow and CI usable. Change producers and consumers
 together; remove an old input only after its remaining consumers are updated.
 No stage requires migrating archived results or reproducing historical figures.
 
+Keep these temporary planning documents on the planning branch, linked from
+[#91](https://github.com/unitaryfoundation/clifft-bench/issues/91). Each PR lands
+current behavior in its owning contract or workflow documentation.
+
 ## PR 1: Establish scope and focused checks
 
 - Land the concise `AGENTS.md` and make the release-over-release/cross-tool scope
@@ -112,9 +116,6 @@ is not an acceptance criterion. This PR must work without archived executions.
 - Update the companion `clifft` release instructions to publish the three
   recurring pairs. Historical, QV, GPU, and special-purpose figures remain
   separately maintained when useful.
-- Remove these temporary planning documents once implemented. Keep durable
-  behavior in the contract and workflows, without copying the PR checklist
-  into `AGENTS.md`.
 
 Run relevant experiment checks and verify documentation/asset references.
 
