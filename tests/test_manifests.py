@@ -12,16 +12,19 @@ from clifft_bench.schema import SchemaValidationError, repository_root
 ROOT = repository_root()
 
 
+SMOKE_MANIFESTS = sorted(ROOT.glob("manifests/run-*.v1.json"))
+assert SMOKE_MANIFESTS, "no checked-in smoke manifests discovered"
 RUN_MANIFESTS = sorted([
-    *ROOT.glob("manifests/run-*.v1.json"),
+    *SMOKE_MANIFESTS,
     *ROOT.glob("campaigns/*/run.v1.json"),
 ])
+assert RUN_MANIFESTS, "no checked-in run manifests discovered"
 
 
 @pytest.mark.parametrize("path", RUN_MANIFESTS, ids=lambda p: str(p.relative_to(ROOT)))
 def test_checked_in_suites_resolve_artifacts_references_and_environments(path: Path) -> None:
     # Loading checks digests, detector masks, adapter compatibility, comparison
-    # references, and the existence of every official implementation's lockfile.
+    # references and matched call sizes; official runs also require environment locks.
     suite = load_suite(path)
     assert suite.cases
     assert len({case.id for case in suite.cases}) == len(suite.cases)
@@ -48,10 +51,6 @@ def test_checked_in_suites_resolve_artifacts_references_and_environments(path: P
                          if case.definition["variant_id"] == variant}
             shared = baseline.keys() & candidate.keys()
             assert shared, f"{comparison['id']}: {variant} has no baseline workloads"
-            for workload in shared:
-                assert baseline[workload].definition["shots_per_call"] == (
-                    candidate[workload].definition["shots_per_call"]
-                )
 
 
 def test_release_compares_distinct_clifft_implementations() -> None:
@@ -71,14 +70,48 @@ def test_release_compares_distinct_clifft_implementations() -> None:
         )
 
 
-@pytest.mark.parametrize("path", sorted(ROOT.glob("manifests/run-*.v1.json")),
-                         ids=lambda p: p.name)
+def test_release_current_variants_share_one_implementation_per_adapter() -> None:
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    comparison = next(c for c in suite.run["comparisons"] if c["id"] == "current-vs-previous")
+    current: dict[str, set[str]] = {}
+    for case in suite.cases:
+        if case.definition["variant_id"] == comparison["baseline_variant"]:
+            continue
+        adapter = case.implementation.definition["adapter"]
+        current.setdefault(adapter, set()).add(case.implementation.id)
+    assert current
+    for adapter, implementations in current.items():
+        assert len(implementations) == 1, f"{adapter}: current variants disagree: {implementations}"
+
+
+def test_release_bulk_calls_exceed_their_short_call_siblings() -> None:
+    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    variants = {variant["id"]: variant for variant in suite.run["variants"]}
+    bulk = [variant for variant in variants.values() if "-bulk" in variant["id"]]
+    assert bulk
+    for variant in bulk:
+        short_id = variant["id"].replace("-bulk-tuned", "-tuned").replace("-bulk", "-current")
+        assert short_id in variants, f"{variant['id']}: missing short-call sibling {short_id}"
+        short = {w["workload_id"]: w["shots_per_call"] for w in variants[short_id]["workloads"]}
+        for workload in variant["workloads"]:
+            workload_id = workload["workload_id"]
+            assert workload_id in short, f"{variant['id']}: {workload_id} missing from {short_id}"
+            assert workload["shots_per_call"] > short[workload_id], (variant["id"], workload_id)
+        implementation = next(c.implementation for c in suite.cases
+                              if c.implementation.id == variant["implementation_id"])
+        if implementation.definition["adapter"] == "tsim":
+            assert variant["execution"].get("tsim_trajectory_sharing", True) is True
+
+
+@pytest.mark.parametrize("path", SMOKE_MANIFESTS, ids=lambda p: p.name)
 def test_smoke_and_pilot_implementations_match_the_release(path: Path) -> None:
     release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     variants = {variant["id"]: variant for variant in release.run["variants"]}
     smoke = load_suite(path)
     for case in smoke.cases:
-        variant = variants[case.definition["variant_id"]]
+        variant_id = case.definition["variant_id"]
+        assert variant_id in variants, f"{path.name}: {variant_id} is absent from the release"
+        variant = variants[variant_id]
         assert case.implementation.id == variant["implementation_id"]
 
 
