@@ -1,107 +1,133 @@
-# `clifft-bench` Staged PR Plan
+# Implementation plan
 
-Each PR below is independently reviewable, leaves CI green, and avoids mixing mechanical data migration with behavioral changes.
+Implement [the release benchmark architecture](architecture-spec.md) in focused
+PRs that leave the active workflow and CI usable. Change producers and consumers
+together; remove an old input only after its remaining consumers are updated.
+No stage requires migrating archived results or reproducing historical figures.
 
----
+## PR 1: Establish scope and focused checks
 
-## PR 1: Add `AGENTS.md` and Purge Change-Detector / Snapshot Tests
+- Land the concise `AGENTS.md` and make the release-over-release/cross-tool scope
+  clear in contributor guidance. Keep design details out of agent instructions.
+- Replace prose and shell-substring assertions in `tests/test_ec2_playbook.py`
+  with behavior checks where operational behavior needs coverage. Keep checks
+  for installation settings, deadlines, provenance, and overwrite prevention
+  when their implementations move; do not preserve brittle assertions merely
+  because they already exist.
+- Replace transient version pins and exact counts in `tests/test_manifests.py`
+  with reference integrity, artifact digests, valid selection masks, matched
+  comparison semantics, and environment availability checks.
+- Record one pinned legacy code/results revision in the documentation. A frozen
+  plot or numerical export is optional; leave existing evidence unmodified.
 
-**Goal:** Establish guardrails first so every subsequent PR follows the anti-bloat rules, and strip brittle prompt-echo tests before refactoring internals.
+Verify documentation references, the existing test suite, and Ruff. Do not create
+new tests that assert the wording or length of these planning documents.
 
-- **Add:** `AGENTS.md`
-- **Delete:** `tests/test_ec2_playbook.py`
-- **Edit:** `tests/test_manifests.py` — Replace hardcoded case counts (`108`), version strings (`0.12.1.dev26+...`), and commit SHAs with structural invariant checks (e.g., all referenced workloads/implementations exist, SHA-256 digests match `workloads/circuits/*.stim`, detector subset masks are valid, lockfiles exist).
-- **Verify:** `uv run --extra test pytest && uv run --extra test ruff check .`
+## PR 2: Retire historical execution and consolidate calibration
 
----
+- Remove the historical campaign, obsolete simulator environments, old adapter
+  shims, and the historical-version CI loop. Keep support for active previous
+  and current Clifft and the maintained comparison tools. Retain files still
+  used by active consumers until those consumers change.
+- Update `calibration.py`, `worker.py`, and the adapters to the single bounded
+  policy in the specification. Remove native proposals and duplicate policy
+  execution paths; retain candidate failure and budget evidence. Update the
+  current writer/validator and tests in the same PR without changing the result
+  layout consumed by the existing report yet.
+- Remove the 38 duplicate tuned cases. At the starting manifest revision this
+  leaves 70 of 108 cases, including all 23 coverage cases introduced in #90.
+  Treat these as a migration inventory, not permanent counts in unit tests.
+  Preserve selection-off controls, repeated QV sampling, cultivation stress
+  inputs, full d5 detector subsets, and short-call/bulk distinctions.
+- Update #81 to record the deliberate single-policy scope decision. Do not claim
+  native-tuning equivalence or completion of the original comparative experiment.
 
-## PR 2: Drop Frozen Clifft 0.1-0.10 Lockfiles, Legacy Shims, and Duplicate Tuning Sweep
+Verify calibration selection, failures and soft-budget handling, plus real-adapter
+smokes for maintained implementations. Use the next normal reference-host run to
+review chosen settings and search costs; do not schedule a separate paid sweep
+as a prerequisite to the architecture work.
 
-**Goal:** Shed dead historical baggage before migrating config formats.
+## PR 3: Simplify configuration and environment setup
 
-- **Delete:**
-  - `environments/clifft-0.1.0.{in,txt}` through `environments/clifft-0.10.0rc1.{in,txt}`
-  - Superseded `environments/symft-0.1.0-9ec5790.{in,txt}` and `environments/xtim-3.1.4-2945407.{in,txt}`
-  - Redundant `.in` files for single-line packages (retain `.in` header comments inside `.txt` where `uv pip compile` is used)
-  - `campaigns/clifft-history-v1/` manifest (the archived evidence in `results/clifft-history-v1/` stays untouched)
-  - `campaigns/release-v1/clifft-scheduled-execution.json`
-- **Edit:**
-  - `src/clifft_bench/adapters/clifft.py` — Remove pre-0.11 `set_num_threads`, `default_bytecode_pass_manager`, `active_k_history`, `_accepts_keyword` docstring-regex scraping, and `native_batch_choices()`.
-  - `src/clifft_bench/calibration.py` & `worker.py` — Unify batch calibration onto the single bounded policy (60 s soft budget, 3 x 1 s warmed probes, `(1, 32, 64, 256, 1024, 2048)` for Clifft/SymFT, `(1, 32, 256, 1024, 8192, 65536)` for Tsim, `(256, 1024, 4096, 16384, 65536)` for Stim/xtim). Remove the 38 duplicate `*-tuned` cases from `release-v1` (resolves `#81`).
-  - `.github/workflows/ci.yml` — Remove the 12-version `0.1.0..0.12.0rc1` install loop; test `clifft-previous` and `clifft-current` plus SymFT, xtim, Stim, and Tsim.
-- **Verify:** `uv run --extra test pytest && uv run --extra test ruff check .`
+- Add `workloads.toml`, `software.toml`, `campaigns/release-v1.toml`, and
+  `campaigns/smoke.toml`, with a small `config.py` loader and typed objects.
+  Preserve explicit comparison groups and every retained case's executable
+  contract. Represent all coverage cases, not only the older QEC group.
+- Move simulator settings and their validation into adapter options. Preserve
+  `selection.py`, `scripts/generate_full_d5.py`, generator pins, and circuit
+  provenance/licenses.
+- Add `bootstrap` and conventional implementation environments. Move reference
+  host checks and bounded IMDSv2 discovery into Python; replace `scripts/ec2/`
+  with the small collection wrapper once its behavior is covered.
+- Update active manifest consumers together. Delete old configuration manifests,
+  config schemas, redundant option files, and custom environment plumbing once
+  unused. Keep any result schema/helper still required by the current writer or
+  report until PR 4; do not build a permanent dual-configuration loader.
 
----
+Compare the expanded case definitions before and after conversion, excluding
+only intentional policy changes/removals. Exercise bootstrap, listing, option
+validation, mocked host metadata, and smoke collection. Keep the existing result
+writer/report usable during this stage.
 
-## PR 3: Replace 5 JSON Schemas & 3 JSON Manifests with TOML + Dataclasses, `bootstrap`, and Direct `cases.csv`
+## PR 4: Replace result production and release reporting together
 
-**Goal:** Remove `jsonschema`, `schemas/`, `manifests/`, `comparisons.csv`, `index.json`, and the 40 custom env vars.
+- Implement deterministic `csv_export.py` and update the runner/CLI to write
+  new executions as `raw.json` plus `cases.csv`. Include the resolved campaign,
+  comparison definitions, and provenance in raw evidence so later reporting
+  does not depend on the current configuration files.
+- Add `clifft-bench report EXECUTION_DIR` and `--check` in `report.py`. Produce
+  the three default light/dark figure pairs and a concise review summary from
+  that execution alone. Use metadata for compatibility checks without replaying
+  calibration or auditing a second stored comparison table.
+- Update `tests/test_results.py`, `tests/test_reporting.py`, CLI consumers, and
+  CI together. Then remove obsolete `results.py`/schema helpers, the `jsonschema`
+  dependency, new-run `index.json`/`comparisons.csv` production, and the old
+  recurring report/source-chain dependency. Historical folders are not converted.
+- Update `README.md` references and publication instructions in the same PR.
+  Retain existing published images as frozen evidence until reviewed new results
+  replace them; smoke-generated images are verification artifacts, not published
+  performance evidence. Coordinate renamed asset/link consumers in `clifft`.
+- Keep history, QV, GPU, and adder-specific plotting optional. A history script
+  may use a frozen numerical export if useful; it must not become a release or
+  CI prerequisite. An aggregate-only export redraws history but cannot extend
+  the old per-workload cumulative calculation by multiplying aggregate medians.
 
-- **Add:**
-  - `workloads.toml`, `software.toml`, `campaigns/release-v1.toml`, `campaigns/smoke.toml`
-  - `src/clifft_bench/config.py` (`tomllib` + dataclass validation + `Adapter.validate_options`)
-  - `src/clifft_bench/csv_export.py` (`raw.json` -> 25-column `cases.csv` + terminal comparison summary)
-  - `scripts/ec2-run.sh` (~35-line EC2 wrapper)
-- **Edit:**
-  - `pyproject.toml` — Set `dependencies = []` (drop `jsonschema`).
-  - `src/clifft_bench/adapters/*.py` — Read adapter-specific settings from `options: dict[str, Any]` and implement `validate_options()`.
-  - `src/clifft_bench/system.py` — Add stdlib `urllib.request` IMDSv2 query behind `--require-ec2`; delete `CLOUD_METADATA_ENVIRONMENT` and `RUN_PROVENANCE_ENVIRONMENT`.
-  - `src/clifft_bench/runner.py` & `cli.py` — Add `clifft-bench bootstrap` and `clifft-bench csv`; resolve `.campaign-envs/<id>/bin/python` by convention; write `raw.json` + `cases.csv` directly in `clifft-bench run`.
-  - Migrate the 5 archived directories under `results/` (`raw/*-raw.json` -> `raw.json`, regenerate 25-column `cases.csv`, delete `comparisons.csv` and `index.json`).
-- **Delete:**
-  - `schemas/` (all 5 `.schema.json` files)
-  - `manifests/` (all `.v1.json` files, including `run-smoke`, `run-coverage-smoke`, `run-tsim-*`, `workloads`, `software`)
-  - `campaigns/release-v1/run.v1.json`
-  - `examples/result.v1.json`
-  - `src/clifft_bench/schema.py`, `src/clifft_bench/manifest.py`, `src/clifft_bench/results.py`
-  - `scripts/ec2/` (`common.sh`, `bootstrap.sh`, `run-placement.sh`, `finalize.sh`; retain `scripts/generate_full_d5.py`)
-- **Verify:** Run smoke suite end-to-end, verify all 5 migrated `results/*/*/cases.csv` tables, and run `pytest` + `ruff`.
+Verify a complete smoke run through CSV regeneration and reporting. Check paired
+arithmetic, incompatible inputs, expected/missing cases, unsupported baselines,
+recorded failures, and deterministic export. Inspect the three figure pairs.
+Use focused fixtures for report behavior; exact legacy numerical/PNG equivalence
+is not an acceptance criterion. This PR must work without archived executions.
 
----
+## PR 5: Focus experiments and finish documentation
 
-## PR 4: Unify & Slim `reporting/` (`clifft-bench report`)
+- Simplify `experiments/qv` and `experiments/tsim-gpu` where duplication or dead
+  workflows remain. Keep useful module boundaries, subprocess deadlines,
+  correctness checks, recovery, and recorded failures. Do not rewrite either
+  study merely to hit a file or line count, or add a generic experiment framework.
+- Consolidate recurring methodology in `docs/benchmark-contract.md` and the
+  maintainer workflow in `CONTRIBUTING.md`; keep `README.md` reader-focused.
+  Remove superseded data-format, host, EC2, and reporting instructions after
+  moving useful content to its owner. Retain focused experiment instructions
+  and necessary workload provenance instead of imposing a documentation quota.
+- Update the companion `clifft` release instructions to publish the three
+  recurring pairs. Historical, QV, GPU, and special-purpose figures remain
+  separately maintained when useful.
+- Remove these temporary planning documents once implemented. Keep durable
+  behavior in the contract and workflows, without copying the PR checklist
+  into `AGENTS.md`.
 
-**Goal:** Cut reporting from ~1,560 lines across two subprojects down to one ~450-line module reading `cases.csv` directly.
+Run relevant experiment checks and verify documentation/asset references.
 
-- **Add:**
-  - `reporting/sources.toml`
-  - `src/clifft_bench/report.py` — Compute release ratios and cross-tool comparisons directly from `cases.csv` (no `comparisons.csv` or `_case_map()` cross-auditing), fold in `quantum-volume-{light,dark}.png`, rename `v012-vs-v011-{light,dark}.png` to `release-change-{light,dark}.png`, and wire `clifft-bench report`.
-- **Delete:**
-  - `reporting/qec.py`, `reporting/sources.json`, `reporting/__init__.py`
-  - Unused paper figures (`reporting/figures/*.png`) and unused `reporting/figures/web/clifft-vs-symft-{light,dark}.png`
-  - Old `reporting/figures/web/v012-vs-v011-{light,dark}.png`
-  - `experiments/qv/qv_experiment/plot.py`
-- **Edit:** `README.md` (update `v012-vs-v011` image reference to `release-change`) and `tests/test_reporting.py`.
-- **Verify:** `uv run --extra report clifft-bench report` and verify rendered PNGs match existing charts on the reviewed v0.12 data.
+## Validation and first release
 
----
+For code changes run `uv run --extra test pytest` and
+`uv run --extra test ruff check .`, plus the adapter, experiment, and end-to-end
+checks relevant to each stage. Replace brittle tests with meaningful behavior
+coverage; do not introduce tests for documentation wording or size targets.
 
-## PR 5: Slim `experiments/qv` and `experiments/tsim-gpu` into Single-Script Studies
-
-**Goal:** Collapse ~2,500 lines of duplicate experiment mini-harnesses into two ~200-line scripts while preserving their checked-in result CSVs.
-
-- **Edit / Replace:**
-  - `experiments/qv/`: Replace the 8-file `qv_experiment/` package (`run_benchmark.py`, `worker.py`, `system.py`, `validate.py`, `generator.py`, `qasm_adapter.py`) with a single concise `run_qv.py` (accepting any installed Clifft version rather than hardcoding `0.10.0rc1`) + minimal smoke test; keep `experiments/qv/results/qv-0.10.0rc1-20260902/`.
-  - `experiments/tsim-gpu/`: Replace the 6-file `tsim_gpu/` package (`run.py`, `worker.py`, `finalize.py`, `common.py`) with a single concise `run_tsim_gpu.py` + minimal smoke test; keep `experiments/tsim-gpu/results/tsim-gpu-20260909-131821/`.
-- **Verify:** Run unit/smoke tests in main repo and `experiments/`.
-
----
-
-## PR 6: Consolidate Documentation into 3 Crisp Files
-
-**Goal:** Replace 9 overlapping, PR-diary Markdown files with 3 clean, non-repetitive documents.
-
-- **Rewrite concisely:**
-  - `README.md` — Reader overview and current figures.
-  - `docs/benchmark-contract.md` — ~150-line present-tense specification of workload semantics (`raw-record-parity`), timed boundaries, calibration policy, `raw.json` + `cases.csv` format, and the `m7a.xlarge` reference host.
-  - `CONTRIBUTING.md` — Single linear maintainer checklist: local development, adding a workload, preparing an RC, running `scripts/ec2-run.sh`, running `clifft-bench report`, and copying the 6 light/dark figure pairs to `clifft`.
-- **Delete:**
-  - `docs/data-format.md`
-  - `docs/result-schema.md`
-  - `docs/reference-host.md`
-  - `docs/manual-ec2.md`
-  - `docs/plan/` *(temporary refactor planning docs)*
-  - `reporting/README.md`
-  - `workloads/README.md` and `workloads/coverage.md` *(fold circuit provenance and selection semantics summary table into `docs/benchmark-contract.md`)*
-- **Companion follow-up in `clifft`:**
-  - Update `docs/development/releasing.md` to link to `clifft-bench`'s `CONTRIBUTING.md` instead of `reporting/README.md`, and update `v012-vs-v011-{light,dark}.png` to `release-change-{light,dark}.png` on the next performance refresh.
+The first normal reference-host campaign must demonstrate fresh previous/current
+measurements, compatible cross-tool comparisons, preserved coverage, clear failure
+outcomes, and auditable calibration and timing evidence. Review that evidence
+before publishing new performance claims. Future release preparation should
+require updating active software identities and deliberate campaign selections,
+not historical environments, source chains, or unrelated experiments.
