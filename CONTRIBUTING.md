@@ -22,6 +22,11 @@ a manual, reviewed workflow. Before changing measurements or results, read the
 [benchmark contract](docs/benchmark-contract.md) and
 [data format](docs/data-format.md).
 
+Keep mainline additions focused on maintained benchmarks, their correctness
+checks, and input provenance. Temporary probes, local debugging output, and
+discussion of deferred work belong in PRs or issues. Keep reproducible input
+generators and official raw results with the benchmarking code they support.
+
 ## Preparing a release campaign
 
 [`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.selection import require_all_or_none
 
 
 class _PreparedFixture(PreparedAdapter):
@@ -43,6 +44,7 @@ class FixtureAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
+        require_all_or_none(workload["semantics"], self.name)
         parameters = dict(workload["parameters"])
         if parameters.get("write_native_stdout"):
             os.write(1, b"fixture native prepare output\n")

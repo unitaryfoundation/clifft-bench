@@ -121,7 +121,9 @@ def _result(tmp_path: Path) -> Path:
     return path
 
 
-@pytest.mark.parametrize("change", ["mask", "all", "reference", "execution"])
+@pytest.mark.parametrize("change", [
+    "mask", "missing_mask", "all", "reference", "observable", "output", "numerator", "execution",
+])
 def test_finalize_rejects_changed_selection_semantics(tmp_path, change):
     suite = _suite()
     raw_path = _result(tmp_path)
@@ -138,16 +140,36 @@ def test_finalize_rejects_changed_selection_semantics(tmp_path, change):
     semantics = case["workload"]["semantics"]
     if change == "mask":
         semantics["postselection_detector_indices"] = [1]
+    elif change == "missing_mask":
+        del semantics["postselection_detector_indices"]
     elif change == "all":
         semantics["postselect_all_detectors"] = True
     elif change == "reference":
         semantics["reference_convention"] = "reference-normalized"
+    elif change == "observable":
+        semantics["observable_index"] = 1
+    elif change == "output":
+        semantics["output_contract"] = "per-shot records"
+    elif change == "numerator":
+        semantics["throughput_numerator"] = "accepted shots"
     else:
         case["execution"]["postselection"] = False
     raw_path.write_text(json.dumps(raw))
     with pytest.raises(ValueError, match="mismatched workload semantics"):
         finalize_execution(suite, execution_id="changed-mask", raw_paths=[raw_path],
                            output_dir=tmp_path / "rejected")
+
+
+@pytest.mark.parametrize("key", ["logical_work", "batch_semantics"])
+def test_finalize_accepts_description_edits_without_rewriting_raw_semantics(tmp_path, key):
+    suite = _suite()
+    raw_path = _result(tmp_path)
+    original = raw_path.read_bytes()
+    for expected in suite.cases:
+        expected.workload.definition["semantics"][key] = "Reworded description."
+    finalize_execution(suite, execution_id="reworded", raw_paths=[raw_path],
+                       output_dir=tmp_path / "finalized")
+    assert raw_path.read_bytes() == original
 
 
 def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) -> None:

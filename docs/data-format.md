@@ -43,7 +43,11 @@ records without a policy field remain `grid-v1`.
 
 Raw `workload.semantics` retains any explicit `postselection_detector_indices`.
 `execution.postselection` is true for all-detector or subset selection. The
-finalizer rejects semantics or selection flags that differ from the manifest.
+finalizer compares `postselect_all_detectors`, `postselection_detector_indices`,
+`reference_convention`, `observable_index`, `output_contract`, and
+`throughput_numerator`, plus the execution selection flag. Changes to these
+contract fields are rejected. Wording edits to `logical_work` or `batch_semantics`
+are allowed; raw records retain their original descriptions.
 CSV workload IDs distinguish selected/unselected pairs; the raw record is the
 source of the exact mask. For the supplemental coverage workloads,
 `logical_errors` means raw observable-0 ones, not a decoded error estimate.

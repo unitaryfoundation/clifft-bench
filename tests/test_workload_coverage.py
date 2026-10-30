@@ -22,8 +22,12 @@ PAIRS = (
 def test_selection_pairs_reuse_exact_circuits_and_public_call_sizes():
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     workloads = {w["id"]: w for w in suite.workloads_document["workloads"]}
-    for selected_id in PAIRS:
-        selected, unselected = workloads[selected_id], workloads[selected_id + "-unselected"]
+    pairs = [w for w in workloads.values() if "postselection_pair" in w["parameters"]]
+    assert len(pairs) == len(PAIRS)
+    assert {w["parameters"]["postselection_pair"] for w in pairs} == set(PAIRS)
+    for unselected in pairs:
+        selected_id = unselected["parameters"]["postselection_pair"]
+        selected = workloads[selected_id]
         assert selected["artifact"] == unselected["artifact"]
         assert selected["expected_metadata"] == unselected["expected_metadata"]
         assert selected["compatible_adapters"] == unselected["compatible_adapters"]

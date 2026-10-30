@@ -21,7 +21,8 @@ nonempty, sorted, unique list of zero-based detectors; only those parities must
 be zero. Without a subset, false disables rejection. Subsets and the all-detector
 flag are mutually exclusive. The raw result retains the exact indices and records
 `execution.postselection=true` for either selection mode. Finalization checks
-the declared semantics and execution flag. Clifft and Tsim implement subsets;
+the machine-readable contract fields and execution flag; descriptive wording
+does not affect compatibility. Clifft and Tsim implement subsets;
 other adapters explicitly reject them. Tsim's subset-column materialization
 and count reduction are included in the sampling time.
 

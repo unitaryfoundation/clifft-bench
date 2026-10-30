@@ -65,8 +65,7 @@ or fidelity estimation. Escape detectors are sampled but do not reject a shot.
 Clifft receives this same mask before HIR passes and during lowering. Tsim
 receives it at sampling and the adapter reduces only selected detector columns.
 SymFT, xtim, and Stim adapters currently reject explicit subsets instead of
-silently selecting all or none. This narrower contract does not reopen the
-end-to-end decoding study in #9. Licenses and attribution are in
+silently selecting all or none. Licenses and attribution are in
 [`NOTICE-cultivation-coverage`](circuits/NOTICE-cultivation-coverage).
 
 To reproduce the d5 bytes and mask in a separate generator environment:
@@ -86,22 +85,13 @@ indices. `--noise 0 --output /tmp/full-d5-noiseless.stim` generates the diagnost
 noiseless control. Stim's substitution of T/T_DAG with I is used only to index
 annotations, never to simulate or validate the non-Clifford output law.
 
-## Quantum Volume and the optional 35-qubit input
+## Quantum Volume
 
 QV reuses the immutable QV10/QV20 seed-42 circuits already in the corpus. These
 rows measure repeated aggregate sampling from a prepared sampler. They are
 distinct from the setup-plus-one-shot study under `experiments/qv` and say
 nothing about heavy-output-generation success. There are no selected detectors;
 the output is the raw parity of the declared final measured bit.
-
-The public
-[Tsim notebook pinned in #77](https://github.com/QuEraComputing/tsim/blob/e9406ed5bb49fcff1b04b65534cf56bbb756b3a6/docs/demos/magic_state_distillation.ipynb)
-uses `ColorEncoder5`, producing the existing 85-qubit family. The same source
-tree provides a seven-qubit `SteaneEncoder`, but the linked notebook is not an
-immutable 35-qubit input. A substitution would need a specified readout and
-validation of its stabilizer selection and the separate four-bit distillation
-condition. No new 35-qubit workload is declared compatible here. The existing
-85-qubit and 15-to-1 cases remain the distillation coverage for this release.
 
 ## Validation and collection
 
@@ -113,29 +103,23 @@ tested with a selected detector that is always one, so reference normalization
 or silently ignoring the mask fails the test. Finalization rejects a changed
 mask, reference convention, or selection flag.
 
-[`coverage-20261029.json`](validation/coverage-20261029.json) retains local
-feasibility probes on an Apple M4 Pro using the pinned tools. Each child had a
-120-second watchdog, an 8 GiB RSS watchdog, and single-thread environment
-variables. Affinity and Linux address-space limits were not enforced. These are
-diagnostics, not official throughput measurements:
+For the noiseless full-d5 control, the selected detectors should all be zero.
+An ideal T-state Y readout has expectation magnitude `1/sqrt(2)`; the pinned
+circuit's raw observable includes the negative static readout sign, so its
+raw-one probability is `(1 + 1/sqrt(2))/2`, approximately 0.85355. The upstream
+driver calibrates that sign before interpreting a corrected Y expectation;
+this benchmark preserves it. This noiseless check does not turn noisy raw-one
+counts into fidelity or decoded logical errors.
 
-- All three unselected controls returned every attempt on each eligible tool.
-- d7's three-seed accepted totals were **236/49,152** for Clifft,
-  **242/49,152** for SymFT, and **238/49,152** for Tsim. Raw observable-one counts
-  were 117, 100 and 108. The rare acceptance required longer probes than smoke.
-- Full d5's noiseless control accepted all 6,144 attempts on both Clifft and
-  Tsim. Noisy acceptance was 755/6,144 and 738/6,144, respectively. These support
-  the raw-zero mask; noisy uncorrected observable rates are not fidelity.
-- QV20 at 32 shots and capacity 32 took about 74 seconds per call on SymFT and 3.5 seconds
-  on Tsim with capacity 32. Clifft's capacity-32 candidate hit its 64 MiB packed
-  state guard; scalar preparation and sampling succeeded. Calibration retains
-  such candidate failures and can select scalar execution.
-- xtim rejects the d7 proxy's nondeterministic noiseless records under the
-  adapter contract. It also rejects the coherent circuit's `R_Z` syntax.
+xtim excludes the d7 proxy because its records are nondeterministic without
+noise, and excludes the coherent control because of its `R_Z` syntax. QV20's
+32-shot public call bounds its cost; Clifft's packed candidate can hit its
+state-size guard while scalar sampling succeeds. Calibration records failed
+candidates and selects a successful configuration on the reference host.
+Local feasibility evidence is retained with [PR #90](https://github.com/unitaryfoundation/clifft-bench/pull/90).
 
-The normal release collector calibrates on the reference host; these probes do
-not hard-code per-circuit winning batches. The smoke profile uses small fixed
-calls and runs every declared combination, including full d5 and QV20:
+The smoke profile uses small fixed calls and runs every declared combination,
+including full d5 and QV20:
 
 ```bash
 clifft-bench run --run-manifest manifests/run-coverage-smoke.v1.json \
@@ -146,4 +130,4 @@ clifft-bench validate /tmp/coverage-smoke.json
 Set the implementation-specific Python variables as for the release campaign,
 or use `--case clifft`, `--case tsim`, etc. in the respective environment.
 Linux CI runs these cases under the actual address-space ceiling. Official
-sampling remains part of the next full EC2 release sweep.
+sampling uses the full EC2 release sweep.

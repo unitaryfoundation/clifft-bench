@@ -504,6 +504,10 @@ def _validate_execution(
     expected_instance_type = suite.run["reference_host"]["instance_type"]
     expected_cases = {case.id: case for case in suite.cases}
     expected_case_ids = set(expected_cases)
+    contract_keys = (
+        "postselect_all_detectors", "postselection_detector_indices",
+        "reference_convention", "observable_index", "output_contract", "throughput_numerator",
+    )
     for result in results:
         if result["run"]["profile_id"] != suite.run["profile_id"]:
             raise ValueError(
@@ -526,7 +530,8 @@ def _validate_execution(
         for case in result["cases"]:
             expected = expected_cases[case["case_id"]]
             semantics = expected.workload.definition["semantics"]
-            if (case["workload"]["semantics"] != semantics
+            observed_semantics = case["workload"]["semantics"]
+            if (any(observed_semantics.get(key) != semantics.get(key) for key in contract_keys)
                     or case["execution"]["postselection"] != has_postselection(semantics)):
                 raise ValueError(f"raw case {expected.id!r} has mismatched workload semantics")
             if (
