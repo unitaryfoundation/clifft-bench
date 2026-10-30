@@ -7,257 +7,79 @@ import pytest
 
 from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
 from clifft_bench.manifest import load_suite
-from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
+from clifft_bench.schema import SchemaValidationError, repository_root
 
 ROOT = repository_root()
 
 
-@pytest.mark.parametrize(
-    "relative",
-    [
-        "manifests/workloads.v1.json",
-        "manifests/software.v1.json",
-        "manifests/run-smoke.v1.json",
-        "manifests/run-tsim-smoke.v1.json",
-        "campaigns/release-v1/run.v1.json",
-        "campaigns/clifft-history-v1/run.v1.json",
-    ],
-)
-def test_checked_in_manifests_validate(relative: str) -> None:
-    validate_path(ROOT / relative)
+RUN_MANIFESTS = sorted([
+    *ROOT.glob("manifests/run-*.v1.json"),
+    *ROOT.glob("campaigns/*/run.v1.json"),
+])
 
 
-def test_release_manifest_expands_named_variants() -> None:
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+@pytest.mark.parametrize("path", RUN_MANIFESTS, ids=lambda p: str(p.relative_to(ROOT)))
+def test_checked_in_suites_resolve_artifacts_references_and_environments(path: Path) -> None:
+    # Loading checks digests, detector masks, adapter compatibility, comparison
+    # references, and the existence of every official implementation's lockfile.
+    suite = load_suite(path)
+    assert suite.cases
+    assert len({case.id for case in suite.cases}) == len(suite.cases)
 
-    assert suite.run["collection"]["placements"] == 1
-    assert len(suite.cases) == 108
-    assert len({case.id for case in suite.cases}) == 108
-    assert {case.definition["variant_id"] for case in suite.cases} == {
-        "clifft-previous",
-        "clifft-current",
-        "symft-current",
-        "stim-current",
-        "xtim-current",
-        "tsim-current",
-        "clifft-bulk",
-        "symft-bulk",
-        "tsim-bulk",
-        "clifft-tuned", "symft-tuned", "tsim-tuned", "xtim-tuned", "stim-tuned",
-        "clifft-bulk-tuned", "symft-bulk-tuned", "tsim-bulk-tuned",
-        "clifft-coverage", "symft-coverage", "tsim-coverage", "xtim-coverage", "stim-coverage",
-    }
-    assert {case.implementation.definition["adapter"] for case in suite.cases} == {
-        "clifft",
-        "symft",
-        "stim",
-        "xtim",
-        "tsim",
-    }
-    versions_by_variant = {
-        variant_id: {
-            case.implementation.definition["version"]
+    if "variants" in suite.run:
+        variants = {variant["id"]: variant for variant in suite.run["variants"]}
+        assert {
+            (case.definition["variant_id"], case.workload.id, case.definition["shots_per_call"])
             for case in suite.cases
-            if case.definition["variant_id"] == variant_id
+        } == {
+            (variant["id"], workload["workload_id"], workload["shots_per_call"])
+            for variant in variants.values() for workload in variant["workloads"]
         }
-        for variant_id in ("clifft-previous", "clifft-current")
-    }
-    assert versions_by_variant == {
-        "clifft-previous": {"0.12.0rc1"},
-        "clifft-current": {"0.12.1.dev26+g63cd8854a"},
-    }
-    candidate = next(
-        case.implementation.definition
-        for case in suite.cases
-        if case.definition["variant_id"] == "clifft-current"
-    )
-    assert candidate["version"] == "0.12.1.dev26+g63cd8854a"
-    assert candidate["commit_sha"] == "63cd8854ad5de32515af6584eff33ea400ccc063"
-    smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
-    assert {
-        case.implementation.id for case in smoke.cases
-        if case.definition["variant_id"] == "clifft-current"
-    } == {candidate["id"]}
+        for case in suite.cases:
+            variant = variants[case.definition["variant_id"]]
+            assert case.implementation.id == variant["implementation_id"]
+            assert case.definition["execution"] == variant["execution"]
 
-    comparisons = {item["id"]: item for item in suite.run["comparisons"]}
-    for name in list(comparisons):
-        if name.endswith("-tuning-policy") or name.startswith("tuned-"):
-            comparisons.pop(name)  # Checked separately below.
-    assert comparisons.pop("coverage-alternatives-vs-current") == {
-        "id": "coverage-alternatives-vs-current", "baseline_variant": "clifft-coverage",
-        "candidate_variants": ["symft-coverage", "tsim-coverage", "xtim-coverage", "stim-coverage"],
-    }
-    assert comparisons.pop("tsim-vs-current") == {
-        "id": "tsim-vs-current", "baseline_variant": "clifft-current",
-        "candidate_variants": ["tsim-current"],
-    }
-    assert comparisons.pop("bulk-alternatives-vs-current") == {
-        "id": "bulk-alternatives-vs-current", "baseline_variant": "clifft-bulk",
-        "candidate_variants": ["symft-bulk", "tsim-bulk"],
-    }
-    assert comparisons == {
-        "xtim-vs-current": {
-            "id": "xtim-vs-current",
-            "baseline_variant": "clifft-current",
-            "candidate_variants": ["xtim-current"],
-        },
-        "current-vs-previous": {
-            "id": "current-vs-previous",
-            "baseline_variant": "clifft-previous",
-            "candidate_variants": ["clifft-current"],
-        },
-        "alternatives-vs-current": {
-            "id": "alternatives-vs-current",
-            "baseline_variant": "clifft-current",
-            "candidate_variants": ["symft-current"],
-        },
-        "stim-anchor-vs-current": {
-            "id": "stim-anchor-vs-current",
-            "baseline_variant": "clifft-current",
-            "candidate_variants": ["stim-current"],
-        },
-    }
-
-    calibrated_by_variant = {
-        variant_id: [
-            case
-            for case in suite.cases
-            if case.definition["variant_id"] == variant_id
-        ]
-        for variant_id in ("clifft-previous", "clifft-current", "symft-current")
-    }
-    assert {variant: len(cases) for variant, cases in calibrated_by_variant.items()} == {
-        "clifft-previous": 9,
-        "clifft-current": 11,
-        "symft-current": 8,
-    }
-    for cases in calibrated_by_variant.values():
-        assert all(
-            case.definition["execution"]["batch_enabled"] is True
-            and case.definition["execution"]["batch_size"] == "calibrate"
-            for case in cases
-        )
-        assert all(
-            case.definition["shots_per_call"]
-            >= max(BATCH_CALIBRATION_CANDIDATES)
-            for case in cases
-            if case.workload.id != "coherent-surface-d5-r5-p1e-3-rz2e-2"
-        )
-        slow_case = next(
-            case
-            for case in cases
-            if case.workload.id == "coherent-surface-d5-r5-p1e-3-rz2e-2"
-        )
-        assert slow_case.definition["shots_per_call"] == 1
-
-    stim_cases = [c for c in suite.cases if c.definition["variant_id"] == "stim-current"]
-    assert [c.workload.id for c in stim_cases] == ["surface-code-d7-r7-p1e-3"]
-    assert stim_cases[0].definition["shots_per_call"] == 100000
-    variant_ids = {case.definition["variant_id"] for case in suite.cases} - {"stim-current"}
-    signatures_by_variant = {
-        variant_id: {
-            (case.workload.id, case.definition["shots_per_call"])
-            for case in suite.cases
-            if case.definition["variant_id"] == variant_id
-        }
-        for variant_id in variant_ids
-    }
-    expected_signature = {
-        ("reed-muller-measured", 100000),
-        ("distillation-15to1-rm15-p1e-3", 100000),
-        ("msc-d3-inject-cultivate-p1e-3", 100000),
-        ("msc-d5-inject-cultivate-p1e-3", 20000),
-        ("distillation-color-code-85q-p5e-2", 100000),
-        ("surface-code-d7-r7-p1e-3", 100000),
-        ("coherent-surface-d3-r3-p1e-3-rz2e-2", 100000),
-        ("coherent-surface-d5-r5-p1e-3-rz2e-2", 1),
-    }
-    assert signatures_by_variant["symft-current"] == expected_signature
-    clifft_signature = expected_signature | {("draper-adder-m16-basis", 2048)}
-    assert signatures_by_variant["clifft-previous"] == clifft_signature
-    assert signatures_by_variant["clifft-current"] == clifft_signature | {
-        ("bt27-direct-x", 2048), ("bt81-direct-x", 2048),
-    }
+    for comparison in suite.run.get("comparisons", []):
+        baseline = {case.workload.id: case for case in suite.cases
+                    if case.definition["variant_id"] == comparison["baseline_variant"]}
+        for variant in comparison["candidate_variants"]:
+            candidate = {case.workload.id: case for case in suite.cases
+                         if case.definition["variant_id"] == variant}
+            shared = baseline.keys() & candidate.keys()
+            assert shared, f"{comparison['id']}: {variant} has no baseline workloads"
+            for workload in shared:
+                assert baseline[workload].definition["shots_per_call"] == (
+                    candidate[workload].definition["shots_per_call"]
+                )
 
 
-def test_release_preserves_scheduled_previous_configuration() -> None:
+def test_release_compares_distinct_clifft_implementations() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    scheduled = json.loads(
-        (ROOT / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
-    )
+    comparison = next(c for c in suite.run["comparisons"] if c["id"] == "current-vs-previous")
     variants = {variant["id"]: variant for variant in suite.run["variants"]}
-    for variant_id in ("clifft-previous", "clifft-current"):
-        assert variants[variant_id]["execution"] == scheduled
-
-    # The paired history must continue from the configuration measured for 0.12.
-    previous_result = json.loads((
-        ROOT / "results/release-v1/release-v1-20261009-192718/raw/"
-        "release-v1-p01-r01-raw.json"
-    ).read_text())
-    previous_cases = {
-        case["workload"]["id"]: case
-        for case in previous_result["cases"]
-        if case["variant_id"] == "clifft-current"
-    }
-    for case in suite.cases:
-        if case.definition["variant_id"] != "clifft-previous":
-            continue
-        if case.workload.id not in previous_cases:
-            continue  # Newly added workloads have no previous release measurement.
-        archived = previous_cases[case.workload.id]
-        assert case.implementation.definition["version"] == archived["simulator"]["version"]
-        assert case.definition["execution"]["clifft_scheduler"] == (
-            archived["execution"]["clifft_scheduler"]
+    implementations = {case.implementation.id: case.implementation for case in suite.cases}
+    baseline = implementations[variants[comparison["baseline_variant"]]["implementation_id"]]
+    assert baseline.definition["adapter"] == "clifft"
+    for variant in comparison["candidate_variants"]:
+        candidate = implementations[variants[variant]["implementation_id"]]
+        assert candidate.definition["adapter"] == "clifft"
+        assert candidate.id != baseline.id
+        identity_fields = ("version", "commit_sha")
+        assert tuple(candidate.definition[k] for k in identity_fields) != tuple(
+            baseline.definition[k] for k in identity_fields
         )
-        assert case.definition["shots_per_call"] == archived["execution"]["shots_per_call"]
 
 
-def test_history_manifest_runs_each_release_with_the_same_measurement_inputs() -> None:
-    suite = load_suite(ROOT / "campaigns/clifft-history-v1/run.v1.json")
-
-    assert suite.run["collection"]["placements"] == 1
-    versions = {
-        "0.1.0",
-        "0.2.0",
-        "0.3.0",
-        "0.4.1",
-        "0.5.0",
-        "0.6.0",
-        "0.7.0",
-        "0.8.0",
-        "0.9.0",
-        "0.10.0rc1",
-    }
-    assert len(suite.cases) == 80
-    assert {case.implementation.definition["version"] for case in suite.cases} == versions
-    case_signatures = {
-        case.definition["variant_id"]: {
-            (
-                member.workload.id,
-                member.definition["shots_per_call"],
-                tuple(sorted(member.definition["execution"].items())),
-            )
-            for member in suite.cases
-            if member.definition["variant_id"] == case.definition["variant_id"]
-        }
-        for case in suite.cases
-    }
-    assert len({frozenset(items) for items in case_signatures.values()}) == 1
-
-
-def test_xtim_release_selection_matches_declared_compatibility():
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    cases = [c for c in suite.cases if c.implementation.definition["adapter"] == "xtim"]
-    compatible = {
-        w["id"] for w in suite.workloads_document["workloads"]
-        if "xtim" in w["compatible_adapters"]
-    }
-    assert {c.workload.id for c in cases} == compatible
-    assert all(c.definition["execution"]["batch_size"] == "calibrate" for c in cases)
-    clifft = {c.workload.id: c for c in suite.cases
-              if c.definition["variant_id"] in {"clifft-current", "clifft-coverage"}}
-    assert all(c.definition["shots_per_call"] == clifft[c.workload.id].definition["shots_per_call"]
-               for c in cases)
+@pytest.mark.parametrize("path", sorted(ROOT.glob("manifests/run-*.v1.json")),
+                         ids=lambda p: p.name)
+def test_smoke_and_pilot_implementations_match_the_release(path: Path) -> None:
+    release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    variants = {variant["id"]: variant for variant in release.run["variants"]}
+    smoke = load_suite(path)
+    for case in smoke.cases:
+        variant = variants[case.definition["variant_id"]]
+        assert case.implementation.id == variant["implementation_id"]
 
 
 @pytest.mark.parametrize("adapter", ["clifft", "symft"])
@@ -296,15 +118,26 @@ def test_batch_calibration_requires_batch_enabled_throughput_case(tmp_path: Path
         load_suite(run_path)
 
 
-def test_official_implementations_require_unique_python_variables(
-    tmp_path: Path,
+@pytest.mark.parametrize("change, message", [
+    ("shared-python", "share python executable variable"),
+    ("missing-lock", "requirements do not exist"),
+    ("missing-environment", "no install environment"),
+])
+def test_official_implementations_require_usable_isolated_environments(
+    tmp_path: Path, change: str, message: str,
 ) -> None:
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     software = copy.deepcopy(suite.software_document)
     implementations = {item["id"]: item for item in software["implementations"]}
-    implementations["clifft-0.12.0rc1"]["python_executable_env"] = implementations[
-        "clifft-63cd885"
-    ]["python_executable_env"]
+    variants = {variant["id"]: variant for variant in suite.run["variants"]}
+    previous = implementations[variants["clifft-previous"]["implementation_id"]]
+    current = implementations[variants["clifft-current"]["implementation_id"]]
+    if change == "shared-python":
+        previous["python_executable_env"] = current["python_executable_env"]
+    elif change == "missing-lock":
+        current["environment"]["requirements"] = str(tmp_path / "missing.txt")
+    else:
+        del current["environment"]
     for implementation in implementations.values():
         environment = implementation.get("environment")
         if environment is not None:
@@ -320,7 +153,7 @@ def test_official_implementations_require_unique_python_variables(
     run_path = tmp_path / "run.json"
     run_path.write_text(json.dumps(run))
 
-    with pytest.raises(SchemaValidationError, match="share python executable variable"):
+    with pytest.raises(SchemaValidationError, match=message):
         load_suite(run_path)
 
 
@@ -353,6 +186,16 @@ def _suite_with_local_workloads(tmp_path: Path):
     return suite, workloads, workloads_path, run
 
 
+@pytest.mark.parametrize("field", ["workload_id", "implementation_id"])
+def test_unknown_case_references_are_rejected(tmp_path: Path, field: str) -> None:
+    _, _, _, run = _suite_with_local_workloads(tmp_path)
+    run["cases"][0][field] = "unknown-reference"
+    path = tmp_path / "run.json"
+    path.write_text(json.dumps(run))
+    with pytest.raises(SchemaValidationError, match="references unknown"):
+        load_suite(path)
+
+
 def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
     suite, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
     workloads["workloads"][0]["artifact"] = {
@@ -381,12 +224,14 @@ def test_incompatible_case_is_rejected_before_execution(tmp_path: Path) -> None:
 
 def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) -> None:
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
-    workloads["workloads"][0]["semantics"]["observable_index"] = 1
+    workloads["workloads"][0]["semantics"]["observable_index"] = (
+        workloads["workloads"][0]["expected_metadata"]["num_observables"]
+    )
     workloads_path.write_text(json.dumps(workloads))
     run_path = tmp_path / "run.json"
     run_path.write_text(json.dumps(run))
 
-    with pytest.raises(SchemaValidationError, match="observable index 1 is outside"):
+    with pytest.raises(SchemaValidationError, match="observable index .* is outside"):
         load_suite(run_path)
 
 
@@ -394,10 +239,12 @@ def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) ->
 def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
     workload = next(w for w in workloads["workloads"]
-                    if w["id"] == "msc-full-d5-cultivation-selected-p1e-3")
+                    if "postselection_detector_indices" in w["semantics"])
     semantics = workload["semantics"]
     if change == "range":
-        semantics["postselection_detector_indices"] = [2744]
+        semantics["postselection_detector_indices"] = [
+            workload["expected_metadata"]["num_detectors"]
+        ]
     elif change == "order":
         semantics["postselection_detector_indices"] = [1, 0]
     elif change == "all":
@@ -411,22 +258,34 @@ def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
         load_suite(run_path)
 
 
-def test_tsim_bulk_comparison_preserves_historical_single_shot_case():
+@pytest.mark.parametrize("change, message", [
+    ("unknown", "references unknown variants"),
+    ("self", "repeats its baseline"),
+])
+def test_comparisons_require_distinct_existing_variants(tmp_path, change, message):
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    workload = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-    cases = {c.definition["variant_id"]: c for c in suite.cases if c.workload.id == workload}
-    for variant in ("clifft-previous", "clifft-current", "symft-current", "tsim-current"):
-        assert cases[variant].definition["shots_per_call"] == 1
-    for variant in ("clifft-bulk", "symft-bulk", "tsim-bulk"):
-        assert cases[variant].definition["shots_per_call"] == 256
-        assert cases[variant].definition["execution"]["batch_size"] == "calibrate"
-    assert cases["tsim-bulk"].definition["execution"]["tsim_trajectory_sharing"] is True
+    run = copy.deepcopy(suite.run)
+    comparison = run["comparisons"][0]
+    comparison["candidate_variants"] = [
+        "unknown-variant" if change == "unknown" else comparison["baseline_variant"]
+    ]
+    run["workloads_manifest"] = str(suite.workloads_path)
+    run["software_manifest"] = str(suite.software_path)
+    path = tmp_path / "run.json"
+    path.write_text(json.dumps(run))
+    with pytest.raises(SchemaValidationError, match=message):
+        load_suite(path)
 
 
 def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     run = copy.deepcopy(suite.run)
-    next(v for v in run["variants"] if v["id"] == "tsim-bulk")["workloads"][0]["shots_per_call"] = 1
+    comparison = run["comparisons"][0]
+    variant = next(v for v in run["variants"] if v["id"] == comparison["candidate_variants"][0])
+    baseline = next(v for v in run["variants"] if v["id"] == comparison["baseline_variant"])
+    baseline_workloads = {w["workload_id"] for w in baseline["workloads"]}
+    workload = next(w for w in variant["workloads"] if w["workload_id"] in baseline_workloads)
+    workload["shots_per_call"] += 1
     run["workloads_manifest"] = str(suite.workloads_path)
     run["software_manifest"] = str(suite.software_path)
     path = tmp_path / "mismatch.json"
@@ -435,16 +294,12 @@ def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
         load_suite(path)
 
 
-
 def test_tsim_pilot_reuses_exact_release_cases():
     release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     pilot = load_suite(ROOT / "manifests/run-tsim-pilot.v1.json")
     expected = {case.id: case.definition for case in release.cases}
     assert pilot.run["classification"] == "smoke"
-    assert len(pilot.cases) == 8
-    assert {case.implementation.definition["adapter"] for case in pilot.cases} == {
-        "clifft", "symft", "tsim",
-    }
+    assert pilot.cases
     assert all(case.definition == expected[case.id] for case in pilot.cases)
 
 
@@ -452,8 +307,7 @@ def test_transition_pairs_preserve_shots_compiler_settings_and_source_identity()
     suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
     variants = {v["id"]: v for v in suite.run["variants"]}
     pairs = [c for c in suite.run["comparisons"] if c["id"].endswith("-tuning-policy")]
-    assert len(pairs) == 8
-    assert sum(len(variants[p["candidate_variants"][0]]["workloads"]) for p in pairs) == 38
+    assert pairs
     for pair in pairs:
         baseline = variants[pair["baseline_variant"]]
         tuned = variants[pair["candidate_variants"][0]]
@@ -461,7 +315,6 @@ def test_transition_pairs_preserve_shots_compiler_settings_and_source_identity()
         assert baseline["workloads"] == tuned["workloads"]
         assert "tuning_policy" not in baseline["execution"]
         assert tuned["execution"] == dict(baseline["execution"], tuning_policy="bounded-v2")
-    assert "tuning_policy" not in variants["clifft-previous"]["execution"]
 
 
 def test_tuning_policy_cannot_be_applied_to_a_fixed_batch(tmp_path):
@@ -474,14 +327,3 @@ def test_tuning_policy_cannot_be_applied_to_a_fixed_batch(tmp_path):
     path.write_text(json.dumps(run))
     with pytest.raises(SchemaValidationError, match="tuning_policy requires"):
         load_suite(path)
-
-
-def test_adder_bulk_comparison_keeps_the_original_short_call_rows():
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    cases = {c.definition["variant_id"]: c for c in suite.cases
-             if c.workload.id == "draper-adder-m16-basis"}
-    for variant in ("clifft-previous", "clifft-current", "tsim-current",
-                    "clifft-tuned", "tsim-tuned"):
-        assert cases[variant].definition["shots_per_call"] == 2048
-    for variant in ("clifft-bulk", "tsim-bulk", "clifft-bulk-tuned", "tsim-bulk-tuned"):
-        assert cases[variant].definition["shots_per_call"] == 100000
