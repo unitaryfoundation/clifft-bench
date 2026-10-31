@@ -106,6 +106,8 @@ provide a fixed reference for reproducing or investigating earlier measurements.
 Use that revision's [reporting instructions](https://github.com/unitaryfoundation/clifft-bench/blob/da88d59f7976f5d3c2c071190b80d539eacb5fca/reporting/README.md)
 with its evidence. Active code need not retain compatibility with those formats
 or old simulator APIs, and archived results need not be migrated.
+See the archived [scalar/auto-packing caveat](https://github.com/unitaryfoundation/clifft-bench/blob/da88d59f7976f5d3c2c071190b80d539eacb5fca/docs/benchmark-contract.md#compatibility-with-newer-clifft-apis)
+when interpreting older QV and adder results.
 
 Historical plots may describe performance on an evolving representative suite.
 Label workload, hardware, and methodology changes rather than imply a precise

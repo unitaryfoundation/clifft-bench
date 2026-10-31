@@ -200,8 +200,12 @@ def test_bounded_calibration_prepares_a_fixed_usable_sampler(adapter_name, tmp_p
     from clifft_bench.calibration import CALIBRATION_POLICY
 
     path = tmp_path / "calibration.stim"
-    # A Clifford circuit exercises every maintained adapter, including Stim.
-    path.write_text("H 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    # Deterministic noiseless outputs satisfy every adapter's contract.
+    # Noise flips both measurements, keeping the detector parity zero.
+    path.write_text(
+        "R 0 1\nX_ERROR(0.25) 0\nCX 0 1\nM 0 1\n"
+        "DETECTOR rec[-1] rec[-2]\nOBSERVABLE_INCLUDE(0) rec[-2]\n"
+    )
     monkeypatch.setattr(worker, "BATCH_CALIBRATION_SECONDS", 0.01)
     prepared = worker.calibrate_batch_size(
         load_adapter(adapter_name), artifact_path=path,
@@ -220,4 +224,4 @@ def test_bounded_calibration_prepares_a_fixed_usable_sampler(adapter_name, tmp_p
     worker.begin_sample(prepared, 8)
     counts = prepared.sample(16384, 8)
     assert counts.attempted_shots == counts.accepted_shots == 16384
-    assert counts.logical_errors / 16384 == pytest.approx(0.5, abs=0.025)
+    assert counts.logical_errors / 16384 == pytest.approx(0.25, abs=0.025)
