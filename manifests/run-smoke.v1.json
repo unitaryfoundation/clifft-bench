@@ -229,40 +229,6 @@
         "batch_size": "calibrate",
         "sample_chunk_shots": 2048
       }
-    },
-    {
-      "id": "reed-muller-measured-smoke-clifft-tuned",
-      "variant_id": "clifft-tuned",
-      "workload_id": "reed-muller-measured",
-      "implementation_id": "clifft-63cd885",
-      "shots_per_call": 2048,
-      "execution": {
-        "mode": "throughput",
-        "batch_enabled": true,
-        "batch_size": "calibrate",
-        "sample_chunk_shots": 0,
-        "clifft_scheduler": {
-          "beam_width": 8,
-          "search_budget": 16.0,
-          "noise_transparent": true,
-          "sink_neutral_rotations": true
-        },
-        "tuning_policy": "bounded-v2"
-      }
-    },
-    {
-      "id": "reed-muller-measured-smoke-symft-tuned",
-      "variant_id": "symft-tuned",
-      "workload_id": "reed-muller-measured",
-      "implementation_id": "symft-0.1.1-c89b985",
-      "shots_per_call": 2048,
-      "execution": {
-        "mode": "throughput",
-        "batch_enabled": true,
-        "batch_size": "calibrate",
-        "sample_chunk_shots": 2048,
-        "tuning_policy": "bounded-v2"
-      }
     }
   ]
 }

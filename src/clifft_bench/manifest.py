@@ -183,8 +183,6 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"workload {workload_id!r}"
             )
         execution = definition["execution"]
-        if "tuning_policy" in execution and execution["batch_size"] != "calibrate":
-            raise SchemaValidationError("tuning_policy requires batch_size=calibrate")
         if "tsim_trajectory_sharing" in execution and adapter != "tsim":
             raise SchemaValidationError("tsim_trajectory_sharing requires the tsim adapter")
         if "clifft_scheduler" in execution:

@@ -19,9 +19,7 @@ from typing import Any, Iterator, TextIO
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
 from clifft_bench.calibration import (
-    BOUNDED_POLICY,
-    LEGACY_POLICY,
-    NATIVE_TUNING_BUDGET_SECONDS,
+    CALIBRATION_POLICY,
     TUNING_BUDGET_SECONDS,
     calibration_candidates,
 )
@@ -37,6 +35,12 @@ SEED_MAX_EXCLUSIVE = 2**32
 
 class WorkerTimeout(TimeoutError):
     pass
+
+
+class CalibrationError(RuntimeError):
+    def __init__(self, message: str, record: dict[str, Any]) -> None:
+        super().__init__(message)
+        self.record = record
 
 
 _PROTOCOL_STREAM: TextIO | None = None
@@ -171,34 +175,14 @@ def calibrate_batch_size(
     seed: int,
     sampling_seed: int = 0,
 ) -> Any:
-    policy = execution.get("tuning_policy", LEGACY_POLICY)
-    adapter_name = getattr(adapter, "name", "")
-    # Validate before spending any setup time; historical calls retain their grid.
-    candidates = calibration_candidates(adapter_name, shots_per_call, policy)
+    candidates = calibration_candidates(adapter.name, shots_per_call)
     postselect = has_postselection(workload["semantics"])
     calibration_started = time.perf_counter()
-    native = {"status": "unsupported"}
-    if policy == BOUNDED_POLICY:
-        propose = getattr(adapter, "native_batch_choices", None)
-        if propose is not None:
-            started = time.perf_counter()
-            try:
-                native = propose(
-                    artifact_path=artifact_path, workload=workload, execution=execution,
-                    shots=shots_per_call,
-                    seed=_calibration_seed(seed, BATCH_CALIBRATION_REPETITIONS),
-                    budget_seconds=NATIVE_TUNING_BUDGET_SECONDS,
-                )
-                candidates = calibration_candidates(adapter_name, shots_per_call, policy, native)
-            except Exception as error:  # noqa: BLE001
-                native = {"status": "error",
-                          "error": {"type": type(error).__name__, "message": str(error)}}
-            native["duration_seconds"] = time.perf_counter() - started
     results = []
     successful: list[tuple[float, int]] = []
 
     for candidate in candidates:
-        if (policy == BOUNDED_POLICY and results
+        if (results
                 and time.perf_counter() - calibration_started >= TUNING_BUDGET_SECONDS):
             results.append({
                 "batch_size": candidate, "status": "budget-skipped",
@@ -209,6 +193,7 @@ def calibrate_batch_size(
         candidate_started = time.perf_counter()
         candidate_execution = _candidate_execution(execution, candidate)
         prepared = None
+        samples = []
         try:
             prepared = adapter.prepare(
                 artifact_path=artifact_path,
@@ -226,7 +211,6 @@ def calibrate_batch_size(
             if warm_errors:
                 raise RuntimeError("invalid warmup counts: " + "; ".join(warm_errors))
 
-            samples = []
             for repetition in range(BATCH_CALIBRATION_REPETITIONS):
                 sample = aggregate_sample(
                     prepared,
@@ -269,6 +253,8 @@ def calibrate_batch_size(
                 }
             )
             successful.append((median_rate, candidate))
+        except WorkerTimeout:
+            raise
         except Exception as error:  # noqa: BLE001
             results.append(
                 {
@@ -277,7 +263,7 @@ def calibrate_batch_size(
                     "effective_batch_size": None,
                     "median_attempted_shots_per_second": None,
                     "duration_seconds": time.perf_counter() - candidate_started,
-                    "samples": [],
+                    "samples": samples,
                     "error": {"type": type(error).__name__, "message": str(error)},
                 }
             )
@@ -286,23 +272,15 @@ def calibrate_batch_size(
             # before constructing the next trial or the selected configuration.
             prepared = None
 
-    if not successful:
-        raise RuntimeError("batch calibration failed for every candidate")
-    selected_batch_size = max(successful, key=lambda item: (item[0], -item[1]))[1]
-    search_seconds = time.perf_counter() - calibration_started
-    prepared = adapter.prepare(
-        artifact_path=artifact_path,
-        workload=workload,
-        execution=_candidate_execution(execution, selected_batch_size),
-        seed=sampling_seed,
+    selected_batch_size = (
+        max(successful, key=lambda item: (item[0], -item[1]))[1] if successful else None
     )
-    prepared.runtime_metadata["batch_calibration"] = {
-        "policy": policy,
-        **({"budget_seconds": TUNING_BUDGET_SECONDS,
-            "search_seconds": search_seconds,
-            "budget_scope": "between-candidates",
-            "native_budget_seconds": NATIVE_TUNING_BUDGET_SECONDS,
-            "native": native} if policy == BOUNDED_POLICY else {}),
+    search_seconds = time.perf_counter() - calibration_started
+    record = {
+        "policy": CALIBRATION_POLICY,
+        "budget_seconds": TUNING_BUDGET_SECONDS,
+        "search_seconds": search_seconds,
+        "budget_scope": "between-candidates",
         "candidates": candidates,
         "probe_seconds": BATCH_CALIBRATION_SECONDS,
         "repetitions": BATCH_CALIBRATION_REPETITIONS,
@@ -312,6 +290,22 @@ def calibrate_batch_size(
         "duration_seconds": time.perf_counter() - calibration_started,
         "results": results,
     }
+    if selected_batch_size is None:
+        raise CalibrationError("batch calibration failed for every candidate", record)
+    try:
+        prepared = adapter.prepare(
+            artifact_path=artifact_path,
+            workload=workload,
+            execution=_candidate_execution(execution, selected_batch_size),
+            seed=sampling_seed,
+        )
+    except WorkerTimeout:
+        raise
+    except Exception as error:
+        record["duration_seconds"] = time.perf_counter() - calibration_started
+        raise CalibrationError(f"selected batch preparation failed: {error}", record) from error
+    record["duration_seconds"] = time.perf_counter() - calibration_started
+    prepared.runtime_metadata["batch_calibration"] = record
     return prepared
 
 
@@ -444,6 +438,8 @@ def main() -> int:
                     "type": type(error).__name__,
                     "message": str(error),
                     "traceback": traceback.format_exc(),
+                    **({"batch_calibration": error.record}
+                       if isinstance(error, CalibrationError) else {}),
                 },
             }
         )

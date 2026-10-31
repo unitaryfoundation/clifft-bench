@@ -173,13 +173,8 @@ def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect
                  "OBSERVABLE_INCLUDE(0) rec[-1]\n"),
         postselect=postselect,
     )
-    import clifft
-
-    # Check the native binding as well as Python mocks: nanobind may report
-    # (*args, **kwargs) to inspect.signature despite accepting named arguments.
-    if "batch_size:" in (clifft.sample_survivors.__doc__ or ""):
-        assert prepared._batch_size == 1
-        assert prepared.runtime_metadata["batch_control"] == "explicit"
+    assert prepared._batch_size == 1
+    assert prepared.runtime_metadata["batch_control"] == "explicit"
     shots = 16384
     counts = prepared.sample(shots, 901)
     # With detector 0, the two independent depolarizing faults give joint
@@ -197,33 +192,36 @@ def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect
             assert prepared.runtime_metadata["optimized_t_gates"] == 0
 
 
-def test_clifft_native_tuning_proposals_preserve_one_core_and_freeze_batch(tmp_path):
-    clifft = pytest.importorskip("clifft")
-    if "tuning_budget_seconds" not in (clifft.sample_survivors.__doc__ or ""):
-        pytest.skip("this Clifft release predates native batch tuning")
-    from clifft_bench.adapters.clifft import ClifftAdapter
 
-    path = tmp_path / "native-tuning.stim"
-    path.write_text("H 0\nT 0\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
-    workload = {"semantics": {"reference_convention": "raw-record-parity",
-                              "observable_index": 0, "postselect_all_detectors": False}}
-    execution = {"batch_enabled": True, "batch_size": 32, "sample_chunk_shots": 0}
-    adapter = ClifftAdapter()
-    proposal = adapter.native_batch_choices(
-        artifact_path=path, workload=workload, execution=execution,
-        shots=1024, seed=901, budget_seconds=0.01,
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim", "tsim"])
+def test_bounded_calibration_prepares_a_fixed_usable_sampler(adapter_name, tmp_path, monkeypatch):
+    pytest.importorskip(adapter_name)
+    from clifft_bench import worker
+    from clifft_bench.calibration import CALIBRATION_POLICY
+
+    path = tmp_path / "calibration.stim"
+    # Deterministic noiseless outputs satisfy every adapter's contract.
+    # Noise flips both measurements, keeping the detector parity zero.
+    path.write_text(
+        "R 0 1\nX_ERROR(0.25) 0\nCX 0 1\nM 0 1\n"
+        "DETECTOR rec[-1] rec[-2]\nOBSERVABLE_INCLUDE(0) rec[-2]\n"
     )
-    assert proposal["status"] == "success"
-    report = proposal["report"]
-    assert report["shot_workers"] == report["intra_shot_workers"] == 1
-    assert report["trials"] and report["elapsed_seconds"] > 0
-    selected = report["batch_size"]
-    prepared = adapter.prepare(
-        artifact_path=path, workload=workload,
-        execution=dict(execution, batch_size=selected, batch_enabled=selected > 1),
+    monkeypatch.setattr(worker, "BATCH_CALIBRATION_SECONDS", 0.01)
+    prepared = worker.calibrate_batch_size(
+        load_adapter(adapter_name), artifact_path=path,
+        workload={"semantics": {"reference_convention": "raw-record-parity",
+                                "observable_index": 0, "postselect_all_detectors": False}},
+        execution={"batch_enabled": True, "batch_size": "calibrate", "sample_chunk_shots": 0},
+        shots_per_call=32, seed=10, sampling_seed=7,
     )
-    assert prepared._batch_size == selected
-    assert type(prepared._batch_size) is int
-    counts = prepared.sample(16384, 902)
-    assert counts.accepted_shots == counts.attempted_shots == 16384
-    assert counts.logical_errors / 16384 == pytest.approx((1 - 2**-0.5)/2, abs=0.02)
+    record = prepared.runtime_metadata["batch_calibration"]
+    selected = record["selected_batch_size"]
+    assert record["policy"] == CALIBRATION_POLICY
+    assert type(selected) is int
+    assert prepared.runtime_metadata["threads"] == 1
+    assert prepared.runtime_metadata["effective_batch_size"] == selected
+    assert any(r["batch_size"] == selected and r["status"] == "success" for r in record["results"])
+    worker.begin_sample(prepared, 8)
+    counts = prepared.sample(16384, 8)
+    assert counts.attempted_shots == counts.accepted_shots == 16384
+    assert counts.logical_errors / 16384 == pytest.approx(0.25, abs=0.025)

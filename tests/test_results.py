@@ -9,6 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from clifft_bench.calibration import CALIBRATION_POLICY
 from clifft_bench.results import _comparison_rows, finalize_execution
 from clifft_bench.schema import repository_root, validate_path
 
@@ -95,7 +96,7 @@ def _case(template: dict, *, variant: str, rate: float) -> dict:
     return case
 
 
-def _result(tmp_path: Path) -> Path:
+def _result(tmp_path: Path, *, calibrated: bool = False) -> Path:
     document = copy.deepcopy(validate_path(repository_root() / "examples/result.v1.json"))
     document["run"]["id"] = str(uuid.uuid4())
     document["run"]["profile_id"] = "test-campaign"
@@ -116,6 +117,8 @@ def _result(tmp_path: Path) -> Path:
         _case(template, variant="baseline", rate=100.0),
         _case(template, variant="candidate", rate=125.0),
     ]
+    if calibrated:
+        document["cases"][1]["execution"]["tuning_policy"] = CALIBRATION_POLICY
     path = tmp_path / "release-p01-r01-raw.json"
     path.write_text(json.dumps(document))
     return path
@@ -295,7 +298,7 @@ def test_finalize_rejects_smoke_manifest(tmp_path: Path) -> None:
 
 
 def test_finalize_requires_complete_calibration_evidence(tmp_path: Path) -> None:
-    raw_path = _result(tmp_path)
+    raw_path = _result(tmp_path, calibrated=True)
 
     with pytest.raises(ValueError, match="has no batch_calibration metadata"):
         finalize_execution(
@@ -312,14 +315,8 @@ def test_finalize_requires_complete_calibration_evidence(tmp_path: Path) -> None
     runtime_metadata = candidate["setup"]["runtime_metadata"]
     runtime_metadata["batch_enabled"] = True
     runtime_metadata["effective_batch_size"] = 32
-    runtime_metadata["batch_calibration"] = {
-        "candidates": [1, 32],
-        "selected_batch_size": 32,
-        "results": [
-            {"batch_size": 1, "status": "success"},
-            {"batch_size": 32, "status": "success"},
-        ],
-    }
+    runtime_metadata["batch_calibration"] = _bounded_calibration()
+    runtime_metadata["batch_calibration"]["selected_batch_size"] = 32
     raw_path.write_text(json.dumps(document))
 
     finalize_execution(
@@ -393,12 +390,13 @@ def test_tsim_finalizer_checks_runtime_identity_and_full_warmup(tmp_path, field,
 
 @pytest.mark.parametrize("error_type", ["WorkerTimeout", "MemoryError", "ValueError"])
 def test_finalize_preserves_failed_setup_without_calibration(tmp_path, error_type):
-    raw_path = _result(tmp_path)
+    raw_path = _result(tmp_path, calibrated=True)
     raw = json.loads(raw_path.read_text())
     candidate = raw["cases"][1]
     candidate.update(status="error", setup=None, warmup=None, correctness=None,
                      samples=[], summary=None,
-                     error={"phase": "setup", "type": error_type, "message": "setup failed"})
+                     error={"phase": "setup", "type": error_type, "message": "setup failed",
+                            "batch_calibration": {"selected_batch_size": None, "results": []}})
     candidate["execution"].update(batch_size="calibrate")
     candidate["execution"].pop("batch_size_effective")
     raw_path.write_text(json.dumps(raw))
@@ -422,7 +420,7 @@ def test_finalize_preserves_failed_setup_without_calibration(tmp_path, error_typ
     ("setup", True), ("warmup", False), ("correctness", True), ("sampling", True),
 ])
 def test_finalize_still_requires_calibration_after_setup(tmp_path, phase, has_setup):
-    raw_path = _result(tmp_path)
+    raw_path = _result(tmp_path, calibrated=True)
     raw = json.loads(raw_path.read_text())
     candidate = raw["cases"][1]
     candidate.update(status="error", summary=None,
@@ -474,38 +472,29 @@ def test_finalize_exports_batch_parameter_applicability(tmp_path, applicable):
 
 def _bounded_calibration():
     return {
-        "policy": "bounded-v2", "budget_seconds": 60.0,
-        "budget_scope": "between-candidates", "native_budget_seconds": 0.25,
+        "policy": CALIBRATION_POLICY, "budget_seconds": 60.0,
+        "budget_scope": "between-candidates",
         "probe_seconds": 1.0, "repetitions": 3, "search_seconds": 10.0,
         "selection_statistic": "median_attempted_shots_per_second",
         "tie_break": "smaller_batch_size", "selected_batch_size": 64,
-        "duration_seconds": 11.0, "candidates": [64, 32, 1],
-        "native": {"status": "success", "report": {
-            "batch_size": 64, "baseline_batch_size": 32,
-            "shot_workers": 1, "intra_shot_workers": 1, "elapsed_seconds": 0.25,
-            "sufficient_measurements": True, "stop_reason": "completed", "trials": [],
-        }},
+        "duration_seconds": 11.0, "candidates": [1, 32, 64],
         "results": [
             {"batch_size": batch, "status": "success", "effective_batch_size": batch,
              "median_attempted_shots_per_second": rate, "duration_seconds": 3.0,
              "error": None,
              "samples": [{"throughput_attempted_shots_per_second": rate,
                           "peak_rss_bytes": 1024} for _ in range(3)]}
-            for batch, rate in ((64, 100.0), (32, 50.0), (1, 10.0))
+            for batch, rate in ((1, 10.0), (32, 50.0), (64, 100.0))
         ],
     }
 
 
-def test_finalize_bounded_native_choice_and_export_policy_columns(tmp_path):
+def test_finalize_bounded_choice_and_export_policy_columns(tmp_path):
     suite = _suite(calibrated_candidate=True)
-    suite.cases[1].definition["execution"]["tuning_policy"] = "bounded-v2"
-    suite.cases[1].implementation.definition["adapter"] = "clifft"
-    raw_path = _result(tmp_path)
+    raw_path = _result(tmp_path, calibrated=True)
     raw = json.loads(raw_path.read_text())
     candidate = raw["cases"][1]
-    candidate["simulator"]["adapter"] = "clifft"
-    candidate["execution"].update(tuning_policy="bounded-v2", batch_size=64,
-                                  batch_size_effective=64)
+    candidate["execution"].update(batch_size=64, batch_size_effective=64)
     candidate["setup"]["runtime_metadata"]["batch_calibration"] = _bounded_calibration()
     raw_path.write_text(json.dumps(raw))
     output = tmp_path / "bounded-result"
@@ -514,54 +503,43 @@ def test_finalize_bounded_native_choice_and_export_policy_columns(tmp_path):
     )
     with (output / "cases.csv").open() as stream:
         rows = list(csv.DictReader(stream))
-    assert rows[1]["tuning_policy"] == "bounded-v2"
+    assert rows[1]["tuning_policy"] == CALIBRATION_POLICY
     with (output / "comparisons.csv").open() as stream:
         row = next(csv.DictReader(stream))
     assert row["baseline_tuning_policy"] == "fixed"
-    assert row["candidate_tuning_policy"] == "bounded-v2"
+    assert row["candidate_tuning_policy"] == CALIBRATION_POLICY
 
 
 @pytest.mark.parametrize("damage", [
-    "policy", "native-workers", "missing-candidate", "wrong-winner", "partial-probe",
-    "missing-memory", "wrong-budget", "premature-skip",
+    "policy", "missing-candidate", "failed-selection", "partial-probe",
+    "missing-memory", "wrong-budget", "skipped-probe", "nonfinite-rate", "invalid-duration",
 ])
-def test_bounded_finalizer_rejects_incomplete_or_mismatched_tuning(damage):
+def test_finalizer_rejects_incomplete_or_mismatched_tuning_evidence(damage):
     from clifft_bench.results import _validate_calibration_record
 
     expected = _expected_case("candidate", batch_size="calibrate")
-    expected.definition["execution"]["tuning_policy"] = "bounded-v2"
-    expected.implementation.definition["adapter"] = "clifft"
     calibration = _bounded_calibration()
     observed = {"status": "success", "execution": {
-        "batch_size": 64, "tuning_policy": "bounded-v2",
+        "batch_size": 64, "tuning_policy": CALIBRATION_POLICY,
     }, "setup": {"runtime_metadata": {"batch_calibration": calibration}}}
     if damage == "policy":
-        observed["execution"]["tuning_policy"] = "grid-v1"
-    elif damage == "native-workers":
-        calibration["native"]["report"]["shot_workers"] = 2
+        calibration["policy"] = "different-policy"
     elif damage == "missing-candidate":
         calibration["results"].pop()
-    elif damage == "wrong-winner":
-        calibration["selected_batch_size"] = observed["execution"]["batch_size"] = 32
+    elif damage == "failed-selection":
+        calibration["results"][-1].update(status="error", samples=[], error={"type": "MemoryError"})
     elif damage == "partial-probe":
         calibration["results"][0]["samples"].pop()
     elif damage == "missing-memory":
         calibration["results"][0]["samples"][0].pop("peak_rss_bytes")
     elif damage == "wrong-budget":
         calibration["budget_seconds"] = 3600
+    elif damage == "nonfinite-rate":
+        sample = calibration["results"][0]["samples"][0]
+        sample["throughput_attempted_shots_per_second"] = float("nan")
+    elif damage == "invalid-duration":
+        calibration["results"][0]["duration_seconds"] = -1
     else:
-        calibration["results"][-1].update(status="budget-skipped", samples=[])
+        calibration["results"][0]["status"] = "budget-skipped"
     with pytest.raises(ValueError):
         _validate_calibration_record(expected, observed)
-
-
-def test_legacy_tsim_calibration_does_not_require_new_small_candidates():
-    from clifft_bench.results import _validate_calibration_record
-
-    expected = _expected_case("candidate", batch_size="calibrate")
-    expected.implementation.definition["adapter"] = "tsim"
-    observed = {"status": "success", "execution": {"batch_size": 64},
-                "setup": {"runtime_metadata": {"batch_calibration": {
-                    "candidates": [64], "selected_batch_size": 64,
-                }}}}
-    _validate_calibration_record(expected, observed)

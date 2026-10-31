@@ -44,13 +44,11 @@ jobs:
           key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ steps.python.outputs.python-version }}-${{ steps.native-cache.outputs.fingerprint }}-${{ hashFiles('pyproject.toml', 'environments/*.txt', '.github/workflows/ci.yml') }}
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[test]'
-      - name: Smoke supported Clifft release interfaces
-        run: |
-          for version in 0.1.0 0.2.0 0.3.0 0.4.1 0.5.0 0.6.0 0.7.0 0.8.0 0.9.0 0.10.0rc1 0.11.0rc1 0.12.0rc1; do
-            python -m pip install --no-deps -r "environments/clifft-$version.txt"
-            python -m pip check
-            python -m pytest tests/test_reference_convention.py -k clifft
-          done
+      - name: Install the previous Clifft release
+        run: python -m pip install --no-deps -r environments/clifft-0.12.0rc1.txt
+      - run: python -m pip check
+      - name: Check previous Clifft correctness and bounded calibration
+        run: python -m pytest tests/test_reference_convention.py -k clifft
       - name: Install current pinned SymFT
         env:
           SYMFT_PY_NATIVE: "1"
@@ -118,7 +116,7 @@ jobs:
       - run: python -m pip install --no-deps -r environments/tsim-0.1.5-e9406ed.txt
       - run: python -m pip install -e '.[test]'
       - run: python -m pip check
-      - run: python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py tests/test_runner.py tests/test_code_switching.py tests/test_workload_coverage.py -k 'tsim or hamming'
+      - run: python -m pytest tests/test_tsim_adapter.py tests/test_reference_convention.py tests/test_distillation_15to1.py tests/test_runner.py tests/test_code_switching.py tests/test_workload_coverage.py -k 'tsim or hamming'
       - run: clifft-bench run --run-manifest manifests/run-tsim-smoke.v1.json --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output /tmp/tsim-smoke.json
       - run: clifft-bench validate /tmp/tsim-smoke.json
       - run: clifft-bench run --run-manifest manifests/run-coverage-smoke.v1.json --case 'tsim' --memory-limit-gib 12 --output /tmp/coverage-tsim.json
