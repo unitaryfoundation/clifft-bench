@@ -106,8 +106,10 @@ def test_symft_rejects_effective_batching_mismatch(
 def test_clifft_counts_the_selected_observable() -> None:
     class FakeClifft:
         @staticmethod
-        def sample_survivors(program, shots, *, seed, keep_records):
-            assert (program, shots, seed, keep_records) == ("program", 10, 7, False)
+        def sample_survivors(program, shots, *, seed, keep_records, threads, batch_size):
+            assert (program, shots, seed, keep_records, threads, batch_size) == (
+                "program", 10, 7, False, 1, 1,
+            )
             return SimpleNamespace(
                 total_shots=10,
                 passed_shots=10,
@@ -116,7 +118,7 @@ def test_clifft_counts_the_selected_observable() -> None:
                 observable_ones=[2, 7],
             )
 
-    counts = _PreparedClifft(FakeClifft, "program", 1, {}).sample(10, 7)
+    counts = _PreparedClifft(FakeClifft, "program", 1, {}, 1).sample(10, 7)
     assert counts.logical_errors == 7
 
 
@@ -137,7 +139,8 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
         peak_active_width=3,
     )
 
-    def sample_survivors(actual_program, shots, *, seed, keep_records, batch_size):
+    def sample_survivors(actual_program, shots, *, seed, keep_records, threads, batch_size):
+        assert threads == 1
         assert (actual_program, shots, seed, keep_records, batch_size) == (
             program,
             10,
@@ -155,14 +158,11 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
     manager = SimpleNamespace(run=lambda value: None)
     fake_clifft = SimpleNamespace(
         sample_survivors=sample_survivors,
-        set_num_threads=lambda threads: None,
-        get_num_threads=lambda: 1,
         parse=lambda text: text,
         trace=lambda circuit: hir,
         default_hir_pass_manager=lambda: manager,
         lower=lambda actual_hir, postselection_mask: program,
-        version=lambda: "0.10.0",
-        svm_backend=lambda: "test",
+        version=lambda: "test",
     )
     monkeypatch.setitem(sys.modules, "clifft", fake_clifft)
 
@@ -185,113 +185,6 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
     assert prepared.runtime_metadata["batch_enabled"] is True
     assert prepared.runtime_metadata["effective_batch_size"] == 256
     assert prepared.sample(10, 7).attempted_shots == 10
-
-
-def test_clifft_legacy_interface_shims_threads_passes_and_peak_width(
-    tmp_path: Path, monkeypatch
-) -> None:
-    artifact = tmp_path / "circuit.stim"
-    artifact.write_text("M 0\n")
-    hir = SimpleNamespace(
-        num_qubits=1,
-        num_measurements=1,
-        num_detectors=0,
-        num_observables=1,
-    )
-    program = SimpleNamespace(
-        num_qubits=1,
-        num_measurements=1,
-        num_detectors=0,
-        num_observables=1,
-        active_k_history=[1, 4, 2],
-    )
-    calls = []
-
-    def manager(label):
-        return SimpleNamespace(run=lambda value: calls.append((label, value)))
-
-    fake_clifft = SimpleNamespace(
-        set_num_threads=lambda threads: calls.append(("threads", threads)),
-        get_num_threads=lambda: 1,
-        parse=lambda text: text,
-        trace=lambda circuit: hir,
-        default_hir_pass_manager=lambda: manager("hir"),
-        default_bytecode_pass_manager=lambda: manager("bytecode"),
-        lower=lambda actual_hir, postselection_mask: program,
-        version=lambda: "0.1.0",
-        svm_backend=lambda: "scalar",
-    )
-    monkeypatch.setitem(sys.modules, "clifft", fake_clifft)
-
-    prepared = ClifftAdapter().prepare(
-        artifact_path=artifact,
-        workload={
-            "semantics": {
-                "observable_index": 0,
-                "postselect_all_detectors": False,
-                "reference_convention": "raw-record-parity",
-            }
-        },
-        execution={
-            "batch_enabled": False,
-            "batch_size": 1,
-            "sample_chunk_shots": 0,
-        },
-    )
-
-    assert ("threads", 1) in calls
-    assert ("hir", hir) in calls
-    assert ("bytecode", program) in calls
-    assert prepared.runtime_metadata["peak_active_width"] == 4
-    assert prepared.runtime_metadata["sampling_backend"] == "scalar"
-
-
-def test_clifft_symbolic_interface_needs_no_legacy_module_hooks(
-    tmp_path: Path, monkeypatch
-) -> None:
-    artifact = tmp_path / "circuit.stim"
-    artifact.write_text("M 0\n")
-    hir = SimpleNamespace(
-        num_qubits=1,
-        num_measurements=1,
-        num_detectors=0,
-        num_observables=1,
-    )
-    program = SimpleNamespace(
-        num_qubits=1,
-        num_measurements=1,
-        num_detectors=0,
-        num_observables=1,
-        peak_active_width=3,
-    )
-    fake_clifft = SimpleNamespace(
-        parse=lambda text: text,
-        trace=lambda circuit: hir,
-        default_hir_pass_manager=lambda: SimpleNamespace(run=lambda value: None),
-        lower=lambda actual_hir, postselection_mask: program,
-        version=lambda: "0.9.0",
-    )
-    monkeypatch.setitem(sys.modules, "clifft", fake_clifft)
-
-    prepared = ClifftAdapter().prepare(
-        artifact_path=artifact,
-        workload={
-            "semantics": {
-                "observable_index": 0,
-                "postselect_all_detectors": False,
-                "reference_convention": "raw-record-parity",
-            }
-        },
-        execution={
-            "batch_enabled": False,
-            "batch_size": 1,
-            "sample_chunk_shots": 0,
-        },
-    )
-
-    assert prepared.runtime_metadata["threads"] == 1
-    assert prepared.runtime_metadata["peak_active_width"] == 3
-    assert prepared.runtime_metadata["sampling_backend"] == "symbolic-coordinate"
 
 
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(
@@ -386,22 +279,23 @@ def test_symft_verifies_installed_git_identity_even_for_same_version(monkeypatch
         }
 
 
-@pytest.mark.parametrize("modern", [False, True])
+@pytest.mark.parametrize("early_postselection", [False, True])
 @pytest.mark.parametrize("postselect", [False, True])
 def test_clifft_scalar_and_postselection_follow_available_api(
-    tmp_path, monkeypatch, modern, postselect,
+    tmp_path, monkeypatch, early_postselection, postselect,
 ):
     artifact = tmp_path / "control.stim"
     artifact.write_text("M 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
     hir = SimpleNamespace(num_qubits=1, num_measurements=1, num_detectors=1, num_observables=1)
-    if modern:
+    if early_postselection:
         hir.postselection_mask = []
-    program = SimpleNamespace(peak_active_width=0)
+    program = SimpleNamespace(peak_active_width=0, num_qubits=1, num_measurements=1,
+                              num_detectors=1, num_observables=1)
     mask = [1] if postselect else []
 
     def optimize(value):
         assert value is hir
-        if modern:
+        if early_postselection:
             assert value.postselection_mask == mask
 
     def lower(value, *, postselection_mask):
@@ -409,18 +303,15 @@ def test_clifft_scalar_and_postselection_follow_available_api(
         assert postselection_mask == mask
         return program
 
-    def legacy_sample(value, shots, *, seed, keep_records):
+    def sample(value, shots, *, seed, keep_records, threads, batch_size="auto"):
         assert value is program
+        assert threads == 1
+        assert batch_size == 1
         return SimpleNamespace(total_shots=shots, passed_shots=shots,
                                discards=0, observable_ones=[0])
 
-    def modern_sample(value, shots, *, seed, keep_records, batch_size="auto"):
-        # Omitting this argument is a real behavior change on current Clifft.
-        assert batch_size == 1
-        return legacy_sample(value, shots, seed=seed, keep_records=keep_records)
-
     monkeypatch.setitem(sys.modules, "clifft", SimpleNamespace(
-        sample_survivors=modern_sample if modern else legacy_sample,
+        sample_survivors=sample,
         trace=lambda circuit: hir, parse=lambda text: text,
         default_hir_pass_manager=lambda: SimpleNamespace(run=optimize), lower=lower,
         version=lambda: "test",
@@ -432,24 +323,8 @@ def test_clifft_scalar_and_postselection_follow_available_api(
         execution={"batch_enabled": False, "batch_size": 1},
     )
     assert prepared.sample(128, 7).attempted_shots == 128
-    assert prepared.runtime_metadata["postselection_before_optimization"] is modern
-    assert prepared.runtime_metadata["batch_control"] == (
-        "explicit" if modern else "legacy-scalar-default"
-    )
-
-
-def test_clifft_nanobind_keyword_detection():
-    from clifft_bench.adapters.clifft import _accepts_keyword
-
-    class BoundFunction:
-        def __call__(self, *args, **kwargs):
-            raise AssertionError("capability detection must not execute sampling")
-
-        __doc__ = "sample_survivors(program: Program, shots: int, batch_size: int | str = 'auto')"
-
-    assert _accepts_keyword(BoundFunction(), "batch_size")
-    assert not _accepts_keyword(BoundFunction(), "threads")
-    assert not _accepts_keyword(None, "batch_size")
+    assert prepared.runtime_metadata["postselection_before_optimization"] is early_postselection
+    assert prepared.runtime_metadata["batch_control"] == "explicit"
 
 
 @pytest.mark.parametrize("dev", [False, True])

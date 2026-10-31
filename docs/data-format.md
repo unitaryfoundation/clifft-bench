@@ -29,17 +29,23 @@ raw results or release manifest.
   failures, median/MAD summaries, the exact simulator version, and its public
   display version. Failed cases retain `error_phase`, `error_type`, and
   `error_message`; their throughput summary fields are blank, including when
-  raw JSON retains samples collected before a later failure. Setup failures
-  may have no calibration record or selected batch size.
+  raw JSON retains samples collected before a later failure. Calibration failures
+  retain the search record in `error.batch_calibration`
+  when the worker can return it; hard timeouts or worker exits may leave no
+  record or selected batch size.
 - `comparisons.csv` joins manifest-declared baseline and candidate variants for
   the same workload, placement, and replica. It carries both sides' mode,
   batching, shots-per-call configuration, exact versions, and display versions.
   Only successful pairs produce comparison rows.
 
 `tuning_policy` in `cases.csv`, and `baseline_tuning_policy` /
-`candidate_tuning_policy` in `comparisons.csv`, distinguish the historical
-`grid-v1` search, the new `bounded-v2` search, and fixed settings. Old calibrated
-records without a policy field remain `grid-v1`.
+`candidate_tuning_policy` in `comparisons.csv`, identify `bounded-v3` for new
+calibrated measurements and `fixed` otherwise. Raw execution and calibration
+records carry the policy identity. The finalizer checks complete evidence and a
+successful selected candidate without recomputing probe medians or replaying
+winner/budget decisions. Archived tables retain their recorded policy labels;
+use the [pinned legacy revision](../CONTRIBUTING.md#historical-evidence) to
+regenerate them.
 
 Raw `workload.semantics` retains any explicit `postselection_detector_indices`.
 `execution.postselection` is true for all-detector or subset selection. The

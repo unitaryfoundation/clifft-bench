@@ -527,7 +527,7 @@ def test_reporting_rejects_incomplete_tsim_outcomes(sources_with_tsim, problem, 
         build_report(sources_with_tsim)
 
 
-def test_transition_policy_comparisons_do_not_enter_historical_reports(copied_sources):
+def test_coverage_comparisons_do_not_enter_core_reports(copied_sources):
     expected = build_report(copied_sources)
     document = json.loads(copied_sources.read_text())
     path = Path(document['release_executions'][-1]) / 'comparisons.csv'
@@ -536,9 +536,9 @@ def test_transition_policy_comparisons_do_not_enter_historical_reports(copied_so
     extra = []
     for row in rows:
         candidate = dict(row)
-        candidate['comparison_id'] = 'tuned-alternatives-vs-current'
-        candidate['baseline_variant_id'] = 'clifft-tuned'
-        candidate['candidate_variant_id'] += '-tuned'
+        candidate['comparison_id'] = 'coverage-alternatives-vs-current'
+        candidate['baseline_variant_id'] = 'clifft-coverage'
+        candidate['candidate_variant_id'] += '-coverage'
         candidate['candidate_rate'] = str(float(candidate['candidate_rate']) * 100)
         candidate['ratio_candidate_over_baseline'] = '100'
         extra.append(candidate)

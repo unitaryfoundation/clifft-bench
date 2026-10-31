@@ -1,9 +1,8 @@
 # Supplemental sampling coverage
 
 The `*-coverage` variants in the normal release campaign add 23 current-tool
-cases. They use the existing `grid-v1` calibration policy; the 38 matched
-policy-comparison cases from #81 remain a separate experiment. Results appear
-in `cases.csv` and `coverage-alternatives-vs-current` comparison rows, outside
+cases. They use the release [calibration policy](../docs/benchmark-contract.md#batching).
+Results appear in `cases.csv` and `coverage-alternatives-vs-current` comparison rows, outside
 the historical QEC figures and medians. There is no previous-release baseline
 for this new cohort. Tool pins, single-core restrictions, timed boundaries,
 and the aggregate-count contract are otherwise unchanged.

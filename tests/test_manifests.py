@@ -90,7 +90,7 @@ def test_release_bulk_calls_exceed_their_short_call_siblings() -> None:
     bulk = [variant for variant in variants.values() if "-bulk" in variant["id"]]
     assert bulk
     for variant in bulk:
-        short_id = variant["id"].replace("-bulk-tuned", "-tuned").replace("-bulk", "-current")
+        short_id = variant["id"].replace("-bulk", "-current")
         assert short_id in variants, f"{variant['id']}: missing short-call sibling {short_id}"
         short = {w["workload_id"]: w["shots_per_call"] for w in variants[short_id]["workloads"]}
         for workload in variant["workloads"]:
@@ -334,29 +334,3 @@ def test_tsim_pilot_reuses_exact_release_cases():
     assert pilot.run["classification"] == "smoke"
     assert pilot.cases
     assert all(case.definition == expected[case.id] for case in pilot.cases)
-
-
-def test_transition_pairs_preserve_shots_compiler_settings_and_source_identity():
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    variants = {v["id"]: v for v in suite.run["variants"]}
-    pairs = [c for c in suite.run["comparisons"] if c["id"].endswith("-tuning-policy")]
-    assert pairs
-    for pair in pairs:
-        baseline = variants[pair["baseline_variant"]]
-        tuned = variants[pair["candidate_variants"][0]]
-        assert baseline["implementation_id"] == tuned["implementation_id"]
-        assert baseline["workloads"] == tuned["workloads"]
-        assert "tuning_policy" not in baseline["execution"]
-        assert tuned["execution"] == dict(baseline["execution"], tuning_policy="bounded-v2")
-
-
-def test_tuning_policy_cannot_be_applied_to_a_fixed_batch(tmp_path):
-    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
-    run = copy.deepcopy(suite.run)
-    run["cases"][0]["execution"].update(batch_size=32, tuning_policy="bounded-v2")
-    run["workloads_manifest"] = str(suite.workloads_path)
-    run["software_manifest"] = str(suite.software_path)
-    path = tmp_path / "invalid-policy.json"
-    path.write_text(json.dumps(run))
-    with pytest.raises(SchemaValidationError, match="tuning_policy requires"):
-        load_suite(path)

@@ -3,268 +3,6 @@
   "suite_version": "0.2.8",
   "implementations": [
     {
-      "id": "clifft-0.1.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.1.0",
-      "commit_sha": "427a499a4fd835d5a6324f4b1fbcd906c28639a1",
-      "commit_datetime": "2026-04-16T16:03:20Z",
-      "release_datetime": "2026-04-16T16:12:43Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_1_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.1.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.2.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.2.0",
-      "commit_sha": "3947f4634cab191b4e36fd10a91818a916ac5ea3",
-      "commit_datetime": "2026-05-01T13:55:57Z",
-      "release_datetime": "2026-05-01T14:03:20Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_2_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.2.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.3.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.3.0",
-      "commit_sha": "7dc0a263b3d79fecef20e29de36fca0adc25b3c8",
-      "commit_datetime": "2026-05-08T13:51:11Z",
-      "release_datetime": "2026-05-08T14:09:29Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_3_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.3.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.4.1",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.4.1",
-      "commit_sha": "85c23f5c76eb87e7add254641dd18ef38e914f22",
-      "commit_datetime": "2026-05-19T15:18:30Z",
-      "release_datetime": "2026-05-19T15:34:17Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_4_1_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.4.1.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.5.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.5.0",
-      "commit_sha": "ba0edee7e6971df55939c52af8d9892932d279a7",
-      "commit_datetime": "2026-06-15T13:02:47Z",
-      "release_datetime": "2026-06-15T13:22:20Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_5_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.5.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.6.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.6.0",
-      "commit_sha": "a65a7e7d1078280e453c81feaad4babe3e2d32c2",
-      "commit_datetime": "2026-07-14T22:10:01Z",
-      "release_datetime": "2026-07-14T22:18:37Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_6_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.6.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.7.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.7.0",
-      "commit_sha": "27085d10a6822a00eb0bbae9ac708ec13dd4de27",
-      "commit_datetime": "2026-07-31T15:10:55Z",
-      "release_datetime": "2026-07-31T15:29:02Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_7_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.7.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.8.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.8.0",
-      "commit_sha": "859272faaea971d4599b3c8e323dcb79079aa8ac",
-      "commit_datetime": "2026-08-18T20:08:55Z",
-      "release_datetime": "2026-08-18T20:17:52Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_8_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.8.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": ["CPU-only", "symbolic-coordinate sampler", "PyPI release wheel"]
-      }
-    },
-    {
-      "id": "clifft-0.9.0",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.9.0",
-      "commit_sha": "87175b513b8d944955102230b9c7931be1570ef2",
-      "commit_datetime": "2026-08-24T13:44:37Z",
-      "release_datetime": "2026-08-24T14:24:24Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_9_0_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.9.0.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": [
-          "CPU-only",
-          "symbolic-coordinate sampler",
-          "OpenMP intra-shot parallelism",
-          "PyPI release wheel"
-        ]
-      }
-    },
-    {
-      "id": "clifft-0.10.0rc1",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.10.0rc1",
-      "display_version": "0.10.0",
-      "commit_sha": "4440ecb71ab9b4922ba2f543e392fbab640cd248",
-      "commit_datetime": "2026-09-02T13:05:13Z",
-      "release_datetime": "2026-09-02T13:14:11Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "source_tag": "v0.10.0rc1",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_10_0RC1_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.10.0rc1.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": [
-          "CPU-only",
-          "symbolic-coordinate sampler",
-          "OpenMP intra-shot parallelism",
-          "PyPI release-candidate wheel"
-        ]
-      }
-    },
-    {
-      "id": "clifft-0.11.0rc1",
-      "name": "Clifft",
-      "adapter": "clifft",
-      "distribution": "clifft",
-      "version": "0.11.0rc1",
-      "display_version": "0.11.0",
-      "commit_sha": "ea69dbb0ce057443eeb62b4bdfa5a112f35b4063",
-      "commit_datetime": "2026-09-30T17:32:18Z",
-      "release_datetime": "2026-09-30T17:39:33Z",
-      "source_url": "https://github.com/unitaryfoundation/clifft",
-      "source_tag": "v0.11.0rc1",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_11_0RC1_PYTHON",
-      "environment": {
-        "requirements": "../environments/clifft-0.11.0rc1.txt",
-        "import_modules": ["clifft"]
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [],
-        "features": [
-          "CPU-only",
-          "symbolic-coordinate sampler",
-          "OpenMP intra-shot parallelism",
-          "opt-in active-width scheduling",
-          "PyPI release-candidate wheel"
-        ]
-      }
-    },
-    {
       "id": "clifft-0.12.0rc1",
       "name": "Clifft",
       "adapter": "clifft",
@@ -276,11 +14,15 @@
       "release_datetime": "2026-10-09T18:58:35Z",
       "source_url": "https://github.com/unitaryfoundation/clifft",
       "source_tag": "v0.12.0rc1",
-      "dependency_distributions": ["numpy"],
+      "dependency_distributions": [
+        "numpy"
+      ],
       "python_executable_env": "CLIFFT_BENCH_CLIFFT_0_12_0RC1_PYTHON",
       "environment": {
         "requirements": "../environments/clifft-0.12.0rc1.txt",
-        "import_modules": ["clifft"]
+        "import_modules": [
+          "clifft"
+        ]
       },
       "build": {
         "precision": "complex-fp64",
@@ -293,32 +35,6 @@
           "default phase-polynomial and rotation simplification",
           "PyPI release-candidate wheel"
         ]
-      }
-    },
-    {
-      "id": "symft-0.1.0-9ec5790",
-      "name": "SymFT",
-      "adapter": "symft",
-      "distribution": "symft",
-      "version": "0.1.0",
-      "commit_sha": "9ec5790322f93140e78bdb6d6620a2a43eceba0b",
-      "commit_datetime": "2026-08-05T16:28:27Z",
-      "release_datetime": null,
-      "source_url": "https://github.com/haoliri0/SymFT_Test",
-      "dependency_distributions": ["numpy"],
-      "python_executable_env": "CLIFFT_BENCH_SYMFT_9EC5790_PYTHON",
-      "environment": {
-        "requirements": "../environments/symft-0.1.0-9ec5790.txt",
-        "import_modules": ["symft"],
-        "install_environment": {
-          "SYMFT_PY_NATIVE": "1",
-          "SYMFT_PY_ENABLE_CUDA": "0"
-        }
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": ["SYMFT_PY_NATIVE=1"],
-        "features": ["CPU-only", "runtime-dispatched SIMD", "CUDA disabled"]
       }
     },
     {
@@ -391,22 +107,22 @@
       }
     },
     {
-      "id": "xtim-3.1.4-2945407",
+      "id": "xtim-3.2.2-edf0dd0",
       "name": "xtim",
       "adapter": "xtim",
       "distribution": "xtim",
-      "version": "3.1.4",
-      "commit_sha": "29454071fb20fbcffd258559ad0644676e44a8f9",
-      "commit_datetime": "2026-10-07T13:40:01Z",
+      "version": "3.2.2",
+      "commit_sha": "edf0dd0cff804ac0228d517889e49b0c286cb19a",
+      "commit_datetime": "2026-10-25T21:53:10Z",
       "release_datetime": null,
       "source_url": "https://github.com/ikim-quantum/xtim",
       "dependency_distributions": [
         "numpy",
         "stim"
       ],
-      "python_executable_env": "CLIFFT_BENCH_XTIM_2945407_PYTHON",
+      "python_executable_env": "CLIFFT_BENCH_XTIM_EDF0DD0_PYTHON",
       "environment": {
-        "requirements": "../environments/xtim-3.1.4-2945407.txt",
+        "requirements": "../environments/xtim-3.2.2-edf0dd0.txt",
         "import_modules": [
           "xtim",
           "stim"
@@ -423,39 +139,6 @@
           "-funroll-loops",
           "QECCORE_PORTABLE=1",
           "CXXFLAGS=-include cstdint"
-        ],
-        "features": [
-          "CPU-only",
-          "portable source build without -march=native",
-          "pinned upstream source",
-          "fresh plan cache per repetition with untimed compilation"
-        ]
-      }
-    },
-    {
-      "id": "xtim-3.2.2-edf0dd0",
-      "name": "xtim",
-      "adapter": "xtim",
-      "distribution": "xtim",
-      "version": "3.2.2",
-      "commit_sha": "edf0dd0cff804ac0228d517889e49b0c286cb19a",
-      "commit_datetime": "2026-10-25T21:53:10Z",
-      "release_datetime": null,
-      "source_url": "https://github.com/ikim-quantum/xtim",
-      "dependency_distributions": ["numpy", "stim"],
-      "python_executable_env": "CLIFFT_BENCH_XTIM_EDF0DD0_PYTHON",
-      "environment": {
-        "requirements": "../environments/xtim-3.2.2-edf0dd0.txt",
-        "import_modules": ["xtim", "stim"],
-        "install_environment": {
-          "QECCORE_PORTABLE": "1",
-          "CXXFLAGS": "-include cstdint"
-        }
-      },
-      "build": {
-        "precision": "complex-fp64",
-        "compiler_flags": [
-          "-O3", "-funroll-loops", "QECCORE_PORTABLE=1", "CXXFLAGS=-include cstdint"
         ],
         "features": [
           "CPU-only",

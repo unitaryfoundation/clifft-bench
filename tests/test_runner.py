@@ -280,10 +280,10 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     assert metadata["sampling_backend"] == "compile_sampler"
     assert metadata["record_materialization"] == "bit-packed-measurements"
     calibration = metadata["batch_calibration"]
-    assert calibration["candidates"] == [1, 32]
+    assert calibration["candidates"] == [1, 32, 64]
     assert all(trial["status"] == "success" for trial in calibration["results"])
     selected = calibration["selected_batch_size"]
-    assert selected in (1, 32)
+    assert selected in (1, 32, 64)
     assert case["execution"]["batch_size"] == selected
     assert metadata["sample_chunk_shots"] == (2048 if selected == 1 else 0)
     assert case["correctness"]["status"] == "passed"

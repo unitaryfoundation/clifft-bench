@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import inspect
 import json
-import re
 import time
 from importlib.metadata import distribution
 from pathlib import Path
@@ -15,21 +13,6 @@ from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
 from clifft_bench.selection import detector_mask
 
 
-def _accepts_keyword(function: Any, name: str) -> bool:
-    """Inspect Python and nanobind signatures without making a sampling call."""
-    try:
-        parameters = inspect.signature(function).parameters
-        if name in parameters:
-            return parameters[name].kind != inspect.Parameter.POSITIONAL_ONLY
-        if not any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()):
-            return False
-    except (TypeError, ValueError):
-        pass
-    # nanobind may expose (*args, **kwargs) rather than raising from signature().
-    signature = (getattr(function, "__doc__", None) or "").split("\n\n", 1)[0]
-    return re.search(rf"\b{re.escape(name)}\s*:", signature) is not None
-
-
 class _PreparedClifft(PreparedAdapter):
     def __init__(
         self,
@@ -37,7 +20,7 @@ class _PreparedClifft(PreparedAdapter):
         program: Any,
         observable_index: int,
         runtime_metadata: dict[str, Any],
-        batch_size: int | None = None,
+        batch_size: int,
     ) -> None:
         self._clifft = clifft
         self._program = program
@@ -46,10 +29,10 @@ class _PreparedClifft(PreparedAdapter):
         self.runtime_metadata = runtime_metadata
 
     def sample(self, shots: int, seed: int) -> Counts:
-        kwargs = {"seed": seed, "keep_records": False}
-        if self._batch_size is not None:
-            kwargs["batch_size"] = self._batch_size
-        result = self._clifft.sample_survivors(self._program, shots, **kwargs)
+        result = self._clifft.sample_survivors(
+            self._program, shots, seed=seed, keep_records=False,
+            threads=1, batch_size=self._batch_size,
+        )
         return Counts(
             attempted_shots=int(result.total_shots),
             accepted_shots=int(result.passed_shots),
@@ -71,38 +54,6 @@ class ClifftAdapter(Adapter):
                 "clifft", expected_commit=expected_commit, source_url=source_url
             )
         return {}
-
-    def native_batch_choices(
-        self, *, artifact_path: Path, workload: dict[str, Any],
-        execution: dict[str, Any], shots: int, seed: int, budget_seconds: float,
-    ) -> dict[str, Any]:
-        import clifft
-
-        if not _accepts_keyword(clifft.sample_survivors, "tuning_budget_seconds"):
-            return {"status": "unsupported"}
-        prepared = self.prepare(
-            artifact_path=artifact_path, workload=workload,
-            execution={**execution, "batch_enabled": False, "batch_size": 1}, seed=seed,
-        )
-        result = clifft.sample_survivors(
-            prepared._program, shots, seed=seed, threads=1, keep_records=False,
-            batch_size="tune", tuning_budget_seconds=budget_seconds,
-        )
-        report = result.batch_tuning
-        fields = ("batch_size", "baseline_batch_size", "elapsed_seconds", "trial_shots",
-                  "sufficient_measurements", "stop_reason", "shot_workers",
-                  "intra_shot_workers")
-        trial_fields = ("batch_size", "elapsed_seconds", "setup_seconds", "shot_workers",
-                        "shots", "shots_per_second", "used_warmup", "warmup_seconds",
-                        "warmup_shots")
-        return {
-            "status": "success",
-            "report": {
-                **{name: getattr(report, name) for name in fields},
-                "trials": [{name: getattr(trial, name) for name in trial_fields}
-                           for trial in report.trials],
-            },
-        }
 
     def prepare(
         self,
@@ -130,28 +81,10 @@ class ClifftAdapter(Adapter):
 
         batch_enabled = bool(execution["batch_enabled"])
         requested_batch_size = execution["batch_size"]
-        call_batch_size: int | None = None
-        if not batch_enabled and requested_batch_size == 1:
-            # Early releases lack this argument. On newer releases omission
-            # means auto, which can pack even a supposed scalar calibration trial.
-            if _accepts_keyword(getattr(clifft, "sample_survivors", None), "batch_size"):
-                call_batch_size = 1
-            effective_batch_size = 1
-        elif batch_enabled and type(requested_batch_size) is int and requested_batch_size >= 1:
-            call_batch_size = requested_batch_size
-            effective_batch_size = requested_batch_size
-        else:
-            raise ValueError(
-                "Clifft supports batch_size=1 with batching disabled or "
-                "a positive integer batch size with batching enabled"
-            )
-
-        # Clifft 0.1-0.7 use module-level thread controls. They were removed
-        # in 0.8; later releases default to one sampling thread.
-        if hasattr(clifft, "set_num_threads"):
-            clifft.set_num_threads(1)
-            if int(clifft.get_num_threads()) != 1:
-                raise RuntimeError("Clifft did not accept the one-thread setting")
+        if type(requested_batch_size) is not int or requested_batch_size < 1:
+            raise ValueError("Clifft requires a positive integer batch size")
+        if not batch_enabled and requested_batch_size != 1:
+            raise ValueError("Clifft requires batch_size=1 when batching is disabled")
 
         text = artifact_path.read_text()
         parse_started = time.perf_counter()
@@ -171,46 +104,27 @@ class ClifftAdapter(Adapter):
             manager.add(scheduler)
         manager.run(hir)
         program = clifft.lower(hir, postselection_mask=mask)
-        # The bytecode pass API exists through 0.7. Clifft 0.8 replaced that
-        # backend with a symbolic program optimized during HIR lowering.
-        if hasattr(clifft, "default_bytecode_pass_manager"):
-            clifft.default_bytecode_pass_manager().run(program)
         compile_seconds = time.perf_counter() - compile_started
-
-        # The symbolic backend reports the peak directly; older bytecode
-        # programs expose the full active-width history instead.
-        active_history = list(getattr(program, "active_k_history", []))
-        peak_active_width = getattr(program, "peak_active_width", None)
-        if peak_active_width is None:
-            peak_active_width = max(active_history) if active_history else 0
-
-        def circuit_size(name: str) -> int:
-            value = getattr(program, name, None)
-            if value is None:
-                value = getattr(hir, name)
-            return int(value)
 
         metadata = {
             "name": "clifft",
             "version": str(clifft.version()),
-            "threads": int(clifft.get_num_threads()) if hasattr(clifft, "get_num_threads") else 1,
+            "threads": 1,
             "precision": "complex-fp64",
             "reference_convention": reference_convention,
             "batch_enabled": batch_enabled,
-            "effective_batch_size": effective_batch_size,
-            "batch_control": "explicit" if call_batch_size is not None else "legacy-scalar-default",
+            "effective_batch_size": requested_batch_size,
+            "batch_control": "explicit",
             "postselection_before_optimization": early_postselection,
-            "num_qubits": circuit_size("num_qubits"),
-            "num_measurements": circuit_size("num_measurements"),
-            "num_detectors": circuit_size("num_detectors"),
-            "num_observables": circuit_size("num_observables"),
-            "peak_active_width": int(peak_active_width),
+            "num_qubits": int(program.num_qubits),
+            "num_measurements": int(program.num_measurements),
+            "num_detectors": int(program.num_detectors),
+            "num_observables": int(program.num_observables),
+            "peak_active_width": int(program.peak_active_width),
             "parse_seconds": parse_seconds,
             "compile_seconds": compile_seconds,
             "cpu_baseline": str(getattr(clifft, "CPU_BASELINE", "unknown")),
-            "sampling_backend": str(clifft.svm_backend())
-            if hasattr(clifft, "svm_backend")
-            else "symbolic-coordinate",
+            "sampling_backend": "symbolic-coordinate",
         }
         if hasattr(hir, "num_t_gates"):
             metadata["optimized_t_gates"] = int(hir.num_t_gates)
@@ -232,5 +146,5 @@ class ClifftAdapter(Adapter):
             program,
             int(workload["semantics"]["observable_index"]),
             metadata,
-            call_batch_size,
+            requested_batch_size,
         )

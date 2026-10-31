@@ -89,8 +89,8 @@ an unverified d7 MSC performance proxy, and full d5 cultivation with only its
 the proxy nor the full cultivation case estimates decoded logical error or
 fidelity. [Coverage notes](../workloads/coverage.md) specify public-call sizes,
 source limitations and adapter eligibility. These current-tool rows use
-`grid-v1` and stay outside both the historical QEC median and the temporary
-matched tuning-policy comparison. Repeated QV sampling is distinct from the
+the same bounded calibration policy as the release comparisons and stay outside
+the published historical QEC median. Repeated QV sampling is distinct from the
 setup-plus-one-shot experiment under `experiments/qv`.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
@@ -162,56 +162,42 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-A throughput case may set `batch_size` to `"calibrate"`. An omitted
-`tuning_policy` means the historical `grid-v1` policy. During setup, the worker:
+A throughput case may set `batch_size` to `"calibrate"`. All new calibrated
+runs use the harness policy `bounded-v3`; configuration does not select a policy.
+The candidate pools are:
 
-1. keeps the candidates from `1`, `32`, `256`, `1024`, and `2048` that do not
-   exceed `shots_per_call`, treating `1` as scalar execution;
-2. prepares and warms each candidate;
-3. runs three one-second probes and computes median attempted-shot throughput;
-4. selects the highest median, breaking an exact tie toward the smaller size;
-5. freshly prepares the selected configuration and uses it for all timed
-   repetitions.
+- Clifft/SymFT: `1, 32, 64, 256, 1024, 2048`, restricted to `shots_per_call`.
+- Tsim: `1, 32, 256, 1024, 8192, 65536`, capped at `shots_per_call` and deduplicated.
+- Stim/xtim: output chunks `256, 1024, 4096, 16384, 65536`, capped and deduplicated,
+  plus the full public call size.
 
-Each trial sampler is released before constructing the next trial or the final
-configuration, including after failures, so their native state buffers do not
-overlap during calibration.
+During setup, the worker prepares and warms each candidate, takes three probes
+of at least one second, and chooses the highest median attempted-shot rate.
+Exact ties choose the smaller batch. It freshly prepares the selected numeric
+setting for final measurement. Calibration time is excluded from throughput.
+Each trial sampler is released before preparing the next trial or the final
+configuration, including after failures, so native state buffers do not overlap.
 
-Clifft and SymFT use the same procedure. Stim calibrates public sampler chunks
-of 256, 1024, 4096, 16384, and 65536 shots, capped by `shots_per_call`, plus an
-unchunked call. Its compiled circuit detector sampler is reused across calls;
-packed detectors/observables are reduced with vectorized NumPy operations.
-Calibration is setup work and is not
-included in final throughput samples. Raw results record candidate probes,
-failures, the selected size, and total calibration duration in
-`setup.runtime_metadata.batch_calibration`.
+The search has a 60-second soft budget checked between candidates. At least the
+first candidate is attempted; preparation, warmup, and complete probes may exceed
+that budget. Untried candidates are recorded as `budget-skipped`. Hard worker
+setup/request deadlines and memory limits still apply. Unsupported capacities
+may fail while another candidate succeeds.
 
-Successful results replace `"calibrate"` with the selected numeric `batch_size`.
-They also record `batch_size_effective`, the maximum lanes available to one
-public call after capping the selected capacity by `shots_per_call`. A fixed
-numeric batch size remains supported for cases that do not request calibration.
+Raw calibration evidence records the policy, candidate order, effective settings,
+probes, failures, budget skips, search duration, and process peak RSS (a cumulative
+high-water mark). Completed probes survive a later candidate failure. If every
+candidate or final preparation fails, the setup error retains the search record;
+a hard timeout or worker exit may prevent the worker from returning evidence.
+Successful setup records it in `setup.runtime_metadata.batch_calibration` and
+replaces `"calibrate"` with the selected numeric `batch_size`. Fixed numeric
+settings remain supported. `batch_size_effective` records the capacity available
+to one public call after capping by `shots_per_call`.
 
-`tuning_policy="bounded-v2"` adds Tsim capacities 1 and 32. For Clifft with
-native tuning support, a native search with a requested 0.25-second budget
-supplies its recommended batch and its automatic/default batch. These numeric proposals are measured
-with the same warmed probes as the fixed grid, starting with the native
-recommendation; duplicate capacities are measured once. Native failure falls
-back to the fixed grid. The selected numeric batch is frozen before timing.
-
-The new search has a 60-second soft setup budget, checked between complete
-candidate trials. At least the first candidate is attempted; preparation,
-warmup, and complete probes can overrun the soft budget. The campaign's hard
-setup timeout and 12 GiB worker limit still apply. Untried candidates are marked
-`budget-skipped`. Raw metadata records the native report, failures, complete
-probes, search duration, and process peak RSS (a cumulative high-water mark).
-
-One transition sweep includes 47 grid-policy cases and 38 matched `bounded-v2`
-cases in the normal release campaign. Comparisons ending in `-tuning-policy`
-isolate the policy change on the same tool revision, circuit, compiler settings,
-and public call size. `tuned-alternatives-vs-current` and its bulk counterpart
-compare tools under the new policy. Choose the default after this reference-host
-sweep, then remove the duplicate cases. Historical report comparisons retain
-their original identities and policy.
+This is a declared harness policy, not a claim of native-tuning equivalence or a
+global optimum. It uses no native tuning proposals. Previous and current Clifft
+receive the same policy, with the selected settings frozen before measurement.
+Review choices, failures, and search costs during the normal reference-host run.
 
 For Clifft/SymFT, `batch_size` is the internal number of shots processed together.
 For Stim it is the adapter's chunk size passed to the public detector sampler,
@@ -233,25 +219,22 @@ Derived rows carry both sides' mode, tuning policy, effective batch size, and sh
 
 The recurring `current-vs-previous` comparison asks whether Clifft improved
 using the capabilities available in each release. It applies calibration to
-both releases, allowing an older release without batching support to select
-scalar execution after unsupported candidates fail. The
+both maintained releases with the same candidate pool and search budget. The
 `alternatives-vs-current` comparison applies the same calibration policy to
 current Clifft and SymFT across the release workloads. The separate
 `stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
 compatible surface-code workload. Keeping the anchor separate preserves the
 existing Clifft/SymFT comparison identity and its downstream consumers. The
-historical comparisons, including `xtim-vs-current` and `tsim-vs-current`,
+peer comparisons, including `xtim-vs-current` and `tsim-vs-current`,
 reuse the same collected current-Clifft cases. The separately named bulk
 comparison collects its own current-Clifft case.
 
 ## Compiler configuration
 
 Each release uses its own default HIR pipeline before the optional scheduler.
-Clifft 0.12 adds `PhasePolynomialPass` and `RotationSimplificationPass` to that
-pipeline; the adapter's call to `default_hir_pass_manager()` includes them
-automatically. Both the 0.11 baseline and 0.12 candidate retain the scheduled
-configuration. Release-over-release results therefore include the new defaults;
-they are not a same-version pass ablation.
+Both maintained Clifft implementations use the scheduled configuration.
+Release-over-release results include their compiler defaults; they are not a
+same-version pass ablation.
 
 Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
 pipeline. When pinning a scheduler-capable RC, set `clifft-current.execution`
@@ -456,12 +439,8 @@ candidate's probes. The selected configuration is freshly prepared with the
 final initial seed. No private RNG fields are changed and no compilation is
 performed inside timed calls.
 
-The historical `grid-v1` calibration probes capacities 256, 1024, 8192, and
-65536; `bounded-v2` also probes 1 and 32. Capacities are capped by shots per
-call and deduplicated. Each uses the existing three warmed one-second
-probes and smaller-capacity tie break. A fixed numeric capacity remains
-supported. With direct-detector postselection, this capacity applies to the
-survivors passed to the statevector backend. Fully direct circuits bypass that
+Tsim uses the [bounded calibration policy](#batching). With direct-detector
+postselection, the batch capacity applies to the survivors passed to the statevector backend. Fully direct circuits bypass that
 backend; the recorded capacity is the API setting, not a claim that quantum
 lanes were allocated. Raw metadata and `cases.csv` expose
 `batch_parameter=statevector-batch-shots` and `batch_size_applicable`: false for
@@ -504,24 +483,12 @@ The multicore and expanded-workload follow-ups are separate campaigns/work.
 On Clifft versions exposing a writable HIR `postselection_mask`, the adapter
 sets the workload's raw-parity mask before running compiler passes and supplies
 it again to lowering. Earlier versions retain selection at lowering. A scalar
-configuration explicitly passes `batch_size=1` when the public sampling API
-supports it; omitting the argument on newer versions would request native
-`auto`. Historical releases without that keyword retain their scalar default.
-Runtime metadata records both decisions. Development/VCS builds also verify the
-full installed source URL and commit; release wheels retain version validation.
+configuration explicitly passes `batch_size=1`; omitting it would request native
+`auto`. All sampling calls explicitly request one thread. Runtime metadata
+records batching and the point at which postselection is applied. Development/VCS
+builds also verify the full installed source URL and commit; release wheels retain
+version validation.
 The mask is part of compilation: an unselected variant must compile with an
 empty mask, rather than reuse a program optimized assuming detector selection.
 Runtime metadata records `postselection_before_optimization`, `batch_control`
 and, when available, `optimized_t_gates`.
-
-Historical exposure is narrower than the general API hazard. The batch-size
-keyword exists from Clifft 0.10; through 0.12.0/0.12.0rc1 native `auto` forces
-postselected programs to remain scalar. Candidate 1 in the published
-postselected QEC series therefore was scalar. The unselected QV10/QV20 and
-adder inputs could instead have used automatic packing under a scalar label
-on those batch-capable versions. Clifft #566 enables postselected automatic
-packing after 0.12.0, so future sweeps need the explicit scalar request too.
-Preserve recorded historical measurements and identify the corrected harness
-by its source revision; do not relabel old timings as newly measured results.
-The broader tuning-policy follow-up is tracked in
-[#81](https://github.com/unitaryfoundation/clifft-bench/issues/81).

@@ -48,26 +48,25 @@ SymFT, and Tsim at 256 attempted shots per call on coherent d5/r5, preserving
 the historical one-shot configuration. See the
 [Tsim measurement contract](docs/benchmark-contract.md#tsim-active-statevector-cpu-comparison).
 The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
-A release without batching support selects scalar mode during calibration.
 
 The campaign currently pins development Clifft `63cd885` against measured
 0.12.0 because BT27/BT81 need the newer compiler. Replace this source pin with
 the next RC when preparing that release.
 
-The next sweep compares `grid-v1` and `bounded-v2` once in the same campaign.
-The 38 extra cases differ only in tuning policy; review the `*-tuning-policy`
-rows before choosing the default and removing the duplicates.
-The 23 `*-coverage` cases add sampling coverage under the existing grid policy;
-they do not expand that policy comparison. See [coverage notes](workloads/coverage.md).
+All calibrated cases use the [bounded harness policy](docs/benchmark-contract.md#batching).
+Review its selected settings, failures, and search costs during the normal
+reference-host campaign. Supplemental coverage follows the same policy; see
+[coverage notes](workloads/coverage.md).
 
 For a new Clifft release:
 
 1. Add its identity and install environment to
    [`manifests/software.v1.json`](manifests/software.v1.json).
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
-   Add the version to the adapter-smoke loop in [CI](.github/workflows/ci.yml)
-   so the real-Clifft scheduler tests run against the published RC.
-3. Point `clifft-current`, `clifft-bulk`, `clifft-coverage`, and the tuned variants at the
+   Update the previous-release and current-source installs in
+   [CI](.github/workflows/ci.yml) to exercise both maintained implementations.
+   Remove superseded software entries and environments after updating consumers.
+3. Point `clifft-current`, `clifft-bulk`, and `clifft-coverage` at the
    new implementation and `clifft-previous` at the prior measured release in the release manifest.
    Update the Clifft smoke, coverage smoke and pilot cases and the `clifft-current` CI install
    to the same new implementation. For a scheduler-capable RC, set
@@ -96,9 +95,9 @@ checks placement coverage and calibration evidence, then writes `cases.csv`,
 
 After the results are reviewed, follow the
 [reporting instructions](reporting/README.md) to update the figures and README.
-The current reporting tools also provide an optional historical view using the
-[historical backfill](campaigns/clifft-history-v1/README.md) and paired release
-ratios. See [historical evidence](#historical-evidence) for the archived workflow.
+The current reporting tools also read checked-in historical tables and paired
+release ratios. See [historical evidence](#historical-evidence) for the archived
+collection workflow.
 
 ## Historical evidence
 
@@ -155,9 +154,9 @@ older `experiments/tsim-gpu` environment remains independently pinned.
 ## Bounded three-tool CPU pilot
 
 `manifests/run-tsim-pilot.v1.json` reuses the release cases for coherent d5/r5
-bulk sampling under `bounded-v2` and the 85q distillation control under `grid-v1`
-across Clifft, SymFT, and Tsim. It also checks 100,000-shot bulk adder calls on
-Clifft and Tsim under the new policy.
+bulk sampling and the 85q distillation control across Clifft, SymFT, and Tsim,
+using the same bounded calibration as the release campaign. It also checks
+100,000-shot bulk adder calls on Clifft and Tsim.
 It uses three samples of at least three seconds, with 180-second preparation
 and 60-second request deadlines. Coherent d5/r5 bulk calls contain 256 attempted
 shots; the adder uses 100,000. Historical call sizes remain unchanged.

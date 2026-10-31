@@ -13,6 +13,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from clifft_bench.calibration import CALIBRATION_POLICY
 from clifft_bench.manifest import Case, Suite
 from clifft_bench.schema import repository_root, validate_document, write_json
 from clifft_bench.selection import has_postselection
@@ -194,6 +195,8 @@ def _new_case_result(
     memory_limit_gib: float | None,
 ) -> dict[str, Any]:
     execution = dict(case.definition["execution"])
+    if execution["batch_size"] == "calibrate":
+        execution["tuning_policy"] = CALIBRATION_POLICY
     execution.update(
         {
             "threads_requested": 1,

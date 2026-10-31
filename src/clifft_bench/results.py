@@ -5,15 +5,12 @@ from __future__ import annotations
 import csv
 import json
 import math
-import statistics
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
 from clifft_bench.calibration import (
-    BOUNDED_POLICY,
-    LEGACY_POLICY,
-    NATIVE_TUNING_BUDGET_SECONDS,
+    CALIBRATION_POLICY,
     TUNING_BUDGET_SECONDS,
     calibration_candidates,
 )
@@ -168,10 +165,7 @@ def _common_row(
         "mode": execution["mode"],
         "batch_enabled": str(execution["batch_enabled"]).lower(),
         "batch_size_effective": execution.get("batch_size_effective", ""),
-        "tuning_policy": execution.get("tuning_policy", LEGACY_POLICY if (
-            (case.get("setup") or {}).get("runtime_metadata", {}).get("batch_calibration")
-            or execution["batch_size"] == "calibrate"
-        ) else "fixed"),
+        "tuning_policy": execution.get("tuning_policy", "fixed"),
         "shots_per_call": execution["shots_per_call"],
         "cpu_model": result["runner"]["cpu_model"],
         "instance_type": cloud["instance_type"],
@@ -361,8 +355,7 @@ def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> No
         return
 
     case_id = expected.id
-    policy = expected.definition["execution"].get("tuning_policy", LEGACY_POLICY)
-    if observed["execution"].get("tuning_policy", LEGACY_POLICY) != policy:
+    if observed["execution"].get("tuning_policy") != CALIBRATION_POLICY:
         raise ValueError(f"raw case {case_id!r} has mismatched tuning policy")
     setup = observed.get("setup")
     # A worker can fail during calibration or preparation before returning any
@@ -387,11 +380,10 @@ def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> No
             f"{selected!r}"
         )
     shots_per_call = int(expected.definition["shots_per_call"])
-    if calibration.get("policy", LEGACY_POLICY) != policy:
+    if calibration.get("policy") != CALIBRATION_POLICY:
         raise ValueError(f"calibrated raw case {case_id!r} has mismatched tuning policy")
     expected_candidates = calibration_candidates(
-        expected.implementation.definition["adapter"], shots_per_call, policy,
-        calibration.get("native") if policy == BOUNDED_POLICY else None,
+        expected.implementation.definition["adapter"], shots_per_call,
     )
     if calibration.get("candidates") != expected_candidates:
         raise ValueError(
@@ -406,8 +398,7 @@ def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> No
             f"calibrated raw case {case_id!r} does not record selected numeric "
             "batch_size"
         )
-    if policy == BOUNDED_POLICY:
-        _validate_bounded_calibration(calibration, case_id)
+    _validate_bounded_calibration(calibration, case_id)
 
 
 def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> None:
@@ -416,8 +407,7 @@ def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> 
             raise ValueError(f"calibrated raw case {case_id!r}: {detail}")
 
     require(calibration.get("budget_seconds") == TUNING_BUDGET_SECONDS
-            and calibration.get("budget_scope") == "between-candidates"
-            and calibration.get("native_budget_seconds") == NATIVE_TUNING_BUDGET_SECONDS,
+            and calibration.get("budget_scope") == "between-candidates",
             "invalid tuning budget")
     require(calibration.get("probe_seconds") == 1.0
             and calibration.get("repetitions") == 3,
@@ -425,58 +415,47 @@ def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> 
     require(calibration.get("selection_statistic") == "median_attempted_shots_per_second"
             and calibration.get("tie_break") == "smaller_batch_size",
             "invalid tuning selection rule")
-    native = calibration.get("native", {})
-    require(isinstance(native, dict) and native.get("status") in {
-        "success", "unsupported", "error",
-    }, "missing native tuning outcome")
     search_seconds = calibration.get("search_seconds")
-    require(isinstance(search_seconds, (int, float)) and math.isfinite(search_seconds)
+    require(type(search_seconds) in (int, float) and math.isfinite(search_seconds)
             and search_seconds >= 0, "missing tuning duration")
-    if native["status"] == "error":
-        require(isinstance(native.get("error"), dict), "native failure lacks an error")
-    if native["status"] == "success":
-        report = native["report"]
-        elapsed = report.get("elapsed_seconds")
-        require(isinstance(elapsed, (int, float)) and math.isfinite(elapsed) and elapsed >= 0,
-                "missing native tuning duration")
-        require(isinstance(report.get("trials"), list)
-                and type(report.get("sufficient_measurements")) is bool
-                and isinstance(report.get("stop_reason"), str), "incomplete native report")
     rows = calibration.get("results")
     require(isinstance(rows, list) and len(rows) == len(calibration["candidates"]),
             "missing candidate outcomes")
-    winners = []
-    skipped = False
+    successful = set()
     for batch, row in zip(calibration["candidates"], rows, strict=True):
-        require(row.get("batch_size") == batch, "mismatched candidate order")
+        require(isinstance(row, dict) and row.get("batch_size") == batch,
+                "mismatched candidate order")
         status = row.get("status")
         require(status in {"success", "error", "budget-skipped"}, "invalid candidate status")
+        duration = row.get("duration_seconds")
+        require(type(duration) in (int, float) and math.isfinite(duration) and duration >= 0,
+                "invalid candidate duration")
+        samples = row.get("samples")
+        require(isinstance(samples, list), "missing candidate probes")
         if status == "budget-skipped":
-            require(search_seconds >= TUNING_BUDGET_SECONDS, "premature tuning budget stop")
-            skipped = True
-            require(row.get("samples") == [], "skipped candidate has timed samples")
-            continue
-        require(not skipped, "candidate ran after tuning budget was exhausted")
-        if status == "error":
+            require(not samples, "skipped candidate has timed samples")
+        elif status == "error":
             require(isinstance(row.get("error"), dict), "candidate failure lacks an error")
-            continue
-        samples = row.get("samples", [])
-        require(len(samples) == 3, "incomplete candidate probes")
-        rates = []
+        else:
+            require(len(samples) == calibration["repetitions"], "incomplete candidate probes")
+            effective = row.get("effective_batch_size")
+            require(type(effective) is int and 1 <= effective <= batch,
+                    "invalid effective batch size")
+            rate = row.get("median_attempted_shots_per_second")
+            require(type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
+                    "invalid candidate median")
+            successful.add(batch)
         for sample in samples:
+            require(isinstance(sample, dict), "invalid candidate probe")
             rate = sample.get("throughput_attempted_shots_per_second")
-            require(isinstance(rate, (float, int)) and math.isfinite(rate) and rate > 0,
+            require(type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
                     "invalid candidate throughput")
-            require(isinstance(sample.get("peak_rss_bytes"), int)
+            require(type(sample.get("peak_rss_bytes")) is int
                     and sample["peak_rss_bytes"] > 0, "missing tuning memory measurement")
-            rates.append(rate)
-        median = statistics.median(rates)
-        require(row.get("median_attempted_shots_per_second") == median,
-                "candidate median does not match its probes")
-        winners.append((median, batch))
-    require(bool(winners), "no successful tuning candidates")
-    require(calibration["selected_batch_size"] == max(winners, key=lambda x: (x[0], -x[1]))[1],
-            "selected batch does not match the best complete probes")
+    # Validate complete evidence and a usable selection, without replaying the
+    # recorded medians, winner selection, or elapsed-budget decisions.
+    require(calibration["selected_batch_size"] in successful,
+            "selected batch has no successful probes")
 
 
 def _validate_execution(

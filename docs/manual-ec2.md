@@ -111,13 +111,12 @@ Confirm that `current-vs-previous` compares calibrated previous and current
 Clifft and `alternatives-vs-current` compares calibrated Clifft with SymFT.
 The separate `stim-anchor-vs-current` comparison contributes only the
 surface-code row; the five non-Clifford QEC workloads and the adder are outside
-Stim's supported domain. This transition campaign has 108 cases: 45 existing
-cases, two bulk adder cases, 38 matched `bounded-v2` cases, and 23 supplemental
-coverage cases. Review the
-`*-tuning-policy` comparisons to choose the next tuning default. All pairs
+Stim's supported domain. Review the selected settings, candidate failures,
+search costs, and budget skips under the declared calibration policy. All pairs
 retain identical shots per call.
 `coverage-alternatives-vs-current` adds the [new sampling coverage](../workloads/coverage.md)
-under `grid-v1`, with matched public-call sizes within each row. Check full d5's
+under the [bounded calibration policy](benchmark-contract.md#batching), with matched
+public-call sizes within each row. Check full d5's
 explicit 107-detector mask and keep d7's unverified-proxy label with its results.
 These rows do not change the historical QEC median.
 The anchor reuses current Clifft's surface-code measurement.
@@ -137,7 +136,7 @@ The bootstrap reads the new pinned SymFT source and Stim wheel environments from
 the manifest automatically. Expect SymFT 0.1.1 at `c89b985`, xtim 3.2.2 at
 `edf0dd0` with the manifest's portable build flags, Stim 1.16.0, and Tsim 0.1.5
 at `e9406ed`. Inspect the runtime source identity and calibration evidence.
-Five 30-second samples across 108 cases require at least 270 minutes of sampling,
+Five 30-second samples across the current 70 cases require at least 175 minutes of sampling,
 plus setup/calibration and call overruns. The collection timeout is seven hours;
 the shutdown guard remains eight hours. QV20 calls can substantially exceed the
 30-second sample minimum. The Tsim GPU study has separate

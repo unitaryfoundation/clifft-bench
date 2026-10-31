@@ -70,6 +70,8 @@ def test_aggregate_sample_excludes_stream_setup_and_records_peak_rss(monkeypatch
 
 
 class _CalibrationAdapter:
+    name = "clifft"
+
     def __init__(self) -> None:
         self.prepared_batch_sizes: list[int] = []
         self.prepared_seeds: list[int] = []
@@ -91,7 +93,7 @@ class _CalibrationAdapter:
 
 def test_batch_calibration_selects_best_median_and_records_probes(monkeypatch) -> None:
     adapter = _CalibrationAdapter()
-    durations = {1: 0.5, 32: 0.25}
+    durations = {1: 0.5, 32: 0.25, 64: 0.4}
 
     def timed_sample(prepared, shots: int, seed: int):
         return Counts(shots, shots, 0, seed % 2), durations[prepared.batch_size]
@@ -112,9 +114,9 @@ def test_batch_calibration_selects_best_median_and_records_probes(monkeypatch) -
     )
 
     calibration = prepared.runtime_metadata["batch_calibration"]
-    assert adapter.prepared_batch_sizes == [1, 32, 32]
-    assert adapter.prepared_seeds == [3000010, 3000010, 0]
-    assert calibration["candidates"] == [1, 32]
+    assert adapter.prepared_batch_sizes == [1, 32, 64, 32]
+    assert adapter.prepared_seeds == [3000010, 3000010, 3000010, 0]
+    assert calibration["candidates"] == [1, 32, 64]
     assert calibration["selected_batch_size"] == 32
     assert calibration["selection_statistic"] == "median_attempted_shots_per_second"
     assert calibration["tie_break"] == "smaller_batch_size"
@@ -145,7 +147,7 @@ def test_batch_calibration_breaks_throughput_ties_toward_smaller_size(
     )
 
     assert prepared.runtime_metadata["batch_calibration"]["selected_batch_size"] == 1
-    assert adapter.prepared_batch_sizes == [1, 32, 1]
+    assert adapter.prepared_batch_sizes == [1, 32, 64, 1]
 
 
 def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
@@ -184,11 +186,7 @@ def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
     calibration = prepared.runtime_metadata["batch_calibration"]
     assert calibration["selected_batch_size"] == 1
     assert [result["status"] for result in calibration["results"]] == [
-        "success",
-        "error",
-        "error",
-        "error",
-        "error",
+        "success", "error", "error", "error", "error", "error",
     ]
 
 
@@ -251,6 +249,7 @@ def test_calibration_releases_native_state_before_preparing_another_trial(monkey
             self.runtime_metadata = {"batch_enabled": batch > 1, "effective_batch_size": batch}
 
     class Adapter:
+        name = "clifft"
         previous = None
         batches = []
 
@@ -274,57 +273,25 @@ def test_calibration_releases_native_state_before_preparing_another_trial(monkey
         execution={"batch_size": "calibrate", "batch_enabled": True},
         shots_per_call=256, seed=10,
     )
-    assert adapter.batches == [1, 32, 256, 1]
+    assert adapter.batches == [1, 32, 64, 256, 1]
     assert prepared.batch_size == 1
     assert [r["status"] for r in prepared.runtime_metadata["batch_calibration"]["results"]] == [
-        "success", "error", "success",
+        "success", "error", "success", "success",
     ]
 
 
-def test_tsim_small_capacities_are_versioned():
+@pytest.mark.parametrize("adapter, shots, expected", [
+    ("clifft", 2048, [1, 32, 64, 256, 1024, 2048]),
+    ("symft", 100, [1, 32, 64]),
+    ("tsim", 100000, [1, 32, 256, 1024, 8192, 65536]),
+    ("tsim", 16, [1, 16]),
+    ("stim", 100000, [256, 1024, 4096, 16384, 65536, 100000]),
+    ("xtim", 10, [10]),
+])
+def test_calibration_candidates_follow_tool_capacity_and_public_call(adapter, shots, expected):
     from clifft_bench.calibration import calibration_candidates
 
-    assert calibration_candidates("tsim", 100000) == [256, 1024, 8192, 65536]
-    assert calibration_candidates("tsim", 100000, "bounded-v2") == [
-        1, 32, 256, 1024, 8192, 65536,
-    ]
-    assert calibration_candidates("tsim", 16, "bounded-v2") == [1, 16]
-    with pytest.raises(ValueError, match="unknown tuning policy"):
-        calibration_candidates("tsim", 100, "unknown")
-
-
-def test_bounded_tuning_freezes_native_proposals_and_measures_duplicate_sizes_once(monkeypatch):
-    class Adapter(_CalibrationAdapter):
-        name = "clifft"
-        native_calls = 0
-
-        def native_batch_choices(self, *, budget_seconds, shots, **kwargs):
-            self.native_calls += 1
-            assert budget_seconds == 0.25 and shots == 256
-            return {"status": "success", "report": {
-                "batch_size": 128, "baseline_batch_size": 32,
-                "shot_workers": 1, "intra_shot_workers": 1,
-            }}
-
-    adapter = Adapter()
-    monkeypatch.setattr(worker, "timed_sample", lambda p, shots, seed: (
-        Counts(shots, shots, 0, 0), 0.1 if p.batch_size == 128 else 0.5,
-    ))
-    prepared = worker.calibrate_batch_size(
-        adapter, artifact_path=SimpleNamespace(),
-        workload={"semantics": {"postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate",
-                   "tuning_policy": "bounded-v2"}, shots_per_call=256, seed=10,
-    )
-    record = prepared.runtime_metadata["batch_calibration"]
-    assert adapter.native_calls == 1
-    assert record["candidates"] == [128, 32, 1, 256]
-    assert adapter.prepared_batch_sizes == [128, 32, 1, 256, 128]
-    assert record["selected_batch_size"] == 128
-    assert record["policy"] == "bounded-v2"
-    assert record["native"]["report"]["baseline_batch_size"] == 32
-    assert all(type(n) is int for n in adapter.prepared_batch_sizes)
-    assert all(s["peak_rss_bytes"] > 0 for r in record["results"] for s in r["samples"])
+    assert calibration_candidates(adapter, shots) == expected
 
 
 def test_bounded_tuning_stops_between_complete_candidates(monkeypatch):
@@ -340,36 +307,109 @@ def test_bounded_tuning_stops_between_complete_candidates(monkeypatch):
     prepared = worker.calibrate_batch_size(
         adapter, artifact_path=SimpleNamespace(),
         workload={"semantics": {"postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate",
-                   "tuning_policy": "bounded-v2"}, shots_per_call=2048, seed=10,
+        execution={"batch_enabled": True, "batch_size": "calibrate"}, shots_per_call=2048, seed=10,
     )
     record = prepared.runtime_metadata["batch_calibration"]
     assert adapter.prepared_batch_sizes == [1, 1]
     assert record["search_seconds"] == 80
     assert len(record["results"][0]["samples"]) == 3
     assert [row["status"] for row in record["results"]] == [
-        "success", "budget-skipped", "budget-skipped", "budget-skipped", "budget-skipped",
+        "success", *["budget-skipped"] * (len(record["candidates"]) - 1),
     ]
 
 
-def test_native_tuning_failure_does_not_discard_the_fixed_search(monkeypatch):
-    class Adapter(_CalibrationAdapter):
-        name = "clifft"
 
-        def native_batch_choices(self, **kwargs):
-            raise MemoryError("native tuner could not allocate its trial")
+def test_calibration_retains_completed_probes_when_a_later_probe_fails(monkeypatch):
+    adapter = _CalibrationAdapter()
 
-    adapter = Adapter()
-    monkeypatch.setattr(worker, "timed_sample", lambda p, shots, seed: (
-        Counts(shots, shots, 0, 0), 0.5,
-    ))
+    def sample(prepared, shots, seed):
+        if prepared.batch_size == 32 and seed == 1000010:
+            raise MemoryError("second probe failed")
+        return Counts(shots, shots, 0, 0), 1.0
+
+    monkeypatch.setattr(worker, "timed_sample", sample)
     prepared = worker.calibrate_batch_size(
-        adapter, artifact_path=SimpleNamespace(),
+        adapter, artifact_path=None,
         workload={"semantics": {"postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate",
-                   "tuning_policy": "bounded-v2"}, shots_per_call=32, seed=10,
+        execution={"batch_enabled": True, "batch_size": "calibrate"},
+        shots_per_call=32, seed=10,
     )
-    record = prepared.runtime_metadata["batch_calibration"]
-    assert record["native"]["error"]["type"] == "MemoryError"
-    assert record["candidates"] == [1, 32]
-    assert record["selected_batch_size"] == 1
+    failed = prepared.runtime_metadata["batch_calibration"]["results"][1]
+    assert failed["status"] == "error"
+    assert failed["error"]["type"] == "MemoryError"
+    assert len(failed["samples"]) == 1
+    assert failed["samples"][0]["peak_rss_bytes"] > 0
+
+
+def test_calibration_does_not_swallow_the_hard_preparation_deadline(monkeypatch):
+    adapter = _CalibrationAdapter()
+
+    def sample(*args):
+        raise worker.WorkerTimeout("preparation deadline")
+
+    monkeypatch.setattr(worker, "timed_sample", sample)
+    with pytest.raises(worker.WorkerTimeout, match="preparation deadline"):
+        worker.calibrate_batch_size(
+            adapter, artifact_path=None,
+            workload={"semantics": {"postselect_all_detectors": False}},
+            execution={"batch_enabled": True, "batch_size": "calibrate"},
+            shots_per_call=64, seed=10,
+        )
+    assert adapter.prepared_batch_sizes == [1]
+
+
+@pytest.mark.parametrize("final_prepare_fails", [False, True])
+def test_calibration_failure_keeps_search_evidence(monkeypatch, final_prepare_fails):
+    class Adapter(_CalibrationAdapter):
+        def prepare(self, *, seed=0, **kwargs):
+            if not final_prepare_fails or seed == 0:
+                raise MemoryError("native allocation failed")
+            return super().prepare(seed=seed, **kwargs)
+
+    monkeypatch.setattr(worker, "timed_sample",
+                        lambda p, shots, seed: (Counts(shots, shots, 0, 0), 1.0))
+    with pytest.raises(worker.CalibrationError) as caught:
+        worker.calibrate_batch_size(
+            Adapter(), artifact_path=None,
+            workload={"semantics": {"postselect_all_detectors": False}},
+            execution={"batch_enabled": True, "batch_size": "calibrate"},
+            shots_per_call=32, seed=10,
+        )
+    record = caught.value.record
+    assert record["selected_batch_size"] == (1 if final_prepare_fails else None)
+    assert [r["batch_size"] for r in record["results"]] == record["candidates"]
+    assert all(r["status"] == ("success" if final_prepare_fails else "error")
+               for r in record["results"])
+    if final_prepare_fails:
+        assert all(len(r["samples"]) == 3 for r in record["results"])
+    else:
+        assert all(r["error"]["type"] == "MemoryError" for r in record["results"])
+
+
+
+def test_worker_returns_calibration_failures_with_their_evidence(monkeypatch):
+    import io
+    import json
+
+    def fail(**kwargs):
+        raise MemoryError("cannot prepare candidate")
+
+    adapter = SimpleNamespace(name="clifft", prepare=fail, verify_installation=lambda **kw: {})
+    emitted = []
+    monkeypatch.setattr(worker, "isolate_protocol_stream", lambda: None)
+    monkeypatch.setattr(worker, "emit", emitted.append)
+    monkeypatch.setattr(worker, "load_adapter", lambda _: adapter)
+    monkeypatch.setattr(worker.sys, "stdin", io.StringIO(json.dumps({
+        "command": "prepare", "adapter": "clifft", "artifact_path": "unused.stim",
+        "workload": {"semantics": {"postselect_all_detectors": False}},
+        "execution": {"batch_enabled": True, "batch_size": "calibrate"},
+        "shots_per_call": 32, "seed": 10, "sampling_seed": 7, "timeout_seconds": 5,
+        "expected_commit": "test", "source_url": "test",
+    }) + "\n"))
+    assert worker.main() == 1
+    assert emitted[0]["ok"] is False
+    error = emitted[0]["error"]
+    assert error["type"] == "CalibrationError"
+    record = error["batch_calibration"]
+    assert record["selected_batch_size"] is None
+    assert [r["error"]["type"] for r in record["results"]] == ["MemoryError", "MemoryError"]
