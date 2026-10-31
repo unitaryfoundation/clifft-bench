@@ -1,5 +1,11 @@
 # Contributing to clifft-bench
 
+The maintained workflow compares current Clifft with the previous release and
+with other simulators in a fresh paired campaign. Representative workloads may
+evolve; comparisons within a campaign use matching circuit and output semantics,
+public call sizes, and resource limits. Long-term trends and one-off studies
+are optional analyses, not prerequisites for maintaining the release benchmarks.
+
 ## Local development
 
 Python 3.12 or newer and [uv](https://docs.astral.sh/uv/) are required:
@@ -72,9 +78,11 @@ For a new Clifft release:
    requires it; batch size remains a separately calibrated implementation choice.
 5. Validate locally, then follow the [EC2 collection procedure](docs/manual-ec2.md).
 
-Preserve the previously reviewed current configuration when moving it to
-`clifft-previous`, including optional compiler passes and per-workload shot
-counts. This keeps the paired performance-history chain continuous.
+Choose and record the previous/current configurations for the new campaign.
+Keep shared measurement inputs matched within each comparison; new workloads
+without a supported previous-release baseline belong in current coverage.
+Changing the representative suite does not require extending the historical
+series or rerunning old releases.
 
 For a release candidate, keep its exact prerelease value in `version` and its
 environment lock, record the immutable `source_tag` and commit, and set
@@ -88,9 +96,22 @@ checks placement coverage and calibration evidence, then writes `cases.csv`,
 
 After the results are reviewed, follow the
 [reporting instructions](reporting/README.md) to update the figures and README.
-The reporting layer extends the one-off
-[historical backfill](campaigns/clifft-history-v1/README.md) with paired release
-ratios; older releases are not rerun for every release.
+The current reporting tools also provide an optional historical view using the
+[historical backfill](campaigns/clifft-history-v1/README.md) and paired release
+ratios. See [historical evidence](#historical-evidence) for the archived workflow.
+
+## Historical evidence
+
+The [legacy code, environments, and results at `da88d59`](https://github.com/unitaryfoundation/clifft-bench/tree/da88d59f7976f5d3c2c071190b80d539eacb5fca)
+provide a fixed reference for reproducing or investigating earlier measurements.
+Use that revision's [reporting instructions](https://github.com/unitaryfoundation/clifft-bench/blob/da88d59f7976f5d3c2c071190b80d539eacb5fca/reporting/README.md)
+with its evidence. Active code need not retain compatibility with those formats
+or old simulator APIs, and archived results need not be migrated.
+
+Historical plots may describe performance on an evolving representative suite.
+Label workload, hardware, and methodology changes rather than imply a precise
+same-task speedup across them. Historical refreshes are separate from the
+recurring release workflow.
 
 ## Adding a workload
 
