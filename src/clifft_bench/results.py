@@ -14,7 +14,7 @@ from clifft_bench.calibration import (
     TUNING_BUDGET_SECONDS,
     calibration_candidates,
 )
-from clifft_bench.manifest import Case, Suite
+from clifft_bench.config import Case, Suite
 from clifft_bench.schema import (
     SchemaValidationError,
     repository_root,
@@ -215,8 +215,8 @@ def _case_rows(
                     "total_attempted_shots": summary.get("total_attempted_shots", 0),
                     "total_duration_seconds": summary.get("total_duration_seconds", ""),
                     "clifft_scheduler": (
-                        json.dumps(case["execution"]["clifft_scheduler"], sort_keys=True)
-                        if "clifft_scheduler" in case["execution"] else ""
+                        json.dumps(case["execution"]["options"]["scheduler"], sort_keys=True)
+                        if "scheduler" in case["execution"].get("options", {}) else ""
                     ),
                     "compile_seconds": metadata.get("compile_seconds", ""),
                     "peak_active_width": metadata.get("peak_active_width", ""),
@@ -518,7 +518,7 @@ def _validate_execution(
                     or case["execution"]["postselection"] != has_postselection(semantics)):
                 raise ValueError(f"raw case {expected.id!r} has mismatched workload semantics")
             if (
-                "clifft_scheduler" in expected.definition["execution"]
+                "scheduler" in expected.definition["execution"].get("options", {})
                 and case["status"] == "success"
             ):
                 metadata = (case.get("setup") or {}).get("runtime_metadata", {})
@@ -530,7 +530,11 @@ def _validate_execution(
                 and case["status"] == "success"
             ):
                 metadata = (case.get("setup") or {}).get("runtime_metadata", {})
-                sharing = expected.definition["execution"].get("tsim_trajectory_sharing", True)
+                sharing = (
+                    expected.definition["execution"]
+                    .get("options", {})
+                    .get("trajectory_sharing", True)
+                )
                 if (
                     metadata.get("sampling_backend") != "active_statevector"
                     or metadata.get("threads") != 1

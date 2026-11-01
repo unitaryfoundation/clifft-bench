@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import math
 import os
 from collections import Counter
@@ -9,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKLOAD_ID = "distillation-15to1-rm15-p1e-3"
@@ -23,14 +22,16 @@ def _prepare(adapter, tmp_path, text):
     module = pytest.importorskip(adapter)
     path = tmp_path / "distillation.stim"
     path.write_text(text)
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases if c.workload.id == WORKLOAD_ID)
     execution = {"batch_enabled": True, "batch_size": 1024,
-                 "sample_chunk_shots": 2048 if adapter == "symft" else 0}
+                 "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {}}
     if adapter == "clifft" and hasattr(module, "ActiveWidthSchedulePass"):
-        execution["clifft_scheduler"] = json.loads(
-            (ROOT / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
-        )["clifft_scheduler"]
+        execution["options"]["scheduler"] = (
+            load_suite(ROOT / "campaigns/release-v1.toml")
+            .cases[0]
+            .definition["execution"]["options"]["scheduler"]
+        )
     prepared = load_adapter(adapter).prepare(
         artifact_path=path, workload=case.workload.definition, execution=execution,
     )

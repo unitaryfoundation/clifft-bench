@@ -7,6 +7,7 @@ import os
 import platform
 import subprocess
 import sys
+import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -75,9 +76,9 @@ def write_json(path: Path, value: object) -> None:
 
 
 def workloads() -> dict:
-    manifest = ROOT / "manifests/workloads.v1.json"
+    manifest = ROOT / "workloads.toml"
     selected = {}
-    for workload in json.loads(manifest.read_text())["workloads"]:
+    for workload in tomllib.loads(manifest.read_text())["workloads"]:
         if workload["id"] not in WORKLOADS:
             continue
         artifact = (manifest.parent / workload["artifact"]["path"]).resolve()

@@ -33,7 +33,11 @@ def prepare(tmp_path, text, *, batch=1, observable=0, postselect=False):
                 "postselect_all_detectors": postselect,
             }
         },
-        execution={"batch_enabled": batch > 1, "batch_size": batch, "sample_chunk_shots": 2048},
+        execution={
+            "batch_enabled": batch > 1,
+            "batch_size": batch,
+            "options": {"sample_chunk_shots": 2048},
+        },
     )
 
 

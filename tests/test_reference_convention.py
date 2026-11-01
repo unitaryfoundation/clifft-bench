@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
 
 from clifft_bench.adapters import load_adapter
+from clifft_bench.config import load_suite, read_toml
+from clifft_bench.schema import repository_root
 
 
 def _prepare(
@@ -22,16 +23,16 @@ def _prepare(
         execution = {
             "batch_enabled": False,
             "batch_size": 1,
-            "sample_chunk_shots": 0,
+            "options": {},
         }
     else:
         execution = {
             "batch_enabled": True,
             "batch_size": 32,
-            "sample_chunk_shots": 32,
+            "options": {"sample_chunk_shots": 32} if adapter_name == "symft" else {},
         }
     if adapter_name in {"stim", "xtim"}:
-        execution["sample_chunk_shots"] = 0
+        execution["options"] = {}
     prepared = load_adapter(adapter_name).prepare(
         artifact_path=artifact_path,
         workload={
@@ -108,9 +109,11 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
     )
     artifact = tmp_path / "noisy.stim"
     artifact.write_text(source + "DETECTOR rec[-2]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
-    config_path = (Path(__file__).resolve().parents[1] /
-                   "campaigns/release-v1/clifft-scheduled-execution.json")
-    options = json.loads(config_path.read_text())["clifft_scheduler"]
+    options = (
+        load_suite(repository_root() / "campaigns/release-v1.toml")
+        .cases[0]
+        .definition["execution"]["options"]["scheduler"]
+    )
     prepared = load_adapter("clifft").prepare(
         artifact_path=artifact,
         workload={"semantics": {
@@ -119,8 +122,7 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
         }},
         execution={
             "batch_enabled": batch_size > 1, "batch_size": batch_size,
-            "sample_chunk_shots": 0,
-            "clifft_scheduler": options,
+            "options": {"scheduler": options},
         },
     )
     stats = prepared.runtime_metadata["scheduler_statistics"]
@@ -141,18 +143,19 @@ def test_clifft_default_pipeline_reduces_prepared_adder(batch_size, scheduled):
     if not hasattr(clifft, "RotationSimplificationPass"):
         pytest.skip("this Clifft release predates rotation simplification")
     root = Path(__file__).resolve().parents[1]
-    manifest = json.loads((root / "manifests/workloads.v1.json").read_text())
+    manifest = read_toml(root / "workloads.toml")
     workload = next(
         item for item in manifest["workloads"] if item["id"] == "draper-adder-m16-basis"
     )
-    execution = json.loads(
-        (root / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
+    execution = dict(
+        load_suite(root / "campaigns/release-v1.toml").cases[0].definition["execution"]
     )
+    execution["options"] = dict(execution["options"])
     execution["batch_size"] = batch_size
     if not scheduled:
-        execution.pop("clifft_scheduler")
+        execution["options"].pop("scheduler")
     prepared = load_adapter("clifft").prepare(
-        artifact_path=root / "manifests" / workload["artifact"]["path"],
+        artifact_path=root / workload["artifact"]["path"],
         workload=workload,
         execution=execution,
     )
@@ -211,7 +214,7 @@ def test_bounded_calibration_prepares_a_fixed_usable_sampler(adapter_name, tmp_p
         load_adapter(adapter_name), artifact_path=path,
         workload={"semantics": {"reference_convention": "raw-record-parity",
                                 "observable_index": 0, "postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate", "sample_chunk_shots": 0},
+        execution={"batch_enabled": True, "batch_size": "calibrate", "options": {}},
         shots_per_call=32, seed=10, sampling_seed=7,
     )
     record = prepared.runtime_metadata["batch_calibration"]

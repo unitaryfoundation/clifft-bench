@@ -1,0 +1,76 @@
+suite_version = "0.2.8"
+profile_id = "tsim-adapter-smoke"
+classification = "smoke"
+seed = 20260808
+workloads_file = "../workloads.toml"
+software_file = "../software.toml"
+
+[resources]
+
+[measurement]
+setup_timeout_seconds = 300
+request_timeout_seconds = 60
+warmup_shots = 4
+correctness_shots = 16
+min_sample_seconds = 0.05
+repetitions = 2
+
+[[cases]]
+id = "cultivation-smoke-tsim"
+variant_id = "tsim-current"
+workload_id = "msc-d3-inject-cultivate-p1e-3"
+implementation_id = "tsim-0.1.5-e9406ed"
+shots_per_call = 1024
+
+[cases.execution]
+mode = "throughput"
+batch_enabled = true
+batch_size = "calibrate"
+
+[cases.execution.options]
+trajectory_sharing = true
+
+[[cases]]
+id = "distillation-smoke-tsim"
+variant_id = "tsim-current"
+workload_id = "distillation-15to1-rm15-p1e-3"
+implementation_id = "tsim-0.1.5-e9406ed"
+shots_per_call = 1025
+
+[cases.execution]
+mode = "throughput"
+batch_enabled = true
+batch_size = 1024
+
+[cases.execution.options]
+trajectory_sharing = true
+
+[[cases]]
+id = "coherent-smoke-tsim"
+variant_id = "tsim-current"
+workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
+implementation_id = "tsim-0.1.5-e9406ed"
+shots_per_call = 257
+
+[cases.execution]
+mode = "throughput"
+batch_enabled = true
+batch_size = 256
+
+[cases.execution.options]
+trajectory_sharing = true
+
+[[cases]]
+id = "reed-muller-measured-smoke-tsim"
+variant_id = "tsim-current"
+workload_id = "reed-muller-measured"
+implementation_id = "tsim-0.1.5-e9406ed"
+shots_per_call = 2048
+
+[cases.execution]
+mode = "throughput"
+batch_enabled = true
+batch_size = "calibrate"
+
+[cases.execution.options]
+trajectory_sharing = true

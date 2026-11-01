@@ -1,22 +1,22 @@
 import copy
-import json
 import re
 from pathlib import Path
 
 import pytest
+from toml_helpers import write_toml
 
 from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
-from clifft_bench.manifest import load_suite
-from clifft_bench.schema import SchemaValidationError, repository_root
+from clifft_bench.config import load_suite
+from clifft_bench.schema import repository_root
 
 ROOT = repository_root()
 
 
-SMOKE_MANIFESTS = sorted(ROOT.glob("manifests/run-*.v1.json"))
+SMOKE_MANIFESTS = sorted(ROOT.glob("campaigns/*smoke.toml"))
 assert SMOKE_MANIFESTS, "no checked-in smoke manifests discovered"
 RUN_MANIFESTS = sorted([
     *SMOKE_MANIFESTS,
-    *ROOT.glob("campaigns/*/run.v1.json"),
+    *ROOT.glob("campaigns/release-*.toml"), ROOT / "campaigns/tsim-pilot.toml",
 ])
 assert RUN_MANIFESTS, "no checked-in run manifests discovered"
 
@@ -54,7 +54,7 @@ def test_checked_in_suites_resolve_artifacts_references_and_environments(path: P
 
 
 def test_release_compares_distinct_clifft_implementations() -> None:
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     comparison = next(c for c in suite.run["comparisons"] if c["id"] == "current-vs-previous")
     variants = {variant["id"]: variant for variant in suite.run["variants"]}
     implementations = {case.implementation.id: case.implementation for case in suite.cases}
@@ -71,7 +71,7 @@ def test_release_compares_distinct_clifft_implementations() -> None:
 
 
 def test_release_current_variants_share_one_implementation_per_adapter() -> None:
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     comparison = next(c for c in suite.run["comparisons"] if c["id"] == "current-vs-previous")
     current: dict[str, set[str]] = {}
     for case in suite.cases:
@@ -85,7 +85,7 @@ def test_release_current_variants_share_one_implementation_per_adapter() -> None
 
 
 def test_release_bulk_calls_exceed_their_short_call_siblings() -> None:
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     variants = {variant["id"]: variant for variant in suite.run["variants"]}
     bulk = [variant for variant in variants.values() if "-bulk" in variant["id"]]
     assert bulk
@@ -100,12 +100,12 @@ def test_release_bulk_calls_exceed_their_short_call_siblings() -> None:
         implementation = next(c.implementation for c in suite.cases
                               if c.implementation.id == variant["implementation_id"])
         if implementation.definition["adapter"] == "tsim":
-            assert variant["execution"].get("tsim_trajectory_sharing", True) is True
+            assert variant["execution"]["options"].get("trajectory_sharing", True) is True
 
 
 @pytest.mark.parametrize("path", SMOKE_MANIFESTS, ids=lambda p: p.name)
 def test_smoke_and_pilot_implementations_match_the_release(path: Path) -> None:
-    release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    release = load_suite(ROOT / "campaigns/release-v1.toml")
     variants = {variant["id"]: variant for variant in release.run["variants"]}
     smoke = load_suite(path)
     for case in smoke.cases:
@@ -117,7 +117,7 @@ def test_smoke_and_pilot_implementations_match_the_release(path: Path) -> None:
 
 @pytest.mark.parametrize("adapter", ["clifft", "symft"])
 def test_smoke_suite_exercises_full_batch_calibration_sweep(adapter: str) -> None:
-    smoke = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    smoke = load_suite(ROOT / "campaigns/smoke.toml")
     calibrated = [
         case
         for case in smoke.cases
@@ -134,7 +134,7 @@ def test_smoke_suite_exercises_full_batch_calibration_sweep(adapter: str) -> Non
 
 
 def test_batch_calibration_requires_batch_enabled_throughput_case(tmp_path: Path) -> None:
-    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    suite = load_suite(ROOT / "campaigns/smoke.toml")
     run = copy.deepcopy(suite.run)
     target = next(
         case
@@ -142,52 +142,32 @@ def test_batch_calibration_requires_batch_enabled_throughput_case(tmp_path: Path
         if case["execution"]["batch_size"] == "calibrate"
     )
     target["execution"]["batch_enabled"] = False
-    run["workloads_manifest"] = str(suite.workloads_path)
-    run["software_manifest"] = str(suite.software_path)
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
+    run["workloads_file"] = str(suite.workloads_path)
+    run["software_file"] = str(suite.software_path)
+    run_path = tmp_path / "run.toml"
+    write_toml(run_path, run)
 
-    with pytest.raises(SchemaValidationError, match="batching disabled"):
+    with pytest.raises(ValueError, match="batching disabled"):
         load_suite(run_path)
 
 
-@pytest.mark.parametrize("change, message", [
-    ("shared-python", "share python executable variable"),
-    ("missing-lock", "requirements do not exist"),
-    ("missing-environment", "no install environment"),
-])
-def test_official_implementations_require_usable_isolated_environments(
-    tmp_path: Path, change: str, message: str,
-) -> None:
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    software = copy.deepcopy(suite.software_document)
-    implementations = {item["id"]: item for item in software["implementations"]}
-    variants = {variant["id"]: variant for variant in suite.run["variants"]}
-    previous = implementations[variants["clifft-previous"]["implementation_id"]]
-    current = implementations[variants["clifft-current"]["implementation_id"]]
-    if change == "shared-python":
-        previous["python_executable_env"] = current["python_executable_env"]
-    elif change == "missing-lock":
-        current["environment"]["requirements"] = str(tmp_path / "missing.txt")
-    else:
-        del current["environment"]
-    for implementation in implementations.values():
-        environment = implementation.get("environment")
-        if environment is not None:
-            environment["requirements"] = str(
-                (suite.software_path.parent / environment["requirements"]).resolve()
-            )
-    software_path = tmp_path / "software.json"
-    software_path.write_text(json.dumps(software))
-
+def test_official_implementations_require_environment_locks(tmp_path):
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
+    for implementation in {c.implementation.id: c.implementation for c in suite.cases}.values():
+        assert implementation.requirements_path.is_file()
+        assert implementation.environment_path == ROOT / ".campaign-envs" / implementation.id
+        assert implementation.python_executable() == str(
+            implementation.environment_path / "bin/python"
+        )
+    software_path = tmp_path / "software.toml"
+    write_toml(software_path, suite.software_document)
     run = copy.deepcopy(suite.run)
-    run["workloads_manifest"] = str(suite.workloads_path)
-    run["software_manifest"] = str(software_path)
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
-
-    with pytest.raises(SchemaValidationError, match=message):
-        load_suite(run_path)
+    run["software_file"] = str(software_path)
+    run["workloads_file"] = str(suite.workloads_path)
+    path = tmp_path / "run.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match="requirements do not exist"):
+        load_suite(path)
 
 
 def test_environment_locks_pin_every_requirement() -> None:
@@ -205,17 +185,17 @@ def test_environment_locks_pin_every_requirement() -> None:
 
 
 def _suite_with_local_workloads(tmp_path: Path):
-    suite = load_suite(ROOT / "manifests/run-smoke.v1.json")
+    suite = load_suite(ROOT / "campaigns/smoke.toml")
     workloads = copy.deepcopy(suite.workloads_document)
     for workload in workloads["workloads"]:
         workload["artifact"]["path"] = str(
             suite.workloads_path.parent / workload["artifact"]["path"]
         )
-    workloads_path = tmp_path / "workloads.json"
-    workloads_path.write_text(json.dumps(workloads))
+    workloads_path = tmp_path / "workloads.toml"
+    write_toml(workloads_path, workloads)
     run = copy.deepcopy(suite.run)
-    run["workloads_manifest"] = "workloads.json"
-    run["software_manifest"] = str(suite.software_path)
+    run["workloads_file"] = "workloads.toml"
+    run["software_file"] = str(suite.software_path)
     return suite, workloads, workloads_path, run
 
 
@@ -223,9 +203,9 @@ def _suite_with_local_workloads(tmp_path: Path):
 def test_unknown_case_references_are_rejected(tmp_path: Path, field: str) -> None:
     _, _, _, run = _suite_with_local_workloads(tmp_path)
     run["cases"][0][field] = "unknown-reference"
-    path = tmp_path / "run.json"
-    path.write_text(json.dumps(run))
-    with pytest.raises(SchemaValidationError, match="references unknown"):
+    path = tmp_path / "run.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match="references unknown"):
         load_suite(path)
 
 
@@ -236,22 +216,22 @@ def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
         "sha256": workloads["workloads"][0]["artifact"]["sha256"],
     }
     (tmp_path / "changed.stim").write_text("M 0\n")
-    workloads_path.write_text(json.dumps(workloads))
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
+    write_toml(workloads_path, workloads)
+    run_path = tmp_path / "run.toml"
+    write_toml(run_path, run)
 
-    with pytest.raises(SchemaValidationError, match="SHA-256 mismatch"):
+    with pytest.raises(ValueError, match="SHA-256 mismatch"):
         load_suite(run_path)
 
 
 def test_incompatible_case_is_rejected_before_execution(tmp_path: Path) -> None:
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
     workloads["workloads"][0]["compatible_adapters"] = ["clifft"]
-    workloads_path.write_text(json.dumps(workloads))
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
+    write_toml(workloads_path, workloads)
+    run_path = tmp_path / "run.toml"
+    write_toml(run_path, run)
 
-    with pytest.raises(SchemaValidationError, match="forces incomparable adapter"):
+    with pytest.raises(ValueError, match="forces incomparable adapter"):
         load_suite(run_path)
 
 
@@ -260,11 +240,11 @@ def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) ->
     workloads["workloads"][0]["semantics"]["observable_index"] = (
         workloads["workloads"][0]["expected_metadata"]["num_observables"]
     )
-    workloads_path.write_text(json.dumps(workloads))
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
+    write_toml(workloads_path, workloads)
+    run_path = tmp_path / "run.toml"
+    write_toml(run_path, run)
 
-    with pytest.raises(SchemaValidationError, match="observable index .* is outside"):
+    with pytest.raises(ValueError, match="observable index .* is outside"):
         load_suite(run_path)
 
 
@@ -284,10 +264,10 @@ def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
         semantics["postselect_all_detectors"] = True
     else:
         workload["compatible_adapters"].append("symft")
-    workloads_path.write_text(json.dumps(workloads))
-    run_path = tmp_path / "run.json"
-    run_path.write_text(json.dumps(run))
-    with pytest.raises(SchemaValidationError, match="indices|select all|detector-subset"):
+    write_toml(workloads_path, workloads)
+    run_path = tmp_path / "run.toml"
+    write_toml(run_path, run)
+    with pytest.raises(ValueError, match="indices|select all|detector-subset"):
         load_suite(run_path)
 
 
@@ -296,22 +276,22 @@ def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
     ("self", "repeats its baseline"),
 ])
 def test_comparisons_require_distinct_existing_variants(tmp_path, change, message):
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     run = copy.deepcopy(suite.run)
     comparison = run["comparisons"][0]
     comparison["candidate_variants"] = [
         "unknown-variant" if change == "unknown" else comparison["baseline_variant"]
     ]
-    run["workloads_manifest"] = str(suite.workloads_path)
-    run["software_manifest"] = str(suite.software_path)
-    path = tmp_path / "run.json"
-    path.write_text(json.dumps(run))
-    with pytest.raises(SchemaValidationError, match=message):
+    run["workloads_file"] = str(suite.workloads_path)
+    run["software_file"] = str(suite.software_path)
+    path = tmp_path / "run.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match=message):
         load_suite(path)
 
 
 def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     run = copy.deepcopy(suite.run)
     comparison = run["comparisons"][0]
     variant = next(v for v in run["variants"] if v["id"] == comparison["candidate_variants"][0])
@@ -319,18 +299,52 @@ def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
     baseline_workloads = {w["workload_id"] for w in baseline["workloads"]}
     workload = next(w for w in variant["workloads"] if w["workload_id"] in baseline_workloads)
     workload["shots_per_call"] += 1
-    run["workloads_manifest"] = str(suite.workloads_path)
-    run["software_manifest"] = str(suite.software_path)
-    path = tmp_path / "mismatch.json"
-    path.write_text(json.dumps(run))
-    with pytest.raises(SchemaValidationError, match="unequal shots_per_call"):
+    run["workloads_file"] = str(suite.workloads_path)
+    run["software_file"] = str(suite.software_path)
+    path = tmp_path / "mismatch.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match="unequal shots_per_call"):
         load_suite(path)
 
 
 def test_tsim_pilot_reuses_exact_release_cases():
-    release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    pilot = load_suite(ROOT / "manifests/run-tsim-pilot.v1.json")
+    release = load_suite(ROOT / "campaigns/release-v1.toml")
+    pilot = load_suite(ROOT / "campaigns/tsim-pilot.toml")
     expected = {case.id: case.definition for case in release.cases}
     assert pilot.run["classification"] == "smoke"
     assert pilot.cases
     assert all(case.definition == expected[case.id] for case in pilot.cases)
+
+
+@pytest.mark.parametrize("damage", ["unknown", "type", "nonfinite", "duplicate"])
+def test_campaign_rejects_malformed_inputs(tmp_path, damage):
+    from clifft_bench.config import read_toml
+
+    campaign = read_toml(ROOT / "campaigns/smoke.toml")
+    campaign["workloads_file"] = str(ROOT / "workloads.toml")
+    campaign["software_file"] = str(ROOT / "software.toml")
+    if damage == "unknown":
+        campaign["measurement"]["typo"] = 10
+    elif damage == "type":
+        campaign["measurement"]["repetitions"] = True
+    elif damage == "nonfinite":
+        campaign["measurement"]["min_sample_seconds"] = float("inf")
+    else:
+        campaign["cases"].append(copy.deepcopy(campaign["cases"][0]))
+    path = tmp_path / "malformed.toml"
+    write_toml(path, campaign)
+    with pytest.raises(ValueError):
+        load_suite(path)
+
+
+def test_listing_does_not_import_simulator_packages():
+    import subprocess
+    import sys
+
+    result = subprocess.run([
+        sys.executable, "-c",
+        "import sys; from clifft_bench.cli import main; "
+        "assert main(['list', 'release-v1', '--json']) == 0; "
+        "assert not {'clifft', 'symft', 'stim', 'xtim', 'tsim'} & sys.modules.keys()",
+    ], capture_output=True, text=True, check=True, timeout=10)
+    assert '"case_id"' in result.stdout

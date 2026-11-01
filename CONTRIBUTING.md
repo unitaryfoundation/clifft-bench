@@ -35,7 +35,7 @@ generators and official raw results with the benchmarking code they support.
 
 ## Preparing a release campaign
 
-[`campaigns/release-v1/run.v1.json`](campaigns/release-v1/run.v1.json) is the
+[`campaigns/release-v1.toml`](campaigns/release-v1.toml) is the
 recurring campaign definition. It compares calibrated previous and current
 Clifft configurations, then calibrated current Clifft and SymFT configurations,
 with Stim in a separate `stim-anchor-vs-current` comparison on the unchanged
@@ -61,7 +61,7 @@ reference-host campaign. Supplemental coverage follows the same policy; see
 For a new Clifft release:
 
 1. Add its identity and install environment to
-   [`manifests/software.v1.json`](manifests/software.v1.json).
+   [`software.toml`](software.toml).
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
    Update the previous-release and current-source installs in
    [CI](.github/workflows/ci.yml) to exercise both maintained implementations.
@@ -69,13 +69,12 @@ For a new Clifft release:
 3. Point `clifft-current`, `clifft-bulk`, and `clifft-coverage` at the
    new implementation and `clifft-previous` at the prior measured release in the release manifest.
    Update the Clifft smoke, coverage smoke and pilot cases and the `clifft-current` CI install
-   to the same new implementation. For a scheduler-capable RC, set
-   `clifft-current.execution` to the checked-in
-   [scheduler configuration](campaigns/release-v1/clifft-scheduled-execution.json).
+   to the same new implementation. Keep the intended scheduler settings in
+   each Clifft variant’s `execution.options.scheduler` table.
 4. Keep each workload's `shots_per_call` aligned across every variant and
    release within each comparison. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.
-5. Validate locally, then follow the [EC2 collection procedure](docs/manual-ec2.md).
+5. Validate locally, then follow the [EC2 collection procedure](CONTRIBUTING.md#reference-host-collection).
 
 Choose and record the previous/current configurations for the new campaign.
 Keep shared measurement inputs matched within each comparison; new workloads
@@ -89,15 +88,88 @@ environment lock, record the immutable `source_tag` and commit, and set
 evidence retain the exact candidate identity; derived tables expose the display
 version for plots, summaries, and release docs.
 
-One placement produces one raw result containing every variant. The finalizer
-checks placement coverage and calibration evidence, then writes `cases.csv`,
-`comparisons.csv`, and `index.json` beside the raw evidence.
+One collection produces a raw result containing every selected variant, including
+structured case failures. The finalizer checks coverage and calibration evidence,
+then writes `cases.csv`, `comparisons.csv`, and `index.json` beside the raw evidence.
 
 After the results are reviewed, follow the
 [reporting instructions](reporting/README.md) to update the figures and README.
 The current reporting tools also read checked-in historical tables and paired
 release ratios. See [historical evidence](#historical-evidence) for the archived
 collection workflow.
+
+## Configuration and environments
+
+`workloads.toml` owns circuit identities, provenance, expected metadata, and
+selection/output semantics. `software.toml` owns exact implementation identities
+and build settings. `campaigns/*.toml` select cases, public call sizes, resource
+limits, measurements, and explicit comparison groups. Unknown keys and invalid
+values are rejected before workers start. Simulator-specific settings belong in
+`execution.options` and are validated by the owning adapter without importing
+the simulator.
+
+```bash
+uv run clifft-bench list release-v1 --json
+uv run clifft-bench bootstrap release-v1
+```
+
+Bootstrap uses `environments/<implementation-id>.txt` and installs each selected
+implementation once under `.campaign-envs/<implementation-id>/bin/python`, with
+its declared build settings. It checks dependencies, imports, exact versions,
+and source identity where required by the adapter. Official setup requires a
+clean committed checkout.
+
+For local smoke work, an explicitly selected interpreter can replace the isolated
+environments. For example, the test extra contains Stim:
+
+```bash
+uv run --extra test clifft-bench run smoke --python .venv/bin/python \
+  --case stim --min-sample-seconds 0.01 --repetitions 1 --output /tmp/stim-smoke.json
+```
+
+Use a fresh output path: collection refuses to overwrite existing evidence.
+Official collection requires isolated, verified implementation environments.
+
+## Reference-host collection
+
+Launch the host declared by the release campaign: Canonical Ubuntu Server 24.04
+LTS, x86-64 `m7a.xlarge`, On-Demand, with IMDSv2 enabled. Use a 16 GiB `gp3`
+root volume, restrict SSH access, and set instance-initiated shutdown behavior to
+**Stop**. No AWS credentials or IAM role are needed by the collector.
+
+Clone the repository, select a clean data branch, and run inside `tmux` if the
+connection may close:
+
+```bash
+git switch -c data/release-benchmark
+./scripts/ec2-run.sh release-v1 "$HOME/clifft-bench-ec2-results/release-benchmark"
+```
+
+The wrapper arms an eight-hour shutdown guard, installs host prerequisites,
+bootstraps selected environments, and collects `raw.json` outside the checkout.
+Python checks the source, OS, architecture, instance type, On-Demand lifecycle,
+available CPU, and memory configuration. Bounded IMDSv2 requests record instance,
+AMI, region, availability zone, and boot identity. Every worker receives the
+campaign's memory ceiling; worker deadlines and the overall campaign deadline
+preserve completed evidence when a case fails or times out. The wrapper also
+has an eight-hour outer deadline with a 30-second forced-kill fallback.
+
+The execution directory must be new, including after an incomplete attempt.
+Inspect `raw.json` and its failures before finalizing:
+
+```bash
+uv run clifft-bench validate "$HOME/clifft-bench-ec2-results/release-benchmark/raw.json"
+mkdir -p results/release-v1/release-benchmark/raw
+cp "$HOME/clifft-bench-ec2-results/release-benchmark/raw.json" \
+  results/release-v1/release-benchmark/raw/release-raw.json
+uv run clifft-bench finalize release-v1 --execution-id release-benchmark \
+  --output-dir results/release-v1/release-benchmark \
+  results/release-v1/release-benchmark/raw/release-raw.json
+```
+
+Review selected batches, search failures, correctness, memory evidence, and the
+comparison tables before committing results or publishing figures. Stop the
+instance promptly after retrieving the evidence.
 
 ## Historical evidence
 
@@ -119,7 +191,7 @@ recurring release workflow.
 1. Add the immutable circuit under [`workloads/circuits/`](workloads/circuits/)
    with its license.
 2. Record its digest, provenance, expected metadata, compatible adapters, and
-   semantic contract in [`manifests/workloads.v1.json`](manifests/workloads.v1.json).
+   semantic contract in [`workloads.toml`](workloads.toml).
 3. Add it to the applicable variants in the release manifest.
 4. Run validation and adapter correctness tests.
 
@@ -134,57 +206,30 @@ environment, bounded preparation, and finalize/commit/push workflow for results.
 
 ## Tsim CPU adapter checks
 
-Use the pinned source environment; the released 0.1.5 wheel lacks this backend:
+The maintained Tsim CPU backend uses its pinned source environment:
 
 ```bash
-uv venv --python 3.12 .campaign-envs/tsim
-uv pip install --python .campaign-envs/tsim/bin/python -r environments/tsim-0.1.5-e9406ed.txt
-uv pip install --python .campaign-envs/tsim/bin/python -e '.[test]'
-NUMBA_NUM_THREADS=1 .campaign-envs/tsim/bin/python -m pytest tests/test_tsim_adapter.py tests/test_distillation_15to1.py -k 'tsim or hamming'
-.campaign-envs/tsim/bin/python -m clifft_bench run \
-  --run-manifest manifests/run-tsim-smoke.v1.json \
-  --min-sample-seconds 0.01 --repetitions 1 --output /tmp/tsim-smoke.json
-.campaign-envs/tsim/bin/python -m clifft_bench validate /tmp/tsim-smoke.json
+uv run clifft-bench bootstrap tsim-smoke
+uv run clifft-bench run tsim-smoke --min-sample-seconds 0.01 --repetitions 1 \
+  --output /tmp/tsim-smoke.json
+uv run clifft-bench validate /tmp/tsim-smoke.json
 ```
 
-The runner applies thread restrictions before starting each worker. Linux CI
-also exercises the campaign's 12 GiB address-space ceiling. Local timings are
-installation/correctness diagnostics, not official performance results. The
-older `experiments/tsim-gpu` environment remains independently pinned.
-
+Workers apply thread restrictions before simulator imports. Linux CI also
+exercises the campaign's 12 GiB address-space ceiling. Local timings are
+installation/correctness diagnostics, not official performance results.
+The optional [Tsim GPU study](experiments/tsim-gpu/README.md) remains independently pinned.
 
 ## Bounded three-tool CPU pilot
 
-`manifests/run-tsim-pilot.v1.json` reuses the release cases for coherent d5/r5
-bulk sampling and the 85q distillation control across Clifft, SymFT, and Tsim,
-using the same bounded calibration as the release campaign. It also checks
-100,000-shot bulk adder calls on Clifft and Tsim.
-It uses three samples of at least three seconds, with 180-second preparation
-and 60-second request deadlines. Coherent d5/r5 bulk calls contain 256 attempted
-shots; the adder uses 100,000. Historical call sizes remain unchanged.
-
-After installing the three pinned environments, set their
-`CLIFFT_BENCH_CLIFFT_63CD885_PYTHON`, `CLIFFT_BENCH_SYMFT_C89B985_PYTHON`, and
-`CLIFFT_BENCH_TSIM_E9406ED_PYTHON` variables to the corresponding Python
-executables. Run on Linux to enforce the reference memory limit:
+`campaigns/tsim-pilot.toml` reuses the release's bulk coherent d5/r5 and adder
+cases and its 85q distillation control. Run on Linux to enforce the memory ceiling:
 
 ```bash
-uv run clifft-bench run --run-manifest manifests/run-tsim-pilot.v1.json \
-  --memory-limit-gib 12 --output /tmp/tsim-pilot.json
+uv run clifft-bench bootstrap tsim-pilot
+uv run clifft-bench run tsim-pilot --memory-limit-gib 12 --output /tmp/tsim-pilot.json
 uv run clifft-bench validate /tmp/tsim-pilot.json
 ```
 
-Review candidate failures, selected batch sizes, peak RSS, individual call
-costs, and accepted/error counts. Calibration still chooses internal batch
-sizes on the measurement host. The 256-shot bulk size was chosen after a local
-pilot: 4096-shot SymFT calls took approximately 78–99 seconds, while 256-shot
-calls took approximately 5–6 seconds and retained about 95% of Tsim throughput.
-These are feasibility observations on an Apple M4 Pro, not reference-host
-performance results.
-
-macOS does not enforce this harness's Linux address-space ceiling or affinity.
-In the local pilot, an external RSS watchdog stopped SymFT's 256-lane trial
-above 8 GiB; smaller trials remained usable. Linux CI exercises the automatic
-calibration path under the actual 12 GiB address-space ceiling and retains its
-raw pilot artifacts. A killed local trial must remain recorded as a resource
-failure; it must not be substituted for a successful calibration result.
+The pilot records diagnostics under the same bounded calibration policy as the
+release campaign. Review reference-host evidence before making performance claims.

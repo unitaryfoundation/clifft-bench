@@ -45,6 +45,10 @@ class Adapter(ABC):
     name: str
     adapter_version = ADAPTER_API_VERSION
 
+    def validate_options(self, options: dict[str, Any]) -> None:
+        if options:
+            raise ValueError(f"{self.name} does not accept options: {sorted(options)}")
+
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         """Verify source identity when the adapter requires a source-built package."""
         return {}

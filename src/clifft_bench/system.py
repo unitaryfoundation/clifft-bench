@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import platform
 import resource
@@ -9,6 +10,8 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
+from urllib.request import ProxyHandler, Request, build_opener
 
 THREAD_LIMIT_ENVIRONMENT = {
     "OMP_NUM_THREADS": "1",
@@ -25,30 +28,6 @@ THREAD_LIMIT_ENVIRONMENT = {
     "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
 }
 
-CLOUD_METADATA_ENVIRONMENT = {
-    "provider": "CLIFFT_BENCH_CLOUD_PROVIDER",
-    "instance_id": "CLIFFT_BENCH_CLOUD_INSTANCE_ID",
-    "instance_type": "CLIFFT_BENCH_CLOUD_INSTANCE_TYPE",
-    "image_id": "CLIFFT_BENCH_CLOUD_IMAGE_ID",
-    "region": "CLIFFT_BENCH_CLOUD_REGION",
-    "availability_zone": "CLIFFT_BENCH_CLOUD_AVAILABILITY_ZONE",
-    "lifecycle": "CLIFFT_BENCH_CLOUD_LIFECYCLE",
-    "boot_id": "CLIFFT_BENCH_CLOUD_BOOT_ID",
-}
-
-RUN_PROVENANCE_ENVIRONMENT = {
-    "provider": "CLIFFT_BENCH_RUN_PROVIDER",
-    "repository": "CLIFFT_BENCH_RUN_REPOSITORY",
-    "workflow": "CLIFFT_BENCH_RUN_WORKFLOW",
-    "run_id": "CLIFFT_BENCH_RUN_ID",
-    "run_attempt": "CLIFFT_BENCH_RUN_ATTEMPT",
-    "ref": "CLIFFT_BENCH_RUN_REF",
-    "sha": "CLIFFT_BENCH_RUN_SHA",
-    "runner_name": "CLIFFT_BENCH_RUNNER_NAME",
-    "runner_os": "CLIFFT_BENCH_RUNNER_OS",
-    "image_os": "CLIFFT_BENCH_IMAGE_OS",
-    "image_version": "CLIFFT_BENCH_IMAGE_VERSION",
-}
 
 
 def utc_now() -> str:
@@ -178,21 +157,90 @@ def _git_metadata(root: Path) -> dict[str, Any]:
     return {"commit": commit, "dirty": bool(status) if status is not None else None}
 
 
-def collect_cloud_metadata() -> dict[str, str] | None:
-    """Capture explicitly supplied cloud identity without contacting a metadata service."""
-    values = {key: os.environ.get(variable) for key, variable in CLOUD_METADATA_ENVIRONMENT.items()}
-    supplied = {key: value for key, value in values.items() if value}
-    if not supplied:
-        return None
-    missing = sorted(set(values) - set(supplied))
-    if missing:
-        names = ", ".join(CLOUD_METADATA_ENVIRONMENT[key] for key in missing)
-        raise ValueError(f"incomplete cloud metadata environment; missing: {names}")
-    return {key: str(value) for key, value in values.items()}
+def require_clean_checkout(root: Path) -> dict[str, Any]:
+    source = _git_metadata(root)
+    if source["commit"] is None or source["dirty"] is not False:
+        raise ValueError("the benchmark checkout must be clean and committed")
+    return source
+
+
+def discover_ec2() -> dict[str, str]:
+    """Read IMDSv2 directly, without proxies, retries, or a v1 fallback."""
+    opener = build_opener(ProxyHandler({}))
+    base = "http://169.254.169.254/latest/"
+
+    def request(path: str, *, token: str | None = None) -> str:
+        headers = ({"X-aws-ec2-metadata-token": token} if token is not None else
+                   {"X-aws-ec2-metadata-token-ttl-seconds": "300"})
+        req = Request(base + path, headers=headers, method="GET" if token else "PUT")
+        with opener.open(req, timeout=2) as response:
+            return response.read(65536).decode().strip()
+
+    try:
+        token = request("api/token")
+        if not token:
+            raise ValueError("empty IMDSv2 token")
+        identity = json.loads(request("dynamic/instance-identity/document", token=token))
+        lifecycle = request("meta-data/instance-life-cycle", token=token)
+        cloud = {key: identity[field] for key, field in {
+            "instance_id": "instanceId", "instance_type": "instanceType", "image_id": "imageId",
+            "region": "region", "availability_zone": "availabilityZone",
+        }.items()}
+        cloud.update(provider="aws", lifecycle=lifecycle,
+                     boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
+        if any(not isinstance(value, str) or not value for value in cloud.values()):
+            raise ValueError("incomplete EC2 identity")
+        return cloud
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        raise ValueError(f"cannot discover EC2 identity using IMDSv2: {error}") from error
+
+
+def require_reference_host(root: Path, reference: dict, memory_limit_gib: float,
+                           cpu: int | None) -> dict[str, str]:
+    require_clean_checkout(root)
+    if platform.system() != "Linux" or platform.machine() != reference["architecture"]:
+        raise ValueError("reference host requires Linux with the declared architecture")
+    if reference["provider"] != "aws":
+        raise ValueError("reference collection requires AWS")
+    os_release = platform.freedesktop_os_release()
+    if (os_release.get("ID"), os_release.get("VERSION_ID")) != (
+        reference["os_id"],
+        reference["os_version"],
+    ):
+        raise ValueError("reference host OS does not match the campaign")
+    if _memory_bytes() is None or _memory_bytes() < memory_limit_gib * (1 << 30):
+        raise ValueError("reference host has insufficient memory for the declared ceiling")
+    allowed = _allowed_cpus()
+    if allowed is None or cpu not in allowed:
+        raise ValueError("reference host requires an available logical CPU")
+    cloud = discover_ec2()
+    if cloud["instance_type"] != reference["instance_type"]:
+        raise ValueError("reference host instance type does not match the campaign")
+    if cloud["lifecycle"] != "on-demand":
+        raise ValueError("reference host requires on-demand lifecycle")
+    return cloud
+
+
+def ec2_workflow(root: Path, cloud: dict[str, str], run_id: str) -> dict[str, Any]:
+    remote = _run_text(["git", "remote", "get-url", "origin"], root) or ""
+    parsed = urlsplit(remote)
+    if parsed.scheme in ("http", "https"):
+        remote = urlunsplit((parsed.scheme, parsed.netloc.rsplit("@", 1)[-1],
+                            parsed.path, "", ""))
+    os_release = platform.freedesktop_os_release()
+    return {
+        "provider": "aws-ec2-manual", "repository": remote,
+        "workflow": "scripts/ec2-run.sh", "run_id": run_id, "run_attempt": "1.1",
+        "ref": _run_text(["git", "branch", "--show-current"], root),
+        "sha": _git_metadata(root)["commit"], "runner_name": cloud["instance_id"],
+        "runner_os": "Linux", "image_os": f"{os_release['ID']}-{os_release['VERSION_ID']}",
+        "image_version": cloud["image_id"],
+    }
 
 
 def collect_runner_metadata(
-    root: Path, *, thread_environment: dict[str, str] | None = None
+    root: Path, *, thread_environment: dict[str, str] | None = None,
+    cloud: dict[str, str] | None = None
 ) -> dict[str, Any]:
     uname = platform.uname()
     try:
@@ -215,22 +263,13 @@ def collect_runner_metadata(
         "load_average_at_start": load_average,
         "thread_environment": (thread_environment or THREAD_LIMIT_ENVIRONMENT).copy(),
         "accelerator": None,
-        "cloud": collect_cloud_metadata(),
+        "cloud": cloud,
         "suite_source": _git_metadata(root),
     }
 
 
 def collect_workflow_metadata() -> dict[str, Any]:
-    """Capture explicit run provenance, falling back to GitHub Actions metadata."""
-    explicit = {
-        key: os.environ.get(variable) for key, variable in RUN_PROVENANCE_ENVIRONMENT.items()
-    }
-    if any(value for value in explicit.values()):
-        missing = sorted(key for key, value in explicit.items() if not value)
-        if missing:
-            names = ", ".join(RUN_PROVENANCE_ENVIRONMENT[key] for key in missing)
-            raise ValueError(f"incomplete run provenance environment; missing: {names}")
-        return explicit
+    """Capture GitHub Actions provenance for local smoke runs."""
     return {
         "provider": "github-actions" if os.environ.get("GITHUB_ACTIONS") == "true" else None,
         "repository": os.environ.get("GITHUB_REPOSITORY"),

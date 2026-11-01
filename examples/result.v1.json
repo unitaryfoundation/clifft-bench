@@ -8,7 +8,7 @@
           "accepted_shots": 9,
           "attempted_shots": 16,
           "discarded_shots": 7,
-          "duration_seconds": 0.000042708124965429306,
+          "duration_seconds": 4.2708124965429306e-05,
           "logical_errors": 0
         },
         "errors": [],
@@ -26,10 +26,10 @@
         "postselection": true,
         "repetitions": 1,
         "request_timeout_seconds": 60,
-        "sample_chunk_shots": 0,
         "shots_per_call": 64,
         "threads_effective": 1,
-        "threads_requested": 1
+        "threads_requested": 1,
+        "options": {}
       },
       "variant_id": "clifft-current",
       "samples": [
@@ -71,7 +71,7 @@
           "num_measurements": 21,
           "num_observables": 1,
           "num_qubits": 15,
-          "parse_seconds": 0.00007908325642347336,
+          "parse_seconds": 7.908325642347336e-05,
           "peak_active_width": 4,
           "precision": "complex-fp64",
           "reference_convention": "raw-record-parity",
@@ -118,7 +118,7 @@
         "attempted_shots": 4,
         "contract_errors": [],
         "discarded_shots": 0,
-        "duration_seconds": 0.00005320832133293152,
+        "duration_seconds": 5.320832133293152e-05,
         "logical_errors": 0
       },
       "workload": {

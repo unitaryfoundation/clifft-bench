@@ -3,24 +3,28 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import queue
 import re
 import statistics
 import subprocess
 import threading
+import time
 import uuid
 from pathlib import Path
 from typing import Any
 
 from clifft_bench.calibration import CALIBRATION_POLICY
-from clifft_bench.manifest import Case, Suite
+from clifft_bench.config import Case, Suite
 from clifft_bench.schema import repository_root, validate_document, write_json
 from clifft_bench.selection import has_postselection
 from clifft_bench.system import (
     choose_cpu,
     collect_runner_metadata,
     collect_workflow_metadata,
+    ec2_workflow,
+    require_reference_host,
     restricted_environment,
     utc_now,
 )
@@ -36,14 +40,20 @@ class WorkerError(RuntimeError):
 
 
 class WorkerClient:
-    def __init__(self, case: Case, cpu: int | None) -> None:
+    def __init__(self, case: Case, cpu: int | None, *, python_executable: str | None = None,
+                 deadline: float | None = None) -> None:
         self.case = case
+        self.deadline = deadline
         environment = restricted_environment()
         source = str(repository_root() / "src")
         existing = environment.get("PYTHONPATH")
         environment["PYTHONPATH"] = source if not existing else source + os.pathsep + existing
         self.process = subprocess.Popen(
-            [case.implementation.python_executable(), "-m", "clifft_bench.worker"],
+            [
+                python_executable or case.implementation.python_executable(),
+                "-m",
+                "clifft_bench.worker",
+            ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             text=True,
@@ -74,6 +84,8 @@ class WorkerClient:
             self.process.wait(timeout=5)
 
     def request(self, message: dict[str, Any], *, timeout_seconds: float) -> dict[str, Any]:
+        if self.deadline is not None:
+            timeout_seconds = min(timeout_seconds, max(0.001, self.deadline - time.monotonic()))
         if self.process.stdin is None or self.process.stdout is None:
             raise RuntimeError("worker pipes are unavailable")
         self.process.stdin.write(json.dumps(message, separators=(",", ":")) + "\n")
@@ -279,15 +291,25 @@ def run_suite(
     memory_limit_gib: float | None = None,
     min_sample_seconds: float | None = None,
     repetitions: int | None = None,
+    python_executable: str | None = None,
+    require_ec2: bool = False,
 ) -> dict[str, Any]:
+    if output_path.exists():
+        raise ValueError(f"refusing to overwrite existing result: {output_path}")
+    if suite.run["classification"] == "official" and python_executable is not None:
+        raise ValueError("official collection requires isolated implementation environments")
     measurement = dict(suite.run["measurement"])
     if min_sample_seconds is not None:
         measurement["min_sample_seconds"] = min_sample_seconds
     if repetitions is not None:
         measurement["repetitions"] = repetitions
-    if measurement["min_sample_seconds"] <= 0 or measurement["repetitions"] < 1:
+    if (not math.isfinite(measurement["min_sample_seconds"])
+            or measurement["min_sample_seconds"] <= 0
+            or type(measurement["repetitions"]) is not int or measurement["repetitions"] < 1):
         raise ValueError("measurement overrides must be positive")
-    if memory_limit_gib is not None and memory_limit_gib <= 0:
+    if memory_limit_gib is not None and (
+        not math.isfinite(memory_limit_gib) or memory_limit_gib <= 0
+    ):
         raise ValueError("memory limit must be positive")
     cases = _select_cases(suite, case_pattern)
     if not cases:
@@ -314,12 +336,39 @@ def run_suite(
         )
 
     logical_cpu = choose_cpu(cpu if cpu is not None else suite.run["resources"]["logical_cpu"])
+    root = repository_root()
+    cloud = None
+    if require_ec2:
+        from clifft_bench.bootstrap import selected_implementations, verify_environment
+
+        if "reference_host" not in suite.run or "collection" not in suite.run:
+            raise ValueError("EC2 collection requires a reference host and collection settings")
+        if python_executable is not None:
+            raise ValueError("EC2 collection requires isolated implementation environments")
+        if case_pattern is not None or min_sample_seconds is not None or repetitions is not None:
+            raise ValueError("EC2 collection requires the complete declared campaign")
+        declared_limit = suite.run["collection"]["memory_limit_gib"]
+        if memory_limit_gib is not None and memory_limit_gib != declared_limit:
+            raise ValueError("EC2 memory limit must match the campaign")
+        memory_limit_gib = declared_limit
+        if output_path.resolve().is_relative_to(root):
+            raise ValueError("EC2 raw evidence must be written outside the source checkout")
+        cloud = require_reference_host(
+            root, suite.run["reference_host"], memory_limit_gib, logical_cpu
+        )
+        for implementation in selected_implementations(suite):
+            verify_environment(implementation)
+    elif suite.run["classification"] == "official":
+        raise ValueError("official collection requires --require-ec2")
+    deadline_minutes = suite.run.get("collection", {}).get("run_timeout_minutes")
+    deadline = time.monotonic() + deadline_minutes * 60 if deadline_minutes else None
     started_at = utc_now()
+    run_id = str(uuid.uuid4())
     document: dict[str, Any] = {
         "schema_version": "clifft-bench/result/v1",
         "suite_version": suite.run["suite_version"],
         "run": {
-            "id": str(uuid.uuid4()),
+            "id": run_id,
             "profile_id": suite.run["profile_id"],
             "classification": suite.run["classification"],
             "started_at": started_at,
@@ -329,9 +378,9 @@ def run_suite(
             "software_manifest": str(suite.software_path),
             "selection": case_pattern,
             "schedule_policy": "serial-manifest-order",
-            "workflow": collect_workflow_metadata(),
+            "workflow": ec2_workflow(root, cloud, run_id) if cloud else collect_workflow_metadata(),
         },
-        "runner": collect_runner_metadata(repository_root()),
+        "runner": collect_runner_metadata(root, cloud=cloud),
         "cases": [
             _new_case_result(case, measurement, memory_limit_gib) for case in cases
         ],
@@ -346,8 +395,16 @@ def run_suite(
             client: WorkerClient | None = None
             try:
                 print(f"[{case_index}/{len(cases)}] preparing {case.id}", flush=True)
-                client = WorkerClient(case, logical_cpu)
+                if deadline is not None and time.monotonic() >= deadline:
+                    for pending in document["cases"][case_index - 1:]:
+                        pending.update(status="error", error={
+                            "phase": "setup", "type": "CampaignTimeout",
+                            "message": "campaign deadline exceeded before case preparation",
+                        })
+                    break
                 try:
+                    client = WorkerClient(case, logical_cpu, python_executable=python_executable,
+                                          deadline=deadline)
                     setup = client.prepare(
                         float(measurement["setup_timeout_seconds"]),
                         memory_limit_gib,

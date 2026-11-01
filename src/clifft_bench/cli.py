@@ -1,19 +1,27 @@
-"""Command-line interface for manifest-driven benchmark runs."""
+"""Command-line interface for campaign-driven benchmark runs."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Sequence
 
-from clifft_bench.manifest import load_suite
+from clifft_bench.bootstrap import bootstrap
+from clifft_bench.config import (
+    _validate_software,
+    _validate_workloads,
+    campaign_path,
+    load_suite,
+    read_toml,
+)
 from clifft_bench.results import finalize_execution
 from clifft_bench.runner import run_suite
 from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
-DEFAULT_RUN_MANIFEST = Path("manifests/run-smoke.v1.json")
+DEFAULT_CAMPAIGN = "smoke"
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -23,15 +31,17 @@ def _parser() -> argparse.ArgumentParser:
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
-    validate = commands.add_parser("validate", help="validate manifests or raw results")
+    validate = commands.add_parser("validate", help="validate TOML configuration or raw results")
     validate.add_argument("paths", nargs="*", type=Path)
 
     listing = commands.add_parser("list", help="list cases without importing simulators")
-    listing.add_argument("--run-manifest", type=Path, default=DEFAULT_RUN_MANIFEST)
+    listing.add_argument("campaign", nargs="?", default=DEFAULT_CAMPAIGN)
     listing.add_argument("--json", action="store_true", dest="as_json")
 
-    run = commands.add_parser("run", help="execute a manifest-defined suite serially")
-    run.add_argument("--run-manifest", type=Path, default=DEFAULT_RUN_MANIFEST)
+    run = commands.add_parser("run", help="execute a campaign serially")
+    run.add_argument("campaign", nargs="?", default=DEFAULT_CAMPAIGN)
+    run.add_argument("--python", dest="python_executable", help="local smoke interpreter override")
+    run.add_argument("--require-ec2", action="store_true")
     run.add_argument("--output", type=Path)
     run.add_argument("--case", help="regular expression matched against case IDs")
     run.add_argument("--cpu", type=int, help="logical CPU to request on affinity-capable systems")
@@ -42,10 +52,13 @@ def _parser() -> argparse.ArgumentParser:
     finalize = commands.add_parser(
         "finalize", help="generate an execution index and plot-ready tables"
     )
-    finalize.add_argument("--run-manifest", required=True, type=Path)
+    finalize.add_argument("campaign")
     finalize.add_argument("--execution-id", required=True)
     finalize.add_argument("--output-dir", required=True, type=Path)
     finalize.add_argument("results", nargs="+", type=Path)
+
+    setup = commands.add_parser("bootstrap", help="install selected isolated environments")
+    setup.add_argument("campaign", nargs="?", default="release-v1")
 
     return parser
 
@@ -59,30 +72,26 @@ def _resolve(path: Path) -> Path:
     return (repository_root() / path).resolve()
 
 
-def _default_validation_paths() -> list[Path]:
-    root = repository_root()
-    return [
-        root / "manifests/workloads.v1.json",
-        root / "manifests/software.v1.json",
-        *sorted(root.glob("manifests/run-*.v1.json")),
-        root / "examples/result.v1.json",
-        *sorted(root.glob("campaigns/*/run.v1.json")),
-    ]
-
-
 def _validate(paths: list[Path]) -> int:
-    selected = paths or _default_validation_paths()
+    selected = paths or sorted((repository_root() / "campaigns").glob("*.toml"))
     for path in selected:
         resolved = _resolve(path)
-        document = validate_path(resolved)
-        if document["schema_version"] == "clifft-bench/run/v1":
-            load_suite(resolved)
+        if resolved.suffix == ".toml":
+            document = read_toml(resolved)
+            if "implementations" in document:
+                _validate_software(document)
+            elif "workloads" in document:
+                _validate_workloads(document)
+            else:
+                load_suite(resolved)
+        else:
+            validate_path(resolved)
         print(f"valid: {resolved}")
     return 0
 
 
-def _list(run_manifest: Path, as_json: bool) -> int:
-    suite = load_suite(_resolve(run_manifest))
+def _list(campaign: str, as_json: bool) -> int:
+    suite = load_suite(campaign_path(campaign))
     rows = []
     for case in suite.cases:
         rows.append(
@@ -110,7 +119,7 @@ def _list(run_manifest: Path, as_json: bool) -> int:
 
 
 def _run(args: argparse.Namespace) -> int:
-    suite = load_suite(_resolve(args.run_manifest))
+    suite = load_suite(campaign_path(args.campaign))
     output = args.output
     if output is None:
         output = repository_root() / "results" / f"{suite.run['profile_id']}.json"
@@ -122,6 +131,8 @@ def _run(args: argparse.Namespace) -> int:
         memory_limit_gib=args.memory_limit_gib,
         min_sample_seconds=args.min_sample_seconds,
         repetitions=args.repetitions,
+        python_executable=args.python_executable,
+        require_ec2=args.require_ec2,
     )
     successes = sum(case["status"] == "success" for case in document["cases"])
     for case in document["cases"]:
@@ -138,7 +149,7 @@ def _run(args: argparse.Namespace) -> int:
 
 
 def _finalize(args: argparse.Namespace) -> int:
-    suite = load_suite(_resolve(args.run_manifest))
+    suite = load_suite(campaign_path(args.campaign))
     index = finalize_execution(
         suite,
         execution_id=args.execution_id,
@@ -152,16 +163,19 @@ def _finalize(args: argparse.Namespace) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "bootstrap":
+            bootstrap(load_suite(campaign_path(args.campaign)))
+            return 0
         if args.command == "validate":
             return _validate(args.paths)
         if args.command == "list":
-            return _list(args.run_manifest, args.as_json)
+            return _list(args.campaign, args.as_json)
         if args.command == "run":
             return _run(args)
         if args.command == "finalize":
             return _finalize(args)
         raise AssertionError(f"unhandled command {args.command!r}")
-    except (SchemaValidationError, ValueError) as error:
+    except (SchemaValidationError, ValueError, OSError, subprocess.SubprocessError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
 

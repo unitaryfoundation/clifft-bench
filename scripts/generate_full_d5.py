@@ -12,6 +12,7 @@ import json
 import re
 import subprocess
 import sys
+import tomllib
 from importlib.metadata import version
 from pathlib import Path
 
@@ -50,7 +51,7 @@ def main() -> None:
                if len(coords) <= 4 or coords[4] == -9]
     digest = hashlib.sha256(text.encode()).hexdigest()
     if args.noise == 0.001:
-        manifest = json.loads((ROOT / "manifests/workloads.v1.json").read_text())
+        manifest = tomllib.loads((ROOT / "workloads.toml").read_text())
         workload = next(w for w in manifest["workloads"]
                         if w["id"] == "msc-full-d5-cultivation-selected-p1e-3")
         if digest != workload["artifact"]["sha256"]:

@@ -121,7 +121,7 @@ The smoke profile uses small fixed calls and runs every declared combination,
 including full d5 and QV20:
 
 ```bash
-clifft-bench run --run-manifest manifests/run-coverage-smoke.v1.json \
+clifft-bench run campaigns/coverage-smoke.toml \
   --memory-limit-gib 12 --output /tmp/coverage-smoke.json
 clifft-bench validate /tmp/coverage-smoke.json
 ```

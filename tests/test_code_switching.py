@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
 NEW_WORKLOADS = {"bt27-direct-x", "bt81-direct-x", "reed-muller-measured"}
@@ -59,7 +59,7 @@ def reed_muller_probability() -> float:
 
 
 def _case(workload_id):
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     return next(c for c in suite.cases if c.workload.id == workload_id
                 and c.definition["variant_id"] == "clifft-current")
 
@@ -73,7 +73,7 @@ def _check_counts(counts, probability):
 
 
 def test_new_circuits_are_part_of_the_release_campaign():
-    release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    release = load_suite(ROOT / "campaigns/release-v1.toml")
     cases = [case for case in release.cases if case.workload.id in NEW_WORKLOADS]
     assert {(c.workload.id, c.definition["variant_id"]) for c in cases} == {
         ("bt27-direct-x", "clifft-current"),
@@ -89,8 +89,8 @@ def test_new_circuits_are_part_of_the_release_campaign():
             100000 if case.workload.id == "reed-muller-measured" else 2048
         )
         assert case.definition["execution"]["batch_size"] == "calibrate"
-    smoke_cases = [case for path in ("run-smoke.v1.json", "run-tsim-smoke.v1.json")
-                   for case in load_suite(ROOT / "manifests" / path).cases]
+    smoke_cases = [case for path in ("smoke.toml", "tsim-smoke.toml")
+                   for case in load_suite(ROOT / "campaigns" / path).cases]
     assert NEW_WORKLOADS <= {case.workload.id for case in smoke_cases}
 
 
@@ -105,9 +105,9 @@ def test_measured_reed_muller_sampling(adapter, batch_size):
     pytest.importorskip(adapter)
     case = _case("reed-muller-measured")
     execution = {"batch_enabled": True, "batch_size": batch_size,
-                 "sample_chunk_shots": 2048 if adapter == "symft" else 0}
+                 "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {}}
     if adapter == "clifft":
-        execution["clifft_scheduler"] = case.definition["execution"]["clifft_scheduler"]
+        execution["options"]["scheduler"] = case.definition["execution"]["options"]["scheduler"]
     prepared = load_adapter(adapter).prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
         execution=execution, seed=87,

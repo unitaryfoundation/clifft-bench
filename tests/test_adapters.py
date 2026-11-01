@@ -98,7 +98,7 @@ def test_symft_rejects_effective_batching_mismatch(
             execution={
                 "batch_enabled": True,
                 "batch_size": 32,
-                "sample_chunk_shots": 2048,
+                "options": {"sample_chunk_shots": 2048},
             },
         )
 
@@ -178,7 +178,7 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
         execution={
             "batch_enabled": True,
             "batch_size": 256,
-            "sample_chunk_shots": 0,
+            "options": {},
         },
     )
 
@@ -219,7 +219,7 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
         execution={
             "batch_enabled": False,
             "batch_size": 1,
-            "sample_chunk_shots": 2048,
+            "options": {"sample_chunk_shots": 2048},
         },
     )
     assert prepared.runtime_metadata["effective_batch_size"] == 1
@@ -240,7 +240,7 @@ def test_adapters_reject_unsupported_reference_convention(adapter, tmp_path: Pat
             execution={
                 "batch_enabled": False,
                 "batch_size": 1,
-                "sample_chunk_shots": 0,
+                "options": {},
             },
         )
 

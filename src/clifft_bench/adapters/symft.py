@@ -68,7 +68,7 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
     record_indices = sorted(record for record, count in occurrences.items() if count % 2)
     batch = bool(execution["batch_enabled"])
     batch_size = int(execution["batch_size"])
-    chunk = int(execution.get("sample_chunk_shots", 0))
+    chunk = int(execution.get("options", {}).get("sample_chunk_shots", 0))
     if batch_size < 1 or chunk < 0:
         raise ValueError("SymFT requires a positive batch size and nonnegative sample chunk")
     started = time.perf_counter()
@@ -110,6 +110,14 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
 class SymftAdapter(Adapter):
     name = "symft"
 
+    def validate_options(self, options: dict[str, Any]) -> None:
+        if options.keys() - {"sample_chunk_shots"}:
+            raise ValueError(f"unknown SymFT options: {sorted(options)}")
+        chunk = options.get("sample_chunk_shots", 0)
+        if type(chunk) is not int or chunk < 0:
+            raise ValueError("sample_chunk_shots must be a nonnegative integer")
+
+
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
             self.name, expected_commit=expected_commit, source_url=source_url
@@ -123,6 +131,7 @@ class SymftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
+        self.validate_options(execution.get("options", {}))
         require_all_or_none(workload["semantics"], self.name)
         reference_convention = str(workload["semantics"]["reference_convention"])
         if reference_convention != "raw-record-parity":
@@ -141,7 +150,7 @@ class SymftAdapter(Adapter):
             observable=observable,
             postselect_detectors=postselect,
             batch_size=int(execution["batch_size"]),
-            sample_chunk_shots=int(execution.get("sample_chunk_shots", 0)),
+            sample_chunk_shots=int(execution.get("options", {}).get("sample_chunk_shots", 0)),
             threads=1,
             cuda=False,
         )
@@ -160,7 +169,7 @@ class SymftAdapter(Adapter):
                 f"SymFT batch size {info['batch_size']!r} does not match "
                 f"requested {requested_batch_size}"
             )
-        requested_chunk_shots = int(execution.get("sample_chunk_shots", 0))
+        requested_chunk_shots = int(execution.get("options", {}).get("sample_chunk_shots", 0))
         if int(info["sample_chunk_shots"]) != requested_chunk_shots:
             raise RuntimeError(
                 f"SymFT sample chunk {info['sample_chunk_shots']!r} does not match "

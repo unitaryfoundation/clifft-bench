@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite
 from clifft_bench.results import COMPARISON_FIELDS
 from clifft_bench.results import _comparison_rows as collect_comparisons
 from reporting.qec import (
@@ -68,7 +68,7 @@ def copied_sources(tmp_path: Path) -> Path:
 
 def test_reporting_selects_the_release_core_from_archived_results(copied_sources: Path) -> None:
     expected = build_report(SOURCES)
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     core = {
         case.workload.id for case in suite.cases
         if case.workload.definition["family"] in {
@@ -227,7 +227,7 @@ def test_release_loader_accepts_current_campaign_with_stim_anchor(tmp_path: Path
     })
     # Use the real producer and active manifest so putting Stim back into the
     # SymFT comparison makes this fail, whether or not the source already has Stim.
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     rows = collect_comparisons(suite, source.name, cases)
     execution = tmp_path / source.name
     execution.mkdir()
@@ -393,7 +393,7 @@ def sources_with_tsim(copied_sources: Path) -> Path:
                    "simulator_version": "0.1.5", "simulator_display_version": "0.1.5+e9406ed"}
                   for row in cases if row["variant_id"] == "symft-current"]
     cases += tsim_cases
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     tsim = [row for row in collect_comparisons(suite, path.name, cases)
             if row["comparison_id"] == "tsim-vs-current"]
     bulk = [{**row, "comparison_id": "bulk-alternatives-vs-current",
@@ -458,7 +458,7 @@ def _fail_tsim_cases(path, workloads, phase, *, replica=None):
                 row.update(batch_size_effective="", setup_seconds="")
     _write_rows(path / "cases.csv", cases)
     # Use the real finalizer's join: failed cases have no comparison row.
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     suite.run["collection"]["replicas_per_placement"] = max(int(row["replica"]) for row in cases)
     _write_rows(path / "comparisons.csv", collect_comparisons(suite, path.name, cases))
 

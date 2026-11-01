@@ -10,7 +10,7 @@ import pytest
 from clifft_bench.adapters import _shared
 from clifft_bench.adapters.base import validate_counts
 from clifft_bench.adapters.tsim import TsimAdapter
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
 SEMANTICS = {
@@ -33,8 +33,7 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, batch=256, sharing
         workload={"semantics": {
             **SEMANTICS, "observable_index": observable, "postselect_all_detectors": postselect,
         }},
-        execution={"batch_size": batch, "sample_chunk_shots": 0,
-                   "tsim_trajectory_sharing": sharing},
+        execution={"batch_size": batch, "options": {"trajectory_sharing": sharing}},
         seed=seed,
     )
 
@@ -137,11 +136,11 @@ def test_tsim_verifies_exact_source_identity(monkeypatch, mismatch):
 ])
 def test_tsim_release_circuit_metadata_and_counts(workload_id):
     pytest.importorskip("tsim")
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases if c.workload.id == workload_id)
     p = TsimAdapter().prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
-        execution={"batch_size": 16, "sample_chunk_shots": 0}, seed=42,
+        execution={"batch_size": 16, "options": {}}, seed=42,
     )
     assert all(p.runtime_metadata[k] == v
                for k, v in case.workload.definition["expected_metadata"].items())

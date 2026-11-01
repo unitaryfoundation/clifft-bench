@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
+from toml_helpers import write_toml
 
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite, read_toml
 from clifft_bench.runner import (
     SEED_REPETITION_STRIDE,
     _effective_batch_size,
@@ -18,7 +20,7 @@ from clifft_bench.schema import validate_document
 
 
 def _write(path: Path, value: dict[str, Any]) -> None:
-    path.write_text(json.dumps(value, indent=2) + "\n")
+    write_toml(path, value)
 
 
 def _write_fixture_suite(
@@ -32,7 +34,6 @@ def _write_fixture_suite(
     digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
     source_commit = "0" * 40
     workloads = {
-        "schema_version": "clifft-bench/workloads/v1",
         "suite_version": "0.1.0",
         "workloads": [
             {
@@ -69,7 +70,6 @@ def _write_fixture_suite(
         ],
     }
     software = {
-        "schema_version": "clifft-bench/software/v1",
         "suite_version": "0.1.0",
         "implementations": [
             {
@@ -101,19 +101,18 @@ def _write_fixture_suite(
                 "mode": "throughput",
                 "batch_enabled": False,
                 "batch_size": 1,
-                "sample_chunk_shots": 0,
+                "options": {},
             },
         }
         for identifier in ["fixture-a", "fixture-b"]
     ]
     run = {
-        "schema_version": "clifft-bench/run/v1",
         "suite_version": "0.1.0",
         "profile_id": "fixture",
         "classification": "smoke",
         "seed": 10,
-        "workloads_manifest": "workloads.json",
-        "software_manifest": "software.json",
+        "workloads_file": "workloads.toml",
+        "software_file": "software.toml",
         "resources": {"logical_cpu": None},
         "measurement": {
             "setup_timeout_seconds": 5,
@@ -125,9 +124,9 @@ def _write_fixture_suite(
         },
         "cases": cases,
     }
-    _write(tmp_path / "workloads.json", workloads)
-    _write(tmp_path / "software.json", software)
-    run_path = tmp_path / "run.json"
+    _write(tmp_path / "workloads.toml", workloads)
+    _write(tmp_path / "software.toml", software)
+    run_path = tmp_path / "run.toml"
     _write(run_path, run)
     return run_path, run, software
 
@@ -162,7 +161,12 @@ def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
         tmp_path, parameters={"write_native_stdout": True}
     )
     output = tmp_path / "result.json"
-    result = run_suite(load_suite(run_path), output_path=output, memory_limit_gib=1)
+    result = run_suite(
+        load_suite(run_path),
+        python_executable=sys.executable,
+        output_path=output,
+        memory_limit_gib=1,
+    )
     validate_document(result)
     assert [case["status"] for case in result["cases"]] == ["success", "success"]
     sequences = [
@@ -196,10 +200,14 @@ def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     for implementation in bad_software["implementations"]:
         implementation["version"] = "2.0.0"
     bad_run = dict(run)
-    bad_run["software_manifest"] = "software-bad.json"
-    _write(tmp_path / "software-bad.json", bad_software)
-    _write(tmp_path / "run-bad.json", bad_run)
-    failed = run_suite(load_suite(tmp_path / "run-bad.json"), output_path=tmp_path / "failed.json")
+    bad_run["software_file"] = "software-bad.toml"
+    _write(tmp_path / "software-bad.toml", bad_software)
+    _write(tmp_path / "run-bad.toml", bad_run)
+    failed = run_suite(
+        load_suite(tmp_path / "run-bad.toml"),
+        python_executable=sys.executable,
+        output_path=tmp_path / "failed.json",
+    )
     validate_document(failed)
     assert [case["status"] for case in failed["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "setup" for case in failed["cases"])
@@ -211,7 +219,11 @@ def test_worker_timeout_is_recorded_and_run_completes(tmp_path: Path) -> None:
         parameters={"sleep_on_seed": 10010, "sleep_seconds": 2},
         request_timeout_seconds=0.05,
     )
-    result = run_suite(load_suite(run_path), output_path=tmp_path / "timeout.json")
+    result = run_suite(
+        load_suite(run_path),
+        python_executable=sys.executable,
+        output_path=tmp_path / "timeout.json",
+    )
     validate_document(result)
     assert [case["status"] for case in result["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "sampling" for case in result["cases"])
@@ -224,7 +236,11 @@ def test_warmup_failure_records_warmup_phase(tmp_path: Path) -> None:
         parameters={"sleep_on_seed": 9, "sleep_seconds": 2},
         request_timeout_seconds=0.05,
     )
-    result = run_suite(load_suite(run_path), output_path=tmp_path / "warmup-timeout.json")
+    result = run_suite(
+        load_suite(run_path),
+        python_executable=sys.executable,
+        output_path=tmp_path / "warmup-timeout.json",
+    )
     validate_document(result)
     assert [case["status"] for case in result["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "warmup" for case in result["cases"])
@@ -233,8 +249,7 @@ def test_warmup_failure_records_warmup_phase(tmp_path: Path) -> None:
 def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None:
     run_path, _, _ = _write_fixture_suite(tmp_path, request_timeout_seconds=5)
     with pytest.raises(ValueError, match="must be greater than min_sample_seconds"):
-        run_suite(
-            load_suite(run_path),
+        run_suite(load_suite(run_path), python_executable=sys.executable,
             output_path=tmp_path / "invalid-timeout.json",
             min_sample_seconds=5,
         )
@@ -249,29 +264,34 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     artifact.write_text(
         "X 0 1\nT 1\nM 0\nDETECTOR rec[-1]\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
     )
-    workloads = json.loads((tmp_path / "workloads.json").read_text())
+    workloads = read_toml(tmp_path / "workloads.toml")
     workload = workloads["workloads"][0]
     workload["artifact"]["sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
     workload["compatible_adapters"] = ["symft"]
     workload["expected_metadata"].update(num_qubits=2, num_measurements=2, num_detectors=1)
-    _write(tmp_path / "workloads.json", workloads)
+    _write(tmp_path / "workloads.toml", workloads)
     implementation = software["implementations"][0]
     implementation.update(
         adapter="symft", name="SymFT", distribution="symft", version="0.1.1",
         commit_sha="c89b98514a919240b8afa53a271e08d926d3c987",
         source_url="https://github.com/haoliri0/SOFT",
     )
-    _write(tmp_path / "software.json", software)
+    _write(tmp_path / "software.toml", software)
     run["cases"] = run["cases"][:1]
     run["cases"][0]["shots_per_call"] = 67
     run["cases"][0]["execution"].update(
-        batch_enabled=True, batch_size="calibrate", sample_chunk_shots=2048,
+        batch_enabled=True, batch_size="calibrate", options={"sample_chunk_shots": 2048},
     )
     run["measurement"]["setup_timeout_seconds"] = 60
     _write(run_path, run)
 
     output = tmp_path / "result.json"
-    result = run_suite(load_suite(run_path), output_path=output, memory_limit_gib=1)
+    result = run_suite(
+        load_suite(run_path),
+        python_executable=sys.executable,
+        output_path=output,
+        memory_limit_gib=1,
+    )
     validate_document(json.loads(output.read_text()))
     case = result["cases"][0]
     assert case["status"] == "success", case["error"]
@@ -297,21 +317,23 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
 def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
     pytest.importorskip("tsim")
     run_path, run, software = _write_fixture_suite(tmp_path)
-    workloads = json.loads((tmp_path / "workloads.json").read_text())
+    workloads = read_toml(tmp_path / "workloads.toml")
     workloads["workloads"][0]["compatible_adapters"] = ["tsim"]
-    _write(tmp_path / "workloads.json", workloads)
+    _write(tmp_path / "workloads.toml", workloads)
     implementation = software["implementations"][0]
     implementation.update(
         adapter="tsim", name="Tsim", distribution="bloqade-tsim", version="0.1.5",
         commit_sha="e9406ed5bb49fcff1b04b65534cf56bbb756b3a6",
         source_url="https://github.com/QuEraComputing/tsim",
     )
-    _write(tmp_path / "software.json", software)
+    _write(tmp_path / "software.toml", software)
     run["cases"] = run["cases"][:1]
     run["measurement"]["setup_timeout_seconds"] = 120
     run["measurement"]["request_timeout_seconds"] = 120
     _write(run_path, run)
-    result = run_suite(load_suite(run_path), output_path=tmp_path / "result.json")
+    result = run_suite(
+        load_suite(run_path), python_executable=sys.executable, output_path=tmp_path / "result.json"
+    )
     validate_document(result)
     case = result["cases"][0]
     assert case["status"] == "success", case["error"]
@@ -322,3 +344,45 @@ def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
     assert case["warmup"]["attempted_shots"] == 8
     assert metadata["kernel_warmup_seconds"] >= 0
     assert metadata["compile_seconds"] >= 0
+
+
+def test_existing_raw_evidence_is_never_overwritten(tmp_path):
+    path, _, _ = _write_fixture_suite(tmp_path)
+    output = tmp_path / "raw.json"
+    output.write_text("previous evidence")
+    with pytest.raises(ValueError, match="refusing to overwrite"):
+        run_suite(load_suite(path), output_path=output, python_executable=sys.executable)
+    assert output.read_text() == "previous evidence"
+
+
+def test_campaign_deadline_stops_remaining_work_and_keeps_evidence(tmp_path):
+    path, _, _ = _write_fixture_suite(
+        tmp_path, parameters={"sleep_on_seed": 10010, "sleep_seconds": 3},
+    )
+    suite = load_suite(path)
+    # Shorten the campaign deadline after input validation to exercise the boundary quickly.
+    suite.run["collection"] = {"run_timeout_minutes": 0.01}
+    output = tmp_path / "deadline.json"
+    result = run_suite(suite, output_path=output, python_executable=sys.executable)
+    assert result["cases"][0]["error"]["type"] == "WorkerTimeout"
+    assert result["cases"][1]["error"]["type"] == "CampaignTimeout"
+    assert result["run"]["finished_at"] is not None
+    validate_document(json.loads(output.read_text()))
+
+
+def test_official_collection_rejects_interpreter_override(tmp_path):
+    path, _, _ = _write_fixture_suite(tmp_path)
+    suite = load_suite(path)
+    suite.run["classification"] = "official"
+    with pytest.raises(ValueError, match="isolated implementation environments"):
+        run_suite(suite, output_path=tmp_path / "raw.json", python_executable=sys.executable)
+    assert not (tmp_path / "raw.json").exists()
+
+
+def test_missing_interpreter_is_preserved_as_a_setup_failure(tmp_path):
+    path, _, _ = _write_fixture_suite(tmp_path)
+    result = run_suite(load_suite(path), output_path=tmp_path / "raw.json",
+                       python_executable=str(tmp_path / "missing-python"))
+    assert all(c["status"] == "error" and c["error"]["phase"] == "setup"
+               and c["error"]["type"] == "FileNotFoundError" for c in result["cases"])
+    validate_document(result)

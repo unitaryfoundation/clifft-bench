@@ -11,10 +11,10 @@ from clifft_bench.adapters import _shared
 from clifft_bench.adapters import xtim as adapter
 from clifft_bench.adapters.base import Counts
 from clifft_bench.adapters.clifft import ClifftAdapter
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
-EXECUTION = {"batch_enabled": True, "batch_size": 32, "sample_chunk_shots": 0}
+EXECUTION = {"batch_enabled": True, "batch_size": 32, "options": {}}
 SEMANTICS = {
     "observable_index": 0,
     "postselect_all_detectors": True,
@@ -278,7 +278,7 @@ def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed, postselect):
 def test_release_native_postselection_matches_unmasked_stream(workload_id):
     pytest.importorskip("xtim")
     np = pytest.importorskip("numpy")
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases if c.workload.id == workload_id)
     p = adapter.XtimAdapter().prepare(
         artifact_path=case.workload.artifact_path,
@@ -314,7 +314,7 @@ def test_release_native_postselection_matches_unmasked_stream(workload_id):
 def test_release_workload_metadata_and_acceptance_agree_with_clifft(workload_id):
     pytest.importorskip("xtim")
     pytest.importorskip("clifft")
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases if c.workload.id == workload_id)
     args = {
         "artifact_path": case.workload.artifact_path,

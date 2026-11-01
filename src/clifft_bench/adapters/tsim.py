@@ -62,6 +62,13 @@ class _PreparedTsim(PreparedAdapter):
 class TsimAdapter(Adapter):
     name = "tsim"
 
+    def validate_options(self, options: dict[str, Any]) -> None:
+        if options.keys() - {"trajectory_sharing"}:
+            raise ValueError(f"unknown Tsim options: {sorted(options)}")
+        if type(options.get("trajectory_sharing", True)) is not bool:
+            raise ValueError("trajectory_sharing must be boolean")
+
+
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
             "bloqade-tsim", expected_commit=expected_commit, source_url=source_url
@@ -70,6 +77,7 @@ class TsimAdapter(Adapter):
     def prepare(
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
+        self.validate_options(execution.get("options", {}))
         # NUMBA_NUM_THREADS must be set before import: limiting BLAS/OpenMP
         # alone does not constrain Numba's independent thread pool.
         if os.environ.get("NUMBA_NUM_THREADS") != "1":
@@ -84,9 +92,9 @@ class TsimAdapter(Adapter):
         if semantics["reference_convention"] != "raw-record-parity":
             raise ValueError("Tsim adapter requires raw-record-parity")
         batch = int(execution["batch_size"])
-        if not 1 <= batch <= MAX_BATCH_SIZE or execution.get("sample_chunk_shots", 0) != 0:
-            raise ValueError("Tsim requires batch_size in [1, 65536] and sample_chunk_shots=0")
-        sharing = execution.get("tsim_trajectory_sharing", True)
+        if not 1 <= batch <= MAX_BATCH_SIZE:
+            raise ValueError("Tsim requires batch_size in [1, 65536]")
+        sharing = execution.get("options", {}).get("trajectory_sharing", True)
         if not isinstance(sharing, bool):
             raise ValueError("tsim_trajectory_sharing must be boolean")
         started = time.perf_counter()

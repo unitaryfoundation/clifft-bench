@@ -9,9 +9,6 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 SCHEMA_FILES = {
-    "clifft-bench/workloads/v1": "workloads-v1.schema.json",
-    "clifft-bench/software/v1": "software-v1.schema.json",
-    "clifft-bench/run/v1": "run-v1.schema.json",
     "clifft-bench/result/v1": "result-v1.schema.json",
     "clifft-bench/execution/v1": "execution-v1.schema.json",
 }
@@ -24,11 +21,11 @@ class SchemaValidationError(ValueError):
 def repository_root() -> Path:
     """Return the benchmark-suite checkout containing manifests and schemas."""
     source_candidate = Path(__file__).resolve().parents[2]
-    if (source_candidate / "schemas").is_dir() and (source_candidate / "manifests").is_dir():
+    if (source_candidate / "schemas").is_dir() and (source_candidate / "workloads.toml").is_file():
         return source_candidate
     current = Path.cwd().resolve()
     for candidate in (current, *current.parents):
-        if (candidate / "schemas").is_dir() and (candidate / "manifests").is_dir():
+        if (candidate / "schemas").is_dir() and (candidate / "workloads.toml").is_file():
             return candidate
     raise SchemaValidationError(
         "cannot locate the clifft-bench checkout; run the CLI from this repository"

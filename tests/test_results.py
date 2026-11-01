@@ -10,6 +10,7 @@ from types import SimpleNamespace
 import pytest
 
 from clifft_bench.calibration import CALIBRATION_POLICY
+from clifft_bench.config import load_suite
 from clifft_bench.results import _comparison_rows, finalize_execution
 from clifft_bench.schema import repository_root, validate_path
 
@@ -33,7 +34,7 @@ def _expected_case(variant: str, *, batch_size: int | str) -> SimpleNamespace:
                 "mode": "throughput",
                 "batch_enabled": batch_size != 1,
                 "batch_size": batch_size,
-                "sample_chunk_shots": 0,
+                "options": {},
             },
         },
     )
@@ -41,7 +42,7 @@ def _expected_case(variant: str, *, batch_size: int | str) -> SimpleNamespace:
 
 def _suite(*, calibrated_candidate: bool = False):
     return SimpleNamespace(
-        run_path=repository_root() / "campaigns/release-v1/run.v1.json",
+        run_path=repository_root() / "campaigns/release-v1.toml",
         cases=(
             _expected_case("baseline", batch_size=1),
             _expected_case(
@@ -249,14 +250,16 @@ def test_finalize_writes_index_and_plot_ready_comparison_tables(tmp_path: Path) 
 @pytest.mark.parametrize("applied", [False, True])
 def test_finalize_records_and_validates_clifft_scheduler(tmp_path: Path, applied: bool) -> None:
     suite = _suite()
-    options = json.loads((
-        repository_root() / "campaigns/release-v1/clifft-scheduled-execution.json"
-    ).read_text())["clifft_scheduler"]
-    suite.cases[1].definition["execution"]["clifft_scheduler"] = options
+    options = (
+        load_suite(repository_root() / "campaigns/release-v1.toml")
+        .cases[0]
+        .definition["execution"]["options"]["scheduler"]
+    )
+    suite.cases[1].definition["execution"]["options"]["scheduler"] = options
     raw_path = _result(tmp_path)
     raw = json.loads(raw_path.read_text())
     candidate = raw["cases"][1]
-    candidate["execution"]["clifft_scheduler"] = options
+    candidate["execution"]["options"]["scheduler"] = options
     metadata = candidate["setup"]["runtime_metadata"]
     metadata.update(
         scheduler_statistics={"applied": applied},
@@ -362,7 +365,7 @@ def test_tsim_finalizer_checks_runtime_identity_and_full_warmup(tmp_path, field,
     suite = _suite()
     expected = suite.cases[1]
     expected.implementation.definition.update(adapter="tsim", commit_sha="c" * 40)
-    expected.definition["execution"]["tsim_trajectory_sharing"] = True
+    expected.definition["execution"]["options"]["trajectory_sharing"] = True
     raw_path = _result(tmp_path)
     raw = json.loads(raw_path.read_text())
     observed = raw["cases"][1]

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import time
 from importlib.metadata import distribution
 from pathlib import Path
@@ -44,6 +45,27 @@ class _PreparedClifft(PreparedAdapter):
 class ClifftAdapter(Adapter):
     name = "clifft"
 
+    def validate_options(self, options: dict[str, Any]) -> None:
+        if options.keys() - {"scheduler"}:
+            raise ValueError(f"unknown Clifft options: {sorted(options)}")
+        if "scheduler" not in options:
+            return
+        scheduler = options["scheduler"]
+        required = {"beam_width", "search_budget", "noise_transparent", "sink_neutral_rotations"}
+        if not isinstance(scheduler, dict) or scheduler.keys() != required:
+            raise ValueError("scheduler requires explicit beam_width, search_budget, "
+                             "noise_transparent and sink_neutral_rotations")
+        if type(scheduler["beam_width"]) is not int or scheduler["beam_width"] < 1:
+            raise ValueError("scheduler beam_width must be a positive integer")
+        budget = scheduler["search_budget"]
+        if budget is not None and (type(budget) not in (int, float)
+                                   or not math.isfinite(budget) or budget < 0):
+            raise ValueError("scheduler search_budget must be finite and nonnegative or null")
+        if any(type(scheduler[key]) is not bool for key in
+               ("noise_transparent", "sink_neutral_rotations")):
+            raise ValueError("scheduler switches must be boolean")
+
+
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         installed = distribution("clifft")
         direct_url = json.loads(installed.read_text("direct_url.json") or "{}")
@@ -63,6 +85,7 @@ class ClifftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
+        self.validate_options(execution.get("options", {}))
         reference_convention = str(workload["semantics"]["reference_convention"])
         if reference_convention != "raw-record-parity":
             raise ValueError(
@@ -70,7 +93,7 @@ class ClifftAdapter(Adapter):
             )
         import clifft
 
-        scheduler_config = execution.get("clifft_scheduler")
+        scheduler_config = execution.get("options", {}).get("scheduler")
         scheduler = None
         if scheduler_config is not None:
             if not hasattr(clifft, "ActiveWidthSchedulePass"):

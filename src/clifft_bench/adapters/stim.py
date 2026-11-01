@@ -80,6 +80,7 @@ class StimAdapter(Adapter):
         self, *, artifact_path: Path, workload: dict[str, Any], execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
+        self.validate_options(execution.get("options", {}))
         import stim
 
         require_all_or_none(workload["semantics"], self.name)
@@ -92,8 +93,8 @@ class StimAdapter(Adapter):
         if not 0 <= observable < circuit.num_observables:
             raise ValueError("observable index is outside the circuit")
         chunk = int(execution["batch_size"])
-        if chunk < 1 or execution.get("sample_chunk_shots", 0) != 0:
-            raise ValueError("Stim uses batch_size for chunking; sample_chunk_shots must be 0")
+        if chunk < 1:
+            raise ValueError("Stim requires a positive batch_size for chunking")
         started = time.perf_counter()
         prepared = _PreparedStim(
             circuit,

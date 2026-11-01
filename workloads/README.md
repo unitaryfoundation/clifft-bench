@@ -2,7 +2,7 @@
 
 The checked-in `.stim` files are immutable benchmark inputs. Their SHA-256
 digests, semantic contracts, compatible adapters, and source commits live in
-[`manifests/workloads.v1.json`](../manifests/workloads.v1.json).
+[`workloads.toml`](../workloads.toml).
 
 The benchmark corpus contains:
 

@@ -8,14 +8,14 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.manifest import load_suite
+from clifft_bench.config import load_suite
 from clifft_bench.selection import detector_mask, has_postselection
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_selection_pairs_reuse_exact_circuits_and_public_call_sizes():
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     workloads = {w["id"]: w for w in suite.workloads_document["workloads"]}
     pairs = [w for w in workloads.values() if "postselection_pair" in w["parameters"]]
     assert pairs
@@ -40,7 +40,7 @@ def test_selection_pairs_reuse_exact_circuits_and_public_call_sizes():
 def test_full_cultivation_mask_follows_pinned_coordinate_rule():
     import stim
 
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases
                 if c.workload.id == "msc-full-d5-cultivation-selected-p1e-3")
     # Clifford substitution is for annotation indexing ONLY, not a physics oracle.
@@ -57,8 +57,8 @@ def test_full_cultivation_mask_follows_pinned_coordinate_rule():
 
 
 def test_coverage_smoke_exercises_every_declared_release_combination():
-    release = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
-    smoke = load_suite(ROOT / "manifests/run-coverage-smoke.v1.json")
+    release = load_suite(ROOT / "campaigns/release-v1.toml")
+    smoke = load_suite(ROOT / "campaigns/coverage-smoke.toml")
     expected = {c.id: c for c in release.cases
                 if c.definition["variant_id"].endswith("-coverage")}
     assert expected
@@ -97,7 +97,7 @@ def test_partial_selection_counts_only_selected_raw_detector(adapter, batch, sel
     prepared = load_adapter(adapter).prepare(
         artifact_path=circuit, workload={"semantics": semantics},
         execution={"batch_enabled": batch > 1, "batch_size": batch,
-                   "sample_chunk_shots": 0}, seed=918,
+                   "options": {}}, seed=918,
     )
     prepared.begin_sample(919)
     counts = prepared.sample(16384, 919)
@@ -149,14 +149,14 @@ def qv_observable_probability(path: Path, qubits: int) -> float:
 @pytest.mark.parametrize("batch", [1, 32])
 def test_repeated_qv10_matches_independent_statevector(adapter, batch):
     pytest.importorskip(adapter)
-    suite = load_suite(ROOT / "campaigns/release-v1/run.v1.json")
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases if c.workload.id == "quantum-volume-q10-seed42")
     probability = qv_observable_probability(case.workload.artifact_path, 10)
     execution = copy.deepcopy(case.definition["execution"])
     execution.update(batch_size=batch, batch_enabled=batch > 1,
-                     sample_chunk_shots=2048 if adapter == "symft" else 0)
+                     options={"sample_chunk_shots": 2048} if adapter == "symft" else {})
     if adapter != "clifft":
-        execution.pop("clifft_scheduler", None)
+        execution["options"].pop("scheduler", None)
     prepared = load_adapter(adapter).prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
         execution=execution, seed=1742,

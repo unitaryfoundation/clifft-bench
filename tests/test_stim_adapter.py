@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
@@ -8,6 +7,7 @@ import stim
 
 from clifft_bench.adapters.stim import StimAdapter
 from clifft_bench.calibration import calibration_candidates
+from clifft_bench.config import read_toml
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -24,7 +24,7 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
                 "postselect_all_detectors": postselect,
             }
         },
-        execution={"batch_size": chunk, "sample_chunk_shots": 0},
+        execution={"batch_size": chunk, "options": {}},
     )
 
 
@@ -40,7 +40,7 @@ def test_surface_artifact_matches_paper_generator_and_declared_metadata():
         before_round_data_depolarization=0.001,
     )
     assert circuit == generated
-    workloads = json.loads((ROOT / "manifests/workloads.v1.json").read_text())["workloads"]
+    workloads = read_toml(ROOT / "workloads.toml")["workloads"]
     compatible = [w for w in workloads if "stim" in w["compatible_adapters"]]
     assert [w["id"] for w in compatible] == [
         "surface-code-d7-r7-p1e-3", "surface-code-d7-r7-p1e-3-unselected",
@@ -97,9 +97,9 @@ def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
 
     pytest.importorskip("clifft")
     pytest.importorskip("symft")
-    workloads = json.loads((ROOT / "manifests/workloads.v1.json").read_text())["workloads"]
+    workloads = read_toml(ROOT / "workloads.toml")["workloads"]
     workload = next(w for w in workloads if w["id"] == "surface-code-d7-r7-p1e-3")
-    artifact = (ROOT / "manifests" / workload["artifact"]["path"]).resolve()
+    artifact = (ROOT / workload["artifact"]["path"]).resolve()
     shots = 65536
     observed = []
     for adapter in ("stim", "clifft", "symft"):
@@ -109,7 +109,7 @@ def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
             execution={
                 "batch_enabled": True,
                 "batch_size": 1024,
-                "sample_chunk_shots": 2048 if adapter == "symft" else 0,
+                "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {},
             },
         )
         prepared.begin_sample(42)

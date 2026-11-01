@@ -1,29 +1,31 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from toml_helpers import write_toml
 
 from clifft_bench.adapters.clifft import ClifftAdapter
-from clifft_bench.manifest import load_suite
-from clifft_bench.schema import repository_root, write_json
+from clifft_bench.config import load_suite, read_toml
+from clifft_bench.schema import repository_root
 
 ROOT = repository_root()
 
 
 def _release_copy(tmp_path: Path) -> tuple[Path, dict]:
-    document = json.loads((ROOT / "campaigns/release-v1/run.v1.json").read_text())
-    document["workloads_manifest"] = str(ROOT / "manifests/workloads.v1.json")
-    document["software_manifest"] = str(ROOT / "manifests/software.v1.json")
-    return tmp_path / "release.json", document
+    document = read_toml(ROOT / "campaigns/release-v1.toml")
+    document["workloads_file"] = str(ROOT / "workloads.toml")
+    document["software_file"] = str(ROOT / "software.toml")
+    return tmp_path / "release.toml", document
 
 
 def _scheduler_options() -> dict:
-    return json.loads(
-        (ROOT / "campaigns/release-v1/clifft-scheduled-execution.json").read_text()
-    )["clifft_scheduler"]
+    return (
+        load_suite(ROOT / "campaigns/release-v1.toml")
+        .cases[0]
+        .definition["execution"]["options"]["scheduler"]
+    )
 
 
 @pytest.mark.parametrize("options", [
@@ -34,17 +36,20 @@ def _scheduler_options() -> dict:
 ])
 def test_invalid_scheduler_options_are_rejected_before_launch(tmp_path, options):
     path, document = _release_copy(tmp_path)
-    document["variants"][1]["execution"]["clifft_scheduler"] = {**_scheduler_options(), **options}
-    write_json(path, document)
+    document["variants"][1]["execution"]["options"]["scheduler"] = {
+        **_scheduler_options(),
+        **options,
+    }
+    write_toml(path, document)
     with pytest.raises(ValueError):
         load_suite(path)
 
 
 def test_scheduler_options_cannot_be_silently_ignored_by_another_adapter(tmp_path):
     path, document = _release_copy(tmp_path)
-    document["variants"][2]["execution"]["clifft_scheduler"] = _scheduler_options()
-    write_json(path, document)
-    with pytest.raises(ValueError, match="Clifft compiler options"):
+    document["variants"][2]["execution"]["options"]["scheduler"] = _scheduler_options()
+    write_toml(path, document)
+    with pytest.raises(ValueError, match="unknown SymFT options"):
         load_suite(path)
 
 
@@ -56,7 +61,7 @@ def test_requested_scheduler_is_rejected_on_older_clifft(tmp_path, monkeypatch):
         ClifftAdapter().prepare(
             artifact_path=tmp_path / "unused.stim",
             workload={"semantics": {"reference_convention": "raw-record-parity"}},
-            execution={"clifft_scheduler": _scheduler_options()},
+            execution={"options": {"scheduler": _scheduler_options()}},
         )
 
 
@@ -64,7 +69,22 @@ def test_scheduler_requires_explicit_options(tmp_path):
     path, document = _release_copy(tmp_path)
     options = _scheduler_options()
     options.pop("search_budget")
-    document["variants"][1]["execution"]["clifft_scheduler"] = options
-    write_json(path, document)
-    with pytest.raises(ValueError, match="required property"):
+    document["variants"][1]["execution"]["options"]["scheduler"] = options
+    write_toml(path, document)
+    with pytest.raises(ValueError, match="requires explicit"):
         load_suite(path)
+
+
+@pytest.mark.parametrize("adapter, options", [
+    ("symft", {"sample_chunk_shots": True}),
+    ("symft", {"sample_chunk_shots": -1}),
+    ("tsim", {"trajectory_sharing": 1}),
+    ("stim", {"trajectory_sharing": True}),
+    ("xtim", {"sample_chunk_shots": 0}),
+    ("clifft", {"scheduler": {}}),
+])
+def test_adapter_owns_option_validation(adapter, options):
+    from clifft_bench.adapters import load_adapter
+
+    with pytest.raises(ValueError):
+        load_adapter(adapter).validate_options(options)

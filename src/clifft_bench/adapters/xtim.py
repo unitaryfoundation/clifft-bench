@@ -124,6 +124,7 @@ class XtimAdapter(Adapter):
     def prepare(
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
+        self.validate_options(execution.get("options", {}))
         import numpy as np
         import xtim
 
@@ -132,8 +133,8 @@ class XtimAdapter(Adapter):
         if semantics["reference_convention"] != "raw-record-parity":
             raise ValueError("xtim adapter requires raw-record-parity")
         chunk = int(execution["batch_size"])
-        if chunk < 1 or execution.get("sample_chunk_shots", 0) != 0:
-            raise ValueError("xtim uses batch_size for chunking; sample_chunk_shots must be 0")
+        if chunk < 1:
+            raise ValueError("xtim requires a positive batch_size for chunking")
         started = time.perf_counter()
         text = artifact_path.read_text()
         circuit = xtim.Circuit(text)
