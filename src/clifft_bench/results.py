@@ -422,17 +422,21 @@ def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> 
     require(isinstance(rows, list) and len(rows) == len(calibration["candidates"]),
             "missing candidate outcomes")
     successful = set()
+    seen_skip = False
     for batch, row in zip(calibration["candidates"], rows, strict=True):
         require(isinstance(row, dict) and row.get("batch_size") == batch,
                 "mismatched candidate order")
         status = row.get("status")
         require(status in {"success", "error", "budget-skipped"}, "invalid candidate status")
+        require(not seen_skip or status == "budget-skipped",
+                "candidate attempted after budget skip")
         duration = row.get("duration_seconds")
         require(type(duration) in (int, float) and math.isfinite(duration) and duration >= 0,
                 "invalid candidate duration")
         samples = row.get("samples")
         require(isinstance(samples, list), "missing candidate probes")
         if status == "budget-skipped":
+            seen_skip = True
             require(not samples, "skipped candidate has timed samples")
         elif status == "error":
             require(isinstance(row.get("error"), dict), "candidate failure lacks an error")

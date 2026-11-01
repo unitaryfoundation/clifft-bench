@@ -543,3 +543,37 @@ def test_finalizer_rejects_incomplete_or_mismatched_tuning_evidence(damage):
         calibration["results"][0]["status"] = "budget-skipped"
     with pytest.raises(ValueError):
         _validate_calibration_record(expected, observed)
+
+
+@pytest.mark.parametrize("skip_index, later_status", [
+    (0, "success"), (1, "success"), (1, "error"),
+])
+def test_finalizer_rejects_attempted_candidates_after_budget_skip(skip_index, later_status):
+    from clifft_bench.results import _validate_bounded_calibration
+
+    calibration = _bounded_calibration()
+    calibration["selected_batch_size"] = 64 if skip_index == 0 else 1
+    calibration["results"][skip_index].update(
+        status="budget-skipped", samples=[], duration_seconds=0.0,
+        effective_batch_size=None, median_attempted_shots_per_second=None,
+    )
+    if later_status == "error":
+        calibration["results"][skip_index + 1].update(
+            status="error", samples=[], error={"type": "MemoryError"},
+            effective_batch_size=None, median_attempted_shots_per_second=None,
+        )
+    with pytest.raises(ValueError, match="candidate attempted after budget skip"):
+        _validate_bounded_calibration(calibration, "candidate")
+
+
+def test_finalizer_accepts_budget_skipped_suffix():
+    from clifft_bench.results import _validate_bounded_calibration
+
+    calibration = _bounded_calibration()
+    calibration["selected_batch_size"] = 1
+    for row in calibration["results"][1:]:
+        row.update(
+            status="budget-skipped", samples=[], duration_seconds=0.0,
+            effective_batch_size=None, median_attempted_shots_per_second=None,
+        )
+    _validate_bounded_calibration(calibration, "candidate")
