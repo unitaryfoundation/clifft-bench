@@ -5,6 +5,7 @@ import importlib.metadata
 import json
 import os
 import platform
+import statistics
 import subprocess
 import sys
 import tomllib
@@ -53,6 +54,15 @@ def worker_environment() -> dict[str, str]:
         key: value
         for key, value in {**os.environ, **ENVIRONMENT}.items()
         if key not in JAX_DEFAULT_ENVIRONMENT
+    }
+
+
+def summarize(samples: list[dict]) -> dict:
+    rates = [s["throughput_attempted_shots_per_second"] for s in samples]
+    median = statistics.median(rates)
+    return {
+        "median_attempted_shots_per_second": median,
+        "mad_attempted_shots_per_second": statistics.median(abs(r - median) for r in rates),
     }
 
 

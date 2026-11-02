@@ -1,7 +1,7 @@
 # Tsim GPU QEC comparison
 
-This maintained experiment complements the single-core release campaign. It
-uses the same eight immutable QEC circuits and raw aggregate-count semantics,
+This optional experiment complements the single-core release campaign. It
+uses the immutable QEC corpus and [raw aggregate-count semantics](../../docs/benchmark-contract.md#question-and-logical-work),
 with a separate GPU host, dependency lock, preparation budget, and public-call
 size. It does not launch instances or modify the CPU campaign's resource rules.
 
@@ -9,8 +9,7 @@ The pinned implementation is **bloqade-tsim 0.1.5 at
 44f64ba79c91e6ada77d6b609595ad0a3d767c11** (upstream main, August 12, 2026),
 including changes after the PyPI 0.1.5 release. The lock also pins JAX/JAXLIB
 0.11.1, pyzx-param 0.9.3, NumPy, and both optional CUDA dependency trees. The
-existing CPU comparison uses SymFT 0.1.1 at c89b985 and Stim 1.16.0. Ticit is not
-part of either collection.
+CPU release campaign has independently maintained implementation pins.
 
 ## Reuse from the paper
 
@@ -45,9 +44,7 @@ in the [JAX installation guide](https://docs.jax.dev/en/latest/installation.html
 Use one of the locked extras, not both. Avoid an `LD_LIBRARY_PATH` override of
 the wheel-provided libraries. No local CUDA toolkit build should be needed.
 
-Clone the branch/commit containing this experiment. After the implementation PR
-is merged, use `main` and create a results branch before collection, just as for
-the CPU campaign:
+Clone the repository and create a clean results branch before collection:
 
 ```bash
 git clone https://github.com/unitaryfoundation/clifft-bench.git
@@ -187,19 +184,20 @@ allocator variables, and compiled array dtypes are recorded. JAX's default
 preallocation reduces allocation overhead on this dedicated GPU; see the
 [allocation guide](https://docs.jax.dev/en/latest/gpu_memory_allocation.html).
 
-The CPU campaign retains its public call sizes for historical continuity
-(including one shot for coherent d5/r5); Tsim uses large calls to amortize GPU
-launches. Present absolute rates under each stated configuration on separate
-hardware series. Do not quote a same-hardware speedup or decoder throughput.
+The CPU campaign distinguishes short and bulk public calls; this GPU study
+uses large calls to amortize launches. Present absolute rates under each stated
+configuration on separate hardware series. Do not quote a same-hardware speedup or decoder throughput.
 
 ## Collected evidence
 
-- `metadata.json`: exact source/lock fingerprints, installed package versions,
-  source URL, driver, GPU identity/VRAM, host CPU/RAM, environment, budgets.
+- `metadata.json`: resolved workload identities and selection semantics, exact
+  source/lock fingerprints, installed packages, GPU/driver, host, environment,
+  and budgets.
 - `raw/WORKLOAD/STRATEGY/attempt-NNN/`: request, phase checkpoint, full log, and
   final `result.json`, including raw count/timing samples and failures.
-- `summary.json`: resumable derived selection/coverage view. Raw results are
-  authoritative; never replace a timeout with a numerical rate.
+- `summary.json`: derived selection/coverage view, regenerated from raw samples
+  during finalization. Resume uses completed raw attempts; this view can be
+  missing or stale without losing evidence. Never give a timeout a numerical rate.
 
 ## Finalize and push from the GPU host
 
@@ -218,9 +216,10 @@ git commit --no-gpg-sign -m "data: add Tsim GPU execution $CLIFFT_TSIM_EXECUTION
 git push -u origin HEAD
 ```
 
-The finalizer checks coverage of the declared workloads and strategies, clean
-collection provenance, fingerprints, counts, timing summaries, and strategy
-selection. It preserves timeouts and other completed failures, rejects an
+The finalizer checks declared workload/strategy coverage, clean collection
+provenance, fingerprints, sample counts and finite timings. It computes the
+selected-strategy summary from raw evidence instead of cross-checking stored
+summaries. It preserves timeouts and other completed failures, rejects an
 actively running or incomplete collection, and copies the complete evidence
 into `experiments/tsim-gpu/results/EXECUTION_ID/` without overwriting a previous
 execution. The original spool remains available for recovery. No GPU is needed

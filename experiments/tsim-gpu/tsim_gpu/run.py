@@ -19,6 +19,7 @@ from .common import (
     WORKLOADS,
     digest,
     now,
+    summarize,
     worker_environment,
     workloads,
     write_json,
@@ -182,6 +183,31 @@ def choose_strategy(results: list[dict]) -> dict | None:
     return max(successful, key=lambda r: r["selection_probe_rate"], default=None)
 
 
+def workload_summary(workload: dict, results: list[dict]) -> dict:
+    chosen = choose_strategy(results)
+    return {
+        "workload_id": workload["id"],
+        "artifact_sha256": workload["artifact"]["sha256"],
+        "semantics": workload["semantics"],
+        "status": "success" if chosen else "no-success",
+        "selected_strategy": chosen["strategy"] if chosen else None,
+        "selected_batch_size": chosen["selected_batch_size"] if chosen else None,
+        "selection_rule": "highest warm-probe median; independent final samples",
+        "summary": summarize(chosen["samples"]) if chosen else None,
+        "runtime_metadata": chosen.get("runtime_metadata") if chosen else None,
+        "strategies": [
+            {
+                "strategy": r["strategy"],
+                "status": r["status"],
+                "error": r.get("error"),
+                "compile_seconds": r.get("compile_seconds"),
+                "preparation_seconds": r["strategy_preparation_seconds"],
+            }
+            for r in results
+        ],
+    }
+
+
 def run_attempt(
     case_dir: Path, request: dict, environment: dict, signature: str
 ) -> tuple[dict, Path]:
@@ -328,7 +354,7 @@ def collect(
         {
             "hardware": hardware,
             "options": options,
-            "workloads": identities,
+            "workloads": [identities[key] for key in selected_ids],
             "host_label": host_label,
         }
     )
@@ -347,7 +373,7 @@ def collect(
             "fingerprint": signature,
             "hardware": hardware,
             "options": options,
-            "workload_ids": selected_ids,
+            "workloads": [identities[key] for key in selected_ids],
             "host_label": host_label,
         }
         write_json(metadata_path, metadata)
@@ -378,30 +404,7 @@ def collect(
             remaining -= result["strategy_preparation_seconds"]
             results.append(result)
             print(f"  {strategy}: {result['status']}", flush=True)
-        chosen = choose_strategy(results)
-        summary["workloads"].append(
-            {
-                "workload_id": workload_id,
-                "artifact_sha256": workload["artifact"]["sha256"],
-                "semantics": workload["semantics"],
-                "status": "success" if chosen else "no-success",
-                "selected_strategy": chosen["strategy"] if chosen else None,
-                "selected_batch_size": chosen["selected_batch_size"] if chosen else None,
-                "selection_rule": "highest warm-probe median; independent final samples",
-                "summary": chosen["summary"] if chosen else None,
-                "runtime_metadata": chosen.get("runtime_metadata") if chosen else None,
-                "strategies": [
-                    {
-                        "strategy": r["strategy"],
-                        "status": r["status"],
-                        "error": r.get("error"),
-                        "compile_seconds": r.get("compile_seconds"),
-                        "preparation_seconds": r["strategy_preparation_seconds"],
-                    }
-                    for r in results
-                ],
-            }
-        )
+        summary["workloads"].append(workload_summary(workload, results))
         write_json(output / "summary.json", summary)
 
 

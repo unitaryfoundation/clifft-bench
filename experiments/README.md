@@ -1,35 +1,22 @@
-# One-off performance experiments
+# Optional performance studies
 
-This directory is for questions that are useful but are not answered on every
-Clifft release. An experiment should be a self-contained script or small folder
-with its own environment, measurement notes, raw output, and plotting code.
-It should not add commands, schemas, or branches to the recurring release
-workflow unless at least two real experiments need the same mechanism.
+These studies answer questions outside recurring previous/current Clifft and
+cross-tool release comparisons. Each owns its environment, timing contract,
+correctness checks, raw evidence, and publication workflow:
 
-[`qv/`](qv/) contains the standalone Quantum Volume paper refresh. It carries
-its own locked environment, runner, validator, results directory, plotter, and
-EC2 instructions without adding experiment concepts to the core CLI.
+- [Quantum Volume](qv/): the paper's setup-plus-one-shot comparison against
+  Qiskit Aer, Qulacs, and qsim, including statevector validation and optional
+  light/dark figures.
+- [Tsim GPU](tsim-gpu/): GPU sampling on the QEC corpus with bounded preparation,
+  independent warm probes, process deadlines, resumable failures, and raw samples.
 
-[`tsim-gpu/`](tsim-gpu/) contains the maintained Tsim GPU comparison on the
-immutable QEC corpus. It has a pinned source/dependency lock, hard preparation
-budgets, warm throughput tuning, cached failure evidence, and its own GPU-host
-instructions.
+Run and publish a study when its question is useful. Neither study is an input
+to `clifft-bench report` or a prerequisite for release collection. Their
+[workflow](../.github/workflows/experiments.yml) runs on relevant code/input
+changes or manual dispatch. Study-specific validation commands live in each
+README; no shared experiment framework is required.
 
-## Quantum Volume and multicore scaling
-
-The former integrated Quantum Volume campaign was removed with the 0.x result
-archive. The replacement under [`qv/`](qv/) is deliberately a purpose-built
-refresh of the paper experiment rather than a general QV subsystem.
-
-A QV study should record at least:
-
-- circuit generator, version, seed, width, depth, and circuit digest;
-- simulator version, build configuration, precision, and thread count;
-- physical-core selection and affinity policy;
-- setup and execution timing boundaries;
-- memory limit and peak memory; and
-- the exact reference host and source commit.
-
-The two fixed QV circuits under `workloads/circuits/` remain available for
-quick adapter checks. A new cross-tool study should normally generate a fresh,
-versioned circuit matrix appropriate to its question.
+Keep existing evidence tied to its source revision. Changing a study's code,
+software, hardware, or measurement settings requires a new execution. The fixed
+QV circuits in the [release corpus](../workloads/README.md) measure repeated
+sampling and do not replace the independent Quantum Volume study.

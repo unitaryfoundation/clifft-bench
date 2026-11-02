@@ -11,10 +11,9 @@ are optional analyses, not prerequisites for maintaining the release benchmarks.
 Python 3.12 or newer and [uv](https://docs.astral.sh/uv/) are required:
 
 ```bash
-uv sync --extra test
-uv run clifft-bench validate
-uv run pytest
-uv run ruff check .
+uv run --extra test clifft-bench validate
+uv run --extra test --extra report pytest
+uv run --extra test ruff check .
 ```
 
 List smoke cases without importing a simulator:
@@ -23,10 +22,10 @@ List smoke cases without importing a simulator:
 uv run clifft-bench list
 ```
 
-CI tests the harness and adapter contracts. Official performance collection is
-a manual, reviewed workflow. Before changing measurements or results, read the
-[benchmark contract](docs/benchmark-contract.md) and
-[result evidence contract](docs/benchmark-contract.md#result-evidence-and-comparisons).
+CI tests the harness, reporting, and adapter contracts. Optional studies have
+[separate checks](.github/workflows/experiments.yml) triggered by changes to their
+code or inputs, or by manual dispatch. Before changing measurements or results,
+read the [benchmark contract](docs/benchmark-contract.md).
 
 Keep mainline additions focused on maintained benchmarks, their correctness
 checks, and input provenance. Temporary probes, local debugging output, and
@@ -36,22 +35,11 @@ generators and official raw results with the benchmarking code they support.
 ## Preparing a release campaign
 
 [`campaigns/release-v1.toml`](campaigns/release-v1.toml) is the
-recurring campaign definition. It compares calibrated previous and current
-Clifft configurations, then calibrated current Clifft and SymFT configurations,
-with Stim in a separate `stim-anchor-vs-current` comparison on the unchanged
-Clifford surface-code circuit.
-It also includes `xtim-vs-current` on the compatible subset, with calibrated
-packed-record chunks and the documented cache measurement policy.
-It also includes `tsim-vs-current` with CPU active-statevector sampling and
-trajectory sharing. `bulk-alternatives-vs-current` separately compares Clifft,
-SymFT, and Tsim at 256 attempted shots per call on coherent d5/r5, preserving
-the historical one-shot configuration. See the
-[Tsim measurement contract](docs/benchmark-contract.md#tsim-active-statevector-cpu-comparison).
-The active SymFT identity is pinned to upstream source after its PyPI 0.1.1 release.
-
-The campaign currently pins development Clifft `63cd885` against measured
-0.12.0 because BT27/BT81 need the newer compiler. Replace this source pin with
-the next RC when preparing that release.
+recurring campaign definition. It selects previous/current Clifft and compatible
+peer tools in explicit short-call, bulk, and coverage comparisons. The expanded
+case listing and [`software.toml`](software.toml) identify the active versions
+and source pins; the [contract](docs/benchmark-contract.md) defines measurement
+semantics.
 
 All calibrated cases use the [bounded harness policy](docs/benchmark-contract.md#batching).
 Review its selected settings, failures, and search costs during the normal
@@ -74,7 +62,7 @@ For a new Clifft release:
 4. Keep each workload's `shots_per_call` aligned across every variant and
    release within each comparison. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.
-5. Validate locally, then follow the [EC2 collection procedure](CONTRIBUTING.md#reference-host-collection).
+5. Validate locally, then follow the [EC2 collection procedure](#reference-host-collection).
 
 Choose and record the previous/current configurations for the new campaign.
 Keep shared measurement inputs matched within each comparison; new workloads
@@ -141,8 +129,8 @@ Official collection requires isolated, verified implementation environments.
 ## Reference-host collection
 
 Launch the host declared by the release campaign: Canonical Ubuntu Server 24.04
-LTS, x86-64 `m7a.xlarge`, On-Demand, with IMDSv2 enabled. Use a 16 GiB `gp3`
-root volume, restrict SSH access, and set instance-initiated shutdown behavior to
+LTS, x86-64 `m7a.xlarge`, shared tenancy, On-Demand, with IMDSv2 enabled. Use a
+16 GiB `gp3` root volume, restrict SSH access, and set instance-initiated shutdown behavior to
 **Stop**. No AWS credentials or IAM role are needed by the collector.
 
 Clone the repository, select a clean data branch, and run inside `tmux` if the
@@ -204,9 +192,14 @@ missing baselines, exact versions, and both themes. Smoke figures are validation
 artifacts and must not replace published performance evidence. Existing published
 figures remain frozen until reviewed reference-host results replace them.
 
-For publication, copy the three pairs to `reporting/figures/web/` and the companion
-Clifft checkout's `docs/assets/performance/`. Update README and performance-guide
-links to the stable `release-change` filenames in the same publication change.
+For publication, copy the three reviewed pairs to `reporting/figures/web/` and
+the companion Clifft checkout's `docs/assets/performance/`. In the same
+publication PR, update README and performance-guide image links, measured
+version labels, execution links, and claims. Use the stable `release-change`
+filenames for the paired release plot; retire replaced release-specific assets
+once their links have moved. Keep existing images until reviewed measurements
+are ready. Follow the companion [release instructions](https://github.com/unitaryfoundation/clifft/blob/main/docs/development/releasing.md)
+when publishing its documentation.
 Historical, QV, GPU, and adder-specific figures are separately maintained; they
 are not required inputs or outputs of a release report.
 

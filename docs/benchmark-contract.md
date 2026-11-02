@@ -1,6 +1,6 @@
 # Benchmark contract
 
-This contract governs the official single-core QEC campaigns under
+This contract governs the recurring single-core campaigns under
 `campaigns/`. One-off studies under `experiments/` define their own contracts.
 
 ## Question and logical work
@@ -20,10 +20,9 @@ With that flag false, optional `postselection_detector_indices` selects a
 nonempty, sorted, unique list of zero-based detectors; only those parities must
 be zero. Without a subset, false disables rejection. Subsets and the all-detector
 flag are mutually exclusive. The raw result retains the exact indices and records
-`execution.postselection=true` for either selection mode. Finalization checks
-the machine-readable contract fields and execution flag; descriptive wording
-does not affect compatibility. Clifft and Tsim implement subsets;
-other adapters explicitly reject them. Tsim's subset-column materialization
+`execution.postselection=true` for either selection mode. Input and report
+validation check the selection fields and execution flag. Clifft and Tsim
+implement subsets; other adapters explicitly reject them. Tsim's subset-column materialization
 and count reduction are included in the sampling time.
 
 All supported workloads use raw-record parity; this is a fixed harness contract.
@@ -44,48 +43,22 @@ aggregate endpoints, not identical internal work or a decoder benchmark.
 
 ## Release workload selection
 
-The historical QEC figures cover cultivation
-d3 and d5, 85q distillation, Clifford surface code d7/r7, and coherent surface code d3/r3
-and d5/r5. The coherent memory workloads use repeated syndrome-extraction
-rounds. One-off experiments define their own workload sets.
+The report follows the resolved campaign's workload selections and comparison
+groups. Match circuit bytes, selection semantics, public call sizes, measurement
+settings, and resource limits within each comparison. A new workload without a
+supported previous-release baseline is current coverage, with no release ratio.
+The representative suite may change between campaigns.
 
-The default report follows the recorded campaign's workload selections and
-comparisons. Historical figures remain frozen evidence interpreted with the
-pinned legacy tools; their workload sets do not constrain current reporting.
+The [corpus notes](../workloads/README.md) own circuit provenance and validation;
+[coverage notes](../workloads/coverage.md) describe repeated QV sampling,
+selection-off controls, the unverified d7 proxy, and full d5 detector subsets.
+Observable-0 counts on unselected circuits are raw ones, not logical errors.
+Neither cultivation stress input estimates decoded logical error or fidelity.
+Repeated QV sampling measures a different question from the optional
+[setup-plus-one-shot QV study](../experiments/qv/README.md).
 
-The Clifft release comparison also includes `draper-adder-m16-basis`, a
-fixed-input 16-bit addition on 32 qubits without noise or postselection.
-Each attempted shot executes the entire addition. Its results describe prepared
-basis inputs and are reported separately from the historical QEC figures and medians.
-
-The campaign also includes `distillation-15to1-rm15-p1e-3` for both Clifft
-releases, SymFT, xtim, and Tsim. It retains xtim's 15-to-1 Reed-Muller preparation,
-T-gate phase noise at p=0.001, and four postselected X checks. An ideal inverse-T
-logical-X readout replaces expectation declarations so observable 0 measures
-accepted logical phase errors under the shared raw-parity contract. Preparation,
-checks, and verification are noiseless; the verification gates are timed.
-Its measurements are included in the result tables and declared comparisons.
-Reports show measured tools for each workload and keep recorded failures,
-unsupported adapter pairings, and unmeasured combinations distinct. Failed cases
-have no plotted throughput. See the [corpus notes](../workloads/README.md) for
-provenance and validation.
-
-BT27, BT81, and measured Reed-Muller join the regular release campaign as
-unselected workloads. Counts are raw observable-0 ones rather than logical
-errors. BT runs on current Clifft; Reed-Muller also runs on previous Clifft,
-SymFT, and Tsim. Their results use the normal CSV tables and are kept outside
-the historical QEC figures and medians.
-
-The supplemental `*-coverage` cohort adds repeated QV10/QV20, paired
-postselection-off controls for cultivation d3, surface d7 and coherent d3,
-an unverified d7 MSC performance proxy, and full d5 cultivation with only its
-107 cultivation detectors selected. All count raw observable-0 ones; neither
-the proxy nor the full cultivation case estimates decoded logical error or
-fidelity. [Coverage notes](../workloads/coverage.md) specify public-call sizes,
-source limitations and adapter eligibility. These current-tool rows use
-the same bounded calibration policy as the release comparisons and stay outside
-the published historical QEC median. Repeated QV sampling is distinct from the
-setup-plus-one-shot experiment under `experiments/qv`.
+Reports distinguish recorded failures, unsupported adapter pairings, and
+unmeasured combinations. Failed cases have no plotted throughput.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates
@@ -118,6 +91,20 @@ calibration record. Successful setup still requires complete calibration
 evidence, including when warmup, correctness, or sampling later fails.
 
 ## Resources and ordering
+
+Official results use the campaign's declared hardware epoch: a shared-tenancy,
+On-Demand AWS `m7a.xlarge` with Ubuntu 24.04 on x86-64. Use one placement for a
+fresh paired release comparison. The [host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
+found paired identical-software differences below 0.72% across three placements;
+absolute throughput varied by up to 2.60% on the slower workload. Treat paired
+changes at or below 1.1% as inconclusive. One execution does not re-estimate
+placement variability; studies that need that estimate use independent
+stop/start placements.
+
+Do not combine absolute rates from different hardware epochs without labeling
+the boundary or measuring a bridge. Shared CI hosts provide correctness and
+exploratory evidence, not the official throughput series. Host setup and
+collection commands belong in the [maintainer workflow](../CONTRIBUTING.md#reference-host-collection).
 
 Cases execute serially in manifest order. Every case gets a fresh worker
 process using the Python environment recorded for its implementation. The
@@ -203,14 +190,14 @@ recorded because changing either can change amortization.
 The recurring campaign treats `shots_per_call` as a workload measurement
 parameter, chosen to produce meaningful throughput samples and kept identical
 across tools within each comparison. Separately named comparison variants may
-measure different public call sizes without replacing the historical series. Batch calibration then selects an
-internal optimization for that fixed public call. The bulk comparison includes
+measure different public call sizes. Batch calibration selects an internal
+optimization for that fixed public call. The bulk comparison includes
 100,000-shot adder calls for Clifft and Tsim to reduce call overhead, alongside
-the original 2,048-shot cases. The active-wide coherent
+the 2,048-shot short-call cases. The active-width-limited coherent
 d5/r5 workload intentionally retains one shot per call; its calibrated cases
 therefore consider only candidate `1` and record a scalar selection.
 
-Derived rows carry both sides' mode, tuning policy, effective batch size, and shots per call.
+Each case row records its tuning policy, effective batch size, and shots per call.
 
 The recurring `current-vs-previous` comparison asks whether Clifft improved
 using the capabilities available in each release. It applies calibration to
@@ -467,11 +454,9 @@ resource ceiling. The manifest validator rejects unequal public call sizes
 within a comparison. Failed candidates/cases remain recorded under the normal
 calibration and deadline policies.
 
-The historical current/previous/alternative comparisons retain one shot per
-call for d5/r5. Keeping the bulk case separately named preserves those earlier
-measurements while allowing sharing across shots in the new comparison.
-Bulk results must not be joined into the historical one-shot QEC series.
-The multicore and expanded-workload follow-ups are separate campaigns/work.
+The short-call comparisons use one shot per call for d5/r5. Keep those rows
+separate from the bulk comparison: sharing work across shots changes the
+question, even on the same circuit and host.
 
 ### Compatibility with newer Clifft APIs
 

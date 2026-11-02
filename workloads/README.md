@@ -70,4 +70,4 @@ reference is a logical-model prediction, not an independent full-circuit simulat
 The regular release campaign runs BT27/BT81 on current Clifft, and Reed-Muller
 on both Clifft versions, SymFT, and Tsim. BT requires the post-0.12 compiler;
 peer tools are omitted where the smoke checks did not establish a usable run.
-Results appear in the normal CSV tables, outside the historical QEC figures.
+Results appear in the case table and their declared comparison groups.

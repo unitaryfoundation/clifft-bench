@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import json
-import statistics
 import sys
 import time
 import traceback
 from pathlib import Path
 
-from .common import environment_metadata, now, require_gpu, write_json
+from .common import environment_metadata, now, require_gpu, summarize, write_json
 
 
 def sample_counts(
@@ -46,15 +45,6 @@ def sample_counts(
         "accepted_shots": accepted,
         "discarded_shots": shots - accepted,
         "logical_errors": errors,
-    }
-
-
-def summarize(samples: list[dict]) -> dict:
-    rates = [s["throughput_attempted_shots_per_second"] for s in samples]
-    median = statistics.median(rates)
-    return {
-        "median_attempted_shots_per_second": median,
-        "mad_attempted_shots_per_second": statistics.median(abs(r - median) for r in rates),
     }
 
 
@@ -211,7 +201,6 @@ def run(request: dict, checkpoint: Path) -> dict:
             save()
         save(
             status="success",
-            summary=summarize(record["samples"]),
             device_memory_stats=device.memory_stats(),
         )
     except Exception as error:

@@ -5,14 +5,14 @@ from __future__ import annotations
 import argparse
 import fcntl
 import json
+import math
 import re
 import shutil
 import tempfile
 from pathlib import Path
 
-from .common import EXPERIMENT
-from .run import choose_strategy
-from .worker import summarize
+from .common import EXPERIMENT, write_json
+from .run import workload_summary
 
 TERMINAL_STATUSES = {
     "success",
@@ -28,18 +28,17 @@ def read(path: Path) -> dict:
     return json.loads(path.read_text())
 
 
-def validate_execution(source: Path) -> None:
-    metadata, summary = read(source / "metadata.json"), read(source / "summary.json")
+def validate_execution(source: Path) -> dict:
+    metadata = read(source / "metadata.json")
     if metadata["hardware"]["source_dirty"]:
         raise ValueError("cannot finalize results collected from a dirty checkout")
     fingerprint = metadata["fingerprint"]
-    if summary["fingerprint"] != fingerprint:
-        raise ValueError("summary fingerprint differs from execution metadata")
-    expected = metadata["workload_ids"]
-    rows = {row["workload_id"]: row for row in summary["workloads"]}
-    if set(rows) != set(expected) or len(rows) != len(summary["workloads"]):
-        raise ValueError("incomplete workload coverage; resume collection before finalizing")
-    for workload_id, row in rows.items():
+    summary = {"fingerprint": fingerprint, "workloads": []}
+    declared = metadata["workloads"]
+    if not declared or len({w["id"] for w in declared}) != len(declared):
+        raise ValueError("workloads must be nonempty and unique")
+    for workload in declared:
+        workload_id = workload["id"]
         results = []
         for strategy in metadata["options"]["strategies"]:
             directory = source / "raw" / workload_id / strategy
@@ -62,15 +61,28 @@ def validate_execution(source: Path) -> None:
                 ):
                     raise ValueError(f"invalid result identity or status: {path}")
                 if (
-                    result["workload"]["artifact"]["sha256"] != row["artifact_sha256"]
-                    or result["workload"]["semantics"] != row["semantics"]
+                    result["workload"]["artifact"]["sha256"] != workload["artifact"]["sha256"]
+                    or result["workload"]["semantics"] != workload["semantics"]
                 ):
                     raise ValueError(f"workload digest or semantics mismatch: {path}")
                 if result["status"] == "success":
                     samples = result["samples"]
                     if len(samples) != metadata["options"]["repetitions"]:
                         raise ValueError(f"incomplete samples: {path}")
+                    if not math.isfinite(result["selection_probe_rate"]) or (
+                        result["selection_probe_rate"] <= 0
+                    ):
+                        raise ValueError(f"invalid selection probe: {path}")
                     for sample in samples:
+                        for key in ("api_calls", "attempted_shots", "accepted_shots",
+                                    "discarded_shots", "logical_errors"):
+                            if type(sample[key]) is not int or sample[key] < 0:
+                                raise ValueError(f"invalid aggregate counts: {path}")
+                        if sample["api_calls"] < 1 or any(
+                            not math.isfinite(sample[key]) or sample[key] <= 0
+                            for key in ("duration_seconds", "throughput_attempted_shots_per_second")
+                        ):
+                            raise ValueError(f"invalid sample timing: {path}")
                         if (
                             sample["attempted_shots"]
                             != sample["api_calls"] * metadata["options"]["shots_per_call"]
@@ -82,14 +94,9 @@ def validate_execution(source: Path) -> None:
                         rate = sample["attempted_shots"] / sample["duration_seconds"]
                         if rate != sample["throughput_attempted_shots_per_second"]:
                             raise ValueError(f"invalid throughput: {path}")
-                    if summarize(samples) != result["summary"]:
-                        raise ValueError(f"incorrect sample summary: {path}")
             results.append(read(attempts[-1] / "result.json"))
-        chosen = choose_strategy(results)
-        if row["selected_strategy"] != (chosen["strategy"] if chosen else None) or row[
-            "summary"
-        ] != (chosen["summary"] if chosen else None):
-            raise ValueError(f"stale strategy selection: {workload_id}; resume collection")
+        summary["workloads"].append(workload_summary(workload, results))
+    return summary
 
 
 def finalize(source: Path, execution_id: str, *, output_root: Path | None = None) -> Path:
@@ -109,15 +116,17 @@ def finalize(source: Path, execution_id: str, *, output_root: Path | None = None
             raise ValueError("collection is still running; finish or interrupt it first") from error
         if any(path.is_symlink() for path in source.rglob("*")):
             raise ValueError("result spool must not contain symlinks")
-        validate_execution(source)
+        summary = validate_execution(source)
         target.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(
             prefix=f".{execution_id}-", dir=target.parent
         ) as temporary:
             staged = Path(temporary) / execution_id
             shutil.copytree(
-                source, staged, ignore=shutil.ignore_patterns("collection.lock", "*.tmp")
+                source, staged,
+                ignore=shutil.ignore_patterns("collection.lock", "summary.json", "*.tmp"),
             )
+            write_json(staged / "summary.json", summary)
             staged.rename(target)
     return target
 

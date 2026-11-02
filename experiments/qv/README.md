@@ -6,7 +6,7 @@ experiment. It compares the pinned Clifft `v0.10.0rc1` release candidate with
 current pinned Qiskit Aer, Qulacs, and qsim releases on dense random Quantum
 Volume circuits. Reader-facing output identifies the candidate with its target
 release, Clifft 0.10.0. The experiment does not extend the recurring QEC
-campaign, its schemas, or the `clifft-bench` CLI.
+campaign or the `clifft-bench` CLI.
 
 The adapted paper code remains under this repository's Apache-2.0 license; its
 source repository, path, and exact commit are retained in code and run metadata.
@@ -28,8 +28,8 @@ charged for compilation, while Qiskit transpilation and Qulacs/qsim circuit
 preparation occur before their timers. The plot is not an equal end-to-end
 timing comparison.
 
-The default matrix has 144 serial cases. This is simulator runtime scaling on
-QV circuits, not a measurement of a quantum device's Quantum Volume score.
+This measures simulator runtime scaling on QV circuits, not a quantum device's
+Quantum Volume score.
 
 ## Provenance and outputs
 
@@ -202,9 +202,17 @@ git commit --no-gpg-sign -m "data: add QV execution $CLIFFT_QV_EXECUTION"
 git push -u origin HEAD
 ```
 
-The downstream documentation-sized light/dark pair is selected and regenerated
-through [release publication instructions](../../CONTRIBUTING.md#release-reporting); do not copy QV
-rows into a separate reporting data file.
+To prepare the optional documentation-sized light/dark pair from this execution:
+
+```bash
+uv run python -m qv_experiment.plot "results/$CLIFFT_QV_EXECUTION" \
+  --web-output-dir "results/$CLIFFT_QV_EXECUTION/report"
+```
+
+Review both themes, then copy `quantum-volume-{light,dark}.png` to the chosen
+publication location and update its source link and claims. This is a separate
+publication from the recurring release report; no QV data or figure is required
+for that report.
 
 Require `metadata.json` to say `complete` or `complete-with-failures`, never
 `running`. Review every non-successful row in `cases.csv`, worker exit codes and
