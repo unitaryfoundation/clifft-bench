@@ -23,5 +23,5 @@ Authors: Serban Cercelescu, Mark Koch, and Arthur Pesah.
 Generator: mark-koch/merlin-sim@097380fac1a3968ca47925146e211fe990f4c396
 License: Apache-2.0, from LICENCE at 01b8f34e94d3cf92d5a5a1d5165c6a586f7cedb5.
 Original attribution headers remain in both circuit files. ../README.md and
-../../manifests/workloads.v1.json describe the adaptations and immutable source references.
+../../workloads.toml describe the adaptations and immutable source references.
 The repository root LICENSE supplies the common Apache-2.0 terms.

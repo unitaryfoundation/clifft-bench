@@ -70,7 +70,7 @@ For a new Clifft release:
    new implementation and `clifft-previous` at the prior measured release in the release manifest.
    Update the Clifft smoke, coverage smoke and pilot cases and the `clifft-current` CI install
    to the same new implementation. Keep the intended scheduler settings in
-   each Clifft variant’s `execution.options.scheduler` table.
+   the shared `clifft-scheduled` option preset in `software.toml`.
 4. Keep each workload's `shots_per_call` aligned across every variant and
    release within each comparison. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.
@@ -100,13 +100,23 @@ collection workflow.
 
 ## Configuration and environments
 
-`workloads.toml` owns circuit identities, provenance, expected metadata, and
-selection/output semantics. `software.toml` owns exact implementation identities
-and build settings. `campaigns/*.toml` select cases, public call sizes, resource
-limits, measurements, and explicit comparison groups. Unknown keys and invalid
-values are rejected before workers start. Simulator-specific settings belong in
-`execution.options` and are validated by the owning adapter without importing
-the simulator.
+`workloads.toml` owns circuit identities, provenance, expected metadata,
+selection/output semantics, default `shots_per_call`, and ordered workload groups.
+`software.toml` owns exact implementation identities, build settings, and shared
+adapter option presets. `campaigns/*.toml` select cases, resource limits,
+measurements, and explicit comparison groups.
+
+A variant's `workloads` is either a group name or a list of workload selections.
+Selections and explicit cases inherit the workload's default call size unless
+they set `shots_per_call`; bulk and smoke call sizes stay explicit. A group's
+members expand in their declared order. Simulator settings use either inline
+`execution.options` or one `execution.options_preset` from `software.toml`, with
+no merging or inheritance between presets. The owning adapter validates the
+resolved options without importing the simulator. Unknown keys, invalid values,
+and references are rejected before workers start.
+
+`bootstrap`, `list`, and `run` default to `smoke`. Select the release campaign
+explicitly:
 
 ```bash
 uv run clifft-bench list release-v1 --json
@@ -190,9 +200,9 @@ recurring release workflow.
 
 1. Add the immutable circuit under [`workloads/circuits/`](workloads/circuits/)
    with its license.
-2. Record its digest, provenance, expected metadata, compatible adapters, and
-   semantic contract in [`workloads.toml`](workloads.toml).
-3. Add it to the applicable variants in the release manifest.
+2. Record its digest, provenance, expected metadata, compatible adapters,
+   default call size, and semantic contract in [`workloads.toml`](workloads.toml).
+3. Add it to the applicable workload groups or variant selections.
 4. Run validation and adapter correctness tests.
 
 Changing a circuit creates a new workload identity so checked-in results never

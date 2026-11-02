@@ -7,6 +7,7 @@ description = "Distance-3 injection and cultivation circuit with circuit-level P
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim"
@@ -46,6 +47,7 @@ description = "Distance-5 injection and cultivation circuit with circuit-level P
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
+shots_per_call = 20000
 
 [workloads.artifact]
 path = "workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim"
@@ -85,6 +87,7 @@ description = "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds.
 dialect = "stim"
 angle_convention = "none"
 compatible_adapters = ["clifft", "symft", "stim", "xtim", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/pure_surface_d7_r7_p1e-3.stim"
@@ -125,6 +128,7 @@ description = "85-qubit logical magic-state distillation circuit using five [17,
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/distillation.stim"
@@ -204,6 +208,7 @@ description = "Distance-3 surface-code circuit with three rounds of coherent Z o
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/coherent_d3_r3.stim"
@@ -284,6 +289,7 @@ description = "Distance-5 surface-code circuit with five rounds of coherent Z ov
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 1
 
 [workloads.artifact]
 path = "workloads/circuits/coherent_d5_r5.stim"
@@ -324,6 +330,7 @@ description = "Fixed depth-10 Quantum Volume circuit on 10 qubits, transpiled to
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 4096
 
 [workloads.artifact]
 path = "workloads/circuits/quantum_volume_q10_seed42.stim"
@@ -364,6 +371,7 @@ description = "Fixed depth-20 Quantum Volume circuit on 20 qubits, transpiled to
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 32
 
 [workloads.artifact]
 path = "workloads/circuits/quantum_volume_q20_seed42.stim"
@@ -404,6 +412,7 @@ description = "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise o
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "tsim"]
+shots_per_call = 2048
 
 [workloads.artifact]
 path = "workloads/circuits/draper_adder_16_basis.stim"
@@ -448,6 +457,7 @@ description = "15-to-1 [[15,1,3]] Reed-Muller T-state distillation with T-gate Z
 dialect = "clifft-symft-extended-stim"
 angle_convention = "none"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/distillation_15to1_rm15_p1e-3.stim"
@@ -488,6 +498,7 @@ description = "Noiseless BT27 code switching on 135 qubits with direct logical-X
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft"]
+shots_per_call = 2048
 
 [workloads.artifact]
 path = "workloads/circuits/bt27_direct_x.stim"
@@ -526,6 +537,7 @@ description = "Noiseless BT81 code switching on 405 qubits with direct logical-X
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft"]
+shots_per_call = 2048
 
 [workloads.artifact]
 path = "workloads/circuits/bt81_direct_x.stim"
@@ -564,6 +576,7 @@ description = "Measured 15-qubit Reed-Muller preparation, feedback, transversal 
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/reed_muller_measured_sampling.stim"
@@ -602,6 +615,7 @@ description = "Distance-3 injection and cultivation circuit with circuit-level P
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim"
@@ -642,6 +656,7 @@ description = "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds.
 dialect = "stim"
 angle_convention = "none"
 compatible_adapters = ["clifft", "symft", "stim", "xtim", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/pure_surface_d7_r7_p1e-3.stim"
@@ -683,6 +698,7 @@ description = "Distance-3 surface-code circuit with three rounds of coherent Z o
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 100000
 
 [workloads.artifact]
 path = "workloads/circuits/coherent_d3_r3.stim"
@@ -724,6 +740,7 @@ description = "Unverified distance-7 MSC-like performance proxy; not a validated
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
+shots_per_call = 20000
 
 [workloads.artifact]
 path = "workloads/circuits/msc_proxy_d7_unverified_p1e-3.stim"
@@ -763,6 +780,7 @@ description = "Full d5 T-state cultivation through d15 escape, selecting only th
 dialect = "clifft-symft-extended-stim"
 angle_convention = "half-turns"
 compatible_adapters = ["clifft", "tsim"]
+shots_per_call = 20000
 
 [workloads.artifact]
 path = "workloads/circuits/msc_full_d5_p1e-3.stim"
@@ -799,3 +817,25 @@ source_commit = "db7dc9f13a2c2854690e92390c779048a1ac1400"
 source_path = "magic_state_cultivation/convert_s_to_t.py:make_d5_end2end"
 license = "Apache-2.0"
 notes = "Generated by make_d5_end2end(0.001), without EXP_VAL probes, using the source's vendored Gidney revision 871e68ff6df2f75190b1bfd6351459d1b5a037e3. Detector mask follows run_end2end_bruteforce.py: select coordinates of length <=4 or coordinate[4]==-9. Preserve raw parity instead of the original driver's reference normalization; noiseless selected detectors are verified zero. Stim 1.16.0, NumPy 2.5.2."
+
+[groups]
+qec-and-adder = [
+  "msc-d3-inject-cultivate-p1e-3",
+  "msc-d5-inject-cultivate-p1e-3",
+  "distillation-color-code-85q-p5e-2",
+  "surface-code-d7-r7-p1e-3",
+  "coherent-surface-d3-r3-p1e-3-rz2e-2",
+  "coherent-surface-d5-r5-p1e-3-rz2e-2",
+  "draper-adder-m16-basis",
+  "distillation-15to1-rm15-p1e-3",
+  "reed-muller-measured",
+]
+coverage = [
+  "msc-d3-inject-cultivate-p1e-3-unselected",
+  "surface-code-d7-r7-p1e-3-unselected",
+  "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected",
+  "quantum-volume-q10-seed42",
+  "quantum-volume-q20-seed42",
+  "msc-d7-proxy-unverified-p1e-3",
+  "msc-full-d5-cultivation-selected-p1e-3",
+]

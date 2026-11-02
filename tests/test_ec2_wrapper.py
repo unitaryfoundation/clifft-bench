@@ -57,7 +57,8 @@ elif name == "cat": print("Other" if os.environ["TEST_CONDITION"] == "not-ec2" e
     else:
         assert result.returncode != 0
         assert not any(call[0] == "timeout" for call in calls)
-        if condition in ("not-ec2", "dirty"):
+        if condition in ("not-ec2", "dirty", "existing"):
             assert not any(call[:2] == ["sudo", "apt-get"] for call in calls)
         if condition == "existing":
+            assert not any(call[0] in ("python3.12", "python", "clifft-bench") for call in calls)
             assert (output / "raw.json").read_text() == "existing evidence"

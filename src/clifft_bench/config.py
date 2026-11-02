@@ -6,6 +6,7 @@ import hashlib
 import math
 import re
 import tomllib
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -108,6 +109,39 @@ def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
     return definitions
 
 
+def _resolve_selections(run: dict, workloads: dict, software: dict) -> None:
+    defaults = {w["id"]: w.get("shots_per_call") for w in workloads["workloads"]}
+    implementations = {i["id"]: i for i in software["implementations"]}
+    for item in run.get("variants", run.get("cases", [])):
+        if "workloads" in item:
+            selections = item["workloads"]
+            if isinstance(selections, str):
+                if selections not in workloads.get("groups", {}):
+                    raise ValueError(f"unknown workload group {selections!r}")
+                selections = [{"workload_id": w} for w in workloads["groups"][selections]]
+            item["workloads"] = selections
+        else:
+            selections = [item]
+        for selection in selections:
+            identifier = selection["workload_id"]
+            if identifier not in defaults:
+                raise ValueError(f"{item['id']!r} references unknown workload {identifier!r}")
+            if "shots_per_call" not in selection:
+                if defaults[identifier] is None:
+                    raise ValueError(f"workload {identifier!r} needs an explicit shots_per_call")
+                selection["shots_per_call"] = defaults[identifier]
+        execution = item["execution"]
+        if "options_preset" in execution:
+            name = execution.pop("options_preset")
+            preset = software.get("option_presets", {}).get(name)
+            if preset is None:
+                raise ValueError(f"unknown options preset {name!r}")
+            implementation = implementations.get(item["implementation_id"])
+            if implementation is None or implementation["adapter"] != preset["adapter"]:
+                raise ValueError(f"options preset {name!r} requires adapter {preset['adapter']!r}")
+            execution["options"] = deepcopy(preset["options"])
+
+
 def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
     run_path = run_path.resolve()
     run = read_toml(run_path)
@@ -115,9 +149,9 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
     workloads_path = (run_path.parent / run["workloads_file"]).resolve()
     software_path = (run_path.parent / run["software_file"]).resolve()
     workloads_document = read_toml(workloads_path)
-    _validate_workloads(workloads_document)
+    validate_workloads(workloads_document)
     software_document = read_toml(software_path)
-    _validate_software(software_document)
+    validate_software(software_document)
     suite_versions = {
         str(run["suite_version"]),
         str(workloads_document["suite_version"]),
@@ -130,6 +164,7 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
     implementation_definitions = _unique_by_id(
         software_document["implementations"], "implementation"
     )
+    _resolve_selections(run, workloads_document, software_document)
     case_definitions = _unique_by_id(_case_definitions(run), "case")
 
     workloads: dict[str, Workload] = {}
@@ -347,7 +382,7 @@ def _version(document: dict) -> None:
 
 
 def _validate_execution(execution: dict) -> None:
-    _fields(execution, "mode batch_enabled batch_size", "options")
+    _fields(execution, "mode batch_enabled batch_size", "options options_preset")
     if execution["mode"] not in ("latency", "throughput"):
         raise ValueError("invalid execution mode")
     if type(execution["batch_enabled"]) is not bool:
@@ -356,6 +391,11 @@ def _validate_execution(execution: dict) -> None:
         _number(execution["batch_size"], "batch_size", integer=True)
     if not execution["batch_enabled"] and execution["batch_size"] != 1:
         raise ValueError("batching disabled requires batch_size=1")
+    if "options_preset" in execution:
+        _identifier(execution["options_preset"])
+        if "options" in execution:
+            raise ValueError("declare options or options_preset, not both")
+        return
     execution.setdefault("options", {})
     if not isinstance(execution["options"], dict):
         raise ValueError("options must be a table")
@@ -394,18 +434,23 @@ def _validate_run(run: dict) -> None:
         raise ValueError("declare exactly one of cases or variants")
     for item in _entries(run, "cases" if "cases" in run else "variants"):
         if "cases" in run:
-            _fields(item, "id variant_id workload_id implementation_id shots_per_call execution")
+            _fields(item, "id variant_id workload_id implementation_id execution", "shots_per_call")
             _identifier(item["variant_id"])
             _text(item["workload_id"], "workload_id")
-            _number(item["shots_per_call"], "shots_per_call", integer=True)
+            if "shots_per_call" in item:
+                _number(item["shots_per_call"], "shots_per_call", integer=True)
         else:
             _fields(item, "id implementation_id execution workloads")
-            if not isinstance(item["workloads"], list) or not item["workloads"]:
-                raise ValueError("variant workloads must be nonempty")
-            for selection in item["workloads"]:
-                _fields(selection, "workload_id shots_per_call")
-                _text(selection["workload_id"], "workload_id")
-                _number(selection["shots_per_call"], "shots_per_call", integer=True)
+            if isinstance(item["workloads"], str):
+                _identifier(item["workloads"])
+            else:
+                if not isinstance(item["workloads"], list) or not item["workloads"]:
+                    raise ValueError("variant workloads must be nonempty")
+                for selection in item["workloads"]:
+                    _fields(selection, "workload_id", "shots_per_call")
+                    _text(selection["workload_id"], "workload_id")
+                    if "shots_per_call" in selection:
+                        _number(selection["shots_per_call"], "shots_per_call", integer=True)
         _text(item["implementation_id"], "implementation_id")
         _validate_execution(item["execution"])
     if "comparisons" in run:
@@ -428,17 +473,23 @@ def _validate_run(run: dict) -> None:
         )
         for key, value in run["collection"].items():
             _number(value, key, integer=key != "memory_limit_gib")
+        for key in ("placements", "replicas_per_placement"):
+            if run["collection"][key] != 1:
+                raise ValueError(f"collection.{key} must be 1; only one collection is supported")
 
 
-def _validate_workloads(document: dict) -> None:
-    _fields(document, "suite_version workloads")
+def validate_workloads(document: dict) -> None:
+    _fields(document, "suite_version workloads", "groups")
     _version(document)
     for w in _entries(document, "workloads"):
         _fields(
             w,
             "id family description artifact dialect "
         "angle_convention parameters semantics expected_metadata compatible_adapters provenance",
+            "shots_per_call",
         )
+        if "shots_per_call" in w:
+            _number(w["shots_per_call"], "shots_per_call", integer=True)
         for key in ("family", "description"):
             _text(w[key], key)
         if w["dialect"] not in ("stim", "clifft-symft-extended-stim") or w[
@@ -483,10 +534,33 @@ def _validate_workloads(document: dict) -> None:
         if not re.fullmatch(r"[0-9a-f]{40}", w["provenance"]["source_commit"]):
             raise ValueError("invalid source commit")
 
+    groups = document.get("groups", {})
+    if not isinstance(groups, dict):
+        raise ValueError("groups must be a table")
+    known = {w["id"] for w in document["workloads"]}
+    for name, members in groups.items():
+        _identifier(name)
+        _strings(members, f"workload group {name!r}")
+        unknown = set(members) - known
+        if unknown:
+            raise ValueError(
+                f"workload group {name!r} references unknown workloads: {sorted(unknown)}"
+            )
 
-def _validate_software(document: dict) -> None:
-    _fields(document, "suite_version implementations")
+
+def validate_software(document: dict) -> None:
+    _fields(document, "suite_version implementations", "option_presets")
     _version(document)
+    presets = document.get("option_presets", {})
+    if not isinstance(presets, dict):
+        raise ValueError("option_presets must be a table")
+    for name, preset in presets.items():
+        _identifier(name)
+        _fields(preset, "adapter options")
+        _text(preset["adapter"], "adapter")
+        if not isinstance(preset["options"], dict):
+            raise ValueError("preset options must be a table")
+        load_adapter(preset["adapter"]).validate_options(preset["options"])
     for imp in _entries(document, "implementations"):
         _fields(
             imp,

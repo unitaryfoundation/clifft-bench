@@ -237,14 +237,15 @@ Release-over-release results include their compiler defaults; they are not a
 same-version pass ablation.
 
 Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
-pipeline. When pinning a scheduler-capable RC, set `clifft-current.execution`
-to the checked-in
-[`execution.options.scheduler` in the release campaign](../campaigns/release-v1.toml).
+pipeline. When pinning a scheduler-capable RC, set
+`clifft-current.execution.options_preset` to `clifft-scheduled` from
+[`software.toml`](../software.toml).
 Use the same settings across the release workloads. The four pass options must
-be explicit; the benchmark supplies no defaults. Omit `execution.options.scheduler` to
-disable scheduling. Unsupported installations fail when the pass is requested.
+be explicit; the benchmark supplies no defaults. Scheduling is disabled when the
+resolved `execution.options` has no `scheduler` table. Unsupported installations
+fail when the pass is requested.
 
-With `execution` set to that JSON object, the public Python configuration is:
+With `execution` containing the resolved options, the public Python configuration is:
 
 ```python
 manager = clifft.default_hir_pass_manager()
@@ -387,11 +388,10 @@ incompatible adapter/workload pairing is rejected before execution.
 
 ## Placements and official evidence
 
-The release campaign emits one raw result per placement and replica, containing
-all variants. The recurring release campaign uses one reference-host placement.
-Finalization requires the declared coverage, one clean source commit, the
-reference instance type, one reference instance, distinct boot IDs when a
-campaign requests multiple placements, and the declared memory ceiling.
+The release campaign emits one raw result containing all variants from one
+reference-host collection. Configuration requires one placement and one replica.
+Finalization requires complete case coverage, one clean source commit, the
+reference instance type, one reference instance, and the declared memory ceiling.
 
 `campaigns/smoke.toml` is only a short developer correctness check. A
 release execution becomes official evidence after finalization and review of

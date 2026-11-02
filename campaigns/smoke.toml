@@ -97,14 +97,7 @@ shots_per_call = 2048
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[cases.execution.options]
-
-[cases.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[cases]]
 id = "msc-d3-smoke-symft-calibrated"
@@ -132,14 +125,7 @@ shots_per_call = 8
 mode = "throughput"
 batch_enabled = false
 batch_size = 1
-
-[cases.execution.options]
-
-[cases.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[cases]]
 id = "distillation-85q-smoke-symft-calibrated"
@@ -181,14 +167,7 @@ shots_per_call = 2048
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[cases.execution.options]
-
-[cases.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[cases]]
 id = "bt81-direct-x-smoke-clifft"
@@ -201,14 +180,7 @@ shots_per_call = 2048
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[cases.execution.options]
-
-[cases.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[cases]]
 id = "reed-muller-measured-smoke-clifft"
@@ -221,14 +193,7 @@ shots_per_call = 2048
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[cases.execution.options]
-
-[cases.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[cases]]
 id = "reed-muller-measured-smoke-symft"

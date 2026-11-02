@@ -11,11 +11,11 @@ from typing import Sequence
 
 from clifft_bench.bootstrap import bootstrap
 from clifft_bench.config import (
-    _validate_software,
-    _validate_workloads,
     campaign_path,
     load_suite,
     read_toml,
+    validate_software,
+    validate_workloads,
 )
 from clifft_bench.results import finalize_execution
 from clifft_bench.runner import run_suite
@@ -58,7 +58,7 @@ def _parser() -> argparse.ArgumentParser:
     finalize.add_argument("results", nargs="+", type=Path)
 
     setup = commands.add_parser("bootstrap", help="install selected isolated environments")
-    setup.add_argument("campaign", nargs="?", default="release-v1")
+    setup.add_argument("campaign", nargs="?", default=DEFAULT_CAMPAIGN)
 
     return parser
 
@@ -79,9 +79,9 @@ def _validate(paths: list[Path]) -> int:
         if resolved.suffix == ".toml":
             document = read_toml(resolved)
             if "implementations" in document:
-                _validate_software(document)
+                validate_software(document)
             elif "workloads" in document:
-                _validate_workloads(document)
+                validate_workloads(document)
             else:
                 load_suite(resolved)
         else:

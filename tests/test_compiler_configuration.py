@@ -14,7 +14,7 @@ ROOT = repository_root()
 
 
 def _release_copy(tmp_path: Path) -> tuple[Path, dict]:
-    document = read_toml(ROOT / "campaigns/release-v1.toml")
+    document = load_suite(ROOT / "campaigns/release-v1.toml").run
     document["workloads_file"] = str(ROOT / "workloads.toml")
     document["software_file"] = str(ROOT / "software.toml")
     return tmp_path / "release.toml", document
@@ -88,3 +88,52 @@ def test_adapter_owns_option_validation(adapter, options):
 
     with pytest.raises(ValueError):
         load_adapter(adapter).validate_options(options)
+
+
+@pytest.mark.parametrize("damage, message", [
+    ("unknown", "unknown options preset"),
+    ("adapter", "requires adapter"),
+    ("both", "declare options or options_preset"),
+    ("invalid", "beam_width"),
+])
+def test_option_presets_are_validated_before_launch(tmp_path, damage, message):
+    campaign = read_toml(ROOT / "campaigns/smoke.toml")
+    software = read_toml(ROOT / "software.toml")
+    case = next(c for c in campaign["cases"] if "options_preset" in c["execution"])
+    if damage == "unknown":
+        case["execution"]["options_preset"] = "missing-preset"
+    elif damage == "adapter":
+        case["implementation_id"] = next(i["id"] for i in software["implementations"]
+                                         if i["adapter"] == "symft")
+    elif damage == "both":
+        case["execution"]["options"] = {}
+    else:
+        software["option_presets"][case["execution"]["options_preset"]]["options"][
+            "scheduler"
+        ]["beam_width"] = 0
+    campaign["workloads_file"] = str(ROOT / "workloads.toml")
+    campaign["software_file"] = "software.toml"
+    write_toml(tmp_path / "software.toml", software)
+    write_toml(tmp_path / "campaign.toml", campaign)
+    with pytest.raises(ValueError, match=message):
+        load_suite(tmp_path / "campaign.toml")
+
+
+def test_shared_preset_changes_reach_every_selected_case(tmp_path):
+    campaign = read_toml(ROOT / "campaigns/smoke.toml")
+    software = read_toml(ROOT / "software.toml")
+    selected = [c for c in campaign["cases"] if "options_preset" in c["execution"]]
+    preset = selected[0]["execution"]["options_preset"]
+    software["option_presets"][preset]["options"]["scheduler"]["beam_width"] += 1
+    expected = software["option_presets"][preset]["options"]
+    ids = {c["id"] for c in selected if c["execution"]["options_preset"] == preset}
+    campaign["workloads_file"] = str(ROOT / "workloads.toml")
+    campaign["software_file"] = "software.toml"
+    write_toml(tmp_path / "software.toml", software)
+    write_toml(tmp_path / "campaign.toml", campaign)
+    suite = load_suite(tmp_path / "campaign.toml")
+    executions = [c.definition["execution"] for c in suite.cases if c.id in ids]
+    assert executions
+    assert all(e["options"] == expected for e in executions)
+    executions[0]["options"]["scheduler"]["beam_width"] += 1
+    assert executions[1]["options"] == expected

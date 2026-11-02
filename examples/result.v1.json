@@ -160,10 +160,10 @@
     "finished_at": "2026-08-08T00:00:01Z",
     "id": "00000000-0000-4000-8000-000000000001",
     "profile_id": "adapter-smoke",
-    "run_manifest": "manifests/run-smoke.v1.json",
+    "run_manifest": "campaigns/smoke.toml",
     "schedule_policy": "serial-manifest-order",
     "selection": "^msc-d3-smoke-clifft$",
-    "software_manifest": "manifests/software.v1.json",
+    "software_manifest": "software.toml",
     "started_at": "2026-08-08T00:00:00Z",
     "workflow": {
       "image_os": null,
@@ -178,7 +178,7 @@
       "sha": null,
       "workflow": null
     },
-    "workloads_manifest": "manifests/workloads.v1.json"
+    "workloads_manifest": "workloads.toml"
   },
   "runner": {
     "accelerator": null,

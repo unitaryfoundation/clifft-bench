@@ -16,7 +16,10 @@ One raw file contains every variant for one placement and replica.
 
 ## Authority and derived views
 
-The schema-valid files under `raw/` are the source of truth. They retain every
+Raw files are the source of truth. New collections validate against the current
+result schema. Checked-in archived raw files use the schema and validation tools
+at the [pinned legacy revision](../CONTRIBUTING.md#historical-evidence); the current
+validator does not accept their superseded execution fields. Raw files retain every
 timing sample, case failure, workload digest and semantics, software identity,
 dependency version, affinity outcome, source commit, and cloud/boot identity.
 

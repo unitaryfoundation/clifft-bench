@@ -68,55 +68,13 @@ repetitions = 5
 [[variants]]
 id = "clifft-previous"
 implementation_id = "clifft-0.12.0rc1"
+workloads = "qec-and-adder"
 
 [variants.execution]
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[variants.execution.options]
-
-[variants.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
-
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "msc-d5-inject-cultivate-p1e-3"
-shots_per_call = 20000
-
-[[variants.workloads]]
-workload_id = "distillation-color-code-85q-p5e-2"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 1
-
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis"
-shots_per_call = 2048
-
-[[variants.workloads]]
-workload_id = "distillation-15to1-rm15-p1e-3"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "reed-muller-measured"
-shots_per_call = 100000
+options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current"
@@ -126,58 +84,40 @@ implementation_id = "clifft-63cd885"
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[variants.execution.options]
-
-[variants.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "msc-d5-inject-cultivate-p1e-3"
-shots_per_call = 20000
 
 [[variants.workloads]]
 workload_id = "distillation-color-code-85q-p5e-2"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 1
 
 [[variants.workloads]]
 workload_id = "draper-adder-m16-basis"
-shots_per_call = 2048
 
 [[variants.workloads]]
 workload_id = "distillation-15to1-rm15-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "bt27-direct-x"
-shots_per_call = 2048
 
 [[variants.workloads]]
 workload_id = "bt81-direct-x"
-shots_per_call = 2048
 
 [[variants.workloads]]
 workload_id = "reed-muller-measured"
-shots_per_call = 100000
 
 [[variants]]
 id = "symft-current"
@@ -193,35 +133,27 @@ sample_chunk_shots = 2048
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "msc-d5-inject-cultivate-p1e-3"
-shots_per_call = 20000
 
 [[variants.workloads]]
 workload_id = "distillation-color-code-85q-p5e-2"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 1
 
 [[variants.workloads]]
 workload_id = "distillation-15to1-rm15-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "reed-muller-measured"
-shots_per_call = 100000
 
 [[variants]]
 id = "stim-current"
@@ -236,7 +168,6 @@ batch_size = "calibrate"
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3"
-shots_per_call = 100000
 
 [[variants]]
 id = "xtim-current"
@@ -251,23 +182,20 @@ batch_size = "calibrate"
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "msc-d5-inject-cultivate-p1e-3"
-shots_per_call = 20000
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "distillation-15to1-rm15-p1e-3"
-shots_per_call = 100000
 
 [[variants]]
 id = "tsim-current"
 implementation_id = "tsim-0.1.5-e9406ed"
+workloads = "qec-and-adder"
 
 [variants.execution]
 mode = "throughput"
@@ -277,42 +205,6 @@ batch_size = "calibrate"
 [variants.execution.options]
 trajectory_sharing = true
 
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "msc-d5-inject-cultivate-p1e-3"
-shots_per_call = 20000
-
-[[variants.workloads]]
-workload_id = "distillation-color-code-85q-p5e-2"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 1
-
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis"
-shots_per_call = 2048
-
-[[variants.workloads]]
-workload_id = "distillation-15to1-rm15-p1e-3"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "reed-muller-measured"
-shots_per_call = 100000
-
 [[variants]]
 id = "clifft-bulk"
 implementation_id = "clifft-63cd885"
@@ -321,14 +213,7 @@ implementation_id = "clifft-63cd885"
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[variants.execution.options]
-
-[variants.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
+options_preset = "clifft-scheduled"
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
@@ -377,47 +262,13 @@ shots_per_call = 100000
 [[variants]]
 id = "clifft-coverage"
 implementation_id = "clifft-63cd885"
+workloads = "coverage"
 
 [variants.execution]
 mode = "throughput"
 batch_enabled = true
 batch_size = "calibrate"
-
-[variants.execution.options]
-
-[variants.execution.options.scheduler]
-beam_width = 8
-search_budget = 16.0
-noise_transparent = true
-sink_neutral_rotations = true
-
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "quantum-volume-q10-seed42"
-shots_per_call = 4096
-
-[[variants.workloads]]
-workload_id = "quantum-volume-q20-seed42"
-shots_per_call = 32
-
-[[variants.workloads]]
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-shots_per_call = 20000
-
-[[variants.workloads]]
-workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-shots_per_call = 20000
+options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "symft-coverage"
@@ -433,31 +284,26 @@ sample_chunk_shots = 2048
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "quantum-volume-q10-seed42"
-shots_per_call = 4096
 
 [[variants.workloads]]
 workload_id = "quantum-volume-q20-seed42"
-shots_per_call = 32
 
 [[variants.workloads]]
 workload_id = "msc-d7-proxy-unverified-p1e-3"
-shots_per_call = 20000
 
 [[variants]]
 id = "tsim-coverage"
 implementation_id = "tsim-0.1.5-e9406ed"
+workloads = "coverage"
 
 [variants.execution]
 mode = "throughput"
@@ -466,34 +312,6 @@ batch_size = "calibrate"
 
 [variants.execution.options]
 trajectory_sharing = true
-
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-shots_per_call = 100000
-
-[[variants.workloads]]
-workload_id = "quantum-volume-q10-seed42"
-shots_per_call = 4096
-
-[[variants.workloads]]
-workload_id = "quantum-volume-q20-seed42"
-shots_per_call = 32
-
-[[variants.workloads]]
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-shots_per_call = 20000
-
-[[variants.workloads]]
-workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-shots_per_call = 20000
 
 [[variants]]
 id = "xtim-coverage"
@@ -508,11 +326,9 @@ batch_size = "calibrate"
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-shots_per_call = 100000
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-shots_per_call = 100000
 
 [[variants]]
 id = "stim-coverage"
@@ -527,4 +343,3 @@ batch_size = "calibrate"
 
 [[variants.workloads]]
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-shots_per_call = 100000

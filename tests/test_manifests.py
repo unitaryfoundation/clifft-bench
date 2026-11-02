@@ -348,3 +348,107 @@ def test_listing_does_not_import_simulator_packages():
         "assert not {'clifft', 'symft', 'stim', 'xtim', 'tsim'} & sys.modules.keys()",
     ], capture_output=True, text=True, check=True, timeout=10)
     assert '"case_id"' in result.stdout
+
+
+@pytest.mark.parametrize("field", ["placements", "replicas_per_placement"])
+def test_collection_rejects_unsupported_counts(tmp_path, field):
+    from clifft_bench.config import read_toml
+
+    campaign = read_toml(ROOT / "campaigns/release-v1.toml")
+    campaign["collection"][field] = 2
+    campaign["workloads_file"] = str(ROOT / "workloads.toml")
+    campaign["software_file"] = str(ROOT / "software.toml")
+    path = tmp_path / "campaign.toml"
+    write_toml(path, campaign)
+    with pytest.raises(ValueError, match=f"collection.{field} must be 1"):
+        load_suite(path)
+
+
+@pytest.mark.parametrize("call_size", [17, 31])
+def test_groups_preserve_order_and_propagate_defaults_with_explicit_overrides(tmp_path, call_size):
+    _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
+    clifft = [c for c in run["cases"] if c["variant_id"] == "clifft-current"]
+    members = list(dict.fromkeys(c["workload_id"] for c in clifft))[:2][::-1]
+    for workload in workloads["workloads"]:
+        if workload["id"] in members:
+            workload["shots_per_call"] = call_size
+    workloads["groups"]["test-group"] = members
+    execution = clifft[0]["execution"]
+    implementation = clifft[0]["implementation_id"]
+    run.pop("cases")
+    run["variants"] = [
+        {"id": variant, "implementation_id": implementation,
+         "execution": execution, "workloads": "test-group"}
+        for variant in ("previous", "current")
+    ] + [{"id": "override", "implementation_id": implementation, "execution": execution,
+          "workloads": [{"workload_id": members[0], "shots_per_call": 5}]}]
+    write_toml(workloads_path, workloads)
+    path = tmp_path / "campaign.toml"
+    write_toml(path, run)
+    suite = load_suite(path)
+    assert [(c.workload.id, c.definition["shots_per_call"]) for c in suite.cases] == [
+        *[(w, call_size) for w in members], *[(w, call_size) for w in members], (members[0], 5),
+    ]
+
+
+def test_explicit_cases_can_inherit_workload_call_sizes(tmp_path):
+    _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
+    case = run["cases"][0]
+    original = case.pop("shots_per_call")
+    workload = next(w for w in workloads["workloads"] if w["id"] == case["workload_id"])
+    workload["shots_per_call"] = original + 1
+    write_toml(workloads_path, workloads)
+    path = tmp_path / "campaign.toml"
+    write_toml(path, run)
+    suite = load_suite(path)
+    assert suite.cases[0].definition["shots_per_call"] == original + 1
+    for actual, expected in zip(suite.cases[1:], run["cases"][1:], strict=True):
+        assert actual.definition["shots_per_call"] == expected["shots_per_call"]
+
+
+@pytest.mark.parametrize("damage, message", [
+    ("unknown-group", "unknown workload group"),
+    ("unknown-member", "references unknown workloads"),
+    ("duplicate-member", "unique strings"),
+    ("empty-group", "unique strings"),
+    ("bad-default", "shots_per_call"),
+    ("missing-default", "explicit shots_per_call"),
+])
+def test_workload_groups_and_defaults_fail_at_input_boundary(tmp_path, damage, message):
+    _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
+    case = run.pop("cases")[0]
+    workload = next(w for w in workloads["workloads"] if w["id"] == case["workload_id"])
+    members = [workload["id"]]
+    workloads["groups"]["test-group"] = members
+    run["variants"] = [{"id": "test-variant", "implementation_id": case["implementation_id"],
+                        "execution": case["execution"], "workloads": "test-group"}]
+    if damage == "unknown-group":
+        run["variants"][0]["workloads"] = "missing-group"
+    elif damage == "unknown-member":
+        members.append("missing-workload")
+    elif damage == "duplicate-member":
+        members.append(members[0])
+    elif damage == "empty-group":
+        members.clear()
+    elif damage == "bad-default":
+        workload["shots_per_call"] = True
+    else:
+        workload.pop("shots_per_call")
+    write_toml(workloads_path, workloads)
+    path = tmp_path / "campaign.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match=message):
+        load_suite(path)
+
+
+def test_setup_listing_and_collection_share_default_campaign(monkeypatch):
+    from clifft_bench import cli
+
+    campaigns = []
+    monkeypatch.setattr(cli, "bootstrap", lambda suite: campaigns.append(suite.run_path))
+    monkeypatch.setattr(cli, "_list", lambda campaign, as_json: campaigns.append(campaign) or 0)
+    monkeypatch.setattr(cli, "_run", lambda args: campaigns.append(args.campaign) or 0)
+    assert cli.main(["bootstrap"]) == 0
+    assert cli.main(["list"]) == 0
+    assert cli.main(["run"]) == 0
+    assert campaigns[0].stem == campaigns[1] == campaigns[2]
