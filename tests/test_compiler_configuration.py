@@ -7,8 +7,7 @@ import pytest
 from toml_helpers import write_toml
 
 from clifft_bench.adapters.clifft import ClifftAdapter
-from clifft_bench.config import load_suite, read_toml
-from clifft_bench.schema import repository_root
+from clifft_bench.config import load_suite, read_toml, repository_root
 
 ROOT = repository_root()
 

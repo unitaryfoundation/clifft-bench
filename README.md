@@ -66,7 +66,8 @@ timing, aggregate-count endpoints, and build settings. The
 
 ## Reproduce or contribute
 
-- [Regenerate the figures](reporting/README.md) from checked-in results.
+- [Generate release reports](CONTRIBUTING.md#release-reporting) from one execution.
+  The published figures above use [archived tools](CONTRIBUTING.md#historical-evidence).
 - [Collect release benchmarks](CONTRIBUTING.md#reference-host-collection) on the reference EC2 host.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including

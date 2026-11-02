@@ -203,7 +203,7 @@ git push -u origin HEAD
 ```
 
 The downstream documentation-sized light/dark pair is selected and regenerated
-through [`../../reporting/README.md`](../../reporting/README.md); do not copy QV
+through [release publication instructions](../../CONTRIBUTING.md#release-reporting); do not copy QV
 rows into a separate reporting data file.
 
 Require `metadata.json` to say `complete` or `complete-with-failures`, never

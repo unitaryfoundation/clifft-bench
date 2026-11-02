@@ -10,13 +10,13 @@ import pytest
 from toml_helpers import write_toml
 
 from clifft_bench.config import load_suite, read_toml
+from clifft_bench.results import validate_result
 from clifft_bench.runner import (
     SEED_REPETITION_STRIDE,
     _effective_batch_size,
     _record_runtime_execution,
     run_suite,
 )
-from clifft_bench.schema import validate_document
 
 
 def _write(path: Path, value: dict[str, Any]) -> None:
@@ -160,14 +160,14 @@ def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     run_path, run, software = _write_fixture_suite(
         tmp_path, parameters={"write_native_stdout": True}
     )
-    output = tmp_path / "result.json"
+    output = tmp_path / "result"
     result = run_suite(
         load_suite(run_path),
         python_executable=sys.executable,
-        output_path=output,
+        output_dir=output,
         memory_limit_gib=1,
     )
-    validate_document(result)
+    validate_result(result)
     assert [case["status"] for case in result["cases"]] == ["success", "success"]
     sequences = [
         [sample["sequence_index"] for sample in case["samples"]] for case in result["cases"]
@@ -206,9 +206,9 @@ def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     failed = run_suite(
         load_suite(tmp_path / "run-bad.toml"),
         python_executable=sys.executable,
-        output_path=tmp_path / "failed.json",
+        output_dir=tmp_path / "failed",
     )
-    validate_document(failed)
+    validate_result(failed)
     assert [case["status"] for case in failed["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "setup" for case in failed["cases"])
 
@@ -222,9 +222,9 @@ def test_worker_timeout_is_recorded_and_run_completes(tmp_path: Path) -> None:
     result = run_suite(
         load_suite(run_path),
         python_executable=sys.executable,
-        output_path=tmp_path / "timeout.json",
+        output_dir=tmp_path / "timeout",
     )
-    validate_document(result)
+    validate_result(result)
     assert [case["status"] for case in result["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "sampling" for case in result["cases"])
     assert all(case["error"]["type"] == "WorkerTimeout" for case in result["cases"])
@@ -239,9 +239,9 @@ def test_warmup_failure_records_warmup_phase(tmp_path: Path) -> None:
     result = run_suite(
         load_suite(run_path),
         python_executable=sys.executable,
-        output_path=tmp_path / "warmup-timeout.json",
+        output_dir=tmp_path / "warmup-timeout",
     )
-    validate_document(result)
+    validate_result(result)
     assert [case["status"] for case in result["cases"]] == ["error", "error"]
     assert all(case["error"]["phase"] == "warmup" for case in result["cases"])
 
@@ -250,7 +250,7 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
     run_path, _, _ = _write_fixture_suite(tmp_path, request_timeout_seconds=5)
     with pytest.raises(ValueError, match="must be greater than min_sample_seconds"):
         run_suite(load_suite(run_path), python_executable=sys.executable,
-            output_path=tmp_path / "invalid-timeout.json",
+            output_dir=tmp_path / "invalid-timeout",
             min_sample_seconds=5,
         )
 
@@ -285,14 +285,14 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     run["measurement"]["setup_timeout_seconds"] = 60
     _write(run_path, run)
 
-    output = tmp_path / "result.json"
+    output = tmp_path / "result"
     result = run_suite(
         load_suite(run_path),
         python_executable=sys.executable,
-        output_path=output,
+        output_dir=output,
         memory_limit_gib=1,
     )
-    validate_document(json.loads(output.read_text()))
+    validate_result(json.loads((output / "raw.json").read_text()))
     case = result["cases"][0]
     assert case["status"] == "success", case["error"]
     metadata = case["setup"]["runtime_metadata"]
@@ -332,9 +332,9 @@ def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
     run["measurement"]["request_timeout_seconds"] = 120
     _write(run_path, run)
     result = run_suite(
-        load_suite(run_path), python_executable=sys.executable, output_path=tmp_path / "result.json"
+        load_suite(run_path), python_executable=sys.executable, output_dir=tmp_path / "result"
     )
-    validate_document(result)
+    validate_result(result)
     case = result["cases"][0]
     assert case["status"] == "success", case["error"]
     metadata = case["setup"]["runtime_metadata"]
@@ -348,11 +348,12 @@ def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
 
 def test_existing_raw_evidence_is_never_overwritten(tmp_path):
     path, _, _ = _write_fixture_suite(tmp_path)
-    output = tmp_path / "raw.json"
-    output.write_text("previous evidence")
+    output = tmp_path / "raw"
+    output.mkdir()
+    (output / "raw.json").write_text("previous evidence")
     with pytest.raises(ValueError, match="refusing to overwrite"):
-        run_suite(load_suite(path), output_path=output, python_executable=sys.executable)
-    assert output.read_text() == "previous evidence"
+        run_suite(load_suite(path), output_dir=output, python_executable=sys.executable)
+    assert (output / "raw.json").read_text() == "previous evidence"
 
 
 def test_campaign_deadline_stops_remaining_work_and_keeps_evidence(tmp_path):
@@ -362,12 +363,12 @@ def test_campaign_deadline_stops_remaining_work_and_keeps_evidence(tmp_path):
     suite = load_suite(path)
     # Shorten the campaign deadline after input validation to exercise the boundary quickly.
     suite.run["collection"] = {"run_timeout_minutes": 0.01}
-    output = tmp_path / "deadline.json"
-    result = run_suite(suite, output_path=output, python_executable=sys.executable)
+    output = tmp_path / "deadline"
+    result = run_suite(suite, output_dir=output, python_executable=sys.executable)
     assert result["cases"][0]["error"]["type"] == "WorkerTimeout"
     assert result["cases"][1]["error"]["type"] == "CampaignTimeout"
     assert result["run"]["finished_at"] is not None
-    validate_document(json.loads(output.read_text()))
+    validate_result(json.loads((output / "raw.json").read_text()))
 
 
 def test_official_collection_rejects_interpreter_override(tmp_path):
@@ -375,14 +376,44 @@ def test_official_collection_rejects_interpreter_override(tmp_path):
     suite = load_suite(path)
     suite.run["classification"] = "official"
     with pytest.raises(ValueError, match="isolated implementation environments"):
-        run_suite(suite, output_path=tmp_path / "raw.json", python_executable=sys.executable)
-    assert not (tmp_path / "raw.json").exists()
+        run_suite(suite, output_dir=tmp_path / "raw", python_executable=sys.executable)
+    assert not (tmp_path / "raw").exists()
 
 
 def test_missing_interpreter_is_preserved_as_a_setup_failure(tmp_path):
     path, _, _ = _write_fixture_suite(tmp_path)
-    result = run_suite(load_suite(path), output_path=tmp_path / "raw.json",
+    result = run_suite(load_suite(path), output_dir=tmp_path / "raw",
                        python_executable=str(tmp_path / "missing-python"))
     assert all(c["status"] == "error" and c["error"]["phase"] == "setup"
                and c["error"]["type"] == "FileNotFoundError" for c in result["cases"])
-    validate_document(result)
+    validate_result(result)
+
+
+def test_interruption_preserves_terminal_raw_evidence_and_failed_csv(tmp_path, monkeypatch):
+    import csv
+
+    from clifft_bench import runner
+
+    class InterruptedClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def prepare(self, *args, **kwargs):
+            raise KeyboardInterrupt
+
+        def close(self):
+            pass
+
+    path, _, _ = _write_fixture_suite(tmp_path)
+    output = tmp_path / "interrupted"
+    monkeypatch.setattr(runner, "WorkerClient", InterruptedClient)
+    with pytest.raises(KeyboardInterrupt):
+        run_suite(load_suite(path), output_dir=output, python_executable=sys.executable)
+    raw = json.loads((output / "raw.json").read_text())
+    validate_result(raw)
+    assert all(c["status"] == "interrupted" and c["error"]["phase"] == "setup"
+               for c in raw["cases"])
+    with (output / "cases.csv").open() as stream:
+        rows = list(csv.DictReader(stream))
+    assert all(r["status"] == "interrupted" and r["median_attempted_shots_per_second"] == ""
+               for r in rows)

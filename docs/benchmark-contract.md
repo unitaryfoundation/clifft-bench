@@ -49,10 +49,9 @@ d3 and d5, 85q distillation, Clifford surface code d7/r7, and coherent surface c
 and d5/r5. The coherent memory workloads use repeated syndrome-extraction
 rounds. One-off experiments define their own workload sets.
 
-The performance-history figure uses this same six-workload set across all
-plotted releases and computes the median at each version. Current throughput,
-cross-tool comparisons, and release-change figures also include 15-to-1
-distillation. Adding it to current figures does not alter historical medians.
+The default report follows the recorded campaign's workload selections and
+comparisons. Historical figures remain frozen evidence interpreted with the
+pinned legacy tools; their workload sets do not constrain current reporting.
 
 The Clifft release comparison also includes `draper-adder-m16-basis`, a
 fixed-input 16-bit addition on 32 qubits without noise or postselection.
@@ -65,16 +64,11 @@ T-gate phase noise at p=0.001, and four postselected X checks. An ideal inverse-
 logical-X readout replaces expectation declarations so observable 0 measures
 accepted logical phase errors under the shared raw-parity contract. Preparation,
 checks, and verification are noiseless; the verification gates are timed.
-Its measurements are included in the finalized result tables and current QEC
-figures. The combined throughput chart shows Clifft and SymFT on all seven QEC
-workloads, xtim on its four measured workloads, and Stim on its surface-code
-anchor. It includes Tsim once the selected release records outcomes for all
-seven QEC workloads. Recorded failures are labelled in the chart and never
-represented as zero throughput. If any placement or replica fails for a Tsim
-workload, its aggregate rate is withheld rather than computed from only the
-successful subset. An unlabelled absent marker means no measurement was planned
-for that tool and workload in the selected campaign. See the
-[corpus notes](../workloads/README.md) for provenance and validation.
+Its measurements are included in the result tables and declared comparisons.
+Reports show measured tools for each workload and keep recorded failures,
+unsupported adapter pairings, and unmeasured combinations distinct. Failed cases
+have no plotted throughput. See the [corpus notes](../workloads/README.md) for
+provenance and validation.
 
 BT27, BT81, and measured Reed-Muller join the regular release campaign as
 unselected workloads. Counts are raw observable-0 ones rather than logical
@@ -119,7 +113,7 @@ derived conveniences.
 A request deadline prevents a stalled simulator from blocking the campaign.
 Setup, warmup, correctness, and sampling failures are recorded with their phase
 instead of being converted into throughput values. A setup failure before the
-worker returns metadata can be finalized without a selected batch size or
+worker returns metadata can be recorded without a selected batch size or
 calibration record. Successful setup still requires complete calibration
 evidence, including when warmup, correctness, or sampling later fails.
 
@@ -135,7 +129,7 @@ worker requests one logical CPU and receives a single-thread environment:
 Linux affinity is applied with `sched_setaffinity` and the outcome is recorded.
 Official workers receive the campaign's 12 GiB address-space ceiling, leaving
 headroom on the 16 GiB reference host. The requested ceiling is embedded in the
-raw result, the applied `RLIMIT_AS` is recorded after setup, and finalization
+raw result, the applied `RLIMIT_AS` is recorded after setup, and input validation
 rejects a mismatch.
 
 The manifest seed must be at least 1. Warmup uses `seed - 1`, correctness uses
@@ -389,12 +383,12 @@ incompatible adapter/workload pairing is rejected before execution.
 ## Placements and official evidence
 
 The release campaign emits one raw result containing all variants from one
-reference-host collection. Configuration requires one placement and one replica.
-Finalization requires complete case coverage, one clean source commit, the
-reference instance type, one reference instance, and the declared memory ceiling.
+reference-host collection. Persisted official evidence requires complete case
+coverage, one clean source commit, the reference instance type, applied CPU
+affinity, and the declared memory ceiling.
 
 `campaigns/smoke.toml` is only a short developer correctness check. A
-release execution becomes official evidence after finalization and review of
+release execution becomes official evidence after validation and review of
 its results change.
 
 
@@ -492,3 +486,37 @@ The mask is part of compilation: an unselected variant must compile with an
 empty mask, rather than reuse a program optimized assuming detector selection.
 Runtime metadata records `postselection_before_optimization`, `batch_control`
 and, when available, `optimized_t_gates`.
+
+
+## Result evidence and comparisons
+
+A new execution contains `raw.json` in format `clifft-bench/raw/v1` and one derived
+`cases.csv`. Raw evidence records the resolved selected campaign and comparison
+definitions, effective measurement/resource settings, collection time and source,
+exact software identities, workload digests and semantics, setup/compilation,
+warmup/correctness outcomes, calibration, individual samples, and structured
+failures. Local selection and overrides are recorded. Results do not depend on
+current configuration files for interpretation. Interrupted or failed workers
+retain completed samples and diagnostics; incomplete nonterminal evidence cannot
+be reported as a completed execution.
+
+CSV regeneration validates raw evidence and computes each successful case's
+sample median and median absolute deviation. Failed rows retain sample counts and
+error/setup/memory diagnostics while throughput summaries stay blank. Detailed
+adapter options and calibration probes stay in raw JSON. The report regenerates
+this table from raw evidence, so a stale CSV cannot change a performance claim.
+There is no separately stored comparison table, execution index, or release chain.
+
+Paired ratios use candidate median divided by baseline median. Pairing requires
+matching workload digest and selection/output semantics, call size, timing mode,
+measurement settings, and resource limits. Internal batches may differ. Declared
+comparison groups keep short calls, bulk calls, and supplemental coverage separate.
+Only successful compatible pairs receive ratios. Missing expected case records
+are errors; recorded failures, unsupported adapters, and intentionally unmeasured
+combinations remain distinct. A new current workload without a previous baseline
+can appear in throughput plots without a release-change value.
+
+Archived files retain their original formats and use the
+[pinned legacy tools](../CONTRIBUTING.md#historical-evidence). They are not migrated
+or required by the recurring report. Hardware or workload changes must be labeled
+in any optional long-term analysis.

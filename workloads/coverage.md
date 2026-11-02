@@ -122,8 +122,8 @@ including full d5 and QV20:
 
 ```bash
 clifft-bench run campaigns/coverage-smoke.toml \
-  --memory-limit-gib 12 --output /tmp/coverage-smoke.json
-clifft-bench validate /tmp/coverage-smoke.json
+  --memory-limit-gib 12 --output-dir /tmp/coverage-smoke
+clifft-bench validate /tmp/coverage-smoke/raw.json
 ```
 
 Set the implementation-specific Python variables as for the release campaign,

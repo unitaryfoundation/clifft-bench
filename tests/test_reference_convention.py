@@ -5,8 +5,7 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.config import load_suite, read_toml
-from clifft_bench.schema import repository_root
+from clifft_bench.config import load_suite, read_toml, repository_root
 
 
 def _prepare(

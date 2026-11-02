@@ -14,8 +14,16 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.schema import repository_root
 from clifft_bench.selection import detector_mask
+
+
+def repository_root() -> Path:
+    """Find the checkout containing the active workload configuration."""
+    source = Path(__file__).resolve().parents[2]
+    for candidate in (source, Path.cwd().resolve(), *Path.cwd().resolve().parents):
+        if (candidate / "workloads.toml").is_file():
+            return candidate
+    raise ValueError("cannot locate clifft-bench; run from its checkout")
 
 
 @dataclass(frozen=True)
@@ -166,6 +174,9 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
     )
     _resolve_selections(run, workloads_document, software_document)
     case_definitions = _unique_by_id(_case_definitions(run), "case")
+    selections = [(c["variant_id"], c["workload_id"]) for c in case_definitions.values()]
+    if len(set(selections)) != len(selections):
+        raise ValueError("duplicate variant/workload selection")
 
     workloads: dict[str, Workload] = {}
     for identifier, definition in workload_definitions.items():
@@ -469,13 +480,10 @@ def _validate_run(run: dict) -> None:
     if "collection" in run:
         _fields(
             run["collection"],
-            "placements replicas_per_placement run_timeout_minutes memory_limit_gib",
+            "run_timeout_minutes memory_limit_gib",
         )
         for key, value in run["collection"].items():
             _number(value, key, integer=key != "memory_limit_gib")
-        for key in ("placements", "replicas_per_placement"):
-            if run["collection"][key] != 1:
-                raise ValueError(f"collection.{key} must be 1; only one collection is supported")
 
 
 def validate_workloads(document: dict) -> None:

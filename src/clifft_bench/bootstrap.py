@@ -7,8 +7,7 @@ import os
 import subprocess
 import sys
 
-from clifft_bench.config import Implementation, Suite
-from clifft_bench.schema import repository_root
+from clifft_bench.config import Implementation, Suite, repository_root
 from clifft_bench.system import THREAD_LIMIT_ENVIRONMENT, require_clean_checkout
 
 

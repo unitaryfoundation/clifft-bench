@@ -1,36 +1,36 @@
-"""Finalize raw campaign results into reviewable, plot-ready tables."""
+"""Validate self-contained raw evidence and project one deterministic case table."""
 
 from __future__ import annotations
 
 import csv
 import json
 import math
-from collections import defaultdict
+import re
+import statistics
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
+from clifft_bench.adapters import load_adapter
+from clifft_bench.adapters.base import Counts, validate_counts
 from clifft_bench.calibration import (
     CALIBRATION_POLICY,
     TUNING_BUDGET_SECONDS,
     calibration_candidates,
 )
-from clifft_bench.config import Case, Suite
-from clifft_bench.schema import (
-    SchemaValidationError,
-    repository_root,
-    validate_document,
-    validate_path,
-    write_json,
-)
-from clifft_bench.selection import has_postselection
+from clifft_bench.selection import detector_mask, has_postselection
 
-CASE_FIELDS = [
-    "execution_id",
-    "campaign_id",
-    "hardware_epoch",
-    "result_id",
-    "placement",
-    "replica",
+FORMAT = "clifft-bench/raw/v1"
+CONTRACT_KEYS = (
+    "postselect_all_detectors",
+    "postselection_detector_indices",
+    "reference_convention",
+    "observable_index",
+    "output_contract",
+    "throughput_numerator",
+    "batch_semantics",
+)
+CASE_FIELDS = (
     "case_id",
     "variant_id",
     "workload_id",
@@ -40,328 +40,516 @@ CASE_FIELDS = [
     "simulator_version",
     "simulator_display_version",
     "adapter",
-    "mode",
-    "batch_enabled",
-    "batch_size_effective",
-    "tuning_policy",
-    "batch_parameter",
-    "batch_size_applicable",
-    "shots_per_call",
-    "cpu_model",
-    "instance_type",
-    "image_id",
-    "boot_id",
     "status",
     "error_phase",
     "error_type",
     "error_message",
-    "setup_seconds",
+    "mode",
+    "shots_per_call",
+    "batch_size_effective",
+    "tuning_policy",
+    "batch_parameter",
+    "batch_size_applicable",
     "sample_count",
     "median_attempted_shots_per_second",
     "mad_attempted_shots_per_second",
-    "min_attempted_shots_per_second",
-    "max_attempted_shots_per_second",
-    "total_attempted_shots",
-    "total_duration_seconds",
-    "clifft_scheduler",
+    "setup_seconds",
     "compile_seconds",
     "peak_active_width",
-    "sampling_backend",
-    "trajectory_sharing",
     "kernel_warmup_seconds",
     "warmup_seconds",
     "peak_rss_bytes",
-]
-
-COMPARISON_FIELDS = [
-    "execution_id",
-    "campaign_id",
-    "hardware_epoch",
-    "placement",
-    "replica",
-    "comparison_id",
-    "workload_id",
-    "baseline_variant_id",
-    "baseline_result_id",
-    "baseline_case_id",
-    "baseline_implementation_id",
-    "baseline_simulator_name",
-    "baseline_simulator_version",
-    "baseline_simulator_display_version",
-    "baseline_mode",
-    "baseline_batch_enabled",
-    "baseline_batch_size_effective",
-    "baseline_tuning_policy",
-    "baseline_shots_per_call",
-    "candidate_variant_id",
-    "candidate_result_id",
-    "candidate_case_id",
-    "candidate_implementation_id",
-    "candidate_simulator_name",
-    "candidate_simulator_version",
-    "candidate_simulator_display_version",
-    "candidate_mode",
-    "candidate_batch_enabled",
-    "candidate_batch_size_effective",
-    "candidate_tuning_policy",
-    "candidate_shots_per_call",
-    "statistic",
-    "baseline_rate",
-    "candidate_rate",
-    "ratio_candidate_over_baseline",
-    "symmetric_delta_percent",
-]
+)
 
 
-def _write_csv(path: Path, fields: list[str], rows: Iterable[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+def read_result(path: Path) -> dict[str, Any]:
+    try:
+        document = json.loads(path.read_text())
+    except json.JSONDecodeError as error:
+        raise ValueError(f"{path}: invalid JSON: {error}") from error
+    validate_result(document)
+    return document
+
+
+def write_json(path: Path, document: dict[str, Any]) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
-    with temporary.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
-        writer.writeheader()
-        writer.writerows(rows)
+    temporary.write_text(json.dumps(document, indent=2, sort_keys=True, allow_nan=False) + "\n")
     temporary.replace(path)
 
 
-def _placement_and_replica(result: dict[str, Any]) -> tuple[int, int]:
-    attempt = result["run"]["workflow"]["run_attempt"]
-    if not isinstance(attempt, str):
-        raise SchemaValidationError("raw result is missing a manual placement/replica attempt")
-    parts = attempt.split(".", maxsplit=1)
-    if len(parts) != 2 or not all(part.isdigit() and int(part) >= 1 for part in parts):
-        raise SchemaValidationError(
-            f"raw result run_attempt {attempt!r} must be PLACEMENT.REPLICA"
-        )
-    return int(parts[0]), int(parts[1])
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
 
 
-def _common_row(
-    suite: Suite,
-    execution_id: str,
-    result: dict[str, Any],
-    case: dict[str, Any],
-) -> dict[str, Any]:
-    placement, replica = _placement_and_replica(result)
-    cloud = result["runner"]["cloud"]
-    execution = case["execution"]
-    return {
-        "execution_id": execution_id,
-        "campaign_id": suite.run["profile_id"],
-        "hardware_epoch": suite.run["hardware_epoch"],
-        "result_id": result["run"]["id"],
-        "placement": placement,
-        "replica": replica,
-        "case_id": case["case_id"],
-        "variant_id": case["variant_id"],
-        "workload_id": case["workload"]["id"],
-        "workload_family": case["workload"]["family"],
-        "implementation_id": case["simulator"]["implementation_id"],
-        "simulator_name": case["simulator"]["name"],
-        "simulator_version": case["simulator"]["version"],
-        "simulator_display_version": case["simulator"].get(
-            "display_version", case["simulator"]["version"]
-        ),
-        "adapter": case["simulator"]["adapter"],
-        "mode": execution["mode"],
-        "batch_enabled": str(execution["batch_enabled"]).lower(),
-        "batch_size_effective": execution.get("batch_size_effective", ""),
-        "tuning_policy": execution.get("tuning_policy", "fixed"),
-        "shots_per_call": execution["shots_per_call"],
-        "cpu_model": result["runner"]["cpu_model"],
-        "instance_type": cloud["instance_type"],
-        "image_id": cloud["image_id"],
-        "boot_id": cloud["boot_id"],
+def _number(value: Any, label: str, *, integer: bool = False, positive: bool = False) -> None:
+    _require(
+        type(value) in ((int,) if integer else (int, float))
+        and math.isfinite(value)
+        and (value > 0 if positive else value >= 0),
+        f"invalid {label}: expected finite {'positive' if positive else 'nonnegative'} number",
+    )
+
+
+def _finite(value: Any) -> None:
+    if isinstance(value, dict):
+        for item in value.values():
+            _finite(item)
+    elif isinstance(value, list):
+        for item in value:
+            _finite(item)
+    elif isinstance(value, float):
+        _require(math.isfinite(value), "nonfinite number in raw evidence")
+
+
+def _timestamp(value: Any) -> datetime:
+    _require(isinstance(value, str), "missing collection timestamp")
+    result = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    _require(result.tzinfo is not None, "collection timestamp requires timezone")
+    return result
+
+
+def _counts(sample: dict, postselect: bool) -> None:
+    values = {
+        key: sample[key]
+        for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors")
     }
+    for key, value in values.items():
+        _number(value, key, integer=True)
+    errors = validate_counts(Counts(**values), postselect=postselect)
+    _require(not errors, "; ".join(errors))
+    _number(sample["duration_seconds"], "duration_seconds", positive=True)
 
 
-def _case_rows(
-    suite: Suite,
-    execution_id: str,
-    results: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
-    case_rows: list[dict[str, Any]] = []
-    for result in results:
-        for case in result["cases"]:
-            common = _common_row(suite, execution_id, result, case)
-            error = case.get("error") or {}
-            summary = (case.get("summary") or {}) if case["status"] == "success" else {}
-            metadata = (case.get("setup") or {}).get("runtime_metadata", {})
-            case_rows.append(
-                {
-                    **common,
-                    "status": case["status"],
-                    "batch_parameter": metadata.get("batch_parameter", ""),
-                    "batch_size_applicable": (
-                        str(metadata["batch_size_applicable"]).lower()
-                        if "batch_size_applicable" in metadata else ""
-                    ),
-                    "error_phase": error.get("phase", ""),
-                    "error_type": error.get("type", ""),
-                    "error_message": error.get("message", ""),
-                    "setup_seconds": (case.get("setup") or {}).get("duration_seconds", ""),
-                    "sample_count": summary.get("sample_count", 0),
-                    "median_attempted_shots_per_second": summary.get(
-                        "median_attempted_shots_per_second", ""
-                    ),
-                    "mad_attempted_shots_per_second": summary.get(
-                        "mad_attempted_shots_per_second", ""
-                    ),
-                    "min_attempted_shots_per_second": summary.get(
-                        "min_attempted_shots_per_second", ""
-                    ),
-                    "max_attempted_shots_per_second": summary.get(
-                        "max_attempted_shots_per_second", ""
-                    ),
-                    "total_attempted_shots": summary.get("total_attempted_shots", 0),
-                    "total_duration_seconds": summary.get("total_duration_seconds", ""),
-                    "clifft_scheduler": (
-                        json.dumps(case["execution"]["options"]["scheduler"], sort_keys=True)
-                        if "scheduler" in case["execution"].get("options", {}) else ""
-                    ),
-                    "compile_seconds": metadata.get("compile_seconds", ""),
-                    "peak_active_width": metadata.get("peak_active_width", ""),
-                    "sampling_backend": metadata.get("sampling_backend", ""),
-                    "trajectory_sharing": metadata.get("trajectory_sharing", ""),
-                    "kernel_warmup_seconds": metadata.get("kernel_warmup_seconds", ""),
-                    "warmup_seconds": (case.get("warmup") or {}).get("duration_seconds", ""),
-                    "peak_rss_bytes": max(
-                        (s["peak_rss_bytes"] for s in case["samples"] if "peak_rss_bytes" in s),
-                        default="",
-                    ),
-                }
-            )
-    return case_rows
+def validate_result(document: dict[str, Any]) -> None:
+    """Check completed evidence without loading a checkout or replaying calibration."""
+    try:
+        _validate_result(document)
+    except (KeyError, TypeError, AttributeError, IndexError) as error:
+        raise ValueError(f"incomplete or malformed raw evidence: {error}") from error
 
 
-def _comparison_rows(
-    suite: Suite,
-    execution_id: str,
-    case_rows: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
-    indexed: dict[tuple[str, int, int, str], list[dict[str, Any]]] = defaultdict(list)
-    for row in case_rows:
-        if row["status"] != "success":
-            continue
-        key = (
-            str(row["variant_id"]),
-            int(row["placement"]),
-            int(row["replica"]),
-            str(row["workload_id"]),
+def _validate_result(document: dict[str, Any]) -> None:
+    _require(
+        isinstance(document, dict) and document.get("format") == FORMAT,
+        f"expected {FORMAT} evidence; archived formats use the pinned legacy revision",
+    )
+    _finite(document)
+    run, campaign, runner = document["run"], document["campaign"], document["runner"]
+    _require(isinstance(run["id"], str) and bool(run["id"]), "missing execution identity")
+    _require(
+        _timestamp(run["finished_at"]) >= _timestamp(run["started_at"]),
+        "collection finished before it started",
+    )
+    _require(run["profile_id"] == campaign["profile_id"], "mismatched campaign identity")
+    _require(
+        run["classification"] == campaign["classification"]
+        and run["classification"] in {"smoke", "official"},
+        "invalid classification",
+    )
+    _require(isinstance(run["overrides"], dict), "missing override record")
+    _require(run["selection"] is None or isinstance(run["selection"], str), "invalid selection")
+    _require(isinstance(runner["suite_source"], dict), "missing source identity")
+    for key in ("cpu_model", "os", "machine"):
+        _require(isinstance(runner[key], str) and bool(runner[key]), f"missing host {key}")
+    measurement = campaign["measurement"]
+    for key in ("repetitions", "warmup_shots", "correctness_shots"):
+        _number(measurement[key], key, integer=True, positive=True)
+    for key in ("setup_timeout_seconds", "request_timeout_seconds", "min_sample_seconds"):
+        _number(measurement[key], key, positive=True)
+    _require(
+        measurement["request_timeout_seconds"] > measurement["min_sample_seconds"],
+        "sample interval exceeds request timeout",
+    )
+    resources = campaign["resources"]
+    if resources["memory_limit_bytes"] is not None:
+        _number(resources["memory_limit_bytes"], "memory limit", integer=True, positive=True)
+    if resources["logical_cpu"] is not None:
+        _number(resources["logical_cpu"], "logical CPU", integer=True)
+    expected = {case["id"]: case for case in campaign["cases"]}
+    _require(
+        bool(expected) and len(expected) == len(campaign["cases"]),
+        "duplicate or empty expected cases",
+    )
+    observed = {case["case_id"]: case for case in document["cases"]}
+    _require(len(observed) == len(document["cases"]), "duplicate observed cases")
+    _require(observed.keys() == expected.keys(), "missing or unexpected cases")
+    identities: dict[str, dict] = {}
+    for case_id, contract in expected.items():
+        case = observed[case_id]
+        _validate_case(case, contract, campaign)
+        simulator = case["simulator"]
+        identity = {k: v for k, v in simulator.items() if k != "dependencies"}
+        _require(
+            identities.setdefault(simulator["implementation_id"], identity) == identity,
+            f"inconsistent implementation identity: {simulator['implementation_id']}",
         )
-        indexed[key].append(row)
-
-    comparisons: list[dict[str, Any]] = []
-    workloads = sorted({str(row["workload_id"]) for row in case_rows})
-    collection = suite.run["collection"]
-    for comparison in suite.run["comparisons"]:
-        baseline_variant = str(comparison["baseline_variant"])
-        for candidate_variant in comparison["candidate_variants"]:
-            for placement in range(1, int(collection["placements"]) + 1):
-                for replica in range(1, int(collection["replicas_per_placement"]) + 1):
-                    for workload_id in workloads:
-                        baseline_rows = indexed.get(
-                            (baseline_variant, placement, replica, workload_id), []
-                        )
-                        candidate_rows = indexed.get(
-                            (str(candidate_variant), placement, replica, workload_id), []
-                        )
-                        if len(baseline_rows) > 1:
-                            raise ValueError(
-                                f"comparison {comparison['id']!r} found multiple successful "
-                                f"baseline cases for {baseline_variant!r}/{workload_id!r}"
-                            )
-                        if len(candidate_rows) > 1:
-                            raise ValueError(
-                                f"comparison {comparison['id']!r} found multiple successful "
-                                f"candidate cases for {candidate_variant!r}/{workload_id!r}"
-                            )
-                        if not baseline_rows or not candidate_rows:
-                            continue
-                        baseline = baseline_rows[0]
-                        candidate = candidate_rows[0]
-                        baseline_rate = float(
-                            baseline["median_attempted_shots_per_second"]
-                        )
-                        candidate_rate = float(
-                            candidate["median_attempted_shots_per_second"]
-                        )
-                        comparisons.append(
-                            {
-                                "execution_id": execution_id,
-                                "campaign_id": suite.run["profile_id"],
-                                "hardware_epoch": suite.run["hardware_epoch"],
-                                "placement": placement,
-                                "replica": replica,
-                                "comparison_id": comparison["id"],
-                                "workload_id": workload_id,
-                                "baseline_variant_id": baseline_variant,
-                                "baseline_result_id": baseline["result_id"],
-                                "baseline_case_id": baseline["case_id"],
-                                "baseline_implementation_id": baseline[
-                                    "implementation_id"
-                                ],
-                                "baseline_simulator_name": baseline["simulator_name"],
-                                "baseline_simulator_version": baseline[
-                                    "simulator_version"
-                                ],
-                                "baseline_simulator_display_version": baseline[
-                                    "simulator_display_version"
-                                ],
-                                "baseline_mode": baseline["mode"],
-                                "baseline_batch_enabled": baseline["batch_enabled"],
-                                "baseline_batch_size_effective": baseline[
-                                    "batch_size_effective"
-                                ],
-                                "baseline_tuning_policy": baseline.get("tuning_policy", ""),
-                                "baseline_shots_per_call": baseline["shots_per_call"],
-                                "candidate_variant_id": candidate_variant,
-                                "candidate_result_id": candidate["result_id"],
-                                "candidate_case_id": candidate["case_id"],
-                                "candidate_implementation_id": candidate[
-                                    "implementation_id"
-                                ],
-                                "candidate_simulator_name": candidate["simulator_name"],
-                                "candidate_simulator_version": candidate[
-                                    "simulator_version"
-                                ],
-                                "candidate_simulator_display_version": candidate[
-                                    "simulator_display_version"
-                                ],
-                                "candidate_mode": candidate["mode"],
-                                "candidate_batch_enabled": candidate["batch_enabled"],
-                                "candidate_batch_size_effective": candidate[
-                                    "batch_size_effective"
-                                ],
-                                "candidate_tuning_policy": candidate.get("tuning_policy", ""),
-                                "candidate_shots_per_call": candidate["shots_per_call"],
-                                "statistic": "result-sample-median",
-                                "baseline_rate": baseline_rate,
-                                "candidate_rate": candidate_rate,
-                                "ratio_candidate_over_baseline": (
-                                    candidate_rate / baseline_rate
-                                ),
-                                "symmetric_delta_percent": (
-                                    200
-                                    * abs(candidate_rate - baseline_rate)
-                                    / (candidate_rate + baseline_rate)
-                                ),
-                            }
-                        )
-    return comparisons
+    if run["classification"] == "official":
+        _validate_official(document)
+    # Comparison validation also runs when regenerating CSV without plotting.
+    comparison_pairs(document)
 
 
-def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> None:
-    if expected.definition["execution"]["batch_size"] != "calibrate":
+def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
+    identifier = case["case_id"]
+    execution, simulator, workload = case["execution"], case["simulator"], case["workload"]
+    _require(
+        case["variant_id"] == contract["variant_id"]
+        and workload["id"] == contract["workload_id"]
+        and simulator["implementation_id"] == contract["implementation_id"],
+        f"case {identifier}: identity differs from resolved campaign",
+    )
+    for key in ("name", "version", "display_version", "source_url", "commit_datetime"):
+        _require(
+            isinstance(simulator[key], str) and bool(simulator[key]),
+            f"case {identifier}: missing simulator {key}",
+        )
+    _require(
+        re.fullmatch(r"[0-9a-f]{40}", simulator["commit_sha"]) is not None,
+        f"case {identifier}: invalid source commit",
+    )
+    _require(
+        re.fullmatch(r"[0-9a-f]{64}", workload["artifact"]["sha256"]) is not None,
+        f"case {identifier}: invalid workload digest",
+    )
+    semantics = workload["semantics"]
+    expected_metadata = workload["expected_metadata"]
+    for key in ("num_qubits", "num_measurements", "num_detectors", "num_observables"):
+        _number(expected_metadata[key], key, integer=True)
+    _number(semantics["observable_index"], "observable index", integer=True)
+    _require(
+        semantics["observable_index"] < expected_metadata["num_observables"],
+        "observable index is outside declared outputs",
+    )
+    detector_mask(semantics, expected_metadata["num_detectors"])
+    _require(
+        semantics["reference_convention"] == "raw-record-parity"
+        and semantics["throughput_numerator"] == "attempted shots",
+        f"case {identifier}: invalid output semantics",
+    )
+    _require(simulator["adapter"] in workload["compatible_adapters"], "incompatible adapter")
+    load_adapter(simulator["adapter"]).validate_options(execution["options"])
+    for key in ("mode", "batch_enabled", "options"):
+        _require(
+            execution[key] == contract["execution"][key], f"case {identifier}: mismatched {key}"
+        )
+    _require(
+        execution["mode"] in {"latency", "throughput"} and type(execution["batch_enabled"]) is bool,
+        "invalid execution mode/batching",
+    )
+    _number(execution["shots_per_call"], "shots_per_call", integer=True, positive=True)
+    _require(execution["shots_per_call"] == contract["shots_per_call"], "mismatched call size")
+    for key in ("min_sample_seconds", "request_timeout_seconds", "repetitions"):
+        _require(execution[key] == campaign["measurement"][key], f"mismatched {key}")
+    _require(
+        execution["memory_limit_bytes"] == campaign["resources"]["memory_limit_bytes"],
+        "mismatched memory limit",
+    )
+    _require(
+        execution["threads_requested"] == 1
+        and execution["postselection"] is has_postselection(semantics),
+        "invalid thread or selection contract",
+    )
+    if contract["execution"]["batch_size"] != "calibrate":
+        _number(execution["batch_size"], "batch size", integer=True, positive=True)
+        _require(
+            execution["batch_size"] == contract["execution"]["batch_size"],
+            "mismatched fixed batch size",
+        )
+    _require(case["status"] in {"success", "error", "interrupted"}, "no terminal case outcome")
+    if case["status"] == "success":
+        _require(case["error"] is None, "successful case has an error")
+        _require(
+            case["correctness"]["status"] == "passed"
+            and not case["correctness"]["errors"]
+            and case["correctness"]["timed_region"] is False,
+            "correctness did not pass",
+        )
+        _counts(case["warmup"], execution["postselection"])
+        _counts(case["correctness"]["details"], execution["postselection"])
+        _require(
+            bool(case["samples"]) and len(case["samples"]) == execution["repetitions"],
+            "incomplete timed samples",
+        )
+    else:
+        error = case["error"]
+        _require(
+            error["phase"] in {"setup", "warmup", "correctness", "sampling"}
+            and isinstance(error["type"], str)
+            and bool(error["type"])
+            and isinstance(error["message"], str),
+            "failure lacks structured error",
+        )
+    setup = case["setup"]
+    if setup is None:
+        _require(
+            case["status"] == "interrupted"
+            or (case["status"] == "error" and case["error"]["phase"] == "setup"),
+            "missing setup evidence",
+        )
+    else:
+        _number(setup["duration_seconds"], "setup duration")
+        metadata = setup["runtime_metadata"]
+        if case["status"] == "success":
+            _require(
+                all(metadata[k] == v for k, v in expected_metadata.items()),
+                "runtime circuit metadata mismatch",
+            )
+        _require(
+            metadata["threads"] == execution["threads_effective"] == 1,
+            "worker did not use one thread",
+        )
+        _require(metadata["version"] == simulator["version"], "runtime version mismatch")
+        _number(execution["batch_size_effective"], "effective batch", integer=True, positive=True)
+        _require(
+            execution["batch_size_effective"] <= execution["shots_per_call"],
+            "effective batch exceeds public call size",
+        )
+        if "scheduler" in execution["options"] and case["status"] == "success":
+            _require(
+                type(metadata["scheduler_statistics"]["applied"]) is bool,
+                "missing scheduler statistics",
+            )
+        if simulator["adapter"] == "tsim" and case["status"] == "success":
+            _require(
+                metadata["sampling_backend"] == "active_statevector"
+                and metadata["installed_source_commit"] == simulator["commit_sha"]
+                and metadata["trajectory_sharing"]
+                is execution["options"].get("trajectory_sharing", True),
+                "invalid Tsim runtime provenance",
+            )
+            _require(
+                case["warmup"]["attempted_shots"] >= execution["shots_per_call"],
+                "Tsim requires a full-call warmup",
+            )
+    if case["status"] != "interrupted" or setup is not None:
+        _validate_calibration_record(contract, case)
+    for repetition, sample in enumerate(case["samples"]):
+        _counts(sample, execution["postselection"])
+        _number(sample["api_calls"], "api_calls", integer=True, positive=True)
+        _number(sample["peak_rss_bytes"], "peak RSS", integer=True, positive=True)
+        _number(sample["throughput_attempted_shots_per_second"], "throughput", positive=True)
+        _require(sample["repetition"] == repetition, "invalid sample repetition order")
+        _require(
+            sample["attempted_shots"] == sample["api_calls"] * execution["shots_per_call"],
+            "sample attempted shots differ from public calls",
+        )
+        _require(
+            math.isclose(
+                sample["throughput_attempted_shots_per_second"],
+                sample["attempted_shots"] / sample["duration_seconds"],
+                rel_tol=1e-9,
+            ),
+            "sample throughput differs from counts/duration",
+        )
+
+
+def _validate_official(document: dict) -> None:
+    run, campaign, runner = document["run"], document["campaign"], document["runner"]
+    _require(
+        run["selection"] is None and not (run["overrides"].keys() - {"cpu"}),
+        "official execution must use the complete declared campaign",
+    )
+    source, cloud = runner["suite_source"], runner["cloud"]
+    _require(
+        source["dirty"] is False
+        and isinstance(source["commit"], str)
+        and re.fullmatch(r"[0-9a-f]{40}", source["commit"]) is not None,
+        "official evidence requires clean committed source",
+    )
+    for key in (
+        "provider",
+        "instance_type",
+        "instance_id",
+        "image_id",
+        "region",
+        "availability_zone",
+        "lifecycle",
+        "boot_id",
+    ):
+        _require(isinstance(cloud[key], str) and bool(cloud[key]), "incomplete cloud identity")
+    reference = campaign["reference_host"]
+    _require(
+        cloud["provider"] == reference["provider"] == "aws"
+        and cloud["instance_type"] == reference["instance_type"]
+        and cloud["lifecycle"] == "on-demand"
+        and runner["os"] == "Linux"
+        and runner["machine"] == reference["architecture"],
+        "reference host mismatch",
+    )
+    expected_memory = int(campaign["collection"]["memory_limit_gib"] * (1 << 30))
+    _require(
+        campaign["resources"]["memory_limit_bytes"] == expected_memory,
+        "official memory ceiling mismatch",
+    )
+    for case in document["cases"]:
+        if case["setup"] is not None:
+            _require(
+                case["setup"]["runtime_metadata"]["address_space_limit_bytes"] == expected_memory,
+                "worker memory ceiling mismatch",
+            )
+            affinity = case["setup"]["affinity"]
+            _require(
+                affinity["applied"] is True
+                and affinity["available_after"] == [campaign["resources"]["logical_cpu"]],
+                "worker CPU affinity was not applied",
+            )
+
+
+def comparison_pairs(document: dict) -> list[dict]:
+    """Join declared comparisons; retain failed and intentionally absent sides."""
+    by_variant: dict[str, dict[str, dict]] = {}
+    for case in document["cases"]:
+        workload = case["workload"]["id"]
+        variant = by_variant.setdefault(case["variant_id"], {})
+        _require(workload not in variant, "duplicate variant/workload cases")
+        variant[workload] = case
+    pairs, seen = [], set()
+    for comparison in document["campaign"].get("comparisons", []):
+        _require(comparison["id"] not in seen, "duplicate comparison identity")
+        seen.add(comparison["id"])
+        baseline_id = comparison["baseline_variant"]
+        candidates = comparison["candidate_variants"]
+        _require(
+            bool(candidates)
+            and len(candidates) == len(set(candidates))
+            and baseline_id not in candidates,
+            "invalid comparison variants",
+        )
+        for candidate_id in candidates:
+            if document["run"]["selection"] is None:
+                _require(
+                    baseline_id in by_variant and candidate_id in by_variant,
+                    "comparison references unknown variant",
+                )
+            baseline = by_variant.get(baseline_id, {})
+            candidate = by_variant.get(candidate_id, {})
+            for workload in dict.fromkeys([*baseline, *candidate]):
+                left, right = baseline.get(workload), candidate.get(workload)
+                ratio = None
+                if left is not None and right is not None:
+                    _compatible(left, right)
+                    if left["status"] == right["status"] == "success":
+                        ratio = _rate(right) / _rate(left)
+                        _number(ratio, "paired ratio", positive=True)
+                pairs.append(
+                    {
+                        "comparison_id": comparison["id"],
+                        "workload_id": workload,
+                        "baseline_variant": baseline_id,
+                        "candidate_variant": candidate_id,
+                        "baseline": left,
+                        "candidate": right,
+                        "ratio": ratio,
+                    }
+                )
+    return pairs
+
+
+def _compatible(left: dict, right: dict) -> None:
+    a, b = left["workload"], right["workload"]
+    _require(
+        a["artifact"]["sha256"] == b["artifact"]["sha256"]
+        and all(a["semantics"].get(k) == b["semantics"].get(k) for k in CONTRACT_KEYS),
+        "incompatible comparison workload/selection semantics",
+    )
+    for key in (
+        "shots_per_call",
+        "mode",
+        "memory_limit_bytes",
+        "threads_requested",
+        "min_sample_seconds",
+        "request_timeout_seconds",
+        "repetitions",
+    ):
+        _require(
+            left["execution"][key] == right["execution"][key], f"incompatible comparison {key}"
+        )
+
+
+def _rate(case: dict) -> float:
+    return statistics.median(s["throughput_attempted_shots_per_second"] for s in case["samples"])
+
+
+def case_rows(document: dict) -> list[dict]:
+    rows = []
+    indexed = {c["case_id"]: c for c in document["cases"]}
+    for expected in document["campaign"]["cases"]:
+        case = indexed[expected["id"]]
+        execution, simulator = case["execution"], case["simulator"]
+        setup, error = case["setup"] or {}, case["error"] or {}
+        metadata = setup.get("runtime_metadata", {})
+        rate = _rate(case) if case["status"] == "success" else ""
+        rows.append(
+            {
+                "case_id": case["case_id"],
+                "variant_id": case["variant_id"],
+                "workload_id": case["workload"]["id"],
+                "workload_family": case["workload"]["family"],
+                "implementation_id": simulator["implementation_id"],
+                "simulator_name": simulator["name"],
+                "simulator_version": simulator["version"],
+                "simulator_display_version": simulator["display_version"],
+                "adapter": simulator["adapter"],
+                "status": case["status"],
+                "error_phase": error.get("phase", ""),
+                "error_type": error.get("type", ""),
+                "error_message": error.get("message", ""),
+                "mode": execution["mode"],
+                "shots_per_call": execution["shots_per_call"],
+                "batch_size_effective": execution.get("batch_size_effective", ""),
+                "tuning_policy": execution.get("tuning_policy", "fixed"),
+                "batch_parameter": metadata.get("batch_parameter", ""),
+                "batch_size_applicable": (
+                    str(metadata["batch_size_applicable"]).lower()
+                    if "batch_size_applicable" in metadata
+                    else ""
+                ),
+                "sample_count": len(case["samples"]),
+                "median_attempted_shots_per_second": rate,
+                "mad_attempted_shots_per_second": statistics.median(
+                    abs(s["throughput_attempted_shots_per_second"] - rate) for s in case["samples"]
+                )
+                if rate != ""
+                else "",
+                "setup_seconds": setup.get("duration_seconds", ""),
+                **{
+                    k: metadata.get(k, "")
+                    for k in ("compile_seconds", "peak_active_width", "kernel_warmup_seconds")
+                },
+                "warmup_seconds": (case["warmup"] or {}).get("duration_seconds", ""),
+                "peak_rss_bytes": max((s["peak_rss_bytes"] for s in case["samples"]), default=""),
+            }
+        )
+    return rows
+
+
+def export_csv(document: dict, path: Path) -> None:
+    validate_result(document)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=CASE_FIELDS, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(case_rows(document))
+    temporary.replace(path)
+
+
+def _validate_calibration_record(expected: dict, observed: dict[str, Any]) -> None:
+    if expected["execution"]["batch_size"] != "calibrate":
         return
 
-    case_id = expected.id
+    case_id = expected["id"]
     if observed["execution"].get("tuning_policy") != CALIBRATION_POLICY:
         raise ValueError(f"raw case {case_id!r} has mismatched tuning policy")
     setup = observed.get("setup")
     # A worker can fail during calibration or preparation before returning any
     # setup metadata. Preserve that explicit failure without inventing a winner.
-    if (setup is None and observed["status"] == "error"
-            and (observed.get("error") or {}).get("phase") == "setup"):
+    if (
+        setup is None
+        and observed["status"] == "error"
+        and (observed.get("error") or {}).get("phase") == "setup"
+    ):
         return
     calibration = (
         setup.get("runtime_metadata", {}).get("batch_calibration")
@@ -369,34 +557,27 @@ def _validate_calibration_record(expected: Case, observed: dict[str, Any]) -> No
         else None
     )
     if not isinstance(calibration, dict):
-        raise ValueError(
-            f"calibrated raw case {case_id!r} has no batch_calibration metadata"
-        )
+        raise ValueError(f"calibrated raw case {case_id!r} has no batch_calibration metadata")
 
     selected = calibration.get("selected_batch_size")
     if type(selected) is not int or selected < 1:
         raise ValueError(
-            f"calibrated raw case {case_id!r} has invalid selected_batch_size "
-            f"{selected!r}"
+            f"calibrated raw case {case_id!r} has invalid selected_batch_size {selected!r}"
         )
-    shots_per_call = int(expected.definition["shots_per_call"])
+    shots_per_call = int(expected["shots_per_call"])
     if calibration.get("policy") != CALIBRATION_POLICY:
         raise ValueError(f"calibrated raw case {case_id!r} has mismatched tuning policy")
     expected_candidates = calibration_candidates(
-        expected.implementation.definition["adapter"], shots_per_call,
+        observed["simulator"]["adapter"],
+        shots_per_call,
     )
     if calibration.get("candidates") != expected_candidates:
-        raise ValueError(
-            f"calibrated raw case {case_id!r} candidates do not match the contract"
-        )
+        raise ValueError(f"calibrated raw case {case_id!r} candidates do not match the contract")
     if selected not in expected_candidates:
-        raise ValueError(
-            f"calibrated raw case {case_id!r} selected an unsupported batch_size"
-        )
+        raise ValueError(f"calibrated raw case {case_id!r} selected an unsupported batch_size")
     if observed["execution"].get("batch_size") != selected:
         raise ValueError(
-            f"calibrated raw case {case_id!r} does not record selected numeric "
-            "batch_size"
+            f"calibrated raw case {case_id!r} does not record selected numeric batch_size"
         )
     _validate_bounded_calibration(calibration, case_id)
 
@@ -406,33 +587,48 @@ def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> 
         if not condition:
             raise ValueError(f"calibrated raw case {case_id!r}: {detail}")
 
-    require(calibration.get("budget_seconds") == TUNING_BUDGET_SECONDS
-            and calibration.get("budget_scope") == "between-candidates",
-            "invalid tuning budget")
-    require(calibration.get("probe_seconds") == 1.0
-            and calibration.get("repetitions") == 3,
-            "invalid tuning probe settings")
-    require(calibration.get("selection_statistic") == "median_attempted_shots_per_second"
-            and calibration.get("tie_break") == "smaller_batch_size",
-            "invalid tuning selection rule")
+    require(
+        calibration.get("budget_seconds") == TUNING_BUDGET_SECONDS
+        and calibration.get("budget_scope") == "between-candidates",
+        "invalid tuning budget",
+    )
+    require(
+        calibration.get("probe_seconds") == 1.0 and calibration.get("repetitions") == 3,
+        "invalid tuning probe settings",
+    )
+    require(
+        calibration.get("selection_statistic") == "median_attempted_shots_per_second"
+        and calibration.get("tie_break") == "smaller_batch_size",
+        "invalid tuning selection rule",
+    )
     search_seconds = calibration.get("search_seconds")
-    require(type(search_seconds) in (int, float) and math.isfinite(search_seconds)
-            and search_seconds >= 0, "missing tuning duration")
+    require(
+        type(search_seconds) in (int, float)
+        and math.isfinite(search_seconds)
+        and search_seconds >= 0,
+        "missing tuning duration",
+    )
     rows = calibration.get("results")
-    require(isinstance(rows, list) and len(rows) == len(calibration["candidates"]),
-            "missing candidate outcomes")
+    require(
+        isinstance(rows, list) and len(rows) == len(calibration["candidates"]),
+        "missing candidate outcomes",
+    )
     successful = set()
     seen_skip = False
     for batch, row in zip(calibration["candidates"], rows, strict=True):
-        require(isinstance(row, dict) and row.get("batch_size") == batch,
-                "mismatched candidate order")
+        require(
+            isinstance(row, dict) and row.get("batch_size") == batch, "mismatched candidate order"
+        )
         status = row.get("status")
         require(status in {"success", "error", "budget-skipped"}, "invalid candidate status")
-        require(not seen_skip or status == "budget-skipped",
-                "candidate attempted after budget skip")
+        require(
+            not seen_skip or status == "budget-skipped", "candidate attempted after budget skip"
+        )
         duration = row.get("duration_seconds")
-        require(type(duration) in (int, float) and math.isfinite(duration) and duration >= 0,
-                "invalid candidate duration")
+        require(
+            type(duration) in (int, float) and math.isfinite(duration) and duration >= 0,
+            "invalid candidate duration",
+        )
         samples = row.get("samples")
         require(isinstance(samples, list), "missing candidate probes")
         if status == "budget-skipped":
@@ -443,218 +639,28 @@ def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> 
         else:
             require(len(samples) == calibration["repetitions"], "incomplete candidate probes")
             effective = row.get("effective_batch_size")
-            require(type(effective) is int and 1 <= effective <= batch,
-                    "invalid effective batch size")
+            require(
+                type(effective) is int and 1 <= effective <= batch, "invalid effective batch size"
+            )
             rate = row.get("median_attempted_shots_per_second")
-            require(type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
-                    "invalid candidate median")
+            require(
+                type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
+                "invalid candidate median",
+            )
             successful.add(batch)
         for sample in samples:
             require(isinstance(sample, dict), "invalid candidate probe")
             rate = sample.get("throughput_attempted_shots_per_second")
-            require(type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
-                    "invalid candidate throughput")
-            require(type(sample.get("peak_rss_bytes")) is int
-                    and sample["peak_rss_bytes"] > 0, "missing tuning memory measurement")
+            require(
+                type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
+                "invalid candidate throughput",
+            )
+            require(
+                type(sample.get("peak_rss_bytes")) is int and sample["peak_rss_bytes"] > 0,
+                "missing tuning memory measurement",
+            )
     # Validate complete evidence and a usable selection, without replaying the
     # recorded medians, winner selection, or elapsed-budget decisions.
-    require(calibration["selected_batch_size"] in successful,
-            "selected batch has no successful probes")
-
-
-def _validate_execution(
-    suite: Suite,
-    raw_paths: list[Path],
-) -> list[dict[str, Any]]:
-    if len(raw_paths) != len({path.resolve() for path in raw_paths}):
-        raise ValueError("duplicate raw result path")
-    results = [validate_path(path.resolve()) for path in sorted(raw_paths)]
-    collection = suite.run["collection"]
-    expected_count = int(collection["placements"]) * int(
-        collection["replicas_per_placement"]
+    require(
+        calibration["selected_batch_size"] in successful, "selected batch has no successful probes"
     )
-    if len(results) != expected_count:
-        raise ValueError(f"expected {expected_count} raw results, received {len(results)}")
-
-    source = results[0]["runner"]["suite_source"]
-    if source["dirty"] is not False or source["commit"] is None:
-        raise ValueError("raw results must come from one clean committed source")
-    if any(result["runner"]["suite_source"] != source for result in results[1:]):
-        raise ValueError("raw results do not share one source identity")
-
-    placements: dict[int, list[dict[str, Any]]] = defaultdict(list)
-    expected_memory_limit_bytes = int(float(collection["memory_limit_gib"]) * (1 << 30))
-    expected_instance_type = suite.run["reference_host"]["instance_type"]
-    expected_cases = {case.id: case for case in suite.cases}
-    expected_case_ids = set(expected_cases)
-    contract_keys = (
-        "postselect_all_detectors", "postselection_detector_indices",
-        "reference_convention", "observable_index", "output_contract", "throughput_numerator",
-    )
-    for result in results:
-        if result["run"]["profile_id"] != suite.run["profile_id"]:
-            raise ValueError(
-                f"raw result profile {result['run']['profile_id']!r} does not match "
-                f"campaign {suite.run['profile_id']!r}"
-            )
-        cloud = result["runner"].get("cloud")
-        if cloud is None:
-            raise ValueError("campaign results require complete cloud identity")
-        if cloud["instance_type"] != expected_instance_type:
-            raise ValueError(
-                f"expected instance type {expected_instance_type!r}, "
-                f"received {cloud['instance_type']!r}"
-            )
-        observed_case_ids = [case["case_id"] for case in result["cases"]]
-        if len(observed_case_ids) != len(set(observed_case_ids)):
-            raise ValueError("raw result contains duplicate campaign case IDs")
-        if set(observed_case_ids) != expected_case_ids:
-            raise ValueError("raw result does not contain every declared campaign case")
-        for case in result["cases"]:
-            expected = expected_cases[case["case_id"]]
-            semantics = expected.workload.definition["semantics"]
-            observed_semantics = case["workload"]["semantics"]
-            if (any(observed_semantics.get(key) != semantics.get(key) for key in contract_keys)
-                    or case["execution"]["postselection"] != has_postselection(semantics)):
-                raise ValueError(f"raw case {expected.id!r} has mismatched workload semantics")
-            if (
-                "scheduler" in expected.definition["execution"].get("options", {})
-                and case["status"] == "success"
-            ):
-                metadata = (case.get("setup") or {}).get("runtime_metadata", {})
-                statistics = metadata.get("scheduler_statistics")
-                if not isinstance(statistics, dict) or type(statistics.get("applied")) is not bool:
-                    raise ValueError(f"raw case {expected.id!r} is missing scheduler statistics")
-            if (
-                expected.implementation.definition["adapter"] == "tsim"
-                and case["status"] == "success"
-            ):
-                metadata = (case.get("setup") or {}).get("runtime_metadata", {})
-                sharing = (
-                    expected.definition["execution"]
-                    .get("options", {})
-                    .get("trajectory_sharing", True)
-                )
-                if (
-                    metadata.get("sampling_backend") != "active_statevector"
-                    or metadata.get("threads") != 1
-                    or metadata.get("trajectory_sharing") is not sharing
-                    or metadata.get("installed_source_commit")
-                    != expected.implementation.definition["commit_sha"]
-                ):
-                    raise ValueError(
-                        f"raw case {expected.id!r} has invalid Tsim runtime provenance"
-                    )
-                warm_shots = (case.get("warmup") or {}).get("attempted_shots", 0)
-                if warm_shots < expected.definition["shots_per_call"]:
-                    raise ValueError(f"raw case {expected.id!r} did not warm a full Tsim call")
-            _validate_calibration_record(expected, case)
-            observed_memory_limit = case["execution"].get("memory_limit_bytes")
-            if observed_memory_limit != expected_memory_limit_bytes:
-                raise ValueError(
-                    "raw result memory limit does not match the campaign: "
-                    f"expected {expected_memory_limit_bytes}, received "
-                    f"{observed_memory_limit!r}"
-                )
-            setup = case.get("setup")
-            if setup is not None:
-                applied_memory_limit = setup["runtime_metadata"].get(
-                    "address_space_limit_bytes"
-                )
-                if applied_memory_limit != expected_memory_limit_bytes:
-                    raise ValueError(
-                        "worker memory limit does not match the campaign: "
-                        f"expected {expected_memory_limit_bytes}, received "
-                        f"{applied_memory_limit!r}"
-                    )
-        placement, _ = _placement_and_replica(result)
-        placements[placement].append(result)
-
-    if len({result["runner"]["cloud"]["instance_id"] for result in results}) != 1:
-        raise ValueError("raw results must come from one reference instance")
-    expected_placements = set(range(1, int(collection["placements"]) + 1))
-    if set(placements) != expected_placements:
-        raise ValueError(f"raw result placements must be {sorted(expected_placements)}")
-    expected_replicas = int(collection["replicas_per_placement"])
-    boot_ids = set()
-    for placement, placement_results in placements.items():
-        if len(placement_results) != expected_replicas:
-            raise ValueError(
-                f"placement {placement} must contain {expected_replicas} raw results"
-            )
-        replicas = {_placement_and_replica(result)[1] for result in placement_results}
-        if replicas != set(range(1, expected_replicas + 1)):
-            raise ValueError(
-                f"placement {placement} replicas must be 1 through {expected_replicas}"
-            )
-        placement_boots = {result["runner"]["cloud"]["boot_id"] for result in placement_results}
-        if len(placement_boots) != 1:
-            raise ValueError(f"placement {placement} spans multiple boot IDs")
-        boot_ids.update(placement_boots)
-    if len(boot_ids) != len(placements):
-        raise ValueError("each placement must use a distinct boot ID")
-    return results
-
-
-def finalize_execution(
-    suite: Suite,
-    *,
-    execution_id: str,
-    raw_paths: list[Path],
-    output_dir: Path,
-) -> dict[str, Any]:
-    if suite.run["classification"] != "official":
-        raise ValueError("only official run manifests can be finalized")
-    resolved_paths = sorted(path.resolve() for path in raw_paths)
-    results = _validate_execution(suite, resolved_paths)
-    case_rows = _case_rows(suite, execution_id, results)
-    comparison_rows = _comparison_rows(suite, execution_id, case_rows)
-    _write_csv(output_dir / "cases.csv", CASE_FIELDS, case_rows)
-    _write_csv(output_dir / "comparisons.csv", COMPARISON_FIELDS, comparison_rows)
-
-    placements: dict[int, list[tuple[Path, dict[str, Any]]]] = defaultdict(list)
-    for path, result in zip(resolved_paths, results, strict=True):
-        placement, _ = _placement_and_replica(result)
-        placements[placement].append((path, result))
-    first = results[0]
-    first_cloud = first["runner"]["cloud"]
-    root = repository_root()
-    index = {
-        "schema_version": "clifft-bench/execution/v1",
-        "execution_id": execution_id,
-        "campaign_id": suite.run["profile_id"],
-        "hardware_epoch": suite.run["hardware_epoch"],
-        "run_manifest": str(suite.run_path.relative_to(root)),
-        "created_at": max(str(result["run"]["finished_at"]) for result in results),
-        "source": first["runner"]["suite_source"],
-        "cloud": {
-            key: first_cloud[key]
-            for key in (
-                "provider",
-                "instance_type",
-                "image_id",
-                "region",
-                "availability_zone",
-                "lifecycle",
-            )
-        },
-        "placements": [
-            {
-                "number": number,
-                "boot_id": items[0][1]["runner"]["cloud"]["boot_id"],
-                "instance_id": items[0][1]["runner"]["cloud"]["instance_id"],
-                "raw_results": [
-                    f"raw/{path.name}"
-                    for path, _ in sorted(items, key=lambda item: item[0])
-                ],
-            }
-            for number, items in sorted(placements.items())
-        ],
-        "derived": {
-            "cases": "cases.csv",
-            "comparisons": "comparisons.csv",
-        },
-    }
-    validate_document(index)
-    write_json(output_dir / "index.json", index)
-    return index

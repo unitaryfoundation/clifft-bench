@@ -5,7 +5,7 @@ import sys
 
 import pytest
 
-from clifft_bench.schema import repository_root
+from clifft_bench.config import repository_root
 
 
 @pytest.mark.parametrize("condition", ["valid", "not-ec2", "dirty", "existing"])
@@ -52,7 +52,7 @@ elif name == "cat": print("Other" if os.environ["TEST_CONDITION"] == "not-ec2" e
         assert calls[-1] == [
             "timeout", "--signal=TERM", "--kill-after=30s", "480m",
             ".venv/bin/clifft-bench", "run", "release-v1", "--require-ec2",
-            "--output", str(output / "raw.json"),
+            "--output-dir", str(output),
         ]
     else:
         assert result.returncode != 0

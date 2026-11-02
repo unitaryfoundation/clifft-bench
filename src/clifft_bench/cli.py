@@ -14,12 +14,12 @@ from clifft_bench.config import (
     campaign_path,
     load_suite,
     read_toml,
+    repository_root,
     validate_software,
     validate_workloads,
 )
-from clifft_bench.results import finalize_execution
+from clifft_bench.results import export_csv, read_result
 from clifft_bench.runner import run_suite
-from clifft_bench.schema import SchemaValidationError, repository_root, validate_path
 
 DEFAULT_CAMPAIGN = "smoke"
 
@@ -42,20 +42,23 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("campaign", nargs="?", default=DEFAULT_CAMPAIGN)
     run.add_argument("--python", dest="python_executable", help="local smoke interpreter override")
     run.add_argument("--require-ec2", action="store_true")
-    run.add_argument("--output", type=Path)
+    run.add_argument("--output-dir", required=True, type=Path)
     run.add_argument("--case", help="regular expression matched against case IDs")
     run.add_argument("--cpu", type=int, help="logical CPU to request on affinity-capable systems")
     run.add_argument("--memory-limit-gib", type=float)
     run.add_argument("--min-sample-seconds", type=float)
     run.add_argument("--repetitions", type=int)
 
-    finalize = commands.add_parser(
-        "finalize", help="generate an execution index and plot-ready tables"
+    csv_command = commands.add_parser("csv", help="regenerate the case table from raw evidence")
+    csv_command.add_argument("raw_json", type=Path)
+    csv_command.add_argument("--output", type=Path)
+
+    report = commands.add_parser(
+        "report", help="report one execution's release and tool comparisons"
     )
-    finalize.add_argument("campaign")
-    finalize.add_argument("--execution-id", required=True)
-    finalize.add_argument("--output-dir", required=True, type=Path)
-    finalize.add_argument("results", nargs="+", type=Path)
+    report.add_argument("execution_dir", type=Path)
+    report.add_argument("--output-dir", type=Path)
+    report.add_argument("--check", action="store_true", help="validate without writing files")
 
     setup = commands.add_parser("bootstrap", help="install selected isolated environments")
     setup.add_argument("campaign", nargs="?", default=DEFAULT_CAMPAIGN)
@@ -85,7 +88,7 @@ def _validate(paths: list[Path]) -> int:
             else:
                 load_suite(resolved)
         else:
-            validate_path(resolved)
+            read_result(resolved)
         print(f"valid: {resolved}")
     return 0
 
@@ -120,12 +123,10 @@ def _list(campaign: str, as_json: bool) -> int:
 
 def _run(args: argparse.Namespace) -> int:
     suite = load_suite(campaign_path(args.campaign))
-    output = args.output
-    if output is None:
-        output = repository_root() / "results" / f"{suite.run['profile_id']}.json"
+    output = args.output_dir
     document = run_suite(
         suite,
-        output_path=output.resolve(),
+        output_dir=output.resolve(),
         case_pattern=args.case,
         cpu=args.cpu,
         memory_limit_gib=args.memory_limit_gib,
@@ -148,18 +149,6 @@ def _run(args: argparse.Namespace) -> int:
     return 0 if successes == len(document["cases"]) else 1
 
 
-def _finalize(args: argparse.Namespace) -> int:
-    suite = load_suite(campaign_path(args.campaign))
-    index = finalize_execution(
-        suite,
-        execution_id=args.execution_id,
-        raw_paths=[_resolve(path) for path in args.results],
-        output_dir=args.output_dir.resolve(),
-    )
-    print(json.dumps(index, indent=2, sort_keys=True))
-    return 0
-
-
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
@@ -172,10 +161,22 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _list(args.campaign, args.as_json)
         if args.command == "run":
             return _run(args)
-        if args.command == "finalize":
-            return _finalize(args)
+        if args.command == "csv":
+            document = read_result(args.raw_json)
+            output = args.output or args.raw_json.with_name("cases.csv")
+            if output.resolve() == args.raw_json.resolve():
+                raise ValueError("CSV output cannot overwrite raw evidence")
+            export_csv(document, output)
+            return 0
+        if args.command == "report":
+            from clifft_bench.report import report_execution
+
+            print(
+                report_execution(args.execution_dir, output_dir=args.output_dir, check=args.check)
+            )
+            return 0
         raise AssertionError(f"unhandled command {args.command!r}")
-    except (SchemaValidationError, ValueError, OSError, subprocess.SubprocessError) as error:
+    except (ValueError, OSError, subprocess.SubprocessError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
 

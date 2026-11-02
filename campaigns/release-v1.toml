@@ -15,8 +15,6 @@ os_id = "ubuntu"
 os_version = "24.04"
 
 [collection]
-placements = 1
-replicas_per_placement = 1
 run_timeout_minutes = 420
 memory_limit_gib = 12
 

@@ -26,7 +26,7 @@ uv run clifft-bench list
 CI tests the harness and adapter contracts. Official performance collection is
 a manual, reviewed workflow. Before changing measurements or results, read the
 [benchmark contract](docs/benchmark-contract.md) and
-[data format](docs/data-format.md).
+[result evidence contract](docs/benchmark-contract.md#result-evidence-and-comparisons).
 
 Keep mainline additions focused on maintained benchmarks, their correctness
 checks, and input provenance. Temporary probes, local debugging output, and
@@ -89,14 +89,12 @@ evidence retain the exact candidate identity; derived tables expose the display
 version for plots, summaries, and release docs.
 
 One collection produces a raw result containing every selected variant, including
-structured case failures. The finalizer checks coverage and calibration evidence,
-then writes `cases.csv`, `comparisons.csv`, and `index.json` beside the raw evidence.
+structured case failures. Persisted-input validation checks coverage and calibration
+evidence, then writes the derived `cases.csv` beside `raw.json`.
 
-After the results are reviewed, follow the
-[reporting instructions](reporting/README.md) to update the figures and README.
-The current reporting tools also read checked-in historical tables and paired
-release ratios. See [historical evidence](#historical-evidence) for the archived
-collection workflow.
+After reviewing results, follow [release reporting](#release-reporting) to
+publish the three recurring figure pairs. Archived figures use the pinned
+legacy tools described under [historical evidence](#historical-evidence).
 
 ## Configuration and environments
 
@@ -134,7 +132,7 @@ environments. For example, the test extra contains Stim:
 
 ```bash
 uv run --extra test clifft-bench run smoke --python .venv/bin/python \
-  --case stim --min-sample-seconds 0.01 --repetitions 1 --output /tmp/stim-smoke.json
+  --case stim --min-sample-seconds 0.01 --repetitions 1 --output-dir /tmp/stim-smoke
 ```
 
 Use a fresh output path: collection refuses to overwrite existing evidence.
@@ -165,21 +163,52 @@ preserve completed evidence when a case fails or times out. The wrapper also
 has an eight-hour outer deadline with a 30-second forced-kill fallback.
 
 The execution directory must be new, including after an incomplete attempt.
-Inspect `raw.json` and its failures before finalizing:
+Inspect `raw.json` and its failures before reporting:
 
 ```bash
 uv run clifft-bench validate "$HOME/clifft-bench-ec2-results/release-benchmark/raw.json"
-mkdir -p results/release-v1/release-benchmark/raw
-cp "$HOME/clifft-bench-ec2-results/release-benchmark/raw.json" \
-  results/release-v1/release-benchmark/raw/release-raw.json
-uv run clifft-bench finalize release-v1 --execution-id release-benchmark \
-  --output-dir results/release-v1/release-benchmark \
-  results/release-v1/release-benchmark/raw/release-raw.json
+mkdir -p results/release-v1
+cp -R "$HOME/clifft-bench-ec2-results/release-benchmark" results/release-v1/
+uv run clifft-bench report results/release-v1/release-benchmark --check
+uv run --extra report clifft-bench report results/release-v1/release-benchmark
 ```
 
 Review selected batches, search failures, correctness, memory evidence, and the
-comparison tables before committing results or publishing figures. Stop the
+report summary before committing results or publishing figures. Stop the
 instance promptly after retrieving the evidence.
+
+## Release reporting
+
+Each execution directory contains authoritative `raw.json` and derived `cases.csv`.
+The raw file records the selected cases, resolved campaign and comparisons, exact
+software and workload identities, host metadata, and sample/failure evidence.
+Reporting requires that directory alone, without today's configuration or earlier
+executions. To regenerate just the table:
+
+```bash
+uv run clifft-bench csv /path/to/execution/raw.json
+```
+
+`clifft-bench report EXECUTION_DIR --check` validates the evidence and prints a
+review summary without writing files or importing plotting dependencies. Without
+`--check`, install the `report` extra; the command regenerates `cases.csv` and
+writes `report/review.md` plus these light/dark PNG pairs:
+
+- `clifft-throughput-{light,dark}.png`: selected current Clifft configurations.
+- `simulator-throughput-{light,dark}.png`: declared tool comparisons, with bulk
+  and coverage groups kept separate.
+- `release-change-{light,dark}.png`: current/previous throughput on paired work.
+
+Use `--output-dir DIR` to choose the report destination. Review failure labels,
+missing baselines, exact versions, and both themes. Smoke figures are validation
+artifacts and must not replace published performance evidence. Existing published
+figures remain frozen until reviewed reference-host results replace them.
+
+For publication, copy the three pairs to `reporting/figures/web/` and the companion
+Clifft checkout's `docs/assets/performance/`. Update README and performance-guide
+links to the stable `release-change` filenames in the same publication change.
+Historical, QV, GPU, and adder-specific figures are separately maintained; they
+are not required inputs or outputs of a release report.
 
 ## Historical evidence
 
@@ -221,8 +250,8 @@ The maintained Tsim CPU backend uses its pinned source environment:
 ```bash
 uv run clifft-bench bootstrap tsim-smoke
 uv run clifft-bench run tsim-smoke --min-sample-seconds 0.01 --repetitions 1 \
-  --output /tmp/tsim-smoke.json
-uv run clifft-bench validate /tmp/tsim-smoke.json
+  --output-dir /tmp/tsim-smoke
+uv run clifft-bench validate /tmp/tsim-smoke/raw.json
 ```
 
 Workers apply thread restrictions before simulator imports. Linux CI also
@@ -237,8 +266,8 @@ cases and its 85q distillation control. Run on Linux to enforce the memory ceili
 
 ```bash
 uv run clifft-bench bootstrap tsim-pilot
-uv run clifft-bench run tsim-pilot --memory-limit-gib 12 --output /tmp/tsim-pilot.json
-uv run clifft-bench validate /tmp/tsim-pilot.json
+uv run clifft-bench run tsim-pilot --memory-limit-gib 12 --output-dir /tmp/tsim-pilot
+uv run clifft-bench validate /tmp/tsim-pilot/raw.json
 ```
 
 The pilot records diagnostics under the same bounded calibration policy as the

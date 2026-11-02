@@ -230,7 +230,7 @@ def ec2_workflow(root: Path, cloud: dict[str, str], run_id: str) -> dict[str, An
     os_release = platform.freedesktop_os_release()
     return {
         "provider": "aws-ec2-manual", "repository": remote,
-        "workflow": "scripts/ec2-run.sh", "run_id": run_id, "run_attempt": "1.1",
+        "workflow": "scripts/ec2-run.sh", "run_id": run_id,
         "ref": _run_text(["git", "branch", "--show-current"], root),
         "sha": _git_metadata(root)["commit"], "runner_name": cloud["instance_id"],
         "runner_os": "Linux", "image_os": f"{os_release['ID']}-{os_release['VERSION_ID']}",

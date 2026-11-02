@@ -6,8 +6,8 @@ import pytest
 from toml_helpers import write_toml
 
 from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
-from clifft_bench.config import load_suite
-from clifft_bench.schema import repository_root
+from clifft_bench.cli import main
+from clifft_bench.config import load_suite, read_toml, repository_root
 
 ROOT = repository_root()
 
@@ -350,20 +350,6 @@ def test_listing_does_not_import_simulator_packages():
     assert '"case_id"' in result.stdout
 
 
-@pytest.mark.parametrize("field", ["placements", "replicas_per_placement"])
-def test_collection_rejects_unsupported_counts(tmp_path, field):
-    from clifft_bench.config import read_toml
-
-    campaign = read_toml(ROOT / "campaigns/release-v1.toml")
-    campaign["collection"][field] = 2
-    campaign["workloads_file"] = str(ROOT / "workloads.toml")
-    campaign["software_file"] = str(ROOT / "software.toml")
-    path = tmp_path / "campaign.toml"
-    write_toml(path, campaign)
-    with pytest.raises(ValueError, match=f"collection.{field} must be 1"):
-        load_suite(path)
-
-
 @pytest.mark.parametrize("call_size", [17, 31])
 def test_groups_preserve_order_and_propagate_defaults_with_explicit_overrides(tmp_path, call_size):
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
@@ -450,5 +436,36 @@ def test_setup_listing_and_collection_share_default_campaign(monkeypatch):
     monkeypatch.setattr(cli, "_run", lambda args: campaigns.append(args.campaign) or 0)
     assert cli.main(["bootstrap"]) == 0
     assert cli.main(["list"]) == 0
-    assert cli.main(["run"]) == 0
+    assert cli.main(["run", "--output-dir", "unused"]) == 0
     assert campaigns[0].stem == campaigns[1] == campaigns[2]
+
+
+def test_seed_zero_is_rejected(tmp_path) -> None:
+    document = read_toml(repository_root() / "campaigns/smoke.toml")
+    document["seed"] = 0
+    path = tmp_path / "zero.toml"
+    write_toml(path, document)
+    assert main(["validate", str(path)]) == 2
+
+
+
+def test_validate_deep_checks_run_manifest_regardless_of_filename(tmp_path) -> None:
+    root = repository_root()
+    document = read_toml(root / "campaigns/smoke.toml")
+    document["workloads_file"] = str(root / "workloads.toml")
+    document["software_file"] = str(root / "software.toml")
+    document["cases"][0]["workload_id"] = "missing-workload"
+    path = tmp_path / "arbitrary-name.toml"
+    write_toml(path, document)
+    assert main(["validate", str(path)]) == 2
+
+
+def test_duplicate_variant_workload_is_rejected_before_collection(tmp_path):
+    _, _, _, run = _suite_with_local_workloads(tmp_path)
+    duplicate = copy.deepcopy(run["cases"][0])
+    duplicate["id"] += "-duplicate"
+    run["cases"].append(duplicate)
+    path = tmp_path / "duplicate.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match="duplicate variant/workload"):
+        load_suite(path)
