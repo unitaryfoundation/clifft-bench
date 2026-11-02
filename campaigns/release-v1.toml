@@ -69,8 +69,6 @@ implementation_id = "clifft-0.12.0rc1"
 workloads = "qec-and-adder"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -79,8 +77,6 @@ id = "clifft-current"
 implementation_id = "clifft-63cd885"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -122,8 +118,6 @@ id = "symft-current"
 implementation_id = "symft-0.1.1-c89b985"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -158,8 +152,6 @@ id = "stim-current"
 implementation_id = "stim-1.16.0"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -172,8 +164,6 @@ id = "xtim-current"
 implementation_id = "xtim-3.2.2-edf0dd0"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -196,8 +186,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 workloads = "qec-and-adder"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -208,8 +196,6 @@ id = "clifft-bulk"
 implementation_id = "clifft-63cd885"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -226,8 +212,6 @@ id = "symft-bulk"
 implementation_id = "symft-0.1.1-c89b985"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -242,8 +226,6 @@ id = "tsim-bulk"
 implementation_id = "tsim-0.1.5-e9406ed"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -263,8 +245,6 @@ implementation_id = "clifft-63cd885"
 workloads = "coverage"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -273,8 +253,6 @@ id = "symft-coverage"
 implementation_id = "symft-0.1.1-c89b985"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -304,8 +282,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 workloads = "coverage"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -316,8 +292,6 @@ id = "xtim-coverage"
 implementation_id = "xtim-3.2.2-edf0dd0"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]
@@ -333,8 +307,6 @@ id = "stim-coverage"
 implementation_id = "stim-1.16.0"
 
 [variants.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [variants.execution.options]

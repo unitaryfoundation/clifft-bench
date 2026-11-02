@@ -130,8 +130,6 @@ class XtimAdapter(Adapter):
 
         semantics = workload["semantics"]
         require_all_or_none(semantics, self.name)
-        if semantics["reference_convention"] != "raw-record-parity":
-            raise ValueError("xtim adapter requires raw-record-parity")
         chunk = int(execution["batch_size"])
         if chunk < 1:
             raise ValueError("xtim requires a positive batch_size for chunking")

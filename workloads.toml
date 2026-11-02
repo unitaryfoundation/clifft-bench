@@ -4,8 +4,6 @@ suite_version = "0.2.8"
 id = "msc-d3-inject-cultivate-p1e-3"
 family = "magic-state-cultivation"
 description = "Distance-3 injection and cultivation circuit with circuit-level Pauli noise."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
 shots_per_call = 100000
 
@@ -19,13 +17,8 @@ physical_error_rate = 0.001
 stages = ["injection", "cultivation"]
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 15
@@ -44,8 +37,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "msc-d5-inject-cultivate-p1e-3"
 family = "magic-state-cultivation"
 description = "Distance-5 injection and cultivation circuit with circuit-level Pauli noise."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
 shots_per_call = 20000
 
@@ -59,13 +50,8 @@ physical_error_rate = 0.001
 stages = ["injection", "cultivation"]
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 42
@@ -84,8 +70,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "surface-code-d7-r7-p1e-3"
 family = "surface-code-memory"
 description = "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds."
-dialect = "stim"
-angle_convention = "none"
 compatible_adapters = ["clifft", "symft", "stim", "xtim", "tsim"]
 shots_per_call = 100000
 
@@ -100,13 +84,8 @@ physical_error_rate = 0.001
 basis = "Z"
 
 [workloads.semantics]
-logical_work = "Sample the complete pure-Clifford circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 118
@@ -125,8 +104,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "distillation-color-code-85q-p5e-2"
 family = "magic-state-distillation"
 description = "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 100000
 
@@ -140,13 +117,8 @@ blocks = 5
 preparation_error_rate = 0.05
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count output-block observable 0 among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 85
@@ -165,8 +137,6 @@ notes = "Byte-for-byte copy of the paper workload; the benchmark contract select
 id = "coherent-surface-d3-r1-p1e-3-rz2e-2"
 family = "coherent-noise-surface-code"
 description = "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 
 [workloads.artifact]
@@ -180,13 +150,8 @@ physical_error_rate = 0.001
 coherent_z_rotation = 0.02
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 26
@@ -205,8 +170,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
 family = "coherent-noise-surface-code"
 description = "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 100000
 
@@ -221,13 +184,8 @@ physical_error_rate = 0.001
 coherent_z_rotation = 0.02
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 26
@@ -246,8 +204,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "coherent-surface-d5-r1-p1e-3-rz2e-2"
 family = "coherent-noise-surface-code"
 description = "Distance-5 surface-code circuit with one round of coherent Z over-rotation noise."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 
 [workloads.artifact]
@@ -261,13 +217,8 @@ physical_error_rate = 0.001
 coherent_z_rotation = 0.02
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 64
@@ -286,8 +237,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
 family = "coherent-noise-surface-code"
 description = "Distance-5 surface-code circuit with five rounds of coherent Z over-rotation noise."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 1
 
@@ -302,13 +251,8 @@ physical_error_rate = 0.001
 coherent_z_rotation = 0.02
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit once per attempted shot; discard any shot with a detector event and count observable-0 parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 64
@@ -327,8 +271,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "quantum-volume-q10-seed42"
 family = "quantum-volume"
 description = "Fixed depth-10 Quantum Volume circuit on 10 qubits, transpiled to CX and U3 gates."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 4096
 
@@ -343,13 +285,8 @@ generator_seed = 42
 qiskit_version = "2.5.1"
 
 [workloads.semantics]
-logical_work = "Execute the fixed circuit and terminal measurements once per attempted shot; count the final measured bit as observable 0."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 10
@@ -368,8 +305,6 @@ notes = "Generated with Qiskit 2.5.1 and seed 42; OBSERVABLE_INCLUDE(0) rec[-1] 
 id = "quantum-volume-q20-seed42"
 family = "quantum-volume"
 description = "Fixed depth-20 Quantum Volume circuit on 20 qubits, transpiled to CX and U3 gates."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 32
 
@@ -384,13 +319,8 @@ generator_seed = 42
 qiskit_version = "2.5.1"
 
 [workloads.semantics]
-logical_work = "Execute the fixed circuit and terminal measurements once per attempted shot; count the final measured bit as observable 0."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 20
@@ -409,8 +339,6 @@ notes = "Generated with Qiskit 2.5.1 and seed 42; OBSERVABLE_INCLUDE(0) rec[-1] 
 id = "draper-adder-m16-basis"
 family = "prepared-basis-arithmetic"
 description = "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise or postselection."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "tsim"]
 shots_per_call = 2048
 
@@ -429,13 +357,8 @@ qiskit_version = "2.5.2"
 optimization_level = 0
 
 [workloads.semantics]
-logical_work = "Execute the full prepared-basis-input adder once per attempted shot, preserving a and computing b=(a+b) mod 65536. Measure qubits 0..31 in order, with each 16-bit register little-endian; observable 0 is the raw parity of the two most significant sum bits and is zero. Reductions on these fixed basis inputs do not describe arbitrary superposition inputs."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch repeats the same prepared-input circuit with independent shots; every attempted shot remains one complete addition."
 
 [workloads.expected_metadata]
 num_qubits = 32
@@ -454,8 +377,6 @@ notes = "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0
 id = "distillation-15to1-rm15-p1e-3"
 family = "magic-state-distillation"
 description = "15-to-1 [[15,1,3]] Reed-Muller T-state distillation with T-gate Z noise and ideal output verification."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "none"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
 shots_per_call = 100000
 
@@ -470,13 +391,8 @@ noise_model = "independent Z after each physical T; ideal preparation, checks, a
 readout = "inverse transversal T followed by logical X parity"
 
 [workloads.semantics]
-logical_work = "Execute 15-to-1 Reed-Muller distillation and ideal inverse-T logical-X verification; discard any of four X-check detector events and count observable-0 raw parity among survivors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 15
@@ -495,8 +411,6 @@ notes = "Preserve all source instructions except the two PAULI_EXPECTATION decla
 id = "bt27-direct-x"
 family = "code-switching"
 description = "Noiseless BT27 code switching on 135 qubits with direct logical-X readout."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft"]
 shots_per_call = 2048
 
@@ -509,13 +423,8 @@ physical_error_rate = 0
 readout = "direct-X"
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit and count raw observable-0 ones; these stochastic outcomes are not logical errors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "Independent attempted shots."
 
 [workloads.expected_metadata]
 num_qubits = 135
@@ -534,8 +443,6 @@ notes = "Merlin generator 097380fac1a3968ca47925146e211fe990f4c396, p_phys=0, ta
 id = "bt81-direct-x"
 family = "code-switching"
 description = "Noiseless BT81 code switching on 405 qubits with direct logical-X readout."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft"]
 shots_per_call = 2048
 
@@ -548,13 +455,8 @@ physical_error_rate = 0
 readout = "direct-X"
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit and count raw observable-0 ones; these stochastic outcomes are not logical errors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "Independent attempted shots."
 
 [workloads.expected_metadata]
 num_qubits = 405
@@ -573,8 +475,6 @@ notes = "Unmodified direct-X fixture from the same Merlin generator as BT27; no 
 id = "reed-muller-measured"
 family = "reed-muller"
 description = "Measured 15-qubit Reed-Muller preparation, feedback, transversal T, and logical-X readout."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 100000
 
@@ -587,13 +487,8 @@ physical_error_rate = 0
 readout = "direct-X"
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit and count raw observable-0 ones; these stochastic outcomes are not logical errors."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "Independent attempted shots."
 
 [workloads.expected_metadata]
 num_qubits = 15
@@ -612,8 +507,6 @@ notes = "Remove EXP_VAL declarations; retain all preparation, feedback, T gates,
 id = "msc-d3-inject-cultivate-p1e-3-unselected"
 family = "magic-state-cultivation"
 description = "Distance-3 injection and cultivation circuit with circuit-level Pauli noise. Detector postselection disabled; retain every attempted shot."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
 shots_per_call = 100000
 
@@ -628,13 +521,8 @@ stages = ["injection", "cultivation"]
 postselection_pair = "msc-d3-inject-cultivate-p1e-3"
 
 [workloads.semantics]
-logical_work = "Execute the unchanged circuit without detector selection and count raw observable-0 ones over every attempted shot; no decoding or frame correction."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 15
@@ -653,8 +541,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "surface-code-d7-r7-p1e-3-unselected"
 family = "surface-code-memory"
 description = "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds. Detector postselection disabled; retain every attempted shot."
-dialect = "stim"
-angle_convention = "none"
 compatible_adapters = ["clifft", "symft", "stim", "xtim", "tsim"]
 shots_per_call = 100000
 
@@ -670,13 +556,8 @@ basis = "Z"
 postselection_pair = "surface-code-d7-r7-p1e-3"
 
 [workloads.semantics]
-logical_work = "Execute the unchanged circuit without detector selection and count raw observable-0 ones over every attempted shot; no decoding or frame correction."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 118
@@ -695,8 +576,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
 family = "coherent-noise-surface-code"
 description = "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise. Detector postselection disabled; retain every attempted shot."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 100000
 
@@ -712,13 +591,8 @@ coherent_z_rotation = 0.02
 postselection_pair = "coherent-surface-d3-r3-p1e-3-rz2e-2"
 
 [workloads.semantics]
-logical_work = "Execute the unchanged circuit without detector selection and count raw observable-0 ones over every attempted shot; no decoding or frame correction."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 26
@@ -737,8 +611,6 @@ notes = "Byte-for-byte copy of the paper workload."
 id = "msc-d7-proxy-unverified-p1e-3"
 family = "msc-performance-proxy"
 description = "Unverified distance-7 MSC-like performance proxy; not a validated cultivation protocol."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 20000
 
@@ -752,13 +624,8 @@ physical_error_rate = 0.001
 correctness_status = "unverified-performance-only"
 
 [workloads.semantics]
-logical_work = "Sample the unverified proxy, discard raw nonzero detector parity, and count raw observable-0 ones among survivors. Counts validate simulator agreement, not protocol fidelity or a distance-7 error rate."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = true
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 
 [workloads.expected_metadata]
 num_qubits = 76
@@ -777,8 +644,6 @@ notes = "Unmodified public performance proxy; source README explicitly disclaims
 id = "msc-full-d5-cultivation-selected-p1e-3"
 family = "magic-state-cultivation-full"
 description = "Full d5 T-state cultivation through d15 escape, selecting only the 107 cultivation-stage detectors."
-dialect = "clifft-symft-extended-stim"
-angle_convention = "half-turns"
 compatible_adapters = ["clifft", "tsim"]
 shots_per_call = 20000
 
@@ -796,13 +661,8 @@ basis = "Y"
 inject_style = "unitary"
 
 [workloads.semantics]
-logical_work = "Sample the complete circuit with cultivation-only raw-zero detector selection; count uncorrected raw observable-0 ones among survivors. No decoding, frame correction, expectation probes, or logical-error/fidelity estimation."
-output_contract = "aggregate detector-discard and logical-observable counts"
 observable_index = 0
-reference_convention = "raw-record-parity"
 postselect_all_detectors = false
-throughput_numerator = "attempted shots"
-batch_semantics = "A batch contains independent shots and changes throughput amortization only; every attempted shot remains one unit of logical work."
 postselection_detector_indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93, 94, 96, 97, 98, 99, 100, 101, 104, 105, 106, 108, 109, 110, 114, 118]
 
 [workloads.expected_metadata]

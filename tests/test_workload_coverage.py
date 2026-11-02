@@ -92,11 +92,11 @@ def test_partial_selection_counts_only_selected_raw_detector(adapter, batch, sel
     circuit.write_text("X_ERROR(0.25) 0\nM 0\nDETECTOR rec[-1]\n"
                        "X 1\nM 1\nDETECTOR rec[-1]\n"
                        "OBSERVABLE_INCLUDE(0) rec[-2] rec[-1]\n")
-    semantics = {"reference_convention": "raw-record-parity", "observable_index": 0,
+    semantics = {"observable_index": 0,
                  "postselect_all_detectors": False, "postselection_detector_indices": [selected]}
     prepared = load_adapter(adapter).prepare(
         artifact_path=circuit, workload={"semantics": semantics},
-        execution={"batch_enabled": batch > 1, "batch_size": batch,
+        execution={"batch_size": batch,
                    "options": {}}, seed=918,
     )
     prepared.begin_sample(919)
@@ -153,7 +153,7 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch):
     case = next(c for c in suite.cases if c.workload.id == "quantum-volume-q10-seed42")
     probability = qv_observable_probability(case.workload.artifact_path, 10)
     execution = copy.deepcopy(case.definition["execution"])
-    execution.update(batch_size=batch, batch_enabled=batch > 1,
+    execution.update(batch_size=batch,
                      options={"sample_chunk_shots": 2048} if adapter == "symft" else {})
     if adapter != "clifft":
         execution["options"].pop("scheduler", None)

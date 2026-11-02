@@ -86,11 +86,6 @@ class ClifftAdapter(Adapter):
         seed: int = 0,
     ) -> PreparedAdapter:
         self.validate_options(execution.get("options", {}))
-        reference_convention = str(workload["semantics"]["reference_convention"])
-        if reference_convention != "raw-record-parity":
-            raise ValueError(
-                f"Clifft adapter does not support reference convention {reference_convention!r}"
-            )
         import clifft
 
         scheduler_config = execution.get("options", {}).get("scheduler")
@@ -102,12 +97,10 @@ class ClifftAdapter(Adapter):
                 )
             scheduler = clifft.ActiveWidthSchedulePass(**scheduler_config)
 
-        batch_enabled = bool(execution["batch_enabled"])
         requested_batch_size = execution["batch_size"]
         if type(requested_batch_size) is not int or requested_batch_size < 1:
             raise ValueError("Clifft requires a positive integer batch size")
-        if not batch_enabled and requested_batch_size != 1:
-            raise ValueError("Clifft requires batch_size=1 when batching is disabled")
+        batch_enabled = requested_batch_size > 1
 
         text = artifact_path.read_text()
         parse_started = time.perf_counter()
@@ -134,7 +127,7 @@ class ClifftAdapter(Adapter):
             "version": str(clifft.version()),
             "threads": 1,
             "precision": "complex-fp64",
-            "reference_convention": reference_convention,
+            "reference_convention": "raw-record-parity",
             "batch_enabled": batch_enabled,
             "effective_batch_size": requested_batch_size,
             "batch_control": "explicit",

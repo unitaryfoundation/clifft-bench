@@ -26,7 +26,7 @@ does not affect compatibility. Clifft and Tsim implement subsets;
 other adapters explicitly reject them. Tsim's subset-column materialization
 and count reduction are included in the sampling time.
 
-Every workload declares `reference_convention` as `raw-record-parity`.
+All supported workloads use raw-record parity; this is a fixed harness contract.
 Detector events and logical errors are the XOR parity of their declared
 measurement records without a noiseless-reference correction. Clifft returns
 native aggregate counts. SymFT uses native counts for selected or detector-free
@@ -156,8 +156,9 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-A throughput case may set `batch_size` to `"calibrate"`. All new calibrated
-runs use the harness policy `bounded-v3`; configuration does not select a policy.
+All cases measure throughput. A case sets `batch_size` to a positive integer
+(`1` selects scalar execution) or `"calibrate"`; batching follows the selected
+size. Calibrated runs use the harness policy `bounded-v3`; configuration does not select a policy.
 The candidate pools are:
 
 - Clifft/SymFT: `1, 32, 64, 256, 1024, 2048`, restricted to `shots_per_call`.
@@ -371,8 +372,8 @@ separate Git histories, so the two snapshots are identified by repository and
 commit rather than treated as an ancestor/descendant update.
 
 Each implementation records its exact package version, source commit, optional
-release tag, release time, build features, and dependency versions. An optional
-`display_version` provides the intended public release label for plots and
+release tag, build settings, actual worker interpreter, and dependency versions.
+An optional `display_version` provides the intended public release label for plots and
 prose. It has no role in installation or runtime validation: a `0.10.0rc1`
 candidate built from `v0.10.0rc1` can display as `0.10.0`, while the raw result
 continues to identify and verify the RC version, tag, and commit. When omitted,
@@ -508,8 +509,9 @@ this table from raw evidence, so a stale CSV cannot change a performance claim.
 There is no separately stored comparison table, execution index, or release chain.
 
 Paired ratios use candidate median divided by baseline median. Pairing requires
-matching workload digest and selection/output semantics, call size, timing mode,
-measurement settings, and resource limits. Internal batches may differ. Declared
+matching workload digest and selection semantics, call size, measurement settings,
+and resource limits. The raw format fixes aggregate counts, raw-record parity,
+and attempted-shot throughput for every case. Internal batches may differ. Declared
 comparison groups keep short calls, bulk calls, and supplemental coverage separate.
 Only successful compatible pairs receive ratios. Missing expected case records
 are errors; recorded failures, unsupported adapters, and intentionally unmeasured

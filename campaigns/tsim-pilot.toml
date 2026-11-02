@@ -22,8 +22,6 @@ workload_id = "distillation-color-code-85q-p5e-2"
 implementation_id = "clifft-63cd885"
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -34,8 +32,6 @@ workload_id = "distillation-color-code-85q-p5e-2"
 implementation_id = "symft-0.1.1-c89b985"
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -48,8 +44,6 @@ workload_id = "distillation-color-code-85q-p5e-2"
 implementation_id = "tsim-0.1.5-e9406ed"
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -63,8 +57,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 256
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -76,8 +68,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 256
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -91,8 +81,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 256
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -106,8 +94,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 100000
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -119,8 +105,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 100000
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]

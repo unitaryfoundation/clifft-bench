@@ -7,7 +7,9 @@ import math
 import os
 import queue
 import re
+import signal
 import subprocess
+import sys
 import threading
 import time
 import uuid
@@ -144,11 +146,14 @@ class WorkerClient:
             timeout_seconds=timeout_seconds + 5,
         )
 
-    def close(self) -> None:
+    def close(self, *, interrupted: bool = False) -> None:
+        if interrupted:
+            self._stop()
+            return
         if self.process.poll() is None:
             try:
                 self.request({"command": "close"}, timeout_seconds=5)
-            except (BrokenPipeError, WorkerError, json.JSONDecodeError):
+            except (OSError, WorkerError, json.JSONDecodeError):
                 self._stop()
         try:
             self.process.wait(timeout=5)
@@ -182,7 +187,7 @@ def _workload_record(case: Case) -> dict[str, Any]:
     }
 
 
-def _simulator_record(case: Case) -> dict[str, Any]:
+def _simulator_record(case: Case, python_executable: str | None = None) -> dict[str, Any]:
     definition = case.implementation.definition
     record = {
         "implementation_id": definition["id"],
@@ -190,11 +195,9 @@ def _simulator_record(case: Case) -> dict[str, Any]:
         "version": definition["version"],
         "display_version": definition.get("display_version", definition["version"]),
         "commit_sha": definition["commit_sha"],
-        "commit_datetime": definition["commit_datetime"],
-        "release_datetime": definition["release_datetime"],
         "source_url": definition["source_url"],
         "adapter": definition["adapter"],
-        "python_executable": case.implementation.python_executable(),
+        "python_executable": python_executable or case.implementation.python_executable(),
         "build": definition["build"],
         "dependencies": {},
     }
@@ -207,8 +210,10 @@ def _new_case_result(
     case: Case,
     measurement: dict[str, Any],
     memory_limit_gib: float | None,
+    python_executable: str | None = None,
 ) -> dict[str, Any]:
     execution = dict(case.definition["execution"])
+    execution["batch_enabled"] = execution["batch_size"] != 1
     if execution["batch_size"] == "calibrate":
         execution["tuning_policy"] = CALIBRATION_POLICY
     execution.update(
@@ -231,7 +236,7 @@ def _new_case_result(
         "variant_id": case.definition["variant_id"],
         "status": "running",
         "workload": _workload_record(case),
-        "simulator": _simulator_record(case),
+        "simulator": _simulator_record(case, python_executable),
         "execution": execution,
         "setup": None,
         "warmup": None,
@@ -378,12 +383,17 @@ def run_suite(
         },
         "runner": collect_runner_metadata(root, cloud=cloud),
         "cases": [
-            _new_case_result(case, measurement, memory_limit_gib) for case in cases
+            _new_case_result(case, measurement, memory_limit_gib, python_executable)
+            for case in cases
         ],
     }
     output_dir.mkdir(parents=True, exist_ok=False)
     write_json(output_path, document)
 
+    def terminate(signum, frame):
+        raise SystemExit(128 + signum)
+
+    previous_sigterm = signal.signal(signal.SIGTERM, terminate)
     try:
         sequence_index = 0
         for case_index, (case, result) in enumerate(
@@ -505,7 +515,13 @@ def run_suite(
                 write_json(output_path, document)
             finally:
                 if client is not None:
-                    client.close()
+                    interrupted = sys.exception()
+                    try:
+                        client.close(interrupted=interrupted is not None)
+                    except Exception as cleanup_error:  # noqa: BLE001
+                        if interrupted is None:
+                            raise
+                        interrupted.add_note(f"worker cleanup failed: {cleanup_error}")
     except BaseException as error:
         for result in document["cases"]:
             if result["status"] == "running":
@@ -518,7 +534,15 @@ def run_suite(
                 }
         raise
     finally:
-        document["run"]["finished_at"] = utc_now()
-        write_json(output_path, document)
-        export_csv(document, output_dir / "cases.csv")
+        interrupted = sys.exception()
+        try:
+            document["run"]["finished_at"] = utc_now()
+            write_json(output_path, document)
+            export_csv(document, output_dir / "cases.csv")
+        except Exception as export_error:  # noqa: BLE001
+            if interrupted is None:
+                raise
+            interrupted.add_note(f"evidence finalization failed: {export_error}")
+        finally:
+            signal.signal(signal.SIGTERM, previous_sigterm)
     return document

@@ -14,11 +14,10 @@ from clifft_bench.adapters.clifft import ClifftAdapter
 from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
-EXECUTION = {"batch_enabled": True, "batch_size": 32, "options": {}}
+EXECUTION = {"batch_size": 32, "options": {}}
 SEMANTICS = {
     "observable_index": 0,
     "postselect_all_detectors": True,
-    "reference_convention": "raw-record-parity",
 }
 
 

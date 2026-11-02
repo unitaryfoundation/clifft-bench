@@ -84,8 +84,6 @@ class StimAdapter(Adapter):
         import stim
 
         require_all_or_none(workload["semantics"], self.name)
-        if workload["semantics"]["reference_convention"] != "raw-record-parity":
-            raise ValueError("Stim adapter requires raw-record-parity")
         started = time.perf_counter()
         circuit = stim.Circuit(artifact_path.read_text())
         parse_seconds = time.perf_counter() - started

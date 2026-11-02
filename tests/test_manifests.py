@@ -122,7 +122,6 @@ def test_smoke_suite_exercises_full_batch_calibration_sweep(adapter: str) -> Non
         case
         for case in smoke.cases
         if case.implementation.definition["adapter"] == adapter
-        and case.definition["execution"]["mode"] == "throughput"
         and case.definition["execution"]["batch_size"] == "calibrate"
     ]
 
@@ -131,24 +130,6 @@ def test_smoke_suite_exercises_full_batch_calibration_sweep(adapter: str) -> Non
         case.definition["shots_per_call"] >= max(BATCH_CALIBRATION_CANDIDATES)
         for case in calibrated
     )
-
-
-def test_batch_calibration_requires_batch_enabled_throughput_case(tmp_path: Path) -> None:
-    suite = load_suite(ROOT / "campaigns/smoke.toml")
-    run = copy.deepcopy(suite.run)
-    target = next(
-        case
-        for case in run["cases"]
-        if case["execution"]["batch_size"] == "calibrate"
-    )
-    target["execution"]["batch_enabled"] = False
-    run["workloads_file"] = str(suite.workloads_path)
-    run["software_file"] = str(suite.software_path)
-    run_path = tmp_path / "run.toml"
-    write_toml(run_path, run)
-
-    with pytest.raises(ValueError, match="batching disabled"):
-        load_suite(run_path)
 
 
 def test_official_implementations_require_environment_locks(tmp_path):

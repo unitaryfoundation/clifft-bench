@@ -104,7 +104,6 @@ def _list(campaign: str, as_json: bool) -> int:
                 "workload": case.workload.id,
                 "implementation": case.implementation.id,
                 "adapter": case.implementation.definition["adapter"],
-                "mode": case.definition["execution"]["mode"],
                 "batch_size": case.definition["execution"]["batch_size"],
                 "shots_per_call": case.definition["shots_per_call"],
             }
@@ -115,7 +114,7 @@ def _list(campaign: str, as_json: bool) -> int:
         for row in rows:
             print(
                 f"{row['case_id']}: variant={row['variant']} workload={row['workload']} "
-                f"implementation={row['implementation']} mode={row['mode']} "
+                f"implementation={row['implementation']} "
                 f"batch={row['batch_size']} shots/call={row['shots_per_call']}"
             )
     return 0

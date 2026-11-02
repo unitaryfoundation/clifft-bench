@@ -15,7 +15,6 @@ from clifft_bench.config import load_suite
 ROOT = Path(__file__).resolve().parents[1]
 SEMANTICS = {
     "observable_index": 0, "postselect_all_detectors": True,
-    "reference_convention": "raw-record-parity",
 }
 
 

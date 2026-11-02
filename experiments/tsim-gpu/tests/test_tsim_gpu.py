@@ -72,9 +72,6 @@ def test_corpus_identity_and_historic_failures_are_retained():
     assert set(corpus) == set(WORKLOADS)
     assert "msc-d5-inject-cultivate-p1e-3" in corpus
     assert "coherent-surface-d5-r5-p1e-3-rz2e-2" in corpus
-    assert all(
-        w["semantics"]["reference_convention"] == "raw-record-parity" for w in corpus.values()
-    )
 
 
 def test_strategy_selection_uses_probes_not_final_samples():

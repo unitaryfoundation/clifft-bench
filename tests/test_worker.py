@@ -79,7 +79,6 @@ class _CalibrationAdapter:
     def prepare(self, *, artifact_path, workload, execution, seed=0):
         del artifact_path, workload
         batch_size = int(execution["batch_size"])
-        assert execution["batch_enabled"] is (batch_size > 1)
         self.prepared_batch_sizes.append(batch_size)
         self.prepared_seeds.append(seed)
         return SimpleNamespace(
@@ -104,8 +103,6 @@ def test_batch_calibration_selects_best_median_and_records_probes(monkeypatch) -
         artifact_path=SimpleNamespace(),
         workload={"semantics": {"postselect_all_detectors": False}},
         execution={
-            "mode": "throughput",
-            "batch_enabled": True,
             "batch_size": "calibrate",
             "options": {},
         },
@@ -137,8 +134,6 @@ def test_batch_calibration_breaks_throughput_ties_toward_smaller_size(
         artifact_path=SimpleNamespace(),
         workload={"semantics": {"postselect_all_detectors": False}},
         execution={
-            "mode": "throughput",
-            "batch_enabled": True,
             "batch_size": "calibrate",
             "options": {},
         },
@@ -174,8 +169,6 @@ def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
         artifact_path=SimpleNamespace(),
         workload={"semantics": {"postselect_all_detectors": False}},
         execution={
-            "mode": "throughput",
-            "batch_enabled": True,
             "batch_size": "calibrate",
             "options": {},
         },
@@ -270,7 +263,7 @@ def test_calibration_releases_native_state_before_preparing_another_trial(monkey
     prepared = worker.calibrate_batch_size(
         adapter, artifact_path=None,
         workload={"semantics": {"postselect_all_detectors": False}},
-        execution={"batch_size": "calibrate", "batch_enabled": True},
+        execution={"batch_size": "calibrate"},
         shots_per_call=256, seed=10,
     )
     assert adapter.batches == [1, 32, 64, 256, 1]
@@ -307,7 +300,7 @@ def test_bounded_tuning_stops_between_complete_candidates(monkeypatch):
     prepared = worker.calibrate_batch_size(
         adapter, artifact_path=SimpleNamespace(),
         workload={"semantics": {"postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate"}, shots_per_call=2048, seed=10,
+        execution={"batch_size": "calibrate"}, shots_per_call=2048, seed=10,
     )
     record = prepared.runtime_metadata["batch_calibration"]
     assert adapter.prepared_batch_sizes == [1, 1]
@@ -331,7 +324,7 @@ def test_calibration_retains_completed_probes_when_a_later_probe_fails(monkeypat
     prepared = worker.calibrate_batch_size(
         adapter, artifact_path=None,
         workload={"semantics": {"postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate"},
+        execution={"batch_size": "calibrate"},
         shots_per_call=32, seed=10,
     )
     failed = prepared.runtime_metadata["batch_calibration"]["results"][1]
@@ -352,7 +345,7 @@ def test_calibration_does_not_swallow_the_hard_preparation_deadline(monkeypatch)
         worker.calibrate_batch_size(
             adapter, artifact_path=None,
             workload={"semantics": {"postselect_all_detectors": False}},
-            execution={"batch_enabled": True, "batch_size": "calibrate"},
+            execution={"batch_size": "calibrate"},
             shots_per_call=64, seed=10,
         )
     assert adapter.prepared_batch_sizes == [1]
@@ -372,7 +365,7 @@ def test_calibration_failure_keeps_search_evidence(monkeypatch, final_prepare_fa
         worker.calibrate_batch_size(
             Adapter(), artifact_path=None,
             workload={"semantics": {"postselect_all_detectors": False}},
-            execution={"batch_enabled": True, "batch_size": "calibrate"},
+            execution={"batch_size": "calibrate"},
             shots_per_call=32, seed=10,
         )
     record = caught.value.record
@@ -402,7 +395,7 @@ def test_worker_returns_calibration_failures_with_their_evidence(monkeypatch):
     monkeypatch.setattr(worker.sys, "stdin", io.StringIO(json.dumps({
         "command": "prepare", "adapter": "clifft", "artifact_path": "unused.stim",
         "workload": {"semantics": {"postselect_all_detectors": False}},
-        "execution": {"batch_enabled": True, "batch_size": "calibrate"},
+        "execution": {"batch_size": "calibrate"},
         "shots_per_call": 32, "seed": 10, "sampling_seed": 7, "timeout_seconds": 5,
         "expected_commit": "test", "source_url": "test",
     }) + "\n"))

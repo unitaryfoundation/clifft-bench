@@ -112,3 +112,61 @@ def test_render_all_themes_and_regenerate_stale_csv(raw_result, tmp_path, all_fa
     assert ("1.25×" in summary) is not all_failed
     if all_failed:
         assert "candidate: error" in summary
+
+
+@pytest.mark.parametrize("workloads", [1, 12])
+def test_compact_figures_separate_legends_and_use_ratio_ticks(
+    raw_result, tmp_path, monkeypatch, workloads,
+):
+    pytest.importorskip("matplotlib")
+    from matplotlib.figure import Figure
+
+    previous, current = raw_result["cases"]
+    peer = copy.deepcopy(current)
+    peer.update(case_id="peer", variant_id="peer")
+    peer["simulator"].update(implementation_id="peer", adapter="symft", name="SymFT")
+    peer_contract = copy.deepcopy(raw_result["campaign"]["cases"][1])
+    peer_contract.update(id="peer", variant_id="peer", implementation_id="peer")
+    originals = [previous, current, peer]
+    contracts = [*raw_result["campaign"]["cases"], peer_contract]
+    raw_result["cases"], raw_result["campaign"]["cases"] = [], []
+    for index in range(workloads):
+        for original, contract in zip(originals, contracts, strict=True):
+            case, declared = copy.deepcopy(original), copy.deepcopy(contract)
+            case["case_id"] += f"-{index}"
+            case["workload"]["id"] = f"representative-workload-{index}"
+            declared.update(id=case["case_id"], workload_id=case["workload"]["id"])
+            if case["variant_id"] == "current":
+                for sample in case["samples"]:
+                    rate = 98 if index % 2 == 0 else 102
+                    sample["throughput_attempted_shots_per_second"] = rate
+                    sample["duration_seconds"] = sample["attempted_shots"] / rate
+            raw_result["cases"].append(case)
+            raw_result["campaign"]["cases"].append(declared)
+    raw_result["campaign"]["comparisons"].append(
+        {"id": "peers", "baseline_variant": "current", "candidate_variants": ["peer"]}
+    )
+    savefig = Figure.savefig
+    inspected = []
+
+    def check_layout(figure, path, **kwargs):
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        axis = figure.axes[0]
+        legend = axis.get_legend()
+        if legend:
+            assert legend.get_window_extent(renderer).y1 < (
+                axis.xaxis.label.get_window_extent(renderer).y0 - figure.dpi * 0.1
+            )
+        if path.name.startswith("release-change"):
+            low, high = axis.get_xlim()
+            assert 0.5 < low < 0.98 < 1 < high < 2
+            labels = axis.get_xticklabels() + axis.get_xticklabels(minor=True)
+            assert all(label.get_text().endswith("×") for label in labels if label.get_text())
+        inspected.append(path.name)
+        savefig(figure, path, **kwargs)
+
+    monkeypatch.setattr(Figure, "savefig", check_layout)
+    write_json(tmp_path / "raw.json", raw_result)
+    report_execution(tmp_path)
+    assert len(inspected) == 6

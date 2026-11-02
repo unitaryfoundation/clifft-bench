@@ -20,13 +20,11 @@ def _prepare(
     artifact_path.write_text(circuit)
     if adapter_name == "clifft":
         execution = {
-            "batch_enabled": False,
             "batch_size": 1,
             "options": {},
         }
     else:
         execution = {
-            "batch_enabled": True,
             "batch_size": 32,
             "options": {"sample_chunk_shots": 32} if adapter_name == "symft" else {},
         }
@@ -38,7 +36,6 @@ def _prepare(
             "semantics": {
                 "observable_index": 0,
                 "postselect_all_detectors": postselect,
-                "reference_convention": "raw-record-parity",
             }
         },
         execution=execution,
@@ -117,10 +114,9 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
         artifact_path=artifact,
         workload={"semantics": {
             "observable_index": 0, "postselect_all_detectors": True,
-            "reference_convention": "raw-record-parity",
         }},
         execution={
-            "batch_enabled": batch_size > 1, "batch_size": batch_size,
+            "batch_size": batch_size,
             "options": {"scheduler": options},
         },
     )
@@ -211,9 +207,8 @@ def test_bounded_calibration_prepares_a_fixed_usable_sampler(adapter_name, tmp_p
     monkeypatch.setattr(worker, "BATCH_CALIBRATION_SECONDS", 0.01)
     prepared = worker.calibrate_batch_size(
         load_adapter(adapter_name), artifact_path=path,
-        workload={"semantics": {"reference_convention": "raw-record-parity",
-                                "observable_index": 0, "postselect_all_detectors": False}},
-        execution={"batch_enabled": True, "batch_size": "calibrate", "options": {}},
+        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": False}},
+        execution={"batch_size": "calibrate", "options": {}},
         shots_per_call=32, seed=10, sampling_seed=7,
     )
     record = prepared.runtime_metadata["batch_calibration"]

@@ -84,8 +84,6 @@ def workloads() -> dict:
         artifact = (manifest.parent / workload["artifact"]["path"]).resolve()
         if file_digest(artifact) != workload["artifact"]["sha256"]:
             raise ValueError(f"circuit digest mismatch: {workload['id']}")
-        if workload["semantics"]["reference_convention"] != "raw-record-parity":
-            raise ValueError("unsupported reference convention")
         selected[workload["id"]] = {**workload, "artifact_path": str(artifact)}
     if set(selected) != set(WORKLOADS):
         raise ValueError("incomplete QEC corpus")

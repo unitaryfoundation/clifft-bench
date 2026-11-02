@@ -66,8 +66,8 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
     if any(not 0 <= record < circuit.num_measurements for record in occurrences):
         raise ValueError("SymFT observable references a measurement outside the circuit")
     record_indices = sorted(record for record, count in occurrences.items() if count % 2)
-    batch = bool(execution["batch_enabled"])
     batch_size = int(execution["batch_size"])
+    batch = batch_size > 1
     chunk = int(execution.get("options", {}).get("sample_chunk_shots", 0))
     if batch_size < 1 or chunk < 0:
         raise ValueError("SymFT requires a positive batch size and nonnegative sample chunk")
@@ -133,11 +133,6 @@ class SymftAdapter(Adapter):
     ) -> PreparedAdapter:
         self.validate_options(execution.get("options", {}))
         require_all_or_none(workload["semantics"], self.name)
-        reference_convention = str(workload["semantics"]["reference_convention"])
-        if reference_convention != "raw-record-parity":
-            raise ValueError(
-                f"SymFT adapter does not support reference convention {reference_convention!r}"
-            )
         import symft
 
         circuit = symft.Circuit(path=artifact_path)
@@ -145,11 +140,13 @@ class SymftAdapter(Adapter):
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
         if not postselect and circuit.num_detectors:
             return _prepare_unselected_records(circuit, execution, observable, symft)
+        requested_batch_size = int(execution["batch_size"])
+        batch = requested_batch_size > 1
         sampler = circuit.compile_counts_sampler(
-            batch=bool(execution["batch_enabled"]),
+            batch=batch,
             observable=observable,
             postselect_detectors=postselect,
-            batch_size=int(execution["batch_size"]),
+            batch_size=requested_batch_size,
             sample_chunk_shots=int(execution.get("options", {}).get("sample_chunk_shots", 0)),
             threads=1,
             cuda=False,
@@ -157,14 +154,13 @@ class SymftAdapter(Adapter):
         info = dict(sampler.info)
         if int(info["threads"]) != 1:
             raise RuntimeError(f"SymFT planned more than one thread: {info}")
-        expected_backend = "batch" if execution["batch_enabled"] else "single"
+        expected_backend = "batch" if batch else "single"
         if str(info["backend"]) != expected_backend:
             raise RuntimeError(
                 f"SymFT backend {info['backend']!r} does not match {expected_backend!r}"
             )
-        requested_batch_size = int(execution["batch_size"])
         native_batch_size = int(info["batch_size"])
-        if execution["batch_enabled"] and native_batch_size != requested_batch_size:
+        if batch and native_batch_size != requested_batch_size:
             raise RuntimeError(
                 f"SymFT batch size {info['batch_size']!r} does not match "
                 f"requested {requested_batch_size}"
@@ -184,9 +180,9 @@ class SymftAdapter(Adapter):
             "version": str(symft.__version__),
             "threads": int(info["threads"]),
             "precision": "complex-fp64",
-            "reference_convention": reference_convention,
-            "batch_enabled": bool(execution["batch_enabled"]),
-            "effective_batch_size": native_batch_size if execution["batch_enabled"] else 1,
+            "reference_convention": "raw-record-parity",
+            "batch_enabled": batch,
+            "effective_batch_size": native_batch_size if batch else 1,
             "sample_chunk_shots": int(info["sample_chunk_shots"]),
             "num_qubits": int(info["num_qubits"]),
             "num_measurements": int(info["num_measurements"]),

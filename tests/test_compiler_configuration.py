@@ -59,7 +59,7 @@ def test_requested_scheduler_is_rejected_on_older_clifft(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="does not support active-width scheduling"):
         ClifftAdapter().prepare(
             artifact_path=tmp_path / "unused.stim",
-            workload={"semantics": {"reference_convention": "raw-record-parity"}},
+            workload={"semantics": {}},
             execution={"options": {"scheduler": _scheduler_options()}},
         )
 

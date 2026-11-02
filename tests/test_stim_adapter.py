@@ -19,7 +19,6 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
         artifact_path=path,
         workload={
             "semantics": {
-                "reference_convention": "raw-record-parity",
                 "observable_index": observable,
                 "postselect_all_detectors": postselect,
             }
@@ -107,7 +106,6 @@ def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
             artifact_path=artifact,
             workload=workload,
             execution={
-                "batch_enabled": True,
                 "batch_size": 1024,
                 "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {},
             },

@@ -121,12 +121,13 @@ The smoke profile uses small fixed calls and runs every declared combination,
 including full d5 and QV20:
 
 ```bash
+clifft-bench bootstrap campaigns/coverage-smoke.toml
 clifft-bench run campaigns/coverage-smoke.toml \
   --memory-limit-gib 12 --output-dir /tmp/coverage-smoke
 clifft-bench validate /tmp/coverage-smoke/raw.json
 ```
 
-Set the implementation-specific Python variables as for the release campaign,
-or use `--case clifft`, `--case tsim`, etc. in the respective environment.
+For a single local environment, pass its interpreter with `--python` and
+select the matching cases with `--case clifft`, `--case tsim`, etc.
 Linux CI runs these cases under the actual address-space ceiling. Official
 sampling uses the full EC2 release sweep.

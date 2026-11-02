@@ -24,7 +24,7 @@ def _prepare(adapter, tmp_path, text):
     path.write_text(text)
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases if c.workload.id == WORKLOAD_ID)
-    execution = {"batch_enabled": True, "batch_size": 1024,
+    execution = {"batch_size": 1024,
                  "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {}}
     if adapter == "clifft" and hasattr(module, "ActiveWidthSchedulePass"):
         execution["options"]["scheduler"] = (

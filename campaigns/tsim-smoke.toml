@@ -23,8 +23,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 1024
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -38,8 +36,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 1025
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 1024
 
 [cases.execution.options]
@@ -53,8 +49,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 257
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 256
 
 [cases.execution.options]
@@ -68,8 +62,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]

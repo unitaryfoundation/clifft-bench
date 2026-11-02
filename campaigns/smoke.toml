@@ -23,8 +23,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 10000
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 1024
 
 [cases.execution.options]
@@ -37,8 +35,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 10000
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 1024
 
 [cases.execution.options]
@@ -52,8 +48,6 @@ implementation_id = "xtim-3.2.2-edf0dd0"
 shots_per_call = 10000
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 1024
 
 [cases.execution.options]
@@ -66,8 +60,6 @@ implementation_id = "xtim-3.2.2-edf0dd0"
 shots_per_call = 10000
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -80,8 +72,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 2
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = false
 batch_size = 1
 
 [cases.execution.options]
@@ -94,8 +84,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -107,8 +95,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -122,8 +108,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 8
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = false
 batch_size = 1
 options_preset = "clifft-scheduled"
 
@@ -135,8 +119,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 8
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -150,8 +132,6 @@ implementation_id = "stim-1.16.0"
 shots_per_call = 4096
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]
@@ -164,8 +144,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -177,8 +155,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -190,8 +166,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
@@ -203,8 +177,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 2048
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = "calibrate"
 
 [cases.execution.options]

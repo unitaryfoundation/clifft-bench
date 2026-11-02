@@ -104,7 +104,7 @@ def test_logical_reference_probabilities():
 def test_measured_reed_muller_sampling(adapter, batch_size):
     pytest.importorskip(adapter)
     case = _case("reed-muller-measured")
-    execution = {"batch_enabled": True, "batch_size": batch_size,
+    execution = {"batch_size": batch_size,
                  "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {}}
     if adapter == "clifft":
         execution["options"]["scheduler"] = case.definition["execution"]["options"]["scheduler"]

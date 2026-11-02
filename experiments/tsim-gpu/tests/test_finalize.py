@@ -14,7 +14,7 @@ def spool(tmp_path, *, successful=False):
     workload = {
         "id": "circuit",
         "artifact": {"sha256": "a" * 64},
-        "semantics": {"reference_convention": "raw-record-parity"},
+        "semantics": {},
     }
     metadata = {
         "hardware": {"source_dirty": False},

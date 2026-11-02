@@ -53,7 +53,7 @@ class FixtureAdapter(Adapter):
             "version": "1.0.0",
             "threads": 1,
             "precision": "integer",
-            "batch_enabled": bool(execution["batch_enabled"]),
+            "batch_enabled": int(execution["batch_size"]) > 1,
             "effective_batch_size": int(execution["batch_size"]),
             **workload["expected_metadata"],
         }

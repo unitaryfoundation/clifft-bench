@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from typing import Any
 
@@ -152,7 +153,7 @@ def render(report: dict, output_dir: Path) -> list[Path]:
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import FuncFormatter
+    from matplotlib.ticker import FuncFormatter, NullFormatter
 
     output_dir.mkdir(parents=True, exist_ok=True)
     outputs = []
@@ -316,27 +317,38 @@ def render(report: dict, output_dir: Path) -> list[Path]:
                     )
                 if kind == "release-change":
                     axis.axvline(1, color=foreground, linewidth=0.8, alpha=0.6)
-                    axis.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x:g}×"))
+                    formatter = FuncFormatter(lambda x, pos: f"{x:g}×")
+                    axis.xaxis.set_major_formatter(formatter)
+                    axis.xaxis.set_minor_formatter(NullFormatter())
+                    # Include parity even when every measured ratio is on the same side of 1×.
+                    ratios = [1.0, *(p["ratio"] for p in entries if p["ratio"] is not None)]
+                    low, high = math.log(min(ratios)), math.log(max(ratios))
+                    padding = max((high - low) * 0.25, math.log(1.01))
+                    axis.set_xlim(math.exp(low - padding), math.exp(high + padding))
                     axis.set_xlabel("Current / previous throughput · above 1× is faster")
                 else:
                     axis.set_xlabel(
                         "Attempted shots per second · logarithmic scale\n"
                         "n/a = unsupported · unmeasured = not selected"
                     )
-                    if legend:
-                        axis.legend(
-                            loc="upper center",
-                            bbox_to_anchor=(0.5, -0.08),
-                            ncol=min(3, len(legend)),
-                            frameon=False,
-                            labelcolor=foreground,
-                        )
                 axis.grid(axis="x", color=grid, alpha=0.7)
                 axis.set_axisbelow(True)
                 axis.tick_params(axis="y", length=0)
                 for spine in axis.spines.values():
                     spine.set_visible(False)
                 figure.subplots_adjust(left=0.39, right=0.88, top=0.84, bottom=0.19)
+                if kind != "release-change" and legend:
+                    # Anchor below the rendered label in physical space, independent of row count.
+                    figure.canvas.draw()
+                    label = axis.xaxis.label.get_window_extent(figure.canvas.get_renderer())
+                    anchor = figure.transFigure.inverted().transform(
+                        (axis.bbox.x0 + axis.bbox.width / 2, label.y0 - figure.dpi * 0.12)
+                    )
+                    axis.legend(
+                        loc="upper center", bbox_to_anchor=anchor,
+                        bbox_transform=figure.transFigure, borderaxespad=0,
+                        ncol=min(3, len(legend)), frameon=False, labelcolor=foreground,
+                    )
                 path = output_dir / f"{kind}-{theme}.png"
                 figure.savefig(path, dpi=160, bbox_inches="tight")
                 plt.close(figure)

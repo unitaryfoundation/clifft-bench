@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
+import os
+import signal
+import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +20,7 @@ from clifft_bench.runner import (
     SEED_REPETITION_STRIDE,
     _effective_batch_size,
     _record_runtime_execution,
+    _simulator_record,
     run_suite,
 )
 
@@ -41,17 +47,10 @@ def _write_fixture_suite(
                 "family": "test",
                 "description": "Deterministic harness fixture.",
                 "artifact": {"path": "tiny.stim", "sha256": digest},
-                "dialect": "stim",
-                "angle_convention": "none",
                 "parameters": parameters or {},
                 "semantics": {
-                    "logical_work": "One deterministic fixture update.",
-                    "output_contract": "aggregate detector-discard and logical-observable counts",
                     "observable_index": 0,
                     "postselect_all_detectors": False,
-                    "reference_convention": "raw-record-parity",
-                    "throughput_numerator": "attempted shots",
-                    "batch_semantics": "Fixture batch semantics.",
                 },
                 "expected_metadata": {
                     "num_qubits": 1,
@@ -79,11 +78,9 @@ def _write_fixture_suite(
                 "distribution": "clifft-bench",
                 "version": "1.0.0",
                 "commit_sha": source_commit,
-                "commit_datetime": "2026-01-01T00:00:00Z",
-                "release_datetime": None,
                 "source_url": "https://example.com/fixture",
                 "dependency_distributions": ["clifft-bench"],
-                "build": {"precision": "integer", "compiler_flags": [], "features": []},
+                "build": {"precision": "integer", "compiler_flags": []},
             }
             for identifier in ["fixture-a", "fixture-b"]
         ],
@@ -98,8 +95,6 @@ def _write_fixture_suite(
             "implementation_id": identifier,
             "shots_per_call": 8,
             "execution": {
-                "mode": "throughput",
-                "batch_enabled": False,
                 "batch_size": 1,
                 "options": {},
             },
@@ -138,7 +133,7 @@ def test_effective_batch_size_is_capped_by_shots_per_call() -> None:
 
 
 def test_calibrated_result_records_selected_numeric_batch_size() -> None:
-    execution = {"batch_enabled": True, "batch_size": "calibrate"}
+    execution = {"batch_size": "calibrate"}
     metadata = {
         "threads": 1,
         "batch_enabled": False,
@@ -185,6 +180,7 @@ def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     assert "source_tag" not in result["cases"][0]["simulator"]
     assert result["cases"][1]["simulator"]["source_tag"] == "v1.0.0"
     for case in result["cases"]:
+        assert case["simulator"]["python_executable"] == sys.executable
         assert case["execution"]["memory_limit_bytes"] == 1 << 30
         assert case["setup"]["runtime_metadata"]["address_space_limit_bytes"] in {
             None,
@@ -280,7 +276,7 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     run["cases"] = run["cases"][:1]
     run["cases"][0]["shots_per_call"] = 67
     run["cases"][0]["execution"].update(
-        batch_enabled=True, batch_size="calibrate", options={"sample_chunk_shots": 2048},
+        batch_size="calibrate", options={"sample_chunk_shots": 2048},
     )
     run["measurement"]["setup_timeout_seconds"] = 60
     _write(run_path, run)
@@ -389,9 +385,10 @@ def test_missing_interpreter_is_preserved_as_a_setup_failure(tmp_path):
     validate_result(result)
 
 
-def test_interruption_preserves_terminal_raw_evidence_and_failed_csv(tmp_path, monkeypatch):
-    import csv
-
+@pytest.mark.parametrize("export_fails", [False, True])
+def test_interruption_preserves_terminal_raw_evidence_and_failed_csv(
+    tmp_path, monkeypatch, export_fails,
+):
     from clifft_bench import runner
 
     class InterruptedClient:
@@ -401,19 +398,99 @@ def test_interruption_preserves_terminal_raw_evidence_and_failed_csv(tmp_path, m
         def prepare(self, *args, **kwargs):
             raise KeyboardInterrupt
 
-        def close(self):
-            pass
+        def close(self, *, interrupted=False):
+            assert interrupted
 
     path, _, _ = _write_fixture_suite(tmp_path)
     output = tmp_path / "interrupted"
     monkeypatch.setattr(runner, "WorkerClient", InterruptedClient)
-    with pytest.raises(KeyboardInterrupt):
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    if export_fails:
+        def fail_export(*args):
+            raise ValueError("export failure")
+        monkeypatch.setattr(runner, "export_csv", fail_export)
+    with pytest.raises(KeyboardInterrupt) as caught:
         run_suite(load_suite(path), output_dir=output, python_executable=sys.executable)
+    assert signal.getsignal(signal.SIGTERM) is previous_handler
     raw = json.loads((output / "raw.json").read_text())
     validate_result(raw)
+    if export_fails:
+        assert any("export failure" in note for note in caught.value.__notes__)
+        return
     assert all(c["status"] == "interrupted" and c["error"]["phase"] == "setup"
                for c in raw["cases"])
     with (output / "cases.csv").open() as stream:
         rows = list(csv.DictReader(stream))
     assert all(r["status"] == "interrupted" and r["median_attempted_shots_per_second"] == ""
                for r in rows)
+
+
+def test_default_interpreter_provenance(tmp_path):
+    path, _, _ = _write_fixture_suite(tmp_path)
+    case = load_suite(path).cases[0]
+    assert _simulator_record(case)["python_executable"] == case.implementation.python_executable()
+
+
+@pytest.mark.parametrize("signum", [signal.SIGTERM, signal.SIGINT])
+def test_process_signal_stops_busy_worker_and_finalizes_evidence(tmp_path, signum):
+    from clifft_bench.config import repository_root
+    from clifft_bench.report import report_execution
+
+    path, _, _ = _write_fixture_suite(
+        tmp_path, parameters={"write_native_stdout": True, "sleep_on_seed": 10010,
+                              "sleep_seconds": 30}, request_timeout_seconds=60,
+    )
+    script = tmp_path / "collect.py"
+    script.write_text("""
+import sys
+from pathlib import Path
+from clifft_bench import runner
+from clifft_bench.config import load_suite
+class Client(runner.WorkerClient):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        Path(sys.argv[3]).write_text(str(self.process.pid))
+runner.WorkerClient = Client
+runner.run_suite(load_suite(Path(sys.argv[1])), output_dir=Path(sys.argv[2]),
+                 python_executable=sys.executable)
+""")
+    output, pid_path, log_path = tmp_path / "execution", tmp_path / "pid", tmp_path / "log"
+    environment = {**os.environ, "PYTHONPATH": str(repository_root() / "src")}
+    with log_path.open("w") as log:
+        process = subprocess.Popen(
+            [sys.executable, str(script), str(path), str(output), str(pid_path)],
+            stdout=log, stderr=log, env=environment,
+        )
+        worker_pid = None
+        try:
+            deadline = time.monotonic() + 10
+            while log_path.read_text().count("fixture native sample output") < 3:
+                assert process.poll() is None, log_path.read_text()
+                assert time.monotonic() < deadline, log_path.read_text()
+                time.sleep(0.01)
+            worker_pid = int(pid_path.read_text())
+            started = time.monotonic()
+            process.send_signal(signum)
+            process.wait(timeout=8)
+            assert time.monotonic() - started < 8
+            assert process.returncode != 0
+            with pytest.raises(ProcessLookupError):
+                os.kill(worker_pid, 0)
+        finally:
+            if process.poll() is None:
+                process.kill()
+                process.wait(timeout=5)
+            if worker_pid is not None:
+                try:
+                    os.kill(worker_pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+    raw = json.loads((output / "raw.json").read_text())
+    validate_result(raw)
+    assert raw["run"]["finished_at"] is not None
+    assert [c["status"] for c in raw["cases"]] == ["interrupted", "interrupted"]
+    assert [c["error"]["phase"] for c in raw["cases"]] == ["sampling", "setup"]
+    with (output / "cases.csv").open() as stream:
+        rows = list(csv.DictReader(stream))
+    assert all(r["median_attempted_shots_per_second"] == "" for r in rows)
+    assert "interrupted" in report_execution(output, check=True)

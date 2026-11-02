@@ -23,8 +23,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 options_preset = "clifft-scheduled"
 
@@ -36,8 +34,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 options_preset = "clifft-scheduled"
 
@@ -49,8 +45,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 options_preset = "clifft-scheduled"
 
@@ -62,8 +56,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 options_preset = "clifft-scheduled"
 
@@ -75,8 +67,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 1
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = false
 batch_size = 1
 options_preset = "clifft-scheduled"
 
@@ -88,8 +78,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 options_preset = "clifft-scheduled"
 
@@ -101,8 +89,6 @@ implementation_id = "clifft-63cd885"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 options_preset = "clifft-scheduled"
 
@@ -114,8 +100,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -129,8 +113,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -144,8 +126,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -159,8 +139,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -174,8 +152,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 1
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = false
 batch_size = 1
 
 [cases.execution.options]
@@ -189,8 +165,6 @@ implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -204,8 +178,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -219,8 +191,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -234,8 +204,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -249,8 +217,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -264,8 +230,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 1
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = false
 batch_size = 1
 
 [cases.execution.options]
@@ -279,8 +243,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -294,8 +256,6 @@ implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -309,8 +269,6 @@ implementation_id = "xtim-3.2.2-edf0dd0"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -323,8 +281,6 @@ implementation_id = "xtim-3.2.2-edf0dd0"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]
@@ -337,8 +293,6 @@ implementation_id = "stim-1.16.0"
 shots_per_call = 128
 
 [cases.execution]
-mode = "throughput"
-batch_enabled = true
 batch_size = 32
 
 [cases.execution.options]

@@ -160,7 +160,6 @@ def _calibration_seed(seed: int, repetition: int) -> int:
 def _candidate_execution(execution: dict[str, Any], batch_size: int) -> dict[str, Any]:
     return {
         **execution,
-        "batch_enabled": batch_size > 1,
         "batch_size": batch_size,
     }
 

@@ -122,7 +122,7 @@ def test_failed_cases_keep_evidence_without_exporting_throughput(raw_result, pha
     assert comparison_pairs(raw_result)[0]["ratio"] is None
 
 
-@pytest.mark.parametrize("field", ["digest", "selection", "calls", "mode", "memory"])
+@pytest.mark.parametrize("field", ["digest", "selection", "calls", "memory"])
 def test_comparisons_reject_incompatible_inputs(raw_result, field):
     case = raw_result["cases"][1]
     if field == "digest":
@@ -131,8 +131,6 @@ def test_comparisons_reject_incompatible_inputs(raw_result, field):
         case["workload"]["semantics"]["observable_index"] += 1
     elif field == "calls":
         case["execution"]["shots_per_call"] += 1
-    elif field == "mode":
-        case["execution"]["mode"] = "latency"
     else:
         case["execution"]["memory_limit_bytes"] = 1 << 30
     with pytest.raises(ValueError, match="incompatible comparison"):
@@ -323,3 +321,45 @@ def test_raw_validation_accepts_budget_skipped_suffix():
             median_attempted_shots_per_second=None,
         )
     _validate_bounded_calibration(calibration, "candidate")
+
+
+@pytest.mark.parametrize("selected", [1, 32, 64])
+def test_selected_calibration_state_exports_and_reports(raw_result, tmp_path, selected):
+    from clifft_bench.report import report_execution
+
+    for case, contract in zip(raw_result["cases"], raw_result["campaign"]["cases"], strict=True):
+        contract["shots_per_call"] = case["execution"]["shots_per_call"] = 64
+        for sample in case["samples"]:
+            for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"):
+                sample[key] *= 8
+            sample["duration_seconds"] *= 8
+    case, contract = raw_result["cases"][1], raw_result["campaign"]["cases"][1]
+    contract["execution"]["batch_size"] = "calibrate"
+    case["execution"].update(batch_size=selected, batch_enabled=selected > 1,
+                             batch_size_effective=selected, tuning_policy=CALIBRATION_POLICY)
+    calibration = _bounded_calibration()
+    calibration["selected_batch_size"] = selected
+    case["setup"]["runtime_metadata"].update(
+        batch_calibration=calibration, batch_enabled=selected > 1, effective_batch_size=selected,
+    )
+    write_json(tmp_path / "raw.json", raw_result)
+    export_csv(raw_result, tmp_path / "cases.csv")
+    assert "1.25×" in report_execution(tmp_path, check=True)
+    case["execution"]["batch_enabled"] = selected == 1
+    with pytest.raises(ValueError, match="batching differs"):
+        validate_result(raw_result)
+
+
+@pytest.mark.parametrize("status", ["error", "interrupted"])
+def test_calibration_without_setup_keeps_requested_state(raw_result, status):
+    case, contract = raw_result["cases"][1], raw_result["campaign"]["cases"][1]
+    contract["execution"]["batch_size"] = "calibrate"
+    case["execution"].update(batch_size="calibrate", batch_enabled=True,
+                             tuning_policy=CALIBRATION_POLICY)
+    case.update(status=status, setup=None, warmup=None, correctness=None, samples=[],
+                error={"phase": "setup", "type": "WorkerTimeout", "message": "timeout"})
+    validate_result(raw_result)
+    assert case_rows(raw_result)[1]["median_attempted_shots_per_second"] == ""
+    case["execution"].update(batch_size=1, batch_enabled=False)
+    with pytest.raises(ValueError, match="mismatched requested batch size"):
+        validate_result(raw_result)

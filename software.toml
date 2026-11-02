@@ -8,8 +8,6 @@ distribution = "clifft"
 version = "0.12.0rc1"
 display_version = "0.12.0"
 commit_sha = "847757e2bc8c4f7439b9e92011550fd61719eb85"
-commit_datetime = "2026-10-09T18:46:07Z"
-release_datetime = "2026-10-09T18:58:35Z"
 source_url = "https://github.com/unitaryfoundation/clifft"
 source_tag = "v0.12.0rc1"
 dependency_distributions = ["numpy"]
@@ -20,7 +18,6 @@ import_modules = ["clifft"]
 [implementations.build]
 precision = "complex-fp64"
 compiler_flags = []
-features = ["CPU-only", "symbolic-coordinate sampler", "OpenMP intra-shot parallelism", "opt-in active-width scheduling", "default phase-polynomial and rotation simplification", "PyPI release-candidate wheel"]
 
 [[implementations]]
 id = "symft-0.1.1-c89b985"
@@ -29,7 +26,6 @@ adapter = "symft"
 distribution = "symft"
 version = "0.1.1"
 commit_sha = "c89b98514a919240b8afa53a271e08d926d3c987"
-commit_datetime = "2026-08-10T13:58:26Z"
 source_url = "https://github.com/haoliri0/SOFT"
 dependency_distributions = ["numpy"]
 
@@ -43,7 +39,6 @@ SYMFT_PY_ENABLE_CUDA = "0"
 [implementations.build]
 precision = "complex-fp64"
 compiler_flags = ["SYMFT_PY_NATIVE=1"]
-features = ["CPU-only", "runtime-dispatched SIMD", "CUDA disabled", "pinned upstream source after PyPI 0.1.1"]
 
 [[implementations]]
 id = "stim-1.16.0"
@@ -52,8 +47,6 @@ adapter = "stim"
 distribution = "stim"
 version = "1.16.0"
 commit_sha = "e2fc1eca7fd21684d433aa5f10f4504ea4860d07"
-commit_datetime = "2026-05-22T05:16:14Z"
-release_datetime = "2026-05-22T05:41:19.371644Z"
 source_url = "https://github.com/quantumlib/Stim"
 source_tag = "v1.16.0"
 dependency_distributions = ["numpy"]
@@ -64,7 +57,6 @@ import_modules = ["stim"]
 [implementations.build]
 precision = "binary-stabilizer"
 compiler_flags = []
-features = ["CPU-only", "PyPI release wheel", "loaded SIMD extension recorded at runtime", "bit-packed detector sampler with calibrated chunking"]
 
 [[implementations]]
 id = "xtim-3.2.2-edf0dd0"
@@ -73,7 +65,6 @@ adapter = "xtim"
 distribution = "xtim"
 version = "3.2.2"
 commit_sha = "edf0dd0cff804ac0228d517889e49b0c286cb19a"
-commit_datetime = "2026-10-25T21:53:10Z"
 source_url = "https://github.com/ikim-quantum/xtim"
 dependency_distributions = ["numpy", "stim"]
 
@@ -87,7 +78,6 @@ CXXFLAGS = "-include cstdint"
 [implementations.build]
 precision = "complex-fp64"
 compiler_flags = ["-O3", "-funroll-loops", "QECCORE_PORTABLE=1", "CXXFLAGS=-include cstdint"]
-features = ["CPU-only", "portable source build without -march=native", "pinned upstream source with cumulative-shot RNG streams", "fresh plan cache per repetition with untimed compilation", "upstream default 512 MiB plan-payload budget"]
 
 [[implementations]]
 id = "tsim-0.1.5-e9406ed"
@@ -97,7 +87,6 @@ adapter = "tsim"
 distribution = "bloqade-tsim"
 version = "0.1.5"
 commit_sha = "e9406ed5bb49fcff1b04b65534cf56bbb756b3a6"
-commit_datetime = "2026-10-25T03:52:17Z"
 source_url = "https://github.com/QuEraComputing/tsim"
 dependency_distributions = ["numpy", "numba", "llvmlite", "zxparam", "stim", "jax", "jaxlib", "equinox"]
 
@@ -107,7 +96,6 @@ import_modules = ["tsim", "numba", "zxparam"]
 [implementations.build]
 precision = "complex-fp64"
 compiler_flags = []
-features = ["CPU-only active_statevector", "Numba JIT with one thread", "trajectory sharing", "pinned upstream source after PyPI 0.1.5", "prebuilt zxparam Rust extension"]
 
 [[implementations]]
 id = "clifft-63cd885"
@@ -116,7 +104,6 @@ adapter = "clifft"
 distribution = "clifft"
 version = "0.12.1.dev26+g63cd8854a"
 commit_sha = "63cd8854ad5de32515af6584eff33ea400ccc063"
-commit_datetime = "2026-10-26T19:20:52Z"
 source_url = "https://github.com/unitaryfoundation/clifft"
 dependency_distributions = ["numpy"]
 
@@ -126,7 +113,6 @@ import_modules = ["clifft"]
 [implementations.build]
 precision = "complex-fp64"
 compiler_flags = []
-features = ["CPU-only", "Pinned source build; upstream defaults"]
 
 [option_presets]
 

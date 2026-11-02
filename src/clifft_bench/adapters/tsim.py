@@ -89,8 +89,6 @@ class TsimAdapter(Adapter):
         if threads != 1:
             raise RuntimeError(f"Tsim requires one effective Numba thread, got {threads}")
         semantics = workload["semantics"]
-        if semantics["reference_convention"] != "raw-record-parity":
-            raise ValueError("Tsim adapter requires raw-record-parity")
         batch = int(execution["batch_size"])
         if not 1 <= batch <= MAX_BATCH_SIZE:
             raise ValueError("Tsim requires batch_size in [1, 65536]")

@@ -8,7 +8,6 @@ import re
 import tomllib
 from copy import deepcopy
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -238,14 +237,6 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
         execution = definition["execution"]
         load_adapter(adapter).validate_options(execution["options"])
         if execution["batch_size"] == "calibrate":
-            if execution["mode"] != "throughput":
-                raise ValueError(
-                    f"case {identifier!r} requests batch calibration outside throughput mode"
-                )
-            if not execution["batch_enabled"]:
-                raise ValueError(
-                    f"case {identifier!r} requests batch calibration with batching disabled"
-                )
             if adapter not in {"clifft", "symft", "stim", "xtim", "tsim"}:
                 raise ValueError(
                     f"case {identifier!r} requests unsupported batch calibration for "
@@ -393,15 +384,9 @@ def _version(document: dict) -> None:
 
 
 def _validate_execution(execution: dict) -> None:
-    _fields(execution, "mode batch_enabled batch_size", "options options_preset")
-    if execution["mode"] not in ("latency", "throughput"):
-        raise ValueError("invalid execution mode")
-    if type(execution["batch_enabled"]) is not bool:
-        raise ValueError("batch_enabled must be boolean")
+    _fields(execution, "batch_size", "options options_preset")
     if execution["batch_size"] != "calibrate":
         _number(execution["batch_size"], "batch_size", integer=True)
-    if not execution["batch_enabled"] and execution["batch_size"] != 1:
-        raise ValueError("batching disabled requires batch_size=1")
     if "options_preset" in execution:
         _identifier(execution["options_preset"])
         if "options" in execution:
@@ -492,18 +477,14 @@ def validate_workloads(document: dict) -> None:
     for w in _entries(document, "workloads"):
         _fields(
             w,
-            "id family description artifact dialect "
-        "angle_convention parameters semantics expected_metadata compatible_adapters provenance",
+            "id family description artifact parameters semantics "
+            "expected_metadata compatible_adapters provenance",
             "shots_per_call",
         )
         if "shots_per_call" in w:
             _number(w["shots_per_call"], "shots_per_call", integer=True)
         for key in ("family", "description"):
             _text(w[key], key)
-        if w["dialect"] not in ("stim", "clifft-symft-extended-stim") or w[
-            "angle_convention"
-        ] not in ("none", "half-turns"):
-            raise ValueError("invalid circuit dialect or angle convention")
         if not isinstance(w["parameters"], dict):
             raise ValueError("parameters must be a table")
         _fields(w["artifact"], "path sha256")
@@ -517,19 +498,8 @@ def validate_workloads(document: dict) -> None:
             _number(value, key, integer=True, inclusive=True)
         sem = w["semantics"]
         _fields(
-            sem,
-            "logical_work output_contract observable_index "
-        "postselect_all_detectors reference_convention throughput_numerator batch_semantics",
-            "postselection_detector_indices",
+            sem, "observable_index postselect_all_detectors", "postselection_detector_indices"
         )
-        for key in ("logical_work", "batch_semantics"):
-            _text(sem[key], key)
-        if (
-            sem["output_contract"] != "aggregate detector-discard and logical-observable counts"
-            or sem["reference_convention"] != "raw-record-parity"
-            or sem["throughput_numerator"] != "attempted shots"
-        ):
-            raise ValueError("unsupported workload output semantics")
         _number(sem["observable_index"], "observable_index", integer=True, inclusive=True)
         if type(sem["postselect_all_detectors"]) is not bool:
             raise ValueError("postselect_all_detectors must be boolean")
@@ -573,8 +543,8 @@ def validate_software(document: dict) -> None:
         _fields(
             imp,
             "id name adapter distribution version "
-        "commit_sha commit_datetime source_url dependency_distributions build",
-            "display_version release_datetime source_tag environment",
+            "commit_sha source_url dependency_distributions build",
+            "display_version source_tag environment",
         )
         for key in (
             "name",
@@ -582,31 +552,21 @@ def validate_software(document: dict) -> None:
             "distribution",
             "version",
             "commit_sha",
-            "commit_datetime",
             "source_url",
         ):
             _text(imp[key], key)
         load_adapter(imp["adapter"])
         if not re.fullmatch(r"[0-9a-f]{40}", imp["commit_sha"]):
             raise ValueError("invalid implementation commit")
-        imp.setdefault("release_datetime", None)
-        for key in ("commit_datetime", "release_datetime"):
-            value = imp[key]
-            if value is None and key == "release_datetime":
-                continue
-            _text(value, key)
-            if datetime.fromisoformat(value.replace("Z", "+00:00")).tzinfo is None:
-                raise ValueError(f"{key} must include a timezone")
         for key in ("display_version", "source_tag"):
             if key in imp:
                 _text(imp[key], key)
         if not urlsplit(imp["source_url"]).scheme:
             raise ValueError("source_url must be an absolute URL")
         _strings(imp["dependency_distributions"], "dependency_distributions", nonempty=False)
-        _fields(imp["build"], "precision compiler_flags features")
+        _fields(imp["build"], "precision compiler_flags")
         _text(imp["build"]["precision"], "precision")
-        for key in ("compiler_flags", "features"):
-            _strings(imp["build"][key], key, nonempty=False)
+        _strings(imp["build"]["compiler_flags"], "compiler_flags", nonempty=False)
         if "environment" in imp:
             _fields(imp["environment"], "import_modules", "install_environment")
             _strings(imp["environment"]["import_modules"], "import_modules")

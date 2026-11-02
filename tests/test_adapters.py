@@ -92,11 +92,9 @@ def test_symft_rejects_effective_batching_mismatch(
                 "semantics": {
                     "observable_index": 0,
                     "postselect_all_detectors": False,
-                    "reference_convention": "raw-record-parity",
                 }
             },
             execution={
-                "batch_enabled": True,
                 "batch_size": 32,
                 "options": {"sample_chunk_shots": 2048},
             },
@@ -172,11 +170,9 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
             "semantics": {
                 "observable_index": 0,
                 "postselect_all_detectors": True,
-                "reference_convention": "raw-record-parity",
             }
         },
         execution={
-            "batch_enabled": True,
             "batch_size": 256,
             "options": {},
         },
@@ -213,36 +209,14 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
             "semantics": {
                 "observable_index": 0,
                 "postselect_all_detectors": False,
-                "reference_convention": "raw-record-parity",
             }
         },
         execution={
-            "batch_enabled": False,
             "batch_size": 1,
             "options": {"sample_chunk_shots": 2048},
         },
     )
     assert prepared.runtime_metadata["effective_batch_size"] == 1
-
-
-@pytest.mark.parametrize("adapter", [ClifftAdapter(), SymftAdapter()])
-def test_adapters_reject_unsupported_reference_convention(adapter, tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match="does not support reference convention"):
-        adapter.prepare(
-            artifact_path=tmp_path / "unused.stim",
-            workload={
-                "semantics": {
-                    "observable_index": 0,
-                    "postselect_all_detectors": False,
-                    "reference_convention": "reference-normalized-parity",
-                }
-            },
-            execution={
-                "batch_enabled": False,
-                "batch_size": 1,
-                "options": {},
-            },
-        )
 
 
 @pytest.mark.parametrize("mismatch", ["wheel", "commit", "repository", None])
@@ -319,8 +293,8 @@ def test_clifft_scalar_and_postselection_follow_available_api(
     prepared = ClifftAdapter().prepare(
         artifact_path=artifact,
         workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect,
-                                "reference_convention": "raw-record-parity"}},
-        execution={"batch_enabled": False, "batch_size": 1},
+                                }},
+        execution={"batch_size": 1},
     )
     assert prepared.sample(128, 7).attempted_shots == 128
     assert prepared.runtime_metadata["postselection_before_optimization"] is early_postselection

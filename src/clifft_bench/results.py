@@ -24,11 +24,7 @@ FORMAT = "clifft-bench/raw/v1"
 CONTRACT_KEYS = (
     "postselect_all_detectors",
     "postselection_detector_indices",
-    "reference_convention",
     "observable_index",
-    "output_contract",
-    "throughput_numerator",
-    "batch_semantics",
 )
 CASE_FIELDS = (
     "case_id",
@@ -44,7 +40,6 @@ CASE_FIELDS = (
     "error_phase",
     "error_type",
     "error_message",
-    "mode",
     "shots_per_call",
     "batch_size_effective",
     "tuning_policy",
@@ -199,7 +194,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         and simulator["implementation_id"] == contract["implementation_id"],
         f"case {identifier}: identity differs from resolved campaign",
     )
-    for key in ("name", "version", "display_version", "source_url", "commit_datetime"):
+    for key in ("name", "version", "display_version", "source_url", "python_executable"):
         _require(
             isinstance(simulator[key], str) and bool(simulator[key]),
             f"case {identifier}: missing simulator {key}",
@@ -222,20 +217,19 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         "observable index is outside declared outputs",
     )
     detector_mask(semantics, expected_metadata["num_detectors"])
-    _require(
-        semantics["reference_convention"] == "raw-record-parity"
-        and semantics["throughput_numerator"] == "attempted shots",
-        f"case {identifier}: invalid output semantics",
-    )
     _require(simulator["adapter"] in workload["compatible_adapters"], "incompatible adapter")
     load_adapter(simulator["adapter"]).validate_options(execution["options"])
-    for key in ("mode", "batch_enabled", "options"):
-        _require(
-            execution[key] == contract["execution"][key], f"case {identifier}: mismatched {key}"
-        )
+    _require(execution["options"] == contract["execution"]["options"], "mismatched options")
+    requested_batch = contract["execution"]["batch_size"]
+    if requested_batch != "calibrate":
+        _number(requested_batch, "requested batch size", integer=True, positive=True)
+    if requested_batch != "calibrate" or case["setup"] is None:
+        _require(execution["batch_size"] == requested_batch, "mismatched requested batch size")
+    if execution["batch_size"] != "calibrate":
+        _number(execution["batch_size"], "batch size", integer=True, positive=True)
     _require(
-        execution["mode"] in {"latency", "throughput"} and type(execution["batch_enabled"]) is bool,
-        "invalid execution mode/batching",
+        execution["batch_enabled"] is (execution["batch_size"] != 1),
+        "batching differs from batch size",
     )
     _number(execution["shots_per_call"], "shots_per_call", integer=True, positive=True)
     _require(execution["shots_per_call"] == contract["shots_per_call"], "mismatched call size")
@@ -250,12 +244,6 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         and execution["postselection"] is has_postselection(semantics),
         "invalid thread or selection contract",
     )
-    if contract["execution"]["batch_size"] != "calibrate":
-        _number(execution["batch_size"], "batch size", integer=True, positive=True)
-        _require(
-            execution["batch_size"] == contract["execution"]["batch_size"],
-            "mismatched fixed batch size",
-        )
     _require(case["status"] in {"success", "error", "interrupted"}, "no terminal case outcome")
     if case["status"] == "success":
         _require(case["error"] is None, "successful case has an error")
@@ -300,6 +288,10 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
             "worker did not use one thread",
         )
         _require(metadata["version"] == simulator["version"], "runtime version mismatch")
+        _require(
+            metadata["batch_enabled"] is execution["batch_enabled"],
+            "runtime batching mismatch",
+        )
         _number(execution["batch_size_effective"], "effective batch", integer=True, positive=True)
         _require(
             execution["batch_size_effective"] <= execution["shots_per_call"],
@@ -322,8 +314,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
                 case["warmup"]["attempted_shots"] >= execution["shots_per_call"],
                 "Tsim requires a full-call warmup",
             )
-    if case["status"] != "interrupted" or setup is not None:
-        _validate_calibration_record(contract, case)
+    _validate_calibration_record(contract, case)
     for repetition, sample in enumerate(case["samples"]):
         _counts(sample, execution["postselection"])
         _number(sample["api_calls"], "api_calls", integer=True, positive=True)
@@ -455,7 +446,6 @@ def _compatible(left: dict, right: dict) -> None:
     )
     for key in (
         "shots_per_call",
-        "mode",
         "memory_limit_bytes",
         "threads_requested",
         "min_sample_seconds",
@@ -495,7 +485,6 @@ def case_rows(document: dict) -> list[dict]:
                 "error_phase": error.get("phase", ""),
                 "error_type": error.get("type", ""),
                 "error_message": error.get("message", ""),
-                "mode": execution["mode"],
                 "shots_per_call": execution["shots_per_call"],
                 "batch_size_effective": execution.get("batch_size_effective", ""),
                 "tuning_policy": execution.get("tuning_policy", "fixed"),
@@ -547,7 +536,7 @@ def _validate_calibration_record(expected: dict, observed: dict[str, Any]) -> No
     # setup metadata. Preserve that explicit failure without inventing a winner.
     if (
         setup is None
-        and observed["status"] == "error"
+        and observed["status"] in {"error", "interrupted"}
         and (observed.get("error") or {}).get("phase") == "setup"
     ):
         return
