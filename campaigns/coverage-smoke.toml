@@ -19,7 +19,7 @@ repetitions = 1
 id = "msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
 [cases.execution]
@@ -30,7 +30,7 @@ options_preset = "clifft-scheduled"
 id = "surface-code-d7-r7-p1e-3-unselected--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
 [cases.execution]
@@ -41,7 +41,7 @@ options_preset = "clifft-scheduled"
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
 [cases.execution]
@@ -52,7 +52,7 @@ options_preset = "clifft-scheduled"
 id = "quantum-volume-q10-seed42--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "quantum-volume-q10-seed42"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
 [cases.execution]
@@ -63,7 +63,7 @@ options_preset = "clifft-scheduled"
 id = "quantum-volume-q20-seed42--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "quantum-volume-q20-seed42"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 1
 
 [cases.execution]
@@ -74,7 +74,7 @@ options_preset = "clifft-scheduled"
 id = "msc-d7-proxy-unverified-p1e-3--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
 [cases.execution]
@@ -85,7 +85,7 @@ options_preset = "clifft-scheduled"
 id = "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "clifft-63cd885"
+implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
 [cases.execution]
