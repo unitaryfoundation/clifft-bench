@@ -1,0 +1,745 @@
+Shutdown scheduled for Wed 2026-11-04 02:36:23 UTC, use 'shutdown -c' to cancel.
+Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version (12.10ubuntu1).
+python3.12-dev is already the newest version (3.12.3-1ubuntu0.17).
+python3.12-venv is already the newest version (3.12.3-1ubuntu0.17).
+0 upgraded, 0 newly installed, 0 to remove and 90 not upgraded.
+Obtaining file:///home/ubuntu/clifft-bench
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: clifft-bench
+  Building editable for clifft-bench (pyproject.toml): started
+  Building editable for clifft-bench (pyproject.toml): finished with status 'done'
+  Created wheel for clifft-bench: filename=clifft_bench-0.1.0-py3-none-any.whl size=10802 sha256=d09f4b25b8a9b810df56869670284d204b39ef980ce3bf20db85698e0e626d95
+  Stored in directory: /tmp/pip-ephem-wheel-cache-nuwlixjl/wheels/a7/ab/3a/ae03153af36597526749512b87f4647612c5628560981c69a8
+Successfully built clifft-bench
+Installing collected packages: clifft-bench
+  Attempting uninstall: clifft-bench
+    Found existing installation: clifft-bench 0.1.0
+    Uninstalling clifft-bench-0.1.0:
+      Successfully uninstalled clifft-bench-0.1.0
+Successfully installed clifft-bench-0.1.0
+Installing clifft-0.12.0rc1 in /home/ubuntu/clifft-bench/.campaign-envs/clifft-0.12.0rc1
+Requirement already satisfied: pip in ./.campaign-envs/clifft-0.12.0rc1/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 35.9 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting clifft==0.12.0rc1 (from -r /home/ubuntu/clifft-bench/environments/clifft-0.12.0rc1.txt (line 1))
+  Using cached clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Collecting numpy==2.5.2 (from -r /home/ubuntu/clifft-bench/environments/clifft-0.12.0rc1.txt (line 2))
+  Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Using cached clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.3 MB)
+Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Installing collected packages: numpy, clifft
+
+Successfully installed clifft-0.12.0rc1 numpy-2.5.2
+No broken requirements found.
+Installing clifft-0.13.0rc1 in /home/ubuntu/clifft-bench/.campaign-envs/clifft-0.13.0rc1
+Requirement already satisfied: pip in ./.campaign-envs/clifft-0.13.0rc1/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting clifft==0.13.0rc1 (from -r /home/ubuntu/clifft-bench/environments/clifft-0.13.0rc1.txt (line 1))
+  Downloading clifft-0.13.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (11 kB)
+Collecting numpy==2.5.4 (from -r /home/ubuntu/clifft-bench/environments/clifft-0.13.0rc1.txt (line 2))
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Downloading clifft-0.13.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 26.8 MB/s  0:00:00
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 217.4 MB/s  0:00:00
+Installing collected packages: numpy, clifft
+
+Successfully installed clifft-0.13.0rc1 numpy-2.5.4
+No broken requirements found.
+Installing stim-1.16.0 in /home/ubuntu/clifft-bench/.campaign-envs/stim-1.16.0
+Requirement already satisfied: pip in ./.campaign-envs/stim-1.16.0/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting numpy==2.5.2 (from -r /home/ubuntu/clifft-bench/environments/stim-1.16.0.txt (line 3))
+  Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting stim==1.16.0 (from -r /home/ubuntu/clifft-bench/environments/stim-1.16.0.txt (line 7))
+  Using cached stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Using cached stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.3 MB)
+Installing collected packages: stim, numpy
+
+Successfully installed numpy-2.5.2 stim-1.16.0
+No broken requirements found.
+Installing symft-0.1.1-c89b985 in /home/ubuntu/clifft-bench/.campaign-envs/symft-0.1.1-c89b985
+Requirement already satisfied: pip in ./.campaign-envs/symft-0.1.1-c89b985/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting symft @ git+https://github.com/haoliri0/SOFT.git@c89b98514a919240b8afa53a271e08d926d3c987#subdirectory=python (from -r /home/ubuntu/clifft-bench/environments/symft-0.1.1-c89b985.txt (line 7))
+  Using cached symft-0.1.1-cp312-cp312-linux_x86_64.whl
+Collecting numpy==2.5.2 (from -r /home/ubuntu/clifft-bench/environments/symft-0.1.1-c89b985.txt (line 3))
+  Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Installing collected packages: symft, numpy
+
+Successfully installed numpy-2.5.2 symft-0.1.1
+No broken requirements found.
+Installing tsim-0.1.5-e9406ed in /home/ubuntu/clifft-bench/.campaign-envs/tsim-0.1.5-e9406ed
+Requirement already satisfied: pip in ./.campaign-envs/tsim-0.1.5-e9406ed/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting bloqade-tsim @ git+https://github.com/QuEraComputing/tsim.git@e9406ed5bb49fcff1b04b65534cf56bbb756b3a6 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 5))
+  Cloning https://github.com/QuEraComputing/tsim.git (to revision e9406ed5bb49fcff1b04b65534cf56bbb756b3a6) to /tmp/pip-install-wxvs80nx/bloqade-tsim_1cc5cb453cb64e73b158dd0772567f93
+  Running command git clone --filter=blob:none --quiet https://github.com/QuEraComputing/tsim.git /tmp/pip-install-wxvs80nx/bloqade-tsim_1cc5cb453cb64e73b158dd0772567f93
+  Running command git rev-parse -q --verify 'e9406ed5bb49fcff1b04b65534cf56bbb756b3a6^{commit}'
+  e9406ed5bb49fcff1b04b65534cf56bbb756b3a6
+  Running command git checkout -q e9406ed5bb49fcff1b04b65534cf56bbb756b3a6
+  Resolved https://github.com/QuEraComputing/tsim.git to commit e9406ed5bb49fcff1b04b65534cf56bbb756b3a6
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting asttokens==3.0.2 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 3))
+  Using cached asttokens-3.0.2-py3-none-any.whl.metadata (5.7 kB)
+Collecting comm==0.2.3 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 7))
+  Using cached comm-0.2.3-py3-none-any.whl.metadata (3.7 kB)
+Collecting equinox==0.13.8 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 9))
+  Using cached equinox-0.13.8-py3-none-any.whl.metadata (18 kB)
+Collecting executing==2.3.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 11))
+  Downloading executing-2.3.0-py3-none-any.whl.metadata (9.1 kB)
+Collecting ipython==9.17.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 13))
+  Downloading ipython-9.17.1-py3-none-any.whl.metadata (4.6 kB)
+Collecting ipython-pygments-lexers==1.1.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 15))
+  Using cached ipython_pygments_lexers-1.1.1-py3-none-any.whl.metadata (1.1 kB)
+Collecting ipywidgets==8.1.9 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 17))
+  Using cached ipywidgets-8.1.9-py3-none-any.whl.metadata (2.4 kB)
+Collecting jax==0.12.0.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 19))
+  Downloading jax-0.12.0.1-py3-none-any.whl.metadata (13 kB)
+Collecting jaxlib==0.12.0.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 23))
+  Downloading jaxlib-0.12.0.1-cp312-cp312-manylinux_2_27_x86_64.whl.metadata (1.3 kB)
+Collecting jaxtyping==0.3.11 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 25))
+  Using cached jaxtyping-0.3.11-py3-none-any.whl.metadata (6.2 kB)
+Collecting jedi==0.20.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 27))
+  Downloading jedi-0.20.1-py2.py3-none-any.whl.metadata (23 kB)
+Collecting jupyterlab-widgets==3.0.17 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 29))
+  Using cached jupyterlab_widgets-3.0.17-py3-none-any.whl.metadata (20 kB)
+Collecting llvmlite==0.47.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 31))
+  Downloading llvmlite-0.47.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.0 kB)
+Collecting lxml==6.1.3 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 33))
+  Downloading lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+Collecting matplotlib-inline==0.2.2 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 35))
+  Using cached matplotlib_inline-0.2.2-py3-none-any.whl.metadata (2.4 kB)
+Collecting ml-dtypes==0.6.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 37))
+  Using cached ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+Collecting numba==0.65.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 41))
+  Downloading numba-0.65.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.9 kB)
+Collecting numpy==2.4.4 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 45))
+  Downloading numpy-2.4.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting opt-einsum==3.4.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 56))
+  Using cached opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting parso==0.8.7 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 58))
+  Using cached parso-0.8.7-py2.py3-none-any.whl.metadata (8.2 kB)
+Collecting pexpect==4.9.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 60))
+  Using cached pexpect-4.9.0-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting prompt-toolkit==3.0.53 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 62))
+  Using cached prompt_toolkit-3.0.53-py3-none-any.whl.metadata (6.4 kB)
+Collecting psutil==7.2.2 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 64))
+  Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+Collecting ptyprocess==0.7.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 68))
+  Using cached ptyprocess-0.7.0-py2.py3-none-any.whl.metadata (1.3 kB)
+Collecting pure-eval==0.2.4 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 70))
+  Downloading pure_eval-0.2.4-py3-none-any.whl.metadata (6.4 kB)
+Collecting pygments==2.21.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 72))
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting scipy==1.18.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 76))
+  Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting stack-data==0.6.3 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 80))
+  Using cached stack_data-0.6.3-py3-none-any.whl.metadata (18 kB)
+Collecting stim==1.16.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 82))
+  Using cached stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+Collecting stim-timeline-text==0.1.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 86))
+  Downloading stim_timeline_text-0.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.0 kB)
+Collecting traitlets==5.16.1 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 88))
+  Using cached traitlets-5.16.1-py3-none-any.whl.metadata (10 kB)
+Collecting typing-extensions==4.16.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 93))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting wadler-lindig==0.1.8 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 95))
+  Downloading wadler_lindig-0.1.8-py3-none-any.whl.metadata (17 kB)
+Collecting wcwidth==0.9.4 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 99))
+  Downloading wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (23 kB)
+Collecting widgetsnbextension==4.0.16 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 101))
+  Using cached widgetsnbextension-4.0.16-py3-none-any.whl.metadata (1.6 kB)
+Collecting zxparam==0.1.0 (from -r /home/ubuntu/clifft-bench/environments/tsim-0.1.5-e9406ed.txt (line 103))
+  Downloading zxparam-0.1.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.1 kB)
+Using cached asttokens-3.0.2-py3-none-any.whl (28 kB)
+Using cached comm-0.2.3-py3-none-any.whl (7.3 kB)
+Using cached equinox-0.13.8-py3-none-any.whl (185 kB)
+Downloading executing-2.3.0-py3-none-any.whl (29 kB)
+Downloading ipython-9.17.1-py3-none-any.whl (639 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 639.0/639.0 kB 16.6 MB/s  0:00:00
+Using cached ipython_pygments_lexers-1.1.1-py3-none-any.whl (8.1 kB)
+Using cached ipywidgets-8.1.9-py3-none-any.whl (140 kB)
+Downloading jax-0.12.0.1-py3-none-any.whl (3.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 78.0 MB/s  0:00:00
+Downloading jaxlib-0.12.0.1-cp312-cp312-manylinux_2_27_x86_64.whl (86.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.8/86.8 MB 285.6 MB/s  0:00:00
+Using cached jaxtyping-0.3.11-py3-none-any.whl (56 kB)
+Downloading jedi-0.20.1-py2.py3-none-any.whl (4.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 268.2 MB/s  0:00:00
+Using cached jupyterlab_widgets-3.0.17-py3-none-any.whl (217 kB)
+Downloading llvmlite-0.47.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 MB 212.9 MB/s  0:00:00
+Downloading lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 297.5 MB/s  0:00:00
+Using cached matplotlib_inline-0.2.2-py3-none-any.whl (9.5 kB)
+Using cached ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (409 kB)
+Downloading numba-0.65.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 217.1 MB/s  0:00:00
+Downloading numpy-2.4.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.6/16.6 MB 287.1 MB/s  0:00:00
+Using cached opt_einsum-3.4.0-py3-none-any.whl (71 kB)
+Using cached parso-0.8.7-py2.py3-none-any.whl (107 kB)
+Using cached pexpect-4.9.0-py2.py3-none-any.whl (63 kB)
+Using cached prompt_toolkit-3.0.53-py3-none-any.whl (392 kB)
+Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Using cached ptyprocess-0.7.0-py2.py3-none-any.whl (13 kB)
+Downloading pure_eval-0.2.4-py3-none-any.whl (11 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 299.0 MB/s  0:00:00
+Using cached stack_data-0.6.3-py3-none-any.whl (24 kB)
+Using cached stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.3 MB)
+Downloading stim_timeline_text-0.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (183 kB)
+Using cached traitlets-5.16.1-py3-none-any.whl (86 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading wadler_lindig-0.1.8-py3-none-any.whl (20 kB)
+Downloading wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (785 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 785.9/785.9 kB 115.0 MB/s  0:00:00
+Using cached widgetsnbextension-4.0.16-py3-none-any.whl (2.2 MB)
+Downloading zxparam-0.1.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (877 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 877.5/877.5 kB 118.3 MB/s  0:00:00
+Building wheels for collected packages: bloqade-tsim
+  Building wheel for bloqade-tsim (pyproject.toml): started
+  Building wheel for bloqade-tsim (pyproject.toml): finished with status 'done'
+  Created wheel for bloqade-tsim: filename=bloqade_tsim-0.1.5-py3-none-any.whl size=133800 sha256=f24e97ec81e8ff1358714ad226fad088948422897bdf8f830d8e024c01ef20a3
+  Stored in directory: /home/ubuntu/.cache/pip/wheels/8a/f1/b2/a61d2a85b3bd8e440062d821728825987055f3ba140cbd14ba
+Successfully built bloqade-tsim
+Installing collected packages: stack-data, pure-eval, ptyprocess, pexpect, zxparam, widgetsnbextension, wcwidth, wadler-lindig, typing-extensions, traitlets, stim-timeline-text, stim, scipy, pygments, psutil, prompt-toolkit, parso, opt-einsum, numpy, numba, ml-dtypes, matplotlib-inline, lxml, llvmlite, jupyterlab-widgets, jedi, jaxtyping, jaxlib, jax, ipywidgets, ipython-pygments-lexers, ipython, executing, equinox, comm, bloqade-tsim, asttokens
+
+Successfully installed asttokens-3.0.2 bloqade-tsim-0.1.5 comm-0.2.3 equinox-0.13.8 executing-2.3.0 ipython-9.17.1 ipython-pygments-lexers-1.1.1 ipywidgets-8.1.9 jax-0.12.0.1 jaxlib-0.12.0.1 jaxtyping-0.3.11 jedi-0.20.1 jupyterlab-widgets-3.0.17 llvmlite-0.47.0 lxml-6.1.3 matplotlib-inline-0.2.2 ml-dtypes-0.6.0 numba-0.65.0 numpy-2.4.4 opt-einsum-3.4.0 parso-0.8.7 pexpect-4.9.0 prompt-toolkit-3.0.53 psutil-7.2.2 ptyprocess-0.7.0 pure-eval-0.2.4 pygments-2.21.0 scipy-1.18.1 stack-data-0.6.3 stim-1.16.0 stim-timeline-text-0.1.0 traitlets-5.16.1 typing-extensions-4.16.0 wadler-lindig-0.1.8 wcwidth-0.9.4 widgetsnbextension-4.0.16 zxparam-0.1.0
+No broken requirements found.
+Installing xtim-3.2.2-edf0dd0 in /home/ubuntu/clifft-bench/.campaign-envs/xtim-3.2.2-edf0dd0
+Requirement already satisfied: pip in ./.campaign-envs/xtim-3.2.2-edf0dd0/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting xtim @ git+https://github.com/ikim-quantum/xtim.git@edf0dd0cff804ac0228d517889e49b0c286cb19a (from -r /home/ubuntu/clifft-bench/environments/xtim-3.2.2-edf0dd0.txt (line 10))
+  Cloning https://github.com/ikim-quantum/xtim.git (to revision edf0dd0cff804ac0228d517889e49b0c286cb19a) to /tmp/pip-install-3qamaww1/xtim_bfe14e0d97dc4aa0814ebd78dfe3c26c
+  Running command git clone --filter=blob:none --quiet https://github.com/ikim-quantum/xtim.git /tmp/pip-install-3qamaww1/xtim_bfe14e0d97dc4aa0814ebd78dfe3c26c
+  Running command git rev-parse -q --verify 'edf0dd0cff804ac0228d517889e49b0c286cb19a^{commit}'
+  edf0dd0cff804ac0228d517889e49b0c286cb19a
+  Running command git checkout -q edf0dd0cff804ac0228d517889e49b0c286cb19a
+  Resolved https://github.com/ikim-quantum/xtim.git to commit edf0dd0cff804ac0228d517889e49b0c286cb19a
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting numpy==2.5.2 (from -r /home/ubuntu/clifft-bench/environments/xtim-3.2.2-edf0dd0.txt (line 3))
+  Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting stim==1.16.0 (from -r /home/ubuntu/clifft-bench/environments/xtim-3.2.2-edf0dd0.txt (line 8))
+  Using cached stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Using cached stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.3 MB)
+Building wheels for collected packages: xtim
+  Building wheel for xtim (pyproject.toml): started
+  Building wheel for xtim (pyproject.toml): still running...
+  Building wheel for xtim (pyproject.toml): still running...
+  Building wheel for xtim (pyproject.toml): still running...
+  Building wheel for xtim (pyproject.toml): finished with status 'done'
+  Created wheel for xtim: filename=xtim-3.2.2-cp312-cp312-linux_x86_64.whl size=6843361 sha256=80cce0e36dd659f87dfda329a6b303d1ff12b3e12e0e32181501f5520d3ee0bd
+  Stored in directory: /home/ubuntu/.cache/pip/wheels/52/de/9f/cebe3973ab71ee61df1cea54d89293ab1e4c2faadffb477bae
+Successfully built xtim
+Installing collected packages: xtim, stim, numpy
+
+Successfully installed numpy-2.5.2 stim-1.16.0 xtim-3.2.2
+No broken requirements found.
+No broken requirements found.
+No broken requirements found.
+No broken requirements found.
+No broken requirements found.
+No broken requirements found.
+No broken requirements found.
+[1/70] preparing msc-d3-inject-cultivate-p1e-3--clifft-previous
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 1, sequence 0)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 2, sequence 1)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 3, sequence 2)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 4, sequence 3)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 5, sequence 4)
+[2/70] preparing msc-d5-inject-cultivate-p1e-3--clifft-previous
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 1, sequence 5)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 2, sequence 6)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 3, sequence 7)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 4, sequence 8)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 5, sequence 9)
+[3/70] preparing distillation-color-code-85q-p5e-2--clifft-previous
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 1, sequence 10)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 2, sequence 11)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 3, sequence 12)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 4, sequence 13)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 5, sequence 14)
+[4/70] preparing surface-code-d7-r7-p1e-3--clifft-previous
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 1, sequence 15)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 2, sequence 16)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 3, sequence 17)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 4, sequence 18)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 5, sequence 19)
+[5/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 1, sequence 20)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 2, sequence 21)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 3, sequence 22)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 4, sequence 23)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 5, sequence 24)
+[6/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 1, sequence 25)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 2, sequence 26)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 3, sequence 27)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 4, sequence 28)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 5, sequence 29)
+[7/70] preparing draper-adder-m16-basis-all-observables--clifft-previous
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 1, sequence 30)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 2, sequence 31)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 3, sequence 32)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 4, sequence 33)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 5, sequence 34)
+[8/70] preparing distillation-15to1-rm15-p1e-3--clifft-previous
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 1, sequence 35)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 2, sequence 36)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 3, sequence 37)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 4, sequence 38)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 5, sequence 39)
+[9/70] preparing reed-muller-measured--clifft-previous
+sampling reed-muller-measured--clifft-previous (repetition 1, sequence 40)
+sampling reed-muller-measured--clifft-previous (repetition 2, sequence 41)
+sampling reed-muller-measured--clifft-previous (repetition 3, sequence 42)
+sampling reed-muller-measured--clifft-previous (repetition 4, sequence 43)
+sampling reed-muller-measured--clifft-previous (repetition 5, sequence 44)
+[10/70] preparing msc-d3-inject-cultivate-p1e-3--clifft-current
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 1, sequence 45)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 2, sequence 46)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 3, sequence 47)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 4, sequence 48)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 5, sequence 49)
+[11/70] preparing msc-d5-inject-cultivate-p1e-3--clifft-current
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 1, sequence 50)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 2, sequence 51)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 3, sequence 52)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 4, sequence 53)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 5, sequence 54)
+[12/70] preparing distillation-color-code-85q-p5e-2--clifft-current
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 1, sequence 55)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 2, sequence 56)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 3, sequence 57)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 4, sequence 58)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 5, sequence 59)
+[13/70] preparing surface-code-d7-r7-p1e-3--clifft-current
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 1, sequence 60)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 2, sequence 61)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 3, sequence 62)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 4, sequence 63)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 5, sequence 64)
+[14/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 1, sequence 65)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 2, sequence 66)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 3, sequence 67)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 4, sequence 68)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 5, sequence 69)
+[15/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 1, sequence 70)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 2, sequence 71)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 3, sequence 72)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 4, sequence 73)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 5, sequence 74)
+[16/70] preparing draper-adder-m16-basis-all-observables--clifft-current
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 1, sequence 75)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 2, sequence 76)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 3, sequence 77)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 4, sequence 78)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 5, sequence 79)
+[17/70] preparing distillation-15to1-rm15-p1e-3--clifft-current
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 1, sequence 80)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 2, sequence 81)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 3, sequence 82)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 4, sequence 83)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 5, sequence 84)
+[18/70] preparing bt27-direct-x--clifft-current
+sampling bt27-direct-x--clifft-current (repetition 1, sequence 85)
+sampling bt27-direct-x--clifft-current (repetition 2, sequence 86)
+sampling bt27-direct-x--clifft-current (repetition 3, sequence 87)
+sampling bt27-direct-x--clifft-current (repetition 4, sequence 88)
+sampling bt27-direct-x--clifft-current (repetition 5, sequence 89)
+[19/70] preparing bt81-direct-x--clifft-current
+sampling bt81-direct-x--clifft-current (repetition 1, sequence 90)
+sampling bt81-direct-x--clifft-current (repetition 2, sequence 91)
+sampling bt81-direct-x--clifft-current (repetition 3, sequence 92)
+sampling bt81-direct-x--clifft-current (repetition 4, sequence 93)
+sampling bt81-direct-x--clifft-current (repetition 5, sequence 94)
+[20/70] preparing reed-muller-measured--clifft-current
+sampling reed-muller-measured--clifft-current (repetition 1, sequence 95)
+sampling reed-muller-measured--clifft-current (repetition 2, sequence 96)
+sampling reed-muller-measured--clifft-current (repetition 3, sequence 97)
+sampling reed-muller-measured--clifft-current (repetition 4, sequence 98)
+sampling reed-muller-measured--clifft-current (repetition 5, sequence 99)
+[21/70] preparing msc-d3-inject-cultivate-p1e-3--symft-current
+sampling msc-d3-inject-cultivate-p1e-3--symft-current (repetition 1, sequence 100)
+sampling msc-d3-inject-cultivate-p1e-3--symft-current (repetition 2, sequence 101)
+sampling msc-d3-inject-cultivate-p1e-3--symft-current (repetition 3, sequence 102)
+sampling msc-d3-inject-cultivate-p1e-3--symft-current (repetition 4, sequence 103)
+sampling msc-d3-inject-cultivate-p1e-3--symft-current (repetition 5, sequence 104)
+[22/70] preparing msc-d5-inject-cultivate-p1e-3--symft-current
+sampling msc-d5-inject-cultivate-p1e-3--symft-current (repetition 1, sequence 105)
+sampling msc-d5-inject-cultivate-p1e-3--symft-current (repetition 2, sequence 106)
+sampling msc-d5-inject-cultivate-p1e-3--symft-current (repetition 3, sequence 107)
+sampling msc-d5-inject-cultivate-p1e-3--symft-current (repetition 4, sequence 108)
+sampling msc-d5-inject-cultivate-p1e-3--symft-current (repetition 5, sequence 109)
+[23/70] preparing distillation-color-code-85q-p5e-2--symft-current
+sampling distillation-color-code-85q-p5e-2--symft-current (repetition 1, sequence 110)
+sampling distillation-color-code-85q-p5e-2--symft-current (repetition 2, sequence 111)
+sampling distillation-color-code-85q-p5e-2--symft-current (repetition 3, sequence 112)
+sampling distillation-color-code-85q-p5e-2--symft-current (repetition 4, sequence 113)
+sampling distillation-color-code-85q-p5e-2--symft-current (repetition 5, sequence 114)
+[24/70] preparing surface-code-d7-r7-p1e-3--symft-current
+sampling surface-code-d7-r7-p1e-3--symft-current (repetition 1, sequence 115)
+sampling surface-code-d7-r7-p1e-3--symft-current (repetition 2, sequence 116)
+sampling surface-code-d7-r7-p1e-3--symft-current (repetition 3, sequence 117)
+sampling surface-code-d7-r7-p1e-3--symft-current (repetition 4, sequence 118)
+sampling surface-code-d7-r7-p1e-3--symft-current (repetition 5, sequence 119)
+[25/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2--symft-current
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--symft-current (repetition 1, sequence 120)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--symft-current (repetition 2, sequence 121)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--symft-current (repetition 3, sequence 122)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--symft-current (repetition 4, sequence 123)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--symft-current (repetition 5, sequence 124)
+[26/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--symft-current
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-current (repetition 1, sequence 125)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-current (repetition 2, sequence 126)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-current (repetition 3, sequence 127)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-current (repetition 4, sequence 128)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-current (repetition 5, sequence 129)
+[27/70] preparing distillation-15to1-rm15-p1e-3--symft-current
+sampling distillation-15to1-rm15-p1e-3--symft-current (repetition 1, sequence 130)
+sampling distillation-15to1-rm15-p1e-3--symft-current (repetition 2, sequence 131)
+sampling distillation-15to1-rm15-p1e-3--symft-current (repetition 3, sequence 132)
+sampling distillation-15to1-rm15-p1e-3--symft-current (repetition 4, sequence 133)
+sampling distillation-15to1-rm15-p1e-3--symft-current (repetition 5, sequence 134)
+[28/70] preparing reed-muller-measured--symft-current
+sampling reed-muller-measured--symft-current (repetition 1, sequence 135)
+sampling reed-muller-measured--symft-current (repetition 2, sequence 136)
+sampling reed-muller-measured--symft-current (repetition 3, sequence 137)
+sampling reed-muller-measured--symft-current (repetition 4, sequence 138)
+sampling reed-muller-measured--symft-current (repetition 5, sequence 139)
+[29/70] preparing surface-code-d7-r7-p1e-3--stim-current
+sampling surface-code-d7-r7-p1e-3--stim-current (repetition 1, sequence 140)
+sampling surface-code-d7-r7-p1e-3--stim-current (repetition 2, sequence 141)
+sampling surface-code-d7-r7-p1e-3--stim-current (repetition 3, sequence 142)
+sampling surface-code-d7-r7-p1e-3--stim-current (repetition 4, sequence 143)
+sampling surface-code-d7-r7-p1e-3--stim-current (repetition 5, sequence 144)
+[30/70] preparing msc-d3-inject-cultivate-p1e-3--xtim-current
+sampling msc-d3-inject-cultivate-p1e-3--xtim-current (repetition 1, sequence 145)
+sampling msc-d3-inject-cultivate-p1e-3--xtim-current (repetition 2, sequence 146)
+sampling msc-d3-inject-cultivate-p1e-3--xtim-current (repetition 3, sequence 147)
+sampling msc-d3-inject-cultivate-p1e-3--xtim-current (repetition 4, sequence 148)
+sampling msc-d3-inject-cultivate-p1e-3--xtim-current (repetition 5, sequence 149)
+[31/70] preparing msc-d5-inject-cultivate-p1e-3--xtim-current
+sampling msc-d5-inject-cultivate-p1e-3--xtim-current (repetition 1, sequence 150)
+sampling msc-d5-inject-cultivate-p1e-3--xtim-current (repetition 2, sequence 151)
+sampling msc-d5-inject-cultivate-p1e-3--xtim-current (repetition 3, sequence 152)
+sampling msc-d5-inject-cultivate-p1e-3--xtim-current (repetition 4, sequence 153)
+sampling msc-d5-inject-cultivate-p1e-3--xtim-current (repetition 5, sequence 154)
+[32/70] preparing surface-code-d7-r7-p1e-3--xtim-current
+sampling surface-code-d7-r7-p1e-3--xtim-current (repetition 1, sequence 155)
+sampling surface-code-d7-r7-p1e-3--xtim-current (repetition 2, sequence 156)
+sampling surface-code-d7-r7-p1e-3--xtim-current (repetition 3, sequence 157)
+sampling surface-code-d7-r7-p1e-3--xtim-current (repetition 4, sequence 158)
+sampling surface-code-d7-r7-p1e-3--xtim-current (repetition 5, sequence 159)
+[33/70] preparing distillation-15to1-rm15-p1e-3--xtim-current
+sampling distillation-15to1-rm15-p1e-3--xtim-current (repetition 1, sequence 160)
+sampling distillation-15to1-rm15-p1e-3--xtim-current (repetition 2, sequence 161)
+sampling distillation-15to1-rm15-p1e-3--xtim-current (repetition 3, sequence 162)
+sampling distillation-15to1-rm15-p1e-3--xtim-current (repetition 4, sequence 163)
+sampling distillation-15to1-rm15-p1e-3--xtim-current (repetition 5, sequence 164)
+[34/70] preparing msc-d3-inject-cultivate-p1e-3--tsim-current
+sampling msc-d3-inject-cultivate-p1e-3--tsim-current (repetition 1, sequence 165)
+sampling msc-d3-inject-cultivate-p1e-3--tsim-current (repetition 2, sequence 166)
+sampling msc-d3-inject-cultivate-p1e-3--tsim-current (repetition 3, sequence 167)
+sampling msc-d3-inject-cultivate-p1e-3--tsim-current (repetition 4, sequence 168)
+sampling msc-d3-inject-cultivate-p1e-3--tsim-current (repetition 5, sequence 169)
+[35/70] preparing msc-d5-inject-cultivate-p1e-3--tsim-current
+sampling msc-d5-inject-cultivate-p1e-3--tsim-current (repetition 1, sequence 170)
+sampling msc-d5-inject-cultivate-p1e-3--tsim-current (repetition 2, sequence 171)
+sampling msc-d5-inject-cultivate-p1e-3--tsim-current (repetition 3, sequence 172)
+sampling msc-d5-inject-cultivate-p1e-3--tsim-current (repetition 4, sequence 173)
+sampling msc-d5-inject-cultivate-p1e-3--tsim-current (repetition 5, sequence 174)
+[36/70] preparing distillation-color-code-85q-p5e-2--tsim-current
+sampling distillation-color-code-85q-p5e-2--tsim-current (repetition 1, sequence 175)
+sampling distillation-color-code-85q-p5e-2--tsim-current (repetition 2, sequence 176)
+sampling distillation-color-code-85q-p5e-2--tsim-current (repetition 3, sequence 177)
+sampling distillation-color-code-85q-p5e-2--tsim-current (repetition 4, sequence 178)
+sampling distillation-color-code-85q-p5e-2--tsim-current (repetition 5, sequence 179)
+[37/70] preparing surface-code-d7-r7-p1e-3--tsim-current
+sampling surface-code-d7-r7-p1e-3--tsim-current (repetition 1, sequence 180)
+sampling surface-code-d7-r7-p1e-3--tsim-current (repetition 2, sequence 181)
+sampling surface-code-d7-r7-p1e-3--tsim-current (repetition 3, sequence 182)
+sampling surface-code-d7-r7-p1e-3--tsim-current (repetition 4, sequence 183)
+sampling surface-code-d7-r7-p1e-3--tsim-current (repetition 5, sequence 184)
+[38/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-current
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-current (repetition 1, sequence 185)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-current (repetition 2, sequence 186)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-current (repetition 3, sequence 187)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-current (repetition 4, sequence 188)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-current (repetition 5, sequence 189)
+[39/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-current
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-current (repetition 1, sequence 190)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-current (repetition 2, sequence 191)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-current (repetition 3, sequence 192)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-current (repetition 4, sequence 193)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-current (repetition 5, sequence 194)
+[40/70] preparing draper-adder-m16-basis-all-observables--tsim-current
+sampling draper-adder-m16-basis-all-observables--tsim-current (repetition 1, sequence 195)
+sampling draper-adder-m16-basis-all-observables--tsim-current (repetition 2, sequence 196)
+sampling draper-adder-m16-basis-all-observables--tsim-current (repetition 3, sequence 197)
+sampling draper-adder-m16-basis-all-observables--tsim-current (repetition 4, sequence 198)
+sampling draper-adder-m16-basis-all-observables--tsim-current (repetition 5, sequence 199)
+[41/70] preparing distillation-15to1-rm15-p1e-3--tsim-current
+sampling distillation-15to1-rm15-p1e-3--tsim-current (repetition 1, sequence 200)
+sampling distillation-15to1-rm15-p1e-3--tsim-current (repetition 2, sequence 201)
+sampling distillation-15to1-rm15-p1e-3--tsim-current (repetition 3, sequence 202)
+sampling distillation-15to1-rm15-p1e-3--tsim-current (repetition 4, sequence 203)
+sampling distillation-15to1-rm15-p1e-3--tsim-current (repetition 5, sequence 204)
+[42/70] preparing reed-muller-measured--tsim-current
+sampling reed-muller-measured--tsim-current (repetition 1, sequence 205)
+sampling reed-muller-measured--tsim-current (repetition 2, sequence 206)
+sampling reed-muller-measured--tsim-current (repetition 3, sequence 207)
+sampling reed-muller-measured--tsim-current (repetition 4, sequence 208)
+sampling reed-muller-measured--tsim-current (repetition 5, sequence 209)
+[43/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 1, sequence 210)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 2, sequence 211)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 3, sequence 212)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 4, sequence 213)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 5, sequence 214)
+[44/70] preparing draper-adder-m16-basis-all-observables--clifft-bulk
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 1, sequence 215)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 2, sequence 216)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 3, sequence 217)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 4, sequence 218)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 5, sequence 219)
+[45/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk (repetition 1, sequence 220)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk (repetition 2, sequence 221)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk (repetition 3, sequence 222)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk (repetition 4, sequence 223)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk (repetition 5, sequence 224)
+[46/70] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk (repetition 1, sequence 225)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk (repetition 2, sequence 226)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk (repetition 3, sequence 227)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk (repetition 4, sequence 228)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk (repetition 5, sequence 229)
+[47/70] preparing draper-adder-m16-basis-all-observables--tsim-bulk
+sampling draper-adder-m16-basis-all-observables--tsim-bulk (repetition 1, sequence 230)
+sampling draper-adder-m16-basis-all-observables--tsim-bulk (repetition 2, sequence 231)
+sampling draper-adder-m16-basis-all-observables--tsim-bulk (repetition 3, sequence 232)
+sampling draper-adder-m16-basis-all-observables--tsim-bulk (repetition 4, sequence 233)
+sampling draper-adder-m16-basis-all-observables--tsim-bulk (repetition 5, sequence 234)
+[48/70] preparing msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 1, sequence 235)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 2, sequence 236)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 3, sequence 237)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 4, sequence 238)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 5, sequence 239)
+[49/70] preparing surface-code-d7-r7-p1e-3-unselected--clifft-coverage
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 1, sequence 240)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 2, sequence 241)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 3, sequence 242)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 4, sequence 243)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 5, sequence 244)
+[50/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 1, sequence 245)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 2, sequence 246)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 3, sequence 247)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 4, sequence 248)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 5, sequence 249)
+[51/70] preparing quantum-volume-q10-seed42-all-observables--clifft-coverage
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 1, sequence 250)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 2, sequence 251)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 3, sequence 252)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 4, sequence 253)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 5, sequence 254)
+[52/70] preparing quantum-volume-q20-seed42-all-observables--clifft-coverage
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 1, sequence 255)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 2, sequence 256)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 3, sequence 257)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 4, sequence 258)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 5, sequence 259)
+[53/70] preparing msc-d7-proxy-unverified-p1e-3--clifft-coverage
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 1, sequence 260)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 2, sequence 261)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 3, sequence 262)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 4, sequence 263)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 5, sequence 264)
+[54/70] preparing msc-full-d5-cultivation-selected-p1e-3--clifft-coverage
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 1, sequence 265)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 2, sequence 266)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 3, sequence 267)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 4, sequence 268)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 5, sequence 269)
+[55/70] preparing msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage
+sampling msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage (repetition 1, sequence 270)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage (repetition 2, sequence 271)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage (repetition 3, sequence 272)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage (repetition 4, sequence 273)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage (repetition 5, sequence 274)
+[56/70] preparing surface-code-d7-r7-p1e-3-unselected--symft-coverage
+sampling surface-code-d7-r7-p1e-3-unselected--symft-coverage (repetition 1, sequence 275)
+sampling surface-code-d7-r7-p1e-3-unselected--symft-coverage (repetition 2, sequence 276)
+sampling surface-code-d7-r7-p1e-3-unselected--symft-coverage (repetition 3, sequence 277)
+sampling surface-code-d7-r7-p1e-3-unselected--symft-coverage (repetition 4, sequence 278)
+sampling surface-code-d7-r7-p1e-3-unselected--symft-coverage (repetition 5, sequence 279)
+[57/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage (repetition 1, sequence 280)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage (repetition 2, sequence 281)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage (repetition 3, sequence 282)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage (repetition 4, sequence 283)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage (repetition 5, sequence 284)
+[58/70] preparing quantum-volume-q10-seed42-all-observables--symft-coverage
+sampling quantum-volume-q10-seed42-all-observables--symft-coverage (repetition 1, sequence 285)
+sampling quantum-volume-q10-seed42-all-observables--symft-coverage (repetition 2, sequence 286)
+sampling quantum-volume-q10-seed42-all-observables--symft-coverage (repetition 3, sequence 287)
+sampling quantum-volume-q10-seed42-all-observables--symft-coverage (repetition 4, sequence 288)
+sampling quantum-volume-q10-seed42-all-observables--symft-coverage (repetition 5, sequence 289)
+[59/70] preparing quantum-volume-q20-seed42-all-observables--symft-coverage
+sampling quantum-volume-q20-seed42-all-observables--symft-coverage (repetition 1, sequence 290)
+sampling quantum-volume-q20-seed42-all-observables--symft-coverage (repetition 2, sequence 291)
+sampling quantum-volume-q20-seed42-all-observables--symft-coverage (repetition 3, sequence 292)
+sampling quantum-volume-q20-seed42-all-observables--symft-coverage (repetition 4, sequence 293)
+sampling quantum-volume-q20-seed42-all-observables--symft-coverage (repetition 5, sequence 294)
+[60/70] preparing msc-d7-proxy-unverified-p1e-3--symft-coverage
+sampling msc-d7-proxy-unverified-p1e-3--symft-coverage (repetition 1, sequence 295)
+sampling msc-d7-proxy-unverified-p1e-3--symft-coverage (repetition 2, sequence 296)
+sampling msc-d7-proxy-unverified-p1e-3--symft-coverage (repetition 3, sequence 297)
+sampling msc-d7-proxy-unverified-p1e-3--symft-coverage (repetition 4, sequence 298)
+sampling msc-d7-proxy-unverified-p1e-3--symft-coverage (repetition 5, sequence 299)
+[61/70] preparing msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage
+sampling msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage (repetition 1, sequence 300)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage (repetition 2, sequence 301)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage (repetition 3, sequence 302)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage (repetition 4, sequence 303)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage (repetition 5, sequence 304)
+[62/70] preparing surface-code-d7-r7-p1e-3-unselected--tsim-coverage
+sampling surface-code-d7-r7-p1e-3-unselected--tsim-coverage (repetition 1, sequence 305)
+sampling surface-code-d7-r7-p1e-3-unselected--tsim-coverage (repetition 2, sequence 306)
+sampling surface-code-d7-r7-p1e-3-unselected--tsim-coverage (repetition 3, sequence 307)
+sampling surface-code-d7-r7-p1e-3-unselected--tsim-coverage (repetition 4, sequence 308)
+sampling surface-code-d7-r7-p1e-3-unselected--tsim-coverage (repetition 5, sequence 309)
+[63/70] preparing coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage (repetition 1, sequence 310)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage (repetition 2, sequence 311)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage (repetition 3, sequence 312)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage (repetition 4, sequence 313)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage (repetition 5, sequence 314)
+[64/70] preparing quantum-volume-q10-seed42-all-observables--tsim-coverage
+sampling quantum-volume-q10-seed42-all-observables--tsim-coverage (repetition 1, sequence 315)
+sampling quantum-volume-q10-seed42-all-observables--tsim-coverage (repetition 2, sequence 316)
+sampling quantum-volume-q10-seed42-all-observables--tsim-coverage (repetition 3, sequence 317)
+sampling quantum-volume-q10-seed42-all-observables--tsim-coverage (repetition 4, sequence 318)
+sampling quantum-volume-q10-seed42-all-observables--tsim-coverage (repetition 5, sequence 319)
+[65/70] preparing quantum-volume-q20-seed42-all-observables--tsim-coverage
+sampling quantum-volume-q20-seed42-all-observables--tsim-coverage (repetition 1, sequence 320)
+sampling quantum-volume-q20-seed42-all-observables--tsim-coverage (repetition 2, sequence 321)
+sampling quantum-volume-q20-seed42-all-observables--tsim-coverage (repetition 3, sequence 322)
+sampling quantum-volume-q20-seed42-all-observables--tsim-coverage (repetition 4, sequence 323)
+sampling quantum-volume-q20-seed42-all-observables--tsim-coverage (repetition 5, sequence 324)
+[66/70] preparing msc-d7-proxy-unverified-p1e-3--tsim-coverage
+sampling msc-d7-proxy-unverified-p1e-3--tsim-coverage (repetition 1, sequence 325)
+sampling msc-d7-proxy-unverified-p1e-3--tsim-coverage (repetition 2, sequence 326)
+sampling msc-d7-proxy-unverified-p1e-3--tsim-coverage (repetition 3, sequence 327)
+sampling msc-d7-proxy-unverified-p1e-3--tsim-coverage (repetition 4, sequence 328)
+sampling msc-d7-proxy-unverified-p1e-3--tsim-coverage (repetition 5, sequence 329)
+[67/70] preparing msc-full-d5-cultivation-selected-p1e-3--tsim-coverage
+sampling msc-full-d5-cultivation-selected-p1e-3--tsim-coverage (repetition 1, sequence 330)
+sampling msc-full-d5-cultivation-selected-p1e-3--tsim-coverage (repetition 2, sequence 331)
+sampling msc-full-d5-cultivation-selected-p1e-3--tsim-coverage (repetition 3, sequence 332)
+sampling msc-full-d5-cultivation-selected-p1e-3--tsim-coverage (repetition 4, sequence 333)
+sampling msc-full-d5-cultivation-selected-p1e-3--tsim-coverage (repetition 5, sequence 334)
+[68/70] preparing msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage
+sampling msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage (repetition 1, sequence 335)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage (repetition 2, sequence 336)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage (repetition 3, sequence 337)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage (repetition 4, sequence 338)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage (repetition 5, sequence 339)
+[69/70] preparing surface-code-d7-r7-p1e-3-unselected--xtim-coverage
+sampling surface-code-d7-r7-p1e-3-unselected--xtim-coverage (repetition 1, sequence 340)
+sampling surface-code-d7-r7-p1e-3-unselected--xtim-coverage (repetition 2, sequence 341)
+sampling surface-code-d7-r7-p1e-3-unselected--xtim-coverage (repetition 3, sequence 342)
+sampling surface-code-d7-r7-p1e-3-unselected--xtim-coverage (repetition 4, sequence 343)
+sampling surface-code-d7-r7-p1e-3-unselected--xtim-coverage (repetition 5, sequence 344)
+[70/70] preparing surface-code-d7-r7-p1e-3-unselected--stim-coverage
+sampling surface-code-d7-r7-p1e-3-unselected--stim-coverage (repetition 1, sequence 345)
+sampling surface-code-d7-r7-p1e-3-unselected--stim-coverage (repetition 2, sequence 346)
+sampling surface-code-d7-r7-p1e-3-unselected--stim-coverage (repetition 3, sequence 347)
+sampling surface-code-d7-r7-p1e-3-unselected--stim-coverage (repetition 4, sequence 348)
+sampling surface-code-d7-r7-p1e-3-unselected--stim-coverage (repetition 5, sequence 349)
+Result: /home/ubuntu/clifft-bench-ec2-results/0.13.0rc1-20261103-183623 (70/70 successful)
