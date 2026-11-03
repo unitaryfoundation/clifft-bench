@@ -86,11 +86,11 @@ annotations, never to simulate or validate the non-Clifford output law.
 
 ## Quantum Volume
 
-QV reuses the immutable QV10/QV20 seed-42 circuits already in the corpus. These
-rows measure repeated aggregate sampling from a prepared sampler. They are
-distinct from the setup-plus-one-shot study under `experiments/qv` and say
-nothing about heavy-output-generation success. There are no selected detectors;
-the output is the raw parity of the declared final measured bit.
+The QV10/QV20 seed-42 workloads declare every terminal measurement as an
+observable. These rows measure repeated aggregate sampling from a prepared
+sampler and report raw observable-0 ones, corresponding to qubit 0. There are
+no selected detectors. They are distinct from the setup-plus-one-shot study
+under `experiments/qv` and say nothing about heavy-output-generation success.
 
 ## Validation and collection
 

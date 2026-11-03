@@ -31,15 +31,19 @@ The original eight QEC files are byte-for-byte copies from
 [`unitaryfoundation/clifft-paper`](https://github.com/unitaryfoundation/clifft-paper)
 commit `db7dc9f13a2c2854690e92390c779048a1ac1400`. The Quantum Volume
 files were generated from that commit with Qiskit 2.5.1 and seed 42, then given
-a terminal observable declaration so both aggregate-count adapters expose the
-same output. The generated files are immutable inputs; Qiskit is not a runtime
-benchmark dependency. The applicable Apache-2.0 license is included as
+one observable per terminal measurement to expose the complete terminal readout.
+QV observable k is the measurement of qubit k. The benchmark still returns
+aggregate observable-0 counts; declaring these outputs does not require every
+adapter to materialize a full bitstring. The generated files are immutable inputs;
+Qiskit is not a runtime benchmark dependency. The applicable Apache-2.0 license
+is included as
 [`circuits/LICENSE-Clifft-paper`](circuits/LICENSE-Clifft-paper).
 
 The Draper adder was generated with
 [MQT Bench 2.3.0](https://github.com/munich-quantum-toolkit/bench/blob/v2.3.0/src/mqt/bench/benchmarks/draper_qft_adder.py)
-and Qiskit 2.5.2 at optimization level 0. These generators are not runtime
-dependencies.
+and Qiskit 2.5.2 at optimization level 0. Observable 0 is the parity of the two
+sum MSBs; observables 1 through 32 expose every measurement record. These
+generators are not runtime dependencies.
 
 The 15-to-1 circuit comes from
 [`ikim-quantum/xtim`](https://github.com/ikim-quantum/xtim/blob/29454071fb20fbcffd258559ad0644676e44a8f9/examples/distillation_15_1_3.stim),

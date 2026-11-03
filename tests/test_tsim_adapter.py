@@ -131,7 +131,7 @@ def test_tsim_verifies_exact_source_identity(monkeypatch, mismatch):
     "msc-d3-inject-cultivate-p1e-3", "msc-d5-inject-cultivate-p1e-3",
     "surface-code-d7-r7-p1e-3", "distillation-color-code-85q-p5e-2",
     "coherent-surface-d3-r3-p1e-3-rz2e-2", "coherent-surface-d5-r5-p1e-3-rz2e-2",
-    "draper-adder-m16-basis", "distillation-15to1-rm15-p1e-3",
+    "draper-adder-m16-basis-all-observables", "distillation-15to1-rm15-p1e-3",
 ])
 def test_tsim_release_circuit_metadata_and_counts(workload_id):
     pytest.importorskip("tsim")
@@ -147,7 +147,7 @@ def test_tsim_release_circuit_metadata_and_counts(workload_id):
     assert not validate_counts(
         counts, postselect=case.workload.definition["semantics"]["postselect_all_detectors"]
     )
-    if workload_id in {"surface-code-d7-r7-p1e-3", "draper-adder-m16-basis"}:
+    if workload_id in {"surface-code-d7-r7-p1e-3", "draper-adder-m16-basis-all-observables"}:
         assert p.runtime_metadata["batch_size_applicable"] is False
-    if workload_id == "draper-adder-m16-basis":
+    if workload_id == "draper-adder-m16-basis-all-observables":
         assert counts.accepted_shots == 17 and counts.logical_errors == 0

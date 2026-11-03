@@ -99,7 +99,7 @@ workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
 
 [[variants.workloads]]
-workload_id = "draper-adder-m16-basis"
+workload_id = "draper-adder-m16-basis-all-observables"
 
 [[variants.workloads]]
 workload_id = "distillation-15to1-rm15-p1e-3"
@@ -204,7 +204,7 @@ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
 shots_per_call = 256
 
 [[variants.workloads]]
-workload_id = "draper-adder-m16-basis"
+workload_id = "draper-adder-m16-basis-all-observables"
 shots_per_call = 100000
 
 [[variants]]
@@ -236,7 +236,7 @@ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
 shots_per_call = 256
 
 [[variants.workloads]]
-workload_id = "draper-adder-m16-basis"
+workload_id = "draper-adder-m16-basis-all-observables"
 shots_per_call = 100000
 
 [[variants]]
@@ -268,10 +268,10 @@ workload_id = "surface-code-d7-r7-p1e-3-unselected"
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
 
 [[variants.workloads]]
-workload_id = "quantum-volume-q10-seed42"
+workload_id = "quantum-volume-q10-seed42-all-observables"
 
 [[variants.workloads]]
-workload_id = "quantum-volume-q20-seed42"
+workload_id = "quantum-volume-q20-seed42-all-observables"
 
 [[variants.workloads]]
 workload_id = "msc-d7-proxy-unverified-p1e-3"

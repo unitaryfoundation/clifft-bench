@@ -67,7 +67,7 @@ batch_size = "calibrate"
 [[cases]]
 id = "draper-adder-smoke-clifft"
 variant_id = "clifft-current"
-workload_id = "draper-adder-m16-basis"
+workload_id = "draper-adder-m16-basis-all-observables"
 implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 2
 

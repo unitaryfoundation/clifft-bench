@@ -49,9 +49,9 @@ batch_size = 32
 options_preset = "clifft-scheduled"
 
 [[cases]]
-id = "quantum-volume-q10-seed42--clifft-coverage"
+id = "quantum-volume-q10-seed42-all-observables--clifft-coverage"
 variant_id = "clifft-coverage"
-workload_id = "quantum-volume-q10-seed42"
+workload_id = "quantum-volume-q10-seed42-all-observables"
 implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 128
 
@@ -60,9 +60,9 @@ batch_size = 32
 options_preset = "clifft-scheduled"
 
 [[cases]]
-id = "quantum-volume-q20-seed42--clifft-coverage"
+id = "quantum-volume-q20-seed42-all-observables--clifft-coverage"
 variant_id = "clifft-coverage"
-workload_id = "quantum-volume-q20-seed42"
+workload_id = "quantum-volume-q20-seed42-all-observables"
 implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 1
 
@@ -132,9 +132,9 @@ batch_size = 32
 sample_chunk_shots = 2048
 
 [[cases]]
-id = "quantum-volume-q10-seed42--symft-coverage"
+id = "quantum-volume-q10-seed42-all-observables--symft-coverage"
 variant_id = "symft-coverage"
-workload_id = "quantum-volume-q10-seed42"
+workload_id = "quantum-volume-q10-seed42-all-observables"
 implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 128
 
@@ -145,9 +145,9 @@ batch_size = 32
 sample_chunk_shots = 2048
 
 [[cases]]
-id = "quantum-volume-q20-seed42--symft-coverage"
+id = "quantum-volume-q20-seed42-all-observables--symft-coverage"
 variant_id = "symft-coverage"
-workload_id = "quantum-volume-q20-seed42"
+workload_id = "quantum-volume-q20-seed42-all-observables"
 implementation_id = "symft-0.1.1-c89b985"
 shots_per_call = 1
 
@@ -210,9 +210,9 @@ batch_size = 32
 trajectory_sharing = true
 
 [[cases]]
-id = "quantum-volume-q10-seed42--tsim-coverage"
+id = "quantum-volume-q10-seed42-all-observables--tsim-coverage"
 variant_id = "tsim-coverage"
-workload_id = "quantum-volume-q10-seed42"
+workload_id = "quantum-volume-q10-seed42-all-observables"
 implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 128
 
@@ -223,9 +223,9 @@ batch_size = 32
 trajectory_sharing = true
 
 [[cases]]
-id = "quantum-volume-q20-seed42--tsim-coverage"
+id = "quantum-volume-q20-seed42-all-observables--tsim-coverage"
 variant_id = "tsim-coverage"
-workload_id = "quantum-volume-q20-seed42"
+workload_id = "quantum-volume-q20-seed42-all-observables"
 implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 1
 

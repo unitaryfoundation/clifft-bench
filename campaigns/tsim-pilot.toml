@@ -87,9 +87,9 @@ batch_size = "calibrate"
 trajectory_sharing = true
 
 [[cases]]
-id = "draper-adder-m16-basis--clifft-bulk"
+id = "draper-adder-m16-basis-all-observables--clifft-bulk"
 variant_id = "clifft-bulk"
-workload_id = "draper-adder-m16-basis"
+workload_id = "draper-adder-m16-basis-all-observables"
 implementation_id = "clifft-0.13.0rc1"
 shots_per_call = 100000
 
@@ -98,9 +98,9 @@ batch_size = "calibrate"
 options_preset = "clifft-scheduled"
 
 [[cases]]
-id = "draper-adder-m16-basis--tsim-bulk"
+id = "draper-adder-m16-basis-all-observables--tsim-bulk"
 variant_id = "tsim-bulk"
-workload_id = "draper-adder-m16-basis"
+workload_id = "draper-adder-m16-basis-all-observables"
 implementation_id = "tsim-0.1.5-e9406ed"
 shots_per_call = 100000
 

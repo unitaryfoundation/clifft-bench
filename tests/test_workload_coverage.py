@@ -109,14 +109,14 @@ def test_partial_selection_counts_only_selected_raw_detector(adapter, batch, sel
     )
 
 
-def qv_observable_probability(path: Path, qubits: int) -> float:
+def qv_observable_probability(path: Path, qubits: int, observable: int) -> float:
     """Independent dense statevector for the immutable U3/CX QV grammar."""
     import numpy as np
 
     state = np.zeros(1 << qubits, dtype=np.complex128)
     state[0] = 1
     indices = np.arange(len(state))
-    measurements = []
+    measurements, observables = [], []
     for line in path.read_text().splitlines():
         line = line.split("#", 1)[0].strip()
         if not line:
@@ -139,26 +139,33 @@ def qv_observable_probability(path: Path, qubits: int) -> float:
         elif line.startswith("M "):
             measurements.extend(map(int, line.split()[1:]))
         else:
-            assert line == "OBSERVABLE_INCLUDE(0) rec[-1]"
+            observables.append(line)
     assert len(measurements) == qubits
+    assert observables == [
+        f"OBSERVABLE_INCLUDE({k}) rec[-{qubits - k}]" for k in range(qubits)
+    ]
     assert float(np.vdot(state, state).real) == pytest.approx(1)
-    return float(np.sum(np.abs(state[(indices >> measurements[-1]) & 1 == 1])**2))
+    return float(np.sum(np.abs(state[(indices >> measurements[observable]) & 1 == 1])**2))
 
 
 @pytest.mark.parametrize("adapter", ["clifft", "symft", "tsim"])
 @pytest.mark.parametrize("batch", [1, 32])
-def test_repeated_qv10_matches_independent_statevector(adapter, batch):
+@pytest.mark.parametrize("observable", [0, 9])
+def test_repeated_qv10_matches_independent_statevector(adapter, batch, observable):
     pytest.importorskip(adapter)
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
-    case = next(c for c in suite.cases if c.workload.id == "quantum-volume-q10-seed42")
-    probability = qv_observable_probability(case.workload.artifact_path, 10)
+    case = next(c for c in suite.cases
+                if c.workload.id == "quantum-volume-q10-seed42-all-observables")
+    probability = qv_observable_probability(case.workload.artifact_path, 10, observable)
     execution = copy.deepcopy(case.definition["execution"])
     execution.update(batch_size=batch,
                      options={"sample_chunk_shots": 2048} if adapter == "symft" else {})
     if adapter != "clifft":
         execution["options"].pop("scheduler", None)
+    workload = copy.deepcopy(case.workload.definition)
+    workload["semantics"]["observable_index"] = observable
     prepared = load_adapter(adapter).prepare(
-        artifact_path=case.workload.artifact_path, workload=case.workload.definition,
+        artifact_path=case.workload.artifact_path, workload=workload,
         execution=execution, seed=1742,
     )
     for seed in (1743, 1744):
@@ -169,3 +176,34 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch):
         assert abs(counts.logical_errors - 4096 * probability) <= (
             6 * math.sqrt(4096 * probability * (1-probability)) + 1
         )
+
+
+@pytest.mark.parametrize("adapter", ["clifft", "tsim"])
+@pytest.mark.parametrize("batch", [1, 32])
+@pytest.mark.parametrize("observable", [1, 16, 17, 32])
+def test_adder_readout_matches_basis_sum(adapter, batch, observable):
+    pytest.importorskip(adapter)
+    suite = load_suite(ROOT / "campaigns/release-v1.toml")
+    case = next(c for c in suite.cases
+                if c.workload.id == "draper-adder-m16-basis-all-observables")
+    workload = copy.deepcopy(case.workload.definition)
+    workload["semantics"]["observable_index"] = observable
+    params = workload["parameters"]
+    bits = params["bits_per_operand"]
+    output_a = params["input_a"]
+    output_b = (output_a + params["input_b"]) % (1 << bits)
+    register, bit = divmod(observable - 1, bits)
+    expected = ((output_a, output_b)[register] >> bit) & 1
+    execution = copy.deepcopy(case.definition["execution"])
+    execution["batch_size"] = batch
+    if adapter != "clifft":
+        execution["options"] = {}
+    prepared = load_adapter(adapter).prepare(
+        artifact_path=case.workload.artifact_path, workload=workload,
+        execution=execution, seed=1742,
+    )
+    assert prepared.runtime_metadata["num_observables"] == 2 * bits + 1
+    counts = prepared.sample(65, 1743)
+    assert counts.attempted_shots == counts.accepted_shots == 65
+    assert counts.discarded_shots == 0
+    assert counts.logical_errors == expected * 65

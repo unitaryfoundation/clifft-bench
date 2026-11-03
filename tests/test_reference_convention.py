@@ -140,7 +140,8 @@ def test_clifft_default_pipeline_reduces_prepared_adder(batch_size, scheduled):
     root = Path(__file__).resolve().parents[1]
     manifest = read_toml(root / "workloads.toml")
     workload = next(
-        item for item in manifest["workloads"] if item["id"] == "draper-adder-m16-basis"
+        item for item in manifest["workloads"]
+        if item["id"] == "draper-adder-m16-basis-all-observables"
     )
     execution = dict(
         load_suite(root / "campaigns/release-v1.toml").cases[0].definition["execution"]

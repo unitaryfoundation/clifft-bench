@@ -268,15 +268,15 @@ license = "Apache-2.0"
 notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
-id = "quantum-volume-q10-seed42"
+id = "quantum-volume-q10-seed42-all-observables"
 family = "quantum-volume"
-description = "Fixed depth-10 Quantum Volume circuit on 10 qubits, transpiled to CX and U3 gates."
+description = "Fixed depth-10 Quantum Volume circuit on 10 qubits, transpiled to CX and U3 gates, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 4096
 
 [workloads.artifact]
 path = "workloads/circuits/quantum_volume_q10_seed42.stim"
-sha256 = "faf7fbf3bf4048c1c7a0f9954cc14160e74d48ebc8972b41cf3c6bc07c697f6a"
+sha256 = "d80f47477247b6c7b24374497eab2421522dd1110f73355fd7efda21dd8fea2a"
 
 [workloads.parameters]
 num_qubits = 10
@@ -292,25 +292,25 @@ postselect_all_detectors = false
 num_qubits = 10
 num_measurements = 10
 num_detectors = 0
-num_observables = 1
+num_observables = 10
 
 [workloads.provenance]
 source_url = "https://github.com/unitaryfoundation/clifft-paper"
 source_commit = "db7dc9f13a2c2854690e92390c779048a1ac1400"
 source_path = "qv_bench/qv_bench/generator.py and qv_bench/qv_bench/qasm_adapter.py"
 license = "Apache-2.0"
-notes = "Generated with Qiskit 2.5.1 and seed 42; OBSERVABLE_INCLUDE(0) rec[-1] was appended to expose a shared aggregate output."
+notes = "Generated with Qiskit 2.5.1 and seed 42; one OBSERVABLE_INCLUDE(k) per qubit-k measurement was appended to expose the complete terminal readout as declared observables."
 
 [[workloads]]
-id = "quantum-volume-q20-seed42"
+id = "quantum-volume-q20-seed42-all-observables"
 family = "quantum-volume"
-description = "Fixed depth-20 Quantum Volume circuit on 20 qubits, transpiled to CX and U3 gates."
+description = "Fixed depth-20 Quantum Volume circuit on 20 qubits, transpiled to CX and U3 gates, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "symft", "tsim"]
 shots_per_call = 32
 
 [workloads.artifact]
 path = "workloads/circuits/quantum_volume_q20_seed42.stim"
-sha256 = "b9bbbe939ce4c1754b6bac936c04b2c4ce572657831fef6a7bc5c3054f81ce53"
+sha256 = "8a9ea4625d63b9923cc641bc122d085e0602d657b2b378b35d333f84317e73a7"
 
 [workloads.parameters]
 num_qubits = 20
@@ -326,25 +326,25 @@ postselect_all_detectors = false
 num_qubits = 20
 num_measurements = 20
 num_detectors = 0
-num_observables = 1
+num_observables = 20
 
 [workloads.provenance]
 source_url = "https://github.com/unitaryfoundation/clifft-paper"
 source_commit = "db7dc9f13a2c2854690e92390c779048a1ac1400"
 source_path = "qv_bench/qv_bench/generator.py and qv_bench/qv_bench/qasm_adapter.py"
 license = "Apache-2.0"
-notes = "Generated with Qiskit 2.5.1 and seed 42; OBSERVABLE_INCLUDE(0) rec[-1] was appended to expose a shared aggregate output."
+notes = "Generated with Qiskit 2.5.1 and seed 42; one OBSERVABLE_INCLUDE(k) per qubit-k measurement was appended to expose the complete terminal readout as declared observables."
 
 [[workloads]]
-id = "draper-adder-m16-basis"
+id = "draper-adder-m16-basis-all-observables"
 family = "prepared-basis-arithmetic"
-description = "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise or postselection."
+description = "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise or postselection, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "tsim"]
 shots_per_call = 2048
 
 [workloads.artifact]
 path = "workloads/circuits/draper_adder_16_basis.stim"
-sha256 = "c62c0d7210be01315fbaad3ff6114c14524a40477c5246fe0ae65fae36b31289"
+sha256 = "25cf840f9339b4ccf61b3501978cf3217066b1823d210e3a3164b6845b248800"
 
 [workloads.parameters]
 bits_per_operand = 16
@@ -364,14 +364,14 @@ postselect_all_detectors = false
 num_qubits = 32
 num_measurements = 32
 num_detectors = 0
-num_observables = 1
+num_observables = 33
 
 [workloads.provenance]
 source_url = "https://github.com/munich-quantum-toolkit/bench"
 source_commit = "2cd3f3b08d5d8866595948fbce955e701e86a5df"
 source_path = "src/mqt/bench/benchmarks/draper_qft_adder.py"
 license = "Apache-2.0"
-notes = "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0. The Apache-2.0 exported fixture was copied unchanged from tools/bench/fixtures/draper_adder_16_basis.stim in Clifft commit 037551a9b38258fe4f8465bcb4670e7f3e888d99."
+notes = "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0. The Apache-2.0 exported fixture was copied from tools/bench/fixtures/draper_adder_16_basis.stim in Clifft commit 037551a9b38258fe4f8465bcb4670e7f3e888d99; one observable per measurement was appended after observable 0 to expose the complete terminal readout as declared observables."
 
 [[workloads]]
 id = "distillation-15to1-rm15-p1e-3"
@@ -686,7 +686,7 @@ qec-and-adder = [
   "surface-code-d7-r7-p1e-3",
   "coherent-surface-d3-r3-p1e-3-rz2e-2",
   "coherent-surface-d5-r5-p1e-3-rz2e-2",
-  "draper-adder-m16-basis",
+  "draper-adder-m16-basis-all-observables",
   "distillation-15to1-rm15-p1e-3",
   "reed-muller-measured",
 ]
@@ -694,8 +694,8 @@ coverage = [
   "msc-d3-inject-cultivate-p1e-3-unselected",
   "surface-code-d7-r7-p1e-3-unselected",
   "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected",
-  "quantum-volume-q10-seed42",
-  "quantum-volume-q20-seed42",
+  "quantum-volume-q10-seed42-all-observables",
+  "quantum-volume-q20-seed42-all-observables",
   "msc-d7-proxy-unverified-p1e-3",
   "msc-full-d5-cultivation-selected-p1e-3",
 ]

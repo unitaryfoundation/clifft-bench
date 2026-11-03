@@ -1,6 +1,7 @@
 # Fixed-size 16-bit Draper adder on 32 qubits.
 # Input a=37449 b=18724; output a=37449 b=56173; no noise.
-# Records are qubits 0..31 in order; observable 0 is the parity of the two sum MSBs.
+# Records are qubits 0..31 in order; observable 0 is the parity of the two sum MSBs;
+# observable k+1 is the record of qubit k.
 # MQT Bench 2.3.0; Qiskit 2.5.2; optimization_level=0; rotations in half-turns.
 X 0
 R_Z(0.5) 0
@@ -1958,3 +1959,35 @@ M 29
 M 30
 M 31
 OBSERVABLE_INCLUDE(0) rec[-1] rec[-2]
+OBSERVABLE_INCLUDE(1) rec[-32]
+OBSERVABLE_INCLUDE(2) rec[-31]
+OBSERVABLE_INCLUDE(3) rec[-30]
+OBSERVABLE_INCLUDE(4) rec[-29]
+OBSERVABLE_INCLUDE(5) rec[-28]
+OBSERVABLE_INCLUDE(6) rec[-27]
+OBSERVABLE_INCLUDE(7) rec[-26]
+OBSERVABLE_INCLUDE(8) rec[-25]
+OBSERVABLE_INCLUDE(9) rec[-24]
+OBSERVABLE_INCLUDE(10) rec[-23]
+OBSERVABLE_INCLUDE(11) rec[-22]
+OBSERVABLE_INCLUDE(12) rec[-21]
+OBSERVABLE_INCLUDE(13) rec[-20]
+OBSERVABLE_INCLUDE(14) rec[-19]
+OBSERVABLE_INCLUDE(15) rec[-18]
+OBSERVABLE_INCLUDE(16) rec[-17]
+OBSERVABLE_INCLUDE(17) rec[-16]
+OBSERVABLE_INCLUDE(18) rec[-15]
+OBSERVABLE_INCLUDE(19) rec[-14]
+OBSERVABLE_INCLUDE(20) rec[-13]
+OBSERVABLE_INCLUDE(21) rec[-12]
+OBSERVABLE_INCLUDE(22) rec[-11]
+OBSERVABLE_INCLUDE(23) rec[-10]
+OBSERVABLE_INCLUDE(24) rec[-9]
+OBSERVABLE_INCLUDE(25) rec[-8]
+OBSERVABLE_INCLUDE(26) rec[-7]
+OBSERVABLE_INCLUDE(27) rec[-6]
+OBSERVABLE_INCLUDE(28) rec[-5]
+OBSERVABLE_INCLUDE(29) rec[-4]
+OBSERVABLE_INCLUDE(30) rec[-3]
+OBSERVABLE_INCLUDE(31) rec[-2]
+OBSERVABLE_INCLUDE(32) rec[-1]
