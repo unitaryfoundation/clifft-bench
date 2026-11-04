@@ -184,3 +184,93 @@ Bulk and short calls remain separate. Missing baselines are not regressions.
 | coverage-alternatives-vs-current | quantum-volume-q20-seed42-all-observables | stim-coverage | — | baseline: measured; candidate: unsupported |
 | coverage-alternatives-vs-current | msc-d7-proxy-unverified-p1e-3 | stim-coverage | — | baseline: measured; candidate: unsupported |
 | coverage-alternatives-vs-current | msc-full-d5-cultivation-selected-p1e-3 | stim-coverage | — | baseline: measured; candidate: unsupported |
+
+## Figures
+
+Rates count attempted shots and exclude compilation; lazy planning during sampling
+is included. Workload call sizes appear on each row. Colors and marker shapes
+identify implementations consistently across figures. Unsupported pairings have
+no marker; unmeasured and failed cases are labeled. Exact identities and outcomes
+are recorded above and in cases.csv.
+
+Release changes within ±50% use a linear percentage axis; larger changes use
+a separate logarithmic ratio panel. The shaded ±1.1% band is the contract's
+inconclusive region, not a confidence interval. Unpaired workloads have no ratio.
+
+### Clifft — QEC · all-detector postselection
+
+[Dark version](clifft-throughput-dark.png)
+
+![Clifft — QEC · all-detector postselection](clifft-throughput-light.png)
+
+### Clifft — Arithmetic and code switching · postselection off
+
+[Dark version](clifft-throughput-2-dark.png)
+
+![Clifft — Arithmetic and code switching · postselection off](clifft-throughput-2-light.png)
+
+### Clifft — Bulk calls
+
+[Dark version](clifft-throughput-3-dark.png)
+
+![Clifft — Bulk calls](clifft-throughput-3-light.png)
+
+### Clifft — Selection controls · postselection off
+
+[Dark version](clifft-throughput-4-dark.png)
+
+![Clifft — Selection controls · postselection off](clifft-throughput-4-light.png)
+
+### Clifft — Dense Quantum Volume · repeated sampling
+
+[Dark version](clifft-throughput-5-dark.png)
+
+![Clifft — Dense Quantum Volume · repeated sampling](clifft-throughput-5-light.png)
+
+### Clifft — Cultivation stress workloads
+
+[Dark version](clifft-throughput-6-dark.png)
+
+![Clifft — Cultivation stress workloads](clifft-throughput-6-light.png)
+
+### CPU simulators — QEC · all-detector postselection
+
+[Dark version](simulator-throughput-dark.png)
+
+![CPU simulators — QEC · all-detector postselection](simulator-throughput-light.png)
+
+### CPU simulators — Arithmetic and code switching · postselection off
+
+[Dark version](simulator-throughput-2-dark.png)
+
+![CPU simulators — Arithmetic and code switching · postselection off](simulator-throughput-2-light.png)
+
+### CPU simulators — Bulk calls
+
+[Dark version](simulator-throughput-3-dark.png)
+
+![CPU simulators — Bulk calls](simulator-throughput-3-light.png)
+
+### CPU simulators — Selection controls · postselection off
+
+[Dark version](simulator-throughput-4-dark.png)
+
+![CPU simulators — Selection controls · postselection off](simulator-throughput-4-light.png)
+
+### CPU simulators — Dense Quantum Volume · repeated sampling
+
+[Dark version](simulator-throughput-5-dark.png)
+
+![CPU simulators — Dense Quantum Volume · repeated sampling](simulator-throughput-5-light.png)
+
+### CPU simulators — Cultivation stress workloads
+
+[Dark version](simulator-throughput-6-dark.png)
+
+![CPU simulators — Cultivation stress workloads](simulator-throughput-6-light.png)
+
+### Release changes
+
+[Dark version](release-change-dark.png)
+
+![Release changes](release-change-light.png)
