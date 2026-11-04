@@ -23,25 +23,38 @@ jobs:
 
   adapter-smoke:
     runs-on: ubuntu-latest
+    env:
+      SYMFT_PY_NATIVE: "1"
+      SYMFT_PY_ENABLE_CUDA: "0"
+      QECCORE_PORTABLE: "1"
+      XTIM_CXXFLAGS: "-include cstdint"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        id: python
         with:
           python-version: "3.12"
-      - name: Identify native build cache
+      - name: Identify native build compatibility
         id: native-cache
         run: |
-          echo "path=$(python -m pip cache dir)" >> "$GITHUB_OUTPUT"
-          fingerprint=$({ g++ --version; g++ -march=native -Q --help=target; } | sha256sum | cut -d ' ' -f 1)
-          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
+          echo "abi=$(python -c 'import sysconfig; print(sysconfig.get_config_var("SOABI"))')" >> "$GITHUB_OUTPUT"
+          compiler=$({ cat /etc/os-release; g++ --version; } | sha256sum | cut -d ' ' -f 1)
+          native=$(g++ -march=native -Q --help=target | sha256sum | cut -d ' ' -f 1)
+          xtim_flags=$(printf '%s\n' "$QECCORE_PORTABLE" "$XTIM_CXXFLAGS" | sha256sum | cut -d ' ' -f 1)
+          echo "compiler=$compiler" >> "$GITHUB_OUTPUT"
+          echo "native=$native" >> "$GITHUB_OUTPUT"
+          echo "xtim-flags=$xtim_flags" >> "$GITHUB_OUTPUT"
+      - name: Cache native SymFT wheels
+        uses: actions/cache@v4
         with:
-          path: ${{ steps.native-cache.outputs.path }}
-          # SymFT uses -march=native. Reuse wheels only for the same compiler,
-          # CPU target, Python, dependencies, and workflow build settings.
-          # No fallback restore key: it could restore an incompatible native wheel.
-          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ steps.python.outputs.python-version }}-${{ steps.native-cache.outputs.fingerprint }}-${{ hashFiles('pyproject.toml', 'environments/*.txt', '.github/workflows/ci.yml') }}
+          path: ${{ runner.temp }}/pip-symft
+          # Native wheels must match the compiler and CPU target. No fallback key.
+          key: ${{ runner.os }}-${{ runner.arch }}-symft-${{ steps.native-cache.outputs.abi }}-${{ steps.native-cache.outputs.compiler }}-${{ steps.native-cache.outputs.native }}-native${{ env.SYMFT_PY_NATIVE }}-cuda${{ env.SYMFT_PY_ENABLE_CUDA }}-${{ hashFiles('environments/symft-*.txt') }}
+      - name: Cache portable xtim wheels
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/pip-xtim
+          # Portable xtim is independent of the runner CPU and other simulators.
+          key: ${{ runner.os }}-${{ runner.arch }}-xtim-${{ steps.native-cache.outputs.abi }}-${{ steps.native-cache.outputs.compiler }}-${{ steps.native-cache.outputs.xtim-flags }}-${{ hashFiles('environments/xtim-*.txt') }}
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[test]'
       - name: Install the previous Clifft release
@@ -51,14 +64,13 @@ jobs:
         run: python -m pytest tests/test_reference_convention.py -k clifft
       - name: Install current pinned SymFT
         env:
-          SYMFT_PY_NATIVE: "1"
-          SYMFT_PY_ENABLE_CUDA: "0"
+          PIP_CACHE_DIR: ${{ runner.temp }}/pip-symft
         run: python -m pip install --no-deps -r environments/symft-0.1.1-c89b985.txt
       - run: python -m pip check
       - name: Install pinned portable xtim
         env:
-          QECCORE_PORTABLE: "1"
-          CXXFLAGS: "-include cstdint"
+          PIP_CACHE_DIR: ${{ runner.temp }}/pip-xtim
+          CXXFLAGS: ${{ env.XTIM_CXXFLAGS }}
         run: python -m pip install --no-deps -r environments/xtim-3.2.2-edf0dd0.txt
       - run: python -m pip check
       - run: python -m pytest tests/test_reference_convention.py tests/test_symft_adapter.py tests/test_stim_adapter.py tests/test_xtim_adapter.py tests/test_distillation_15to1.py tests/test_code_switching.py
