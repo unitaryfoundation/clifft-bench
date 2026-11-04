@@ -1,0 +1,101 @@
+{
+  "host": {
+    "hostname": "ip-172-31-14-93",
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "cpu_model": "AMD EPYC 9R14",
+    "physical_cores": 4,
+    "logical_cpus": 4,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "memory_bytes": 16374083584,
+    "load_average_at_start": [
+      0.2841796875,
+      0.0654296875,
+      0.021484375
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "JAX_ENABLE_X64": "true",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_PLATFORMS": "cpu",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
+    },
+    "accelerator": null,
+    "cloud": {
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "region": "us-east-1",
+      "availability_zone": "us-east-1c",
+      "provider": "aws",
+      "lifecycle": "on-demand",
+      "boot_id": "57334e03-de88-48d6-b8da-521f3d3dd6ce"
+    },
+    "suite_source": {
+      "commit": "3c89445367581edba4d9b7ec5c72e53c4e68eddc",
+      "dirty": false
+    }
+  },
+  "environments": {
+    "clifft-0.12.0rc1": {
+      "version": "0.12.0rc1",
+      "runtime_version": "0.12.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.2",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "files": {
+        "clifft-0.12.0rc1.dist-info/METADATA": "53b1161f4d26e3d0b6fdd6a6f97383c9d81144b36d7f0f0f54683cb775efdb87",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "bcd7fdf277b3fda8b9eee3aac5d7c140521a91de97e49b53af525a56fadd84cd"
+      },
+      "freeze": "clifft==0.12.0rc1\nnumpy==2.5.2\npip==26.3\n"
+    },
+    "clifft-0.13.0rc2": {
+      "version": "0.13.0rc2",
+      "runtime_version": "0.13.0rc2",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "files": {
+        "clifft-0.13.0rc2.dist-info/METADATA": "2a4d101a1c3278b206e2ceb1aa32a24b69ff21e1c3bd2edb5499c591bf7de158",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "4f17bac32593e95aaf049b718069b5292fa68e486fba3484f82f17aeaf76a55b"
+      },
+      "freeze": "clifft==0.13.0rc2\nnumpy==2.5.4\npip==26.3\n"
+    }
+  },
+  "wheels": [
+    {
+      "commit": "847757e2bc8c4f7439b9e92011550fd61719eb85",
+      "tag": "v0.12.0rc1",
+      "filename": "clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/4f/12/a81bc2dc6dbcad59915ff570f572263341a7eeba65c72d0824c1b4a86a4d/clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "e567a5e5a2db3cabe851da84e14ebea91a7f0cb838fd75cc4c633578900ae8e2"
+    },
+    {
+      "commit": "7e83ec2823bf99c54aa1b90c54a092641c10c4b0",
+      "tag": "v0.13.0rc2",
+      "filename": "clifft-0.13.0rc2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/3b/71/651b7fc08862e68e38c947fb563949d5eb9c1651350ad59ecf5acd554976/clifft-0.13.0rc2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "2f8c3e4808bd52fb4c744a29134fb2d3d29f659fc2d543ffb2a75867431c8b04"
+    }
+  ]
+}
