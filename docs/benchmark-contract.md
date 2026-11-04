@@ -62,7 +62,9 @@ unmeasured combinations. Failed cases have no plotted throughput.
 
 The throughput figure combines Clifft and peer rates, grouped into magic-state
 preparation; surface-code memory and coherent noise; and arithmetic, code
-switching, and dense Quantum Volume. Within each theme, circuits follow a stable
+switching; and Quantum Volume. Each theme has an independent logarithmic axis
+with its own throughput ticks. Horizontal positions are comparable within a panel;
+absolute labels remain comparable across panels. Within each theme, circuits follow a stable
 family and size order, independent of measured speed. Each rate is directly
 labeled; short circuit names and consistent simulator colors and shapes aid
 comparison. Selection-off controls, the unverified cultivation proxy, and

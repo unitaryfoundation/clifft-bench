@@ -195,7 +195,8 @@ review summary without writing files or importing plotting dependencies. Without
 `--check`, install the `report` extra; the command regenerates `cases.csv` and
 writes `report/review.md` plus these light/dark PNG pairs:
 
-- `simulator-throughput-{light,dark}.png`: Clifft and peer throughput by theme.
+- `simulator-throughput-{light,dark}.png`: Clifft and peer throughput in independent
+  log-scale panels by theme, with Quantum Volume separate.
 - `release-change-{light,dark}.png`: measured current/previous pairs in the same
   thematic order.
 

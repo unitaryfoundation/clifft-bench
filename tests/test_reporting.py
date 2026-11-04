@@ -176,11 +176,12 @@ def test_figures_cover_every_measurement_and_separate_release_scales(
             assert legend.get_window_extent(renderer).y1 < (
                 figure._suptitle.get_window_extent(renderer).y0
             )
-            marks = [line for line in axis.lines if line.get_marker() in ("o", "s")]
+            marks = [line for ax in figure.axes for line in ax.lines
+                     if line.get_marker() in ("o", "s")]
             # Every successful value is directly annotated at the plotted position.
-            assert sorted(text.xy[0] for text in axis.texts if hasattr(text, "xy")) == (
-                sorted(float(line.get_xdata()[0]) for line in marks)
-            )
+            annotated = [text.xy[0] for ax in figure.axes for text in ax.texts
+                         if hasattr(text, "xy")]
+            assert sorted(annotated) == sorted(float(line.get_xdata()[0]) for line in marks)
             if path.name.endswith("-light.png"):
                 plotted.extend(float(line.get_xdata()[0]) for line in marks)
         annotations = [text for axis in figure.axes for text in axis.texts if hasattr(text, "xy")]
@@ -460,8 +461,8 @@ def test_peer_render_preserves_release_figures_and_source_files(
 
     def inspect(figure, path, **kwargs):
         if path.name.startswith("simulator-throughput"):
-            plotted.append(sorted(float(line.get_xdata()[0]) for line in figure.axes[0].lines
-                                  if line.get_marker() in ("o", "s")))
+            plotted.append(sorted(float(line.get_xdata()[0]) for ax in figure.axes
+                                  for line in ax.lines if line.get_marker() in ("o", "s")))
         savefig(figure, path, **kwargs)
 
     monkeypatch.setattr(Figure, "savefig", inspect)
@@ -472,3 +473,60 @@ def test_peer_render_preserves_release_figures_and_source_files(
                 or path.name.startswith("release-change")):
             assert path.read_bytes() == content
     assert not (peers / "cases.csv").exists()
+
+
+def test_throughput_panel_ranges_are_independent(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_throughput
+
+    original = raw_result["cases"][1]
+    contract = raw_result["campaign"]["cases"][1]
+    raw_result["cases"], raw_result["campaign"]["cases"] = [], []
+    raw_result["campaign"]["comparisons"] = []
+    settings = [
+        ("magic-small", "magic-state-cultivation", {"distance": 3}, 1e6),
+        ("magic-large", "magic-state-cultivation", {"distance": 5}, 1e7),
+        ("memory", "surface-code-memory", {"distance": 7, "rounds": 7}, 1e4),
+        ("arithmetic", "prepared-basis-arithmetic", {"bits_per_operand": 16}, 1e7),
+        ("qv", "quantum-volume", {"num_qubits": 20}, 0.1),
+    ]
+    for identifier, family, parameters, rate in settings:
+        case, expected = copy.deepcopy(original), copy.deepcopy(contract)
+        case["case_id"] = identifier
+        case["workload"].update(id=identifier, family=family, parameters=parameters)
+        expected.update(id=identifier, workload_id=identifier)
+        for sample in case["samples"]:
+            sample["throughput_attempted_shots_per_second"] = rate
+            sample["duration_seconds"] = sample["attempted_shots"] / rate
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(expected)
+    _, _, grid, colors = THEMES["light"]
+
+    def inspect():
+        figure = _render_throughput(build_report(raw_result), colors, grid)
+        try:
+            limits, plotted = [], []
+            for axis in figure.axes:
+                assert axis.get_xscale() == "log"
+                assert axis.get_xlabel()
+                rates = [float(line.get_xdata()[0]) for line in axis.lines
+                         if line.get_marker() == "o"]
+                low, high = axis.get_xlim()
+                assert rates and all(low < rate < high for rate in rates)
+                plotted.append(rates)
+                limits.append((low, high))
+            return limits, plotted
+        finally:
+            plt.close(figure)
+
+    before, plotted = inspect()
+    assert plotted == [[1e6, 1e7], [1e4], [1e7], [0.1]]
+    for sample in raw_result["cases"][-1]["samples"]:
+        sample["throughput_attempted_shots_per_second"] = 1e-8
+        sample["duration_seconds"] = sample["attempted_shots"] / 1e-8
+    after, changed = inspect()
+    assert before[:-1] == after[:-1]
+    assert before[-1] != after[-1]
+    assert plotted[:-1] == changed[:-1]

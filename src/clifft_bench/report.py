@@ -238,6 +238,8 @@ def review_summary(report: dict) -> str:
         "", "## Figures", "",
         "Rates count attempted shots and exclude compilation; lazy planning during sampling",
         "is included. The main figures share circuit selection and thematic ordering.",
+        "Throughput panels have independent logarithmic axes; compare horizontal positions",
+        "within a panel. Quantum Volume has its own panel.",
         "Selection-off controls, the unverified cultivation proxy, and bulk-call variants",
         "remain in the detailed results above. Colors and marker shapes identify simulators.",
         "Unsupported pairings have",
@@ -402,61 +404,83 @@ def _render_throughput(report, colors, grid):
         adapter = simulator["adapter"] if simulator else ""
         position = adapters.index(adapter) if adapter in adapters else index
         styles[variant] = colors[position % len(colors)], markers[position % len(markers)]
-    visible = [
-        sorted(((v, case) for v, case in entry["cases"].items()
-                if _outcome(case, _representative(entry), report["variants"].get(v))
-                != "unsupported"), key=lambda item: variants.index(item[0]))
-        for entry in entries
-    ]
-    cases = [_representative(entry) for entry in entries]
-    names = [textwrap.fill(_label(case), 29) for case in cases]
-    heights = [max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
-               for values, name in zip(visible, names, strict=True)]
-    headers, positions, extent = _layout(cases, heights)
-    height = extent + 1.55
+    panels = {}
+    for entry in entries:
+        case = _representative(entry)
+        family = case["workload"]["family"]
+        heading = _workload_group(case)[2]
+        if family == "quantum-volume":
+            heading = "Quantum Volume"
+        elif family in {"prepared-basis-arithmetic", "code-switching"}:
+            heading = "Arithmetic & code switching"
+        panels.setdefault(heading, []).append(entry)
+    layouts = []
+    for heading, group in (panels or {"Other workloads": []}).items():
+        visible = [
+            sorted(((v, case) for v, case in entry["cases"].items()
+                    if _outcome(case, _representative(entry), report["variants"].get(v))
+                    != "unsupported"), key=lambda item: variants.index(item[0]))
+            for entry in group
+        ]
+        names = [textwrap.fill(_label(_representative(entry)), 29) for entry in group]
+        heights = [
+            max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
+            for values, name in zip(visible, names, strict=True)
+        ]
+        positions, y = [], 0.55
+        for row_height in heights:
+            positions.append(y + row_height / 2)
+            y += row_height
+        layouts.append((heading, group, visible, names, heights, positions, y + 0.12))
+    top, gap = 0.95, 0.68
+    height = top + sum(layout[-1] for layout in layouts) + gap * len(layouts) + 0.05
     figure = plt.figure(figsize=(12, height))
-    axis = figure.add_axes((0.32, 0.62 / height, 0.64, extent / height))
-    rates = [
-        report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-        for values in visible for _, case in values
-        if case is not None and case["status"] == "success"
-    ]
-    low = 10 ** math.floor(math.log10(min(rates))) / 1.3 if rates else 0.1
-    high = low * (max(rates, default=1) / low) ** 1.13
-    axis.set_xscale("log")
-    axis.set_xlim(low, high)
-    axis.xaxis.set_major_locator(LogLocator(base=10, numticks=7))
-    axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _: _number_label(value)))
-    axis.xaxis.set_minor_locator(NullLocator())
-    _style_axis(axis, extent, grid)
-    _header_bands(axis, headers, grid)
-    used = set()
-    for entry, values, name, y, row_height in zip(
-        entries, visible, names, positions, heights, strict=True,
-    ):
-        axis.text(-0.025, y, name, transform=axis.get_yaxis_transform(),
-                  ha="right", va="center", fontsize=13)
-        for offset, (variant, case) in enumerate(values):
-            color, marker = styles[variant]
-            py = y + (offset - (len(values) - 1) / 2) * 0.23
-            state = _outcome(case, _representative(entry), report["variants"].get(variant))
-            used.add(variant)
-            if state == "measured":
-                rate = report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-                axis.hlines(py, low, rate, color=color, linewidth=2.4)
-                axis.plot(rate, py, marker, color=color, markersize=7)
-                axis.annotate(f"{_number_label(rate)}/s", (rate, py), xytext=(7, 0),
-                              textcoords="offset points", va="center", color=color,
-                              fontsize=11.5, fontweight="bold")
-            else:
-                simulator = report["variants"].get(variant)
-                label = simulator["name"] if simulator else variant
-                axis.text(0.02, py, f"{label}: {state}", transform=axis.get_yaxis_transform(),
-                          va="center", fontsize=11, color=color)
-        axis.axhline(y + row_height / 2, color=grid, linewidth=0.5, alpha=0.65)
-    if not entries:
-        axis.text(0.5, 0.5, "No main workloads selected", ha="center", transform=axis.transAxes)
-    axis.set_xlabel("Attempted shots per second · log scale · higher is faster", labelpad=12)
+    used, consumed = set(), top
+    for heading, group, visible, names, heights, positions, extent in layouts:
+        bottom = height - consumed - extent
+        axis = figure.add_axes((0.32, bottom / height, 0.64, extent / height))
+        rates = [
+            report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
+            for values in visible for _, case in values
+            if case is not None and case["status"] == "success"
+        ]
+        low = min(rates) / 1.5 if rates else 0.1
+        peak = max(rates, default=1)
+        high = peak * max(1.5, (peak / low) ** 0.14)
+        axis.set_xscale("log")
+        axis.set_xlim(low, high)
+        axis.xaxis.set_major_locator(LogLocator(base=10, numticks=7))
+        axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _: _number_label(value)))
+        axis.xaxis.set_minor_locator(NullLocator())
+        _style_axis(axis, extent, grid)
+        _header_bands(axis, [(heading, 0.10)], grid)
+        for entry, values, name, y, row_height in zip(
+            group, visible, names, positions, heights, strict=True,
+        ):
+            axis.text(-0.025, y, name, transform=axis.get_yaxis_transform(),
+                      ha="right", va="center", fontsize=13)
+            for offset, (variant, case) in enumerate(values):
+                color, marker = styles[variant]
+                py = y + (offset - (len(values) - 1) / 2) * 0.23
+                state = _outcome(case, _representative(entry), report["variants"].get(variant))
+                used.add(variant)
+                if state == "measured":
+                    rate = report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
+                    axis.hlines(py, low, rate, color=color, linewidth=2.4)
+                    axis.plot(rate, py, marker, color=color, markersize=7)
+                    axis.annotate(f"{_number_label(rate)}/s", (rate, py), xytext=(7, 0),
+                                  textcoords="offset points", va="center", color=color,
+                                  fontsize=11.5, fontweight="bold")
+                else:
+                    simulator = report["variants"].get(variant)
+                    label = simulator["name"] if simulator else variant
+                    axis.text(0.02, py, f"{label}: {state}", transform=axis.get_yaxis_transform(),
+                              va="center", fontsize=11, color=color)
+            axis.axhline(y + row_height / 2, color=grid, linewidth=0.5, alpha=0.65)
+        if not group:
+            axis.text(0.5, 0.5, "No main workloads selected", ha="center", transform=axis.transAxes)
+        axis.set_xlabel("Attempted shots per second · log scale · higher is faster", labelpad=10)
+        consumed += extent + gap
     handles, names_seen = [], set()
     for variant in variants:
         if variant not in used:
