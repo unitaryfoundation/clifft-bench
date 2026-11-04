@@ -37,7 +37,7 @@ independent workers or placements. This run does not establish behavior for a
 different preparation history. No additional diagnostic repeat was performed.
 
 The figures use the renderer at
-[`d038b164f4d7719443c4d52f874154568bdd2e8a`](https://github.com/unitaryfoundation/clifft-bench/tree/d038b164f4d7719443c4d52f874154568bdd2e8a),
+[`48898bb3f9c1882e109197925b8cb2c5318e15c6`](https://github.com/unitaryfoundation/clifft-bench/tree/48898bb3f9c1882e109197925b8cb2c5318e15c6),
 separately from the collection revision above:
 
 - [Simulator throughput, light](report/simulator-throughput-light.png) and
@@ -61,8 +61,8 @@ has SHA256 `5590e18927b75c15dba650ef0a9d6141aa027bbb1b22140b1d981b92342dad80`.
 
 Peer tools were not rerun. The report validates matching hardware, protocol,
 workload digests, selection semantics, and call sizes before reusing those
-values. Both throughput themes label the two collection dates. Their absolute
-rates come from separate collections; all paired release changes use only the
+values. The companion review records both collection dates. Absolute rates
+come from separate collections; all paired release changes use only the
 RC2 execution. Each source keeps its original raw evidence and CSV. Figure
 labels use intended final versions 0.13.0/0.12.0; raw evidence and the generated
 review retain exact RC and peer identities. These are review artifacts, not an
