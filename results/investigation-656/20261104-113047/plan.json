@@ -1,0 +1,40 @@
+{
+  "blocks": [
+    "ABDC",
+    "BCAD",
+    "CDBA",
+    "DACB"
+  ],
+  "conditions": {
+    "A": {
+      "batch": 1,
+      "implementation": "previous-wheel"
+    },
+    "B": {
+      "batch": 1,
+      "implementation": "current-wheel"
+    },
+    "C": {
+      "batch": "calibrate",
+      "implementation": "previous-wheel"
+    },
+    "D": {
+      "batch": "calibrate",
+      "implementation": "current-wheel"
+    }
+  },
+  "correctness_seed": 20260819,
+  "fresh_worker_per_entry": true,
+  "harness_commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+  "preparation_seed": 520270819,
+  "prior_evidence_commit": "3bb234081a62c19b0854d99d554c5a15f4444c37",
+  "sample_seconds": 30,
+  "sample_seed_first": 20270819,
+  "sample_seed_stride": 100000000,
+  "samples_per_worker": 5,
+  "sampling_seed": 20260818,
+  "shots_per_call": 20000,
+  "stop_rule": "Complete only these 16 measured workers; no adaptive repeats or root-cause investigation.",
+  "total_measured_workers": 16,
+  "workload": "msc-d5-inject-cultivate-p1e-3"
+}

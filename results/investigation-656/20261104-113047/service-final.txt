@@ -1,0 +1,11 @@
+Result=success
+ExecMainExitTimestamp=
+ExecMainStatus=0
+ActiveState=inactive
+SubState=dead
+NextElapseUSecMonotonic=1h 4min 45.278883s
+ActiveState=active
+USEC=1793799063567309
+WARN_WALL=1
+MODE=poweroff
+UID=0

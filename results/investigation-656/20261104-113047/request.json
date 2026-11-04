@@ -1,0 +1,46 @@
+{
+  "purpose": "One bounded interleaved d5 repeat on an independent stop/start placement for release-risk assessment, not a mechanism investigation.",
+  "conditions": {
+    "A": [
+      "clifft==0.12.0rc1",
+      1
+    ],
+    "B": [
+      "clifft==0.13.0rc1",
+      1
+    ],
+    "C": [
+      "clifft==0.12.0rc1",
+      "original full calibration then fresh winner preparation"
+    ],
+    "D": [
+      "clifft==0.13.0rc1",
+      "original full calibration then fresh winner preparation"
+    ]
+  },
+  "blocks": [
+    "ABDC",
+    "BCAD",
+    "CDBA",
+    "DACB"
+  ],
+  "workers": 16,
+  "prior_evidence_commit": "3bb234081a62c19b0854d99d554c5a15f4444c37",
+  "harness_commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+  "constraints": [
+    "Preserve original seeds, warmup, correctness, scheduler, shots per call, postselection and aggregate output.",
+    "Report any selected batch other than 1; never silently force it.",
+    "No baseline before calibration, conditioning, compiler/allocator changes, wheel rebuilds, bisect or additional matrix."
+  ],
+  "disposition_rules": [
+    "Repeated similar direct loss: material release-artifact concern requiring fix or explicit acceptance.",
+    "Loss disappears or reverses: process/placement sensitivity weakens consistent-regression evidence without proving absence.",
+    "Mixed findings: present uncertainty for release-risk decision."
+  ],
+  "cleanup": {
+    "hard_shutdown_utc": "2026-11-04T13:31:03Z",
+    "service_runtime_limit_minutes": 90,
+    "completion_shutdown_delay_minutes": 15,
+    "stop_after_retrieval": true
+  }
+}

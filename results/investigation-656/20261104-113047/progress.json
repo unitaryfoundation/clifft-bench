@@ -1,0 +1,264 @@
+{
+  "active": null,
+  "finished_at": "2026-11-04T12:16:24.056306Z",
+  "records": [
+    {
+      "block": 1,
+      "condition": "A",
+      "implementation": "previous-wheel",
+      "median_rate": 208875.6492578179,
+      "order": 1,
+      "raw": "workers/block-1/1-A/raw.json",
+      "sample_rates": [
+        208897.30249519018,
+        208830.60325425537,
+        208875.6492578179,
+        208961.31060334906,
+        208763.70600165438
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 1,
+      "condition": "B",
+      "implementation": "current-wheel",
+      "median_rate": 216481.46287850055,
+      "order": 2,
+      "raw": "workers/block-1/2-B/raw.json",
+      "sample_rates": [
+        215123.80312913517,
+        216834.36559068537,
+        216481.46287850055,
+        217081.29533570225,
+        216372.67771241517
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 1,
+      "condition": "D",
+      "implementation": "current-wheel",
+      "median_rate": 214228.96439387483,
+      "order": 3,
+      "raw": "workers/block-1/3-D/raw.json",
+      "sample_rates": [
+        214293.1891321063,
+        214184.98786090215,
+        214228.96439387483,
+        214249.58025991442,
+        213543.11427829298
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 1,
+      "condition": "C",
+      "implementation": "previous-wheel",
+      "median_rate": 213651.71001027932,
+      "order": 4,
+      "raw": "workers/block-1/4-C/raw.json",
+      "sample_rates": [
+        213651.71001027932,
+        213807.20972541062,
+        213422.54237100214,
+        213718.4393278377,
+        213233.08562921867
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 2,
+      "condition": "B",
+      "implementation": "current-wheel",
+      "median_rate": 206582.5422752929,
+      "order": 1,
+      "raw": "workers/block-2/1-B/raw.json",
+      "sample_rates": [
+        206685.1140990795,
+        206582.5422752929,
+        206067.1855719204,
+        206698.31297105618,
+        205941.3551237422
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 2,
+      "condition": "C",
+      "implementation": "previous-wheel",
+      "median_rate": 211855.06792834314,
+      "order": 2,
+      "raw": "workers/block-2/2-C/raw.json",
+      "sample_rates": [
+        211855.06792834314,
+        211776.29051082587,
+        211776.1892898976,
+        212351.3391555639,
+        212131.40046068866
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 2,
+      "condition": "A",
+      "implementation": "previous-wheel",
+      "median_rate": 197958.9413095798,
+      "order": 3,
+      "raw": "workers/block-2/3-A/raw.json",
+      "sample_rates": [
+        197661.19860511596,
+        197967.73112124423,
+        197958.9413095798,
+        197991.1031443921,
+        197835.15846376447
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 2,
+      "condition": "D",
+      "implementation": "current-wheel",
+      "median_rate": 205546.92145125143,
+      "order": 4,
+      "raw": "workers/block-2/4-D/raw.json",
+      "sample_rates": [
+        205562.59557016185,
+        205543.70611351187,
+        205557.50806232824,
+        205546.92145125143,
+        204797.2096206808
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 3,
+      "condition": "C",
+      "implementation": "previous-wheel",
+      "median_rate": 213933.56916981368,
+      "order": 1,
+      "raw": "workers/block-3/1-C/raw.json",
+      "sample_rates": [
+        212626.68633617836,
+        213933.56916981368,
+        214091.19843149188,
+        214102.8317550576,
+        213626.42220407358
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 3,
+      "condition": "D",
+      "implementation": "current-wheel",
+      "median_rate": 199677.48150428617,
+      "order": 2,
+      "raw": "workers/block-3/2-D/raw.json",
+      "sample_rates": [
+        199626.42416701364,
+        199694.23701742574,
+        199702.96828200307,
+        199677.48150428617,
+        198825.30549024482
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 3,
+      "condition": "B",
+      "implementation": "current-wheel",
+      "median_rate": 200871.43109124165,
+      "order": 3,
+      "raw": "workers/block-3/3-B/raw.json",
+      "sample_rates": [
+        200871.43109124165,
+        200926.79095060064,
+        200462.80112306293,
+        201030.70855309765,
+        200767.23289791204
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 3,
+      "condition": "A",
+      "implementation": "previous-wheel",
+      "median_rate": 215629.24495588086,
+      "order": 4,
+      "raw": "workers/block-3/4-A/raw.json",
+      "sample_rates": [
+        215629.24495588086,
+        215418.98722391907,
+        215676.77619347122,
+        215694.5878450926,
+        215585.12681782575
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 4,
+      "condition": "D",
+      "implementation": "current-wheel",
+      "median_rate": 216543.03842044258,
+      "order": 1,
+      "raw": "workers/block-4/1-D/raw.json",
+      "sample_rates": [
+        216449.62210388758,
+        216543.03842044258,
+        216560.4757392706,
+        216562.64091040238,
+        216476.36875629704
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 4,
+      "condition": "A",
+      "implementation": "previous-wheel",
+      "median_rate": 216588.89405658055,
+      "order": 2,
+      "raw": "workers/block-4/2-A/raw.json",
+      "sample_rates": [
+        216572.4150735746,
+        216646.71928830884,
+        216588.89405658055,
+        216655.3773760251,
+        216128.72095462226
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 4,
+      "condition": "C",
+      "implementation": "previous-wheel",
+      "median_rate": 199930.33482795762,
+      "order": 3,
+      "raw": "workers/block-4/3-C/raw.json",
+      "sample_rates": [
+        199536.62141841586,
+        199930.33482795762,
+        199894.28549400892,
+        200405.2294407814,
+        200502.69352545083
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": 4,
+      "condition": "B",
+      "implementation": "current-wheel",
+      "median_rate": 196690.57332274594,
+      "order": 4,
+      "raw": "workers/block-4/4-B/raw.json",
+      "sample_rates": [
+        196798.82786774109,
+        196748.46353054594,
+        196645.9555672169,
+        196690.57332274594,
+        196155.45095309947
+      ],
+      "selected_batch": 1
+    }
+  ],
+  "started_at": "2026-11-04T11:33:13.325360Z",
+  "state": "complete"
+}

@@ -1,0 +1,19 @@
+{
+  "instance_id": "i-0b559eec365c2acb7",
+  "region": "us-east-1",
+  "command": "sudo shutdown -h now",
+  "requested_at": "2026-11-04T12:17:25.514476+00:00",
+  "returned_at": "2026-11-04T12:17:26.050280+00:00",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "instance_initiated_shutdown_behavior": "Stop (user confirmed)",
+  "aws_api_stopped_verified": false,
+  "api_verification_limit": "AWS CLI OAuth session previously expired/revoked; no API-confirmed state.",
+  "reachability_check": {
+    "at": "2026-11-04T12:18:31.058012+00:00",
+    "exit_code": 255,
+    "stdout": "",
+    "stderr": "ssh: connect to host 18.207.180.135 port 22: Operation timed out\n"
+  }
+}

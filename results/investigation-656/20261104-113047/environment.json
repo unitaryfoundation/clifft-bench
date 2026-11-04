@@ -1,0 +1,133 @@
+{
+  "host": {
+    "hostname": "ip-172-31-14-93",
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "cpu_model": "AMD EPYC 9R14",
+    "physical_cores": 4,
+    "logical_cpus": 4,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "memory_bytes": 16374091776,
+    "load_average_at_start": [
+      0.15380859375,
+      0.033203125,
+      0.0107421875
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "JAX_ENABLE_X64": "true",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_PLATFORMS": "cpu",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
+    },
+    "accelerator": null,
+    "cloud": {
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "region": "us-east-1",
+      "availability_zone": "us-east-1c",
+      "provider": "aws",
+      "lifecycle": "on-demand",
+      "boot_id": "d6fd85a0-f272-42a3-8f20-96388d772c7a"
+    },
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    }
+  },
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "lscpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               AuthenticAMD\nModel name:                              AMD EPYC 9R14\nCPU family:                              25\nModel:                                   17\nThread(s) per core:                      1\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                1\nBogoMIPS:                                5199.99\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch topoext perfctr_core ssbd perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx512_bf16 clzero xsaveerptr rdpru wbnoinvd arat avx512vbmi pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid flush_l1d\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               128 KiB (4 instances)\nL1i cache:                               128 KiB (4 instances)\nL2 cache:                                4 MiB (4 instances)\nL3 cache:                                16 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Mitigation; Safe RET\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP disabled; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Mitigation; Clear CPU buffers\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n",
+  "build_settings": {
+    "CC": null,
+    "CXX": null,
+    "CMAKE_ARGS": null,
+    "CMAKE_BUILD_PARALLEL_LEVEL": null,
+    "CLIFFT_CPU_BASELINE": null,
+    "CLIFFT_INTERPROCEDURAL_OPTIMIZATION": null,
+    "CLIFFT_OPENMP": null
+  },
+  "environments": {
+    "previous-wheel": {
+      "version": "0.12.0rc1",
+      "runtime_version": "0.12.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "direct_url": {},
+      "files": {
+        "clifft-0.12.0rc1.dist-info/METADATA": "53b1161f4d26e3d0b6fdd6a6f97383c9d81144b36d7f0f0f54683cb775efdb87",
+        "clifft-0.12.0rc1.dist-info/RECORD": "41937d3764743c868f1d8e5a50bdddc77a824a8d2de217522fd416fe7c6c4f66",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "bcd7fdf277b3fda8b9eee3aac5d7c140521a91de97e49b53af525a56fadd84cd"
+      },
+      "freeze": "clifft==0.12.0rc1\nnumpy==2.5.4\npip==24.0\n"
+    },
+    "current-wheel": {
+      "version": "0.13.0rc1",
+      "runtime_version": "0.13.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "direct_url": {},
+      "files": {
+        "clifft-0.13.0rc1.dist-info/METADATA": "b008c447786663ac698608ad5771fcdfca1f9894b516dcb3758e588255cf4683",
+        "clifft-0.13.0rc1.dist-info/RECORD": "97b026e653db6a8075b11a2b543723bcb35b07e1b5bd72bf97f390d9cb3e52d7",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "75b71fd3f1f6c2a22141f3f965bd02958f0a68a2d4d08be7b406e006ee2207b4"
+      },
+      "freeze": "clifft==0.13.0rc1\nnumpy==2.5.4\npip==24.0\n"
+    }
+  },
+  "wheels": [
+    {
+      "environment": "previous-wheel",
+      "package": "clifft",
+      "path": "wheels/previous-wheel/clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/4f/12/a81bc2dc6dbcad59915ff570f572263341a7eeba65c72d0824c1b4a86a4d/clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "e567a5e5a2db3cabe851da84e14ebea91a7f0cb838fd75cc4c633578900ae8e2"
+    },
+    {
+      "environment": "previous-wheel",
+      "package": "numpy",
+      "path": "wheels/previous-wheel/numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/43/a3/c799c62e19c337e6d3770b08e475887fb30ce8477d3c09efca6b2f0228a6/numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "fbde6962867ee75b48b0ee29b2b9372ec5d617799dbaf38e82dc0596f2f7738a"
+    },
+    {
+      "environment": "current-wheel",
+      "package": "clifft",
+      "path": "wheels/current-wheel/clifft-0.13.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/b4/77/d2345b633df7c472e62008bac522ced13aed5c29a1ba7f2655b51ea7cb17/clifft-0.13.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "b102c6ca356abdacc61cb453fafa07bef09730772695eb7038b62b9105f8c72a"
+    },
+    {
+      "environment": "current-wheel",
+      "package": "numpy",
+      "path": "wheels/current-wheel/numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/43/a3/c799c62e19c337e6d3770b08e475887fb30ce8477d3c09efca6b2f0228a6/numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "fbde6962867ee75b48b0ee29b2b9372ec5d617799dbaf38e82dc0596f2f7738a"
+    }
+  ],
+  "prior_boot_id": "245a2b00-efd4-4f77-b8d3-e9b0e71f31dc",
+  "boot_id": "d6fd85a0-f272-42a3-8f20-96388d772c7a",
+  "placement_provenance": "User stopped/restarted the same instance; new boot and address. Independent stop/start placement per benchmark contract; physical host identity is not exposed."
+}

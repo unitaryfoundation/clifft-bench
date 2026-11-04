@@ -1,0 +1,378 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": 1,
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          }
+        },
+        "id": "d5-block4-2-A-previous-wheel",
+        "implementation_id": "previous-wheel",
+        "shots_per_call": 20000,
+        "variant_id": "previous-wheel",
+        "workload_id": "msc-d5-inject-cultivate-p1e-3"
+      }
+    ],
+    "classification": "official",
+    "collection": {
+      "memory_limit_gib": 12,
+      "run_timeout_minutes": 420
+    },
+    "comparisons": [],
+    "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 30,
+      "repetitions": 5,
+      "request_timeout_seconds": 1800,
+      "setup_timeout_seconds": 1800,
+      "warmup_shots": 1
+    },
+    "profile_id": "d5-block4-2-A-previous-wheel",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 12884901888
+    },
+    "seed": 20260819,
+    "suite_version": "0.2.8",
+    "title": "Bounded interleaved d5 release repeat"
+  },
+  "cases": [
+    {
+      "case_id": "d5-block4-2-A-previous-wheel",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 0,
+          "attempted_shots": 8,
+          "discarded_shots": 8,
+          "duration_seconds": 4.1650000184745295e-05,
+          "logical_errors": 0,
+          "stream_setup_seconds": 2.7099999897473026e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 30,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 5,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 20000,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "samples": [
+        {
+          "accepted_shots": 934902,
+          "adapter_timing_totals": {},
+          "api_calls": 325,
+          "attempted_shots": 6500000,
+          "discarded_shots": 5565098,
+          "duration_seconds": 30.01305589999447,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50745344,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20271143,
+          "sequence_index": 0,
+          "started_at": "2026-11-04T12:08:29.871115Z",
+          "stream_setup_seconds": 1.6999997569655534e-06,
+          "throughput_attempted_shots_per_second": 216572.4150735746
+        },
+        {
+          "accepted_shots": 935178,
+          "adapter_timing_totals": {},
+          "api_calls": 325,
+          "attempted_shots": 6500000,
+          "discarded_shots": 5564822,
+          "duration_seconds": 30.00276219899706,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50745344,
+          "repetition": 1,
+          "seed_first": 120270819,
+          "seed_last": 120271143,
+          "sequence_index": 1,
+          "started_at": "2026-11-04T12:08:59.888255Z",
+          "stream_setup_seconds": 4.190000254311599e-06,
+          "throughput_attempted_shots_per_second": 216646.71928830884
+        },
+        {
+          "accepted_shots": 935472,
+          "adapter_timing_totals": {},
+          "api_calls": 325,
+          "attempted_shots": 6500000,
+          "discarded_shots": 5564528,
+          "duration_seconds": 30.010772381994684,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50745344,
+          "repetition": 2,
+          "seed_first": 220270819,
+          "seed_last": 220271143,
+          "sequence_index": 2,
+          "started_at": "2026-11-04T12:09:29.894893Z",
+          "stream_setup_seconds": 4.5499996303988155e-06,
+          "throughput_attempted_shots_per_second": 216588.89405658055
+        },
+        {
+          "accepted_shots": 935090,
+          "adapter_timing_totals": {},
+          "api_calls": 325,
+          "attempted_shots": 6500000,
+          "discarded_shots": 5564910,
+          "duration_seconds": 30.001563214000726,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50745344,
+          "repetition": 3,
+          "seed_first": 320270819,
+          "seed_last": 320271143,
+          "sequence_index": 3,
+          "started_at": "2026-11-04T12:09:59.909308Z",
+          "stream_setup_seconds": 4.170000011072261e-06,
+          "throughput_attempted_shots_per_second": 216655.3773760251
+        },
+        {
+          "accepted_shots": 936072,
+          "adapter_timing_totals": {},
+          "api_calls": 325,
+          "attempted_shots": 6500000,
+          "discarded_shots": 5563928,
+          "duration_seconds": 30.074670183999842,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50745344,
+          "repetition": 4,
+          "seed_first": 420270819,
+          "seed_last": 420271143,
+          "sequence_index": 4,
+          "started_at": "2026-11-04T12:10:29.916619Z",
+          "stream_setup_seconds": 3.870000000461005e-06,
+          "throughput_attempted_shots_per_second": 216128.72095462226
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.05922304800014899,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "explicit",
+          "batch_enabled": false,
+          "compile_seconds": 0.021496312000181206,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "num_detectors": 107,
+          "num_measurements": 112,
+          "num_observables": 1,
+          "num_qubits": 42,
+          "optimized_t_gates": 91,
+          "parse_seconds": 0.000960857999871223,
+          "peak_active_width": 10,
+          "postselection_before_optimization": false,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 51797,
+            "incumbent_dense_work": 58686.0,
+            "incumbent_peak": 10,
+            "result_dense_work": 56778.0,
+            "result_peak": 10,
+            "swept_ops": 50237
+          },
+          "threads": 1,
+          "version": "0.12.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "847757e2bc8c4f7439b9e92011550fd61719eb85",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.12.0rc1",
+        "implementation_id": "previous-wheel",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-ec2-results/d5-repeat-20261104-113047/.campaign-envs/previous-wheel/bin/python",
+        "source_tag": "v0.12.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.12.0rc1"
+      },
+      "status": "success",
+      "variant_id": "previous-wheel",
+      "warmup": {
+        "accepted_shots": 0,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 1,
+        "duration_seconds": 0.0008543280000594677,
+        "logical_errors": 0,
+        "stream_setup_seconds": 4.360000275482889e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-656/workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim",
+          "sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 107,
+          "num_measurements": 112,
+          "num_observables": 1,
+          "num_qubits": 42
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d5-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v1",
+  "run": {
+    "classification": "official",
+    "finished_at": "2026-11-04T12:11:00.026614Z",
+    "id": "c39707fd-6a55-4fd1-bd71-ad495c0c5ba3",
+    "overrides": {
+      "cpu": 0
+    },
+    "profile_id": "d5-block4-2-A-previous-wheel",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-04T12:08:29.740327Z",
+    "workflow": {
+      "image_os": "ubuntu-24.04",
+      "image_version": "ami-0f8a61b66d1accaee",
+      "provider": "aws-ec2-manual",
+      "ref": "",
+      "repository": "https://github.com/unitaryfoundation/clifft-bench.git",
+      "run_id": "c39707fd-6a55-4fd1-bd71-ad495c0c5ba3",
+      "runner_name": "i-0b559eec365c2acb7",
+      "runner_os": "Linux",
+      "sha": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "workflow": "scripts/ec2-run.sh"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cloud": {
+      "availability_zone": "us-east-1c",
+      "boot_id": "d6fd85a0-f272-42a3-8f20-96388d772c7a",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "lifecycle": "on-demand",
+      "provider": "aws",
+      "region": "us-east-1"
+    },
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-14-93",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "load_average_at_start": [
+      1.0,
+      1.0,
+      0.94091796875
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16374091776,
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "physical_cores": 4,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "workers": 16,
+  "samples": 80,
+  "correctness": "all passed",
+  "raw_reader": "all passed",
+  "csv_regeneration": "all byte-identical",
+  "predeclared_order": "exact match",
+  "protocol_checks": "identities, workload, scheduler, selection/output semantics, affinity, memory, threads, durations, seeds and aggregate counts passed",
+  "calibration_choices": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "minimum_sample_seconds": 30.00134806899905,
+  "maximum_peak_rss_bytes": 104685568,
+  "maximum_within_worker_relative_mad_pct": 0.19692529894503094,
+  "maximum_within_worker_range_pct": 0.9099375234604024
+}
