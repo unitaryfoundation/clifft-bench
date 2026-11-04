@@ -8,6 +8,12 @@ Canonical doc owners (give each rule one home; keep design details out of `AGENT
 - **Active scope only:** Maintain current-vs-previous Clifft and current-vs-peer
   comparisons. Historical analysis and `experiments/` are optional and must not
   gate routine work.
+- **Investigation evidence stays on branches:** Keep one-off investigation
+  scripts, raw results, reports, and figures on evidence branches, referenced by
+  immutable commit links from issues or PRs. Do not merge these artifacts into
+  mainline, including as data-only additions or archives. Close evidence-only
+  PRs without deleting their branches. Official recurring release-campaign
+  results remain in scope under `CONTRIBUTING.md`.
 - **Replace, do not shim:** Delete superseded pins, variants, adapter shims, and
   legacy readers rather than keeping backward-compatibility fallbacks.
 - **No speculative plumbing:** Do not add dependencies, CLI flags, campaign
