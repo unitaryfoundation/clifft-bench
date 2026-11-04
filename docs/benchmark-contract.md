@@ -60,20 +60,26 @@ Repeated QV sampling measures a different question from the optional
 Reports distinguish recorded failures, unsupported adapter pairings, and
 unmeasured combinations. Failed cases have no plotted throughput.
 
-Throughput figures group workloads by family and measurement configuration,
-with at most seven workloads per image. Each measured rate is directly labeled;
-short workload names and consistent simulator colors and shapes aid comparison.
-Call sizes remain visible on each row. Unsupported pairings have no marker;
-failed and unmeasured cases are labeled, with full distinctions in the review
-tables. Every selected current case and declared peer comparison remains in
-the report across its pages.
+The throughput figure combines Clifft and peer rates, grouped into magic-state
+preparation; surface-code memory and coherent noise; and arithmetic, code
+switching, and dense Quantum Volume. Within each theme, circuits follow a stable
+family and size order, independent of measured speed. Each rate is directly
+labeled; short circuit names and consistent simulator colors and shapes aid
+comparison. Selection-off controls, the unverified cultivation proxy, and
+bulk-call variants stay in the detailed tables rather than the main figures.
+Unsupported pairings have no marker; failed and unmeasured cases are labeled.
+Every selected case and declared comparison remains in the review tables.
+Call sizes are in `cases.csv`; postselection settings remain in `raw.json`.
 
 Release figures show changes within ±50% on a linear percentage axis and larger
-changes on a separate logarithmic ratio panel. This display threshold keeps
-modest changes visible alongside large gains or losses; it is not a significance
-threshold. The percentage panel shades the ±1.1% inconclusive band defined below.
-Unpaired workloads are listed without a ratio. Exact identities remain in the
-review tables and `cases.csv`.
+changes on an adjacent logarithmic ratio axis sharing the same rows. This display
+threshold keeps modest changes visible alongside large gains or losses; it is not
+a significance threshold. The percentage panel shades the ±1.1% inconclusive band
+defined below.
+Both figures use the same circuit selection and ordering; the release figure
+includes only measured pairs. New pairs automatically appear in their circuit's
+thematic position when the recorded campaign includes compatible measurements.
+Exact identities and unpaired outcomes remain in the review tables and `cases.csv`.
 
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates

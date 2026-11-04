@@ -9,7 +9,19 @@ from typing import Any
 
 from clifft_bench.results import case_rows, comparison_pairs, export_csv, read_result
 
-FIGURES = ("clifft-throughput", "simulator-throughput", "release-change")
+FIGURES = ("simulator-throughput", "release-change")
+WORKLOAD_GROUPS = (
+    ("Magic-state preparation", (
+        "magic-state-cultivation", "magic-state-cultivation-full",
+        "magic-state-distillation", "reed-muller",
+    )),
+    ("Surface-code memory & coherent noise", (
+        "surface-code-memory", "coherent-noise-surface-code",
+    )),
+    ("Arithmetic, code switching & dense QV", (
+        "prepared-basis-arithmetic", "code-switching", "quantum-volume",
+    )),
+)
 THEMES = {
     "light": (
         "#ffffff",
@@ -137,28 +149,23 @@ def review_summary(report: dict) -> str:
     lines += [
         "", "## Figures", "",
         "Rates count attempted shots and exclude compilation; lazy planning during sampling",
-        "is included. Workload call sizes appear on each row. Colors and marker shapes",
-        "identify implementations consistently across figures. Unsupported pairings have",
+        "is included. The main figures share circuit selection and thematic ordering.",
+        "Selection-off controls, the unverified cultivation proxy, and bulk-call variants",
+        "remain in the detailed results above. Colors and marker shapes identify simulators.",
+        "Unsupported pairings have",
         "no marker; unmeasured and failed cases are labeled. Exact identities and outcomes",
-        "are recorded above and in cases.csv.", "",
+        "are recorded above. Call sizes are in cases.csv; postselection settings are in raw.json.",
+        "",
         "Release changes within ±50% use a linear percentage axis; larger changes use",
         "a separate logarithmic ratio panel. The shaded ±1.1% band is the contract's",
         "inconclusive region, not a confidence interval. Unpaired workloads have no ratio.",
         "",
     ]
-    for kind in FIGURES:
-        panels = (
-            [("Release changes", [])] if kind == "release-change"
-            else _throughput_panels(report, kind)
-        )
-        name = "Clifft" if kind == "clifft-throughput" else "CPU simulators"
-        for index, (heading, _) in enumerate(panels):
-            title = heading if kind == "release-change" else f"{name} — {heading}"
-            stem = _figure_stem(kind, index)
-            lines += [
-                f"### {title}", "", f"[Dark version]({stem}-dark.png)", "",
-                f"![{title}]({stem}-light.png)", "",
-            ]
+    for kind, title in zip(FIGURES, ("CPU simulator throughput", "Clifft release changes")):
+        lines += [
+            f"### {title}", "", f"[Dark version]({kind}-dark.png)", "",
+            f"![{title}]({kind}-light.png)", "",
+        ]
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -180,14 +187,13 @@ def _label(case: dict) -> str:
     if family == "quantum-volume":
         return f"Quantum Volume {parameters['num_qubits']}"
     if family == "code-switching":
-        return workload["id"].split("-")[0].upper() + " · direct X"
+        return workload["id"].split("-")[0].upper()
     if family == "reed-muller":
         return "Reed–Muller"
     if family == "msc-performance-proxy":
         return f"Cultivation d{parameters['distance']} proxy (unverified)"
     if family == "magic-state-cultivation-full":
-        count = len(workload["semantics"]["postselection_detector_indices"])
-        return f"Full cultivation d{parameters['distance']} · {count} detectors selected"
+        return f"End-to-end cultivation d{parameters['distance']}"
     return workload["id"]
 
 
@@ -195,58 +201,70 @@ def _representative(entry: dict) -> dict:
     return next(case for case in entry["cases"].values() if case is not None)
 
 
-def _throughput_panels(report: dict, kind: str) -> list[tuple[str, list[dict]]]:
-    entries = (
-        [{"variant": c["variant_id"], "cases": {c["variant_id"]: c}} for c in report["current"]]
-        if kind == "clifft-throughput" else report["tools"]
+def _main_workload(case: dict, variant: str) -> bool:
+    """Keep diagnostic configurations in the tables, independent of their rates."""
+    workload = case["workload"]
+    return (
+        variant != "clifft-bulk"
+        and not workload["parameters"].get("postselection_pair")
+        and workload["family"] != "msc-performance-proxy"
     )
-    groups: dict[tuple[str, str], list[dict]] = {}
-    for entry in entries:
-        case = _representative(entry)
-        workload = case["workload"]
-        family = workload["family"]
-        if family == "quantum-volume":
-            title = "Dense Quantum Volume · repeated sampling"
-        elif family in {"msc-performance-proxy", "magic-state-cultivation-full"}:
-            title = "Cultivation stress workloads"
-        elif workload["parameters"].get("postselection_pair"):
-            title = "Selection controls · postselection off"
-        elif entry["variant"] == "clifft-bulk":
-            title = "Bulk calls"
-        elif family in {"prepared-basis-arithmetic", "code-switching", "reed-muller"}:
-            title = "Arithmetic and code switching · postselection off"
-        elif family in {
-            "magic-state-cultivation", "magic-state-distillation",
-            "surface-code-memory", "coherent-noise-surface-code",
-        }:
-            semantics = workload["semantics"]
-            selection = (
-                "all-detector postselection" if semantics["postselect_all_detectors"]
-                else "selected detectors" if semantics.get("postselection_detector_indices")
-                else "postselection off"
-            )
-            title = f"QEC · {selection}"
-        else:
-            title = entry["variant"].replace("-", " ").capitalize()
-        # Never merge different baseline configurations, even with the same family.
-        groups.setdefault((entry["variant"], title), []).append(entry)
-    panels = []
-    for (_, title), group in groups.items():
-        def rate(entry):
-            case = entry["cases"].get(entry["variant"])
-            return (
-                report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-                if case is not None and case["status"] == "success" else -1
-            )
-        ordered = sorted(group, key=rate, reverse=True)
-        for start in range(0, len(ordered), 7):
-            heading = title if start == 0 else title + " (continued)"
-            panels.append((heading, ordered[start:start + 7]))
-    return panels or [("No matching comparisons selected", [])]
 
 
-def _figure_stem(kind: str, index: int) -> str:
-    return kind if index == 0 else f"{kind}-{index + 1}"
+def _workload_group(case: dict) -> tuple[int, int, str]:
+    family = case["workload"]["family"]
+    for index, (heading, families) in enumerate(WORKLOAD_GROUPS):
+        if family in families:
+            return index, families.index(family), heading
+    return len(WORKLOAD_GROUPS), 0, "Other workloads"
+
+
+def _workload_order(case: dict) -> tuple:
+    """Shared by both figures; new measured pairs need no release-specific list."""
+    workload = case["workload"]
+    parameters = workload["parameters"]
+    size = parameters.get("distance", parameters.get("bits_per_operand", parameters.get(
+        "num_qubits", workload["expected_metadata"].get("num_qubits", 0)
+    )))
+    return (*_workload_group(case)[:2], workload["family"], size,
+            parameters.get("rounds", 0), workload["id"], case["variant_id"])
+
+
+def _throughput_entries(report: dict) -> list[dict]:
+    entries = list(report["tools"])
+    covered = {c["case_id"] for e in entries for c in e["cases"].values() if c is not None}
+    entries.extend(
+        {"variant": c["variant_id"], "cases": {c["variant_id"]: c}}
+        for c in report["current"] if c["case_id"] not in covered
+    )
+    return sorted(
+        (e for e in entries if _main_workload(_representative(e), e["variant"])),
+        key=lambda e: _workload_order(_representative(e)),
+    )
+
+
+def _release_pairs(report: dict) -> list[dict]:
+    return sorted(
+        (p for p in report["release"] if p["ratio"] is not None
+         and _main_workload(p["candidate"], p["candidate_variant"])),
+        key=lambda p: _workload_order(p["candidate"]),
+    )
+
+
+def _layout(cases: list[dict], heights: list[float]) -> tuple[list, list, float]:
+    headers, positions = [], []
+    y, last = 0.0, None
+    for case, height in zip(cases, heights, strict=True):
+        group, _, heading = _workload_group(case)
+        if group != last:
+            if last is not None:
+                y += 0.20
+            headers.append((heading, y + 0.10))
+            y += 0.55
+            last = group
+        positions.append(y + height / 2)
+        y += height
+    return headers, positions, max(0.65, y + 0.12)
 
 
 def _number_label(value: float) -> str:
@@ -256,22 +274,32 @@ def _number_label(value: float) -> str:
     return f"{value:.3g}"
 
 
-def _style_axis(axis, labels: list[str], grid: str) -> None:
-    axis.set_yticks(range(len(labels)), labels, fontsize=13)
-    axis.set_ylim(len(labels) - 0.5, -0.6)
-    axis.grid(axis="x", color=grid, linewidth=1)
+def _style_axis(axis, extent: float, grid: str) -> None:
+    axis.set_ylim(extent, -0.12)
+    axis.set_yticks([])
+    axis.grid(axis="x", color=grid, linewidth=0.8)
     axis.set_axisbelow(True)
-    axis.tick_params(axis="y", length=0, pad=12)
+    axis.tick_params(axis="x", labelsize=11)
     for spine in axis.spines.values():
         spine.set_visible(False)
 
 
-def _render_throughput(report, title, entries, colors, grid):
+def _header_bands(axis, headers, grid, *, left=-0.46, right=1, labels=True):
+    for heading, y in headers:
+        axis.axhspan(y - 0.15, y + 0.20, xmin=left, xmax=right,
+                     color=grid, alpha=0.45, clip_on=False, zorder=0)
+        if labels:
+            axis.text(left + 0.015, y + 0.025, heading,
+                      transform=axis.get_yaxis_transform(), va="center",
+                      fontsize=13, fontweight="bold")
+
+
+def _render_throughput(report, colors, grid):
     import matplotlib.pyplot as plt
     from matplotlib.lines import Line2D
-    from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
+    from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
 
-    # Match color and shape across panels, regardless of campaign iteration order.
+    entries = _throughput_entries(report)
     adapters = ("clifft", "symft", "xtim", "stim", "tsim")
     markers = ("o", "s", "D", "^", "P")
     variants = list(dict.fromkeys(v for entry in entries for v in entry["cases"]))
@@ -286,157 +314,135 @@ def _render_throughput(report, title, entries, colors, grid):
         adapter = simulator["adapter"] if simulator else ""
         position = adapters.index(adapter) if adapter in adapters else index
         styles[variant] = colors[position % len(colors)], markers[position % len(markers)]
-    # Unsupported pairings are in the outcome table, not repeated on every row.
     visible = [
-        [(v, case) for v, case in entry["cases"].items()
-         if _outcome(case, _representative(entry), report["variants"].get(v)) != "unsupported"]
+        sorted(((v, case) for v, case in entry["cases"].items()
+                if _outcome(case, _representative(entry), report["variants"].get(v))
+                != "unsupported"), key=lambda item: variants.index(item[0]))
         for entry in entries
     ]
-    names = [_label(_representative(entry)) for entry in entries]
-    names = [
-        textwrap.fill(_representative(entry)["workload"]["id"] if names.count(name) > 1
-                      else name, 28)
-        for name, entry in zip(names, entries, strict=True)
-    ]
-    label_height = max((name.count("\n") + 2 for name in names), default=2) * 0.23 + 0.16
-    row_height = max(label_height, max((len(cases) for cases in visible), default=1) * 0.27 + 0.22)
-    figure, axis = plt.subplots(figsize=(12, 3.2 + max(len(entries), 1) * row_height))
-    figure.subplots_adjust(left=0.31, right=0.95, top=1 - 1.65 / figure.get_figheight(),
-                           bottom=0.95 / figure.get_figheight())
+    cases = [_representative(entry) for entry in entries]
+    names = [textwrap.fill(_label(case), 29) for case in cases]
+    heights = [max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
+               for values, name in zip(visible, names, strict=True)]
+    headers, positions, extent = _layout(cases, heights)
+    height = extent + 1.55
+    figure = plt.figure(figsize=(12, height))
+    axis = figure.add_axes((0.32, 0.62 / height, 0.64, extent / height))
     rates = [
         report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-        for cases in visible for _, case in cases
+        for values in visible for _, case in values
         if case is not None and case["status"] == "success"
     ]
     low = 10 ** math.floor(math.log10(min(rates))) / 1.3 if rates else 0.1
-    high = max(rates, default=1)
+    high = low * (max(rates, default=1) / low) ** 1.13
     axis.set_xscale("log")
-    # Reserve physical room for a rate label even across a very broad log range.
-    axis.set_xlim(low, low * (high / low) ** 1.13 * 1.5)
+    axis.set_xlim(low, high)
     axis.xaxis.set_major_locator(LogLocator(base=10, numticks=7))
     axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _: _number_label(value)))
-    axis.xaxis.set_minor_formatter(NullFormatter())
-    labels = []
+    axis.xaxis.set_minor_locator(NullLocator())
+    _style_axis(axis, extent, grid)
+    _header_bands(axis, headers, grid)
     used = set()
-    for index, (entry, cases) in enumerate(zip(entries, visible, strict=True)):
-        representative = _representative(entry)
-        calls = representative["execution"]["shots_per_call"]
-        unit = "shot" if calls == 1 else "shots"
-        labels.append(f"{names[index]}\n{calls:,} {unit}/call")
-        cases.sort(key=lambda item: variants.index(item[0]))
-        for offset, (variant, case) in enumerate(cases):
+    for entry, values, name, y, row_height in zip(
+        entries, visible, names, positions, heights, strict=True,
+    ):
+        axis.text(-0.025, y, name, transform=axis.get_yaxis_transform(),
+                  ha="right", va="center", fontsize=13)
+        for offset, (variant, case) in enumerate(values):
             color, marker = styles[variant]
-            y = index + (offset - (len(cases) - 1) / 2) * (0.27 / row_height)
-            state = _outcome(case, representative, report["variants"].get(variant))
+            py = y + (offset - (len(values) - 1) / 2) * 0.23
+            state = _outcome(case, _representative(entry), report["variants"].get(variant))
             used.add(variant)
             if state == "measured":
                 rate = report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-                axis.hlines(y, low, rate, color=color, linewidth=2.5)
-                axis.plot(rate, y, marker, color=color, markersize=8)
-                axis.annotate(f"{_number_label(rate)}/s", (rate, y), xytext=(8, 0),
+                axis.hlines(py, low, rate, color=color, linewidth=2.4)
+                axis.plot(rate, py, marker, color=color, markersize=7)
+                axis.annotate(f"{_number_label(rate)}/s", (rate, py), xytext=(7, 0),
                               textcoords="offset points", va="center", color=color,
-                              fontsize=12, fontweight="bold")
+                              fontsize=11.5, fontweight="bold")
             else:
                 simulator = report["variants"].get(variant)
-                name = simulator["name"] if simulator else variant
-                axis.text(0.02, y, f"{name}: {state}", transform=axis.get_yaxis_transform(),
+                label = simulator["name"] if simulator else variant
+                axis.text(0.02, py, f"{label}: {state}", transform=axis.get_yaxis_transform(),
                           va="center", fontsize=11, color=color)
-        if index < len(entries) - 1:
-            axis.axhline(index + 0.5, color=grid, linewidth=0.7)
-    _style_axis(axis, labels, grid)
-    axis.set_xlabel("Attempted shots per second · log scale · higher is faster", labelpad=14)
-    handles = []
+        axis.axhline(y + row_height / 2, color=grid, linewidth=0.5, alpha=0.65)
+    if not entries:
+        axis.text(0.5, 0.5, "No main workloads selected", ha="center", transform=axis.transAxes)
+    axis.set_xlabel("Attempted shots per second · log scale · higher is faster", labelpad=12)
+    handles, names_seen = [], set()
     for variant in variants:
         if variant not in used:
             continue
         simulator = report["variants"].get(variant)
-        name = f"{simulator['name']} {simulator['display_version']}" if simulator else variant
+        name = simulator["name"] if simulator else variant
+        if name in names_seen:
+            continue
+        names_seen.add(name)
         color, marker = styles[variant]
-        handles.append(Line2D([], [], color=color, marker=marker, linewidth=2.5, label=name))
+        handles.append(Line2D([], [], color=color, marker=marker, linewidth=2.4, label=name))
     if handles:
-        axis.legend(handles=handles, loc="lower left", bbox_to_anchor=(0, 1.02),
-                    borderaxespad=0, ncol=min(3, len(handles)), frameon=False,
-                    fontsize=11, labelcolor="linecolor", handlelength=1.3, columnspacing=1.3)
-    figure.suptitle(title, x=0.04, ha="left", fontsize=17, fontweight="bold",
-                    y=1 - 0.12 / figure.get_figheight())
-    figure.text(0.04, 0.18 / figure.get_figheight(),
-                "Compilation excluded. Missing markers: see outcomes in review.md.",
-                fontsize=10)
+        figure.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.32, 1 - 0.34 / height),
+                      ncol=5, frameon=False, fontsize=11, handlelength=1.3, columnspacing=1.2)
+    figure.suptitle("CPU simulator throughput", x=0.035, ha="left", fontsize=19,
+                    fontweight="bold", y=1 - 0.04 / height)
     return figure
 
 
 def _render_release(report, colors, foreground, grid):
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
+    from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
 
-    measured = [p for p in report["release"] if p["ratio"] is not None]
-    small = sorted((p for p in measured if 0.5 <= p["ratio"] <= 1.5),
-                   key=lambda p: p["ratio"], reverse=True)
-    large = sorted((p for p in measured if p not in small),
-                   key=lambda p: p["ratio"], reverse=True)
-    panels = [(False, small), (True, large)]
-    panels = [(log, pairs) for log, pairs in panels if pairs] or [(False, [])]
-    notes = []
-    for pair in report["release"]:
-        if pair["ratio"] is not None:
-            continue
-        case = pair["candidate"] or pair["baseline"]
-        states = [
-            f"{name} {_outcome(pair[side], pair[other], report['variants'].get(pair[key]))}"
-            for name, side, other, key in (
-                ("previous", "baseline", "candidate", "baseline_variant"),
-                ("current", "candidate", "baseline", "candidate_variant"),
-            )
-            if _outcome(pair[side], pair[other], report["variants"].get(pair[key])) != "measured"
-        ]
-        notes.append(f"{_label(case)}: {', '.join(states)}")
-    note = textwrap.fill("No release ratio — " + "; ".join(notes), 110) if notes else ""
-    footer = 0.55 + (note.count("\n") + 1) * 0.20 if note else 0.55
-    heights = [max(len(pairs), 1) * 0.55 + 1.15 for _, pairs in panels]
-    height = sum(heights) + 0.8 + footer
+    pairs = _release_pairs(report)
+    cases = [p["candidate"] for p in pairs]
+    names = [textwrap.fill(_label(case), 29) for case in cases]
+    heights = [max(0.53, (name.count("\n") + 1) * 0.24 + 0.19) for name in names]
+    headers, positions, extent = _layout(cases, heights)
+    height = extent + 1.65
     figure = plt.figure(figsize=(12, height))
-    top = height - 0.8
-    for (log, pairs), panel_height in zip(panels, heights, strict=True):
-        plot_height = panel_height - 1.15
-        axis = figure.add_axes((0.31, (top - plot_height - 0.35) / height,
-                                0.63, plot_height / height))
-        top -= panel_height
-        labels = [textwrap.fill(_label(p["candidate"] or p["baseline"]), 29) for p in pairs]
-        _style_axis(axis, labels, grid)
-        axis.set_title("Larger changes · separate log scale" if log else "Percentage changes",
-                       loc="left", fontsize=13, pad=12)
-        anchor = 1 if log else 0
-        axis.axvline(anchor, color=foreground, linewidth=1, linestyle="--")
-        if log:
-            ratios = [1, *(p["ratio"] for p in pairs)]
-            low, high = min(ratios), max(ratios)
-            padding = max(math.log(high / low) * 0.22, math.log(1.5))
-            axis.set_xscale("log")
-            axis.set_xlim(low / math.exp(padding), high * math.exp(padding))
-            axis.xaxis.set_major_locator(LogLocator(base=10, numticks=6))
-            axis.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}×"))
-            axis.xaxis.set_minor_formatter(NullFormatter())
-            axis.set_xlabel("Current / previous throughput · 1× = unchanged", labelpad=10)
-        else:
-            span = max([3, *(abs((p["ratio"] - 1) * 100) * 1.4 for p in pairs)])
-            axis.set_xlim(-span, span)
-            axis.axvspan(-1.1, 1.1, color=grid, alpha=0.5, zorder=0)
-            axis.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:+g}%"))
-            axis.set_xlabel("Throughput change · 0% = unchanged", labelpad=10)
-        for index, pair in enumerate(pairs):
-            value = pair["ratio"] if log else (pair["ratio"] - 1) * 100
-            label = f"{value:.3g}×" if log else f"{value:+.2f}%"
-            color = colors[0] if value >= anchor else colors[-1]
-            axis.hlines(index, anchor, value, color=color, linewidth=3)
-            axis.plot(value, index, "o", color=color, markersize=9)
-            axis.annotate(label, (value, index),
-                          xytext=(9 if value >= anchor else -9, 0),
-                          ha="left" if value >= anchor else "right",
-                          textcoords="offset points", va="center",
-                          fontsize=13, fontweight="bold", color=color)
-        if not pairs:
-            axis.text(0.5, 0.5, "No measured release pairs", ha="center",
-                      transform=axis.transAxes)
+    percent = figure.add_axes((0.32, 0.74 / height, 0.295, extent / height))
+    ratio_axis = figure.add_axes((0.69, 0.74 / height, 0.27, extent / height), sharey=percent)
+    small = [p["ratio"] for p in pairs if 0.5 <= p["ratio"] <= 1.5]
+    large = [p["ratio"] for p in pairs if p["ratio"] < 0.5 or p["ratio"] > 1.5]
+    span = max([3, *(abs((ratio - 1) * 100) * 1.65 for ratio in small)])
+    percent.set_xlim(-span, span)
+    percent.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}%"))
+    percent.axvspan(-1.1, 1.1, color=grid, alpha=0.45, zorder=0)
+    percent.axvline(0, color=foreground, linestyle="--", linewidth=0.8)
+    percent.set_title("Percentage change", fontsize=12, pad=13)
+    percent.set_xlabel("0% = unchanged", labelpad=10, fontsize=11)
+    ratio_axis.set_xscale("log")
+    low, high = min([1, *large]), max([1, *large])
+    padding = max(math.log(high / low) * 0.32, math.log(1.5))
+    ratio_axis.set_xlim(low / math.exp(padding), high * math.exp(padding))
+    ratio_axis.xaxis.set_major_locator(LogLocator(base=10, numticks=5))
+    ratio_axis.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}×"))
+    ratio_axis.xaxis.set_minor_locator(NullLocator())
+    ratio_axis.axvline(1, color=foreground, linestyle="--", linewidth=0.8)
+    ratio_axis.set_title("Larger changes", fontsize=12, pad=13)
+    ratio_axis.set_xlabel("Current / previous · log scale", labelpad=10, fontsize=11)
+    for axis in (percent, ratio_axis):
+        _style_axis(axis, extent, grid)
+    _header_bands(percent, headers, grid, left=-1, right=(0.96 - 0.32) / 0.295)
+    _header_bands(ratio_axis, headers, grid, left=0, labels=False)
+    for pair, name, y in zip(pairs, names, positions, strict=True):
+        percent.text(-0.055, y, name, transform=percent.get_yaxis_transform(),
+                     ha="right", va="center", fontsize=13)
+        ratio = pair["ratio"]
+        is_small = 0.5 <= ratio <= 1.5
+        axis = percent if is_small else ratio_axis
+        value, baseline = ((ratio - 1) * 100, 0) if is_small else (ratio, 1)
+        color = colors[0] if ratio >= 1 else colors[-1]
+        if is_small and abs(value) <= 1.1:
+            color = foreground
+        axis.hlines(y, baseline, value, color=color, linewidth=2.7)
+        axis.plot(value, y, "o", color=color, markersize=8)
+        axis.annotate(f"{value:+.2f}%" if is_small else f"{ratio:.3g}×", (value, y),
+                      xytext=(8 if ratio >= 1 else -8, 0), textcoords="offset points",
+                      ha="left" if ratio >= 1 else "right", va="center",
+                      fontsize=12, fontweight="bold", color=color)
+    if not pairs:
+        percent.text(0.5, 0.5, "No measured release pairs", ha="center",
+                     transform=percent.transAxes)
     versions = ""
     if report["release"]:
         pair = report["release"][0]
@@ -445,14 +451,8 @@ def _render_release(report, colors, foreground, grid):
             for key in ("candidate_variant", "baseline_variant")
         )
         versions = f" · {current} vs {previous}"
-    figure.suptitle("Clifft release changes" + versions, x=0.04, ha="left",
-                    fontsize=17, fontweight="bold", y=1 - 0.12 / height)
-    caption = "Shaded ±1.1%: contract's inconclusive band, not a confidence interval."
-    if not any(not log for log, _ in panels):
-        caption = "Ratios compare paired sample medians; higher is faster."
-    figure.text(0.04, (footer - 0.22) / height, caption, fontsize=10)
-    if note:
-        figure.text(0.04, 0.12 / height, note, fontsize=10, va="bottom")
+    figure.suptitle("Clifft release changes" + versions, x=0.035, ha="left",
+                    fontsize=19, fontweight="bold", y=1 - 0.04 / height)
     return figure
 
 
@@ -483,32 +483,23 @@ def render(report: dict, output_dir: Path) -> list[Path]:
             "savefig.facecolor": background,
         }):
             for kind in FIGURES:
-                panels = (
-                    [("", [])] if kind == "release-change"
-                    else _throughput_panels(report, kind)
+                figure = (
+                    _render_release(report, colors, foreground, grid)
+                    if kind == "release-change" else _render_throughput(report, colors, grid)
                 )
-                for index, (heading, entries) in enumerate(panels):
-                    if kind == "release-change":
-                        figure = _render_release(report, colors, foreground, grid)
-                    else:
-                        name = (
-                            "Clifft throughput" if kind == "clifft-throughput" else "CPU simulators"
-                        )
-                        figure = _render_throughput(
-                            report, f"{name}\n{heading}", entries, colors, grid,
-                        )
-                    if qualifier:
-                        figure.text(0.5, 1.01, qualifier.rstrip(" ·"), ha="center",
-                                    transform=figure.transFigure, fontsize=14, color=colors[-1])
-                    path = output_dir / f"{_figure_stem(kind, index)}-{theme}.png"
-                    figure.savefig(path, dpi=160, bbox_inches="tight", pad_inches=0.15)
-                    plt.close(figure)
-                    outputs.append(path)
-            # Remove obsolete numbered pages when regenerating a smaller selection.
-            for kind in FIGURES:
+                if qualifier:
+                    figure.text(0.5, 1.01, qualifier.rstrip(" ·"), ha="center",
+                                transform=figure.transFigure, fontsize=14, color=colors[-1])
+                path = output_dir / f"{kind}-{theme}.png"
+                figure.savefig(path, dpi=160, bbox_inches="tight", pad_inches=0.16)
+                plt.close(figure)
+                outputs.append(path)
+            # Remove superseded generated figures, preserving unrelated images.
+            (output_dir / f"clifft-throughput-{theme}.png").unlink(missing_ok=True)
+            for kind in ("clifft-throughput", *FIGURES):
                 for path in output_dir.glob(f"{kind}-*-{theme}.png"):
                     page = path.name.removeprefix(f"{kind}-").removesuffix(f"-{theme}.png")
-                    if page.isdecimal() and path not in outputs:
+                    if page.isdecimal():
                         path.unlink()
     return outputs
 

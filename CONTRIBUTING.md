@@ -182,15 +182,12 @@ review summary without writing files or importing plotting dependencies. Without
 `--check`, install the `report` extra; the command regenerates `cases.csv` and
 writes `report/review.md` plus these light/dark PNG pairs:
 
-- `clifft-throughput-{light,dark}.png`: selected current Clifft configurations.
-- `simulator-throughput-{light,dark}.png`: declared tool comparisons, with bulk
-  and coverage groups kept separate.
-- `release-change-{light,dark}.png`: current/previous throughput on paired work.
+- `simulator-throughput-{light,dark}.png`: Clifft and peer throughput by theme.
+- `release-change-{light,dark}.png`: measured current/previous pairs in the same
+  thematic order.
 
-Throughput figures split into pages by workload and measurement group. The first
-page uses the names above; additional pages use numbered names such as
-`simulator-throughput-2-light.png`. The generated review embeds every page and
-links its dark counterpart. Regenerating removes obsolete numbered pages.
+The generated review embeds both figures and links their dark counterparts.
+Regenerating removes superseded Clifft-only figures and numbered pages.
 
 Use `--output-dir DIR` to choose the report destination. Review failure labels,
 missing baselines, exact versions, and both themes. Smoke figures are validation
