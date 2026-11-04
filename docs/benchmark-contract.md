@@ -62,7 +62,9 @@ unmeasured combinations. Failed cases have no plotted throughput.
 
 The throughput figure combines Clifft and peer rates, grouped into magic-state
 preparation; surface-code memory and coherent noise; and arithmetic, code
-switching, and dense Quantum Volume. Within each theme, circuits follow a stable
+switching; and Quantum Volume. Each theme has an independent logarithmic axis
+with its own throughput ticks. Horizontal positions are comparable within a panel;
+absolute labels remain comparable across panels. Within each theme, circuits follow a stable
 family and size order, independent of measured speed. Each rate is directly
 labeled; short circuit names and consistent simulator colors and shapes aid
 comparison. Selection-off controls, the unverified cultivation proxy, and
@@ -513,6 +515,20 @@ error/setup/memory diagnostics while throughput summaries stay blank. Detailed
 adapter options and calibration probes stay in raw JSON. The report regenerates
 this table from raw evidence, so a stale CSV cannot change a performance claim.
 There is no separately stored comparison table, execution index, or release chain.
+
+A Clifft-only refresh may explicitly reuse unchanged peers from one prior
+execution for the throughput figure. Both raw files remain separate and
+self-contained; no synthetic combined execution or pooled samples are written.
+The primary execution supplies every Clifft value and all paired release ratios.
+The peer source supplies only non-Clifft values from its declared Clifft
+comparisons. Missing, unsupported, and failed peer outcomes remain distinct.
+Reuse requires matching classification, hardware epoch/reference host, host CPU,
+OS/Python/thread settings, measurement protocol, seeds, and resource limits.
+Compared workloads must also pass the digest, selection, and call-size checks
+below. Incompatible or ambiguous sources are rejected. Reports identify the peer
+run, collection time, source revision, and exact software versions in the
+companion review. These cross-collection absolute rates are
+not a fresh paired comparison and do not acquire the paired 1.1% interpretation.
 
 Paired ratios use candidate median divided by baseline median. Pairing requires
 matching workload digest and selection semantics, call size, measurement settings,
