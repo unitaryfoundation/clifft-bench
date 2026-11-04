@@ -117,10 +117,6 @@ def test_release_bulk_calls_exceed_their_short_call_siblings() -> None:
             workload_id = workload["workload_id"]
             assert workload_id in short, f"{variant['id']}: {workload_id} missing from {short_id}"
             assert workload["shots_per_call"] > short[workload_id], (variant["id"], workload_id)
-        implementation = next(c.implementation for c in suite.cases
-                              if c.implementation.id == variant["implementation_id"])
-        if implementation.definition["adapter"] == "tsim":
-            assert variant["execution"]["options"].get("trajectory_sharing", True) is True
 
 
 @pytest.mark.parametrize("path", SMOKE_MANIFESTS, ids=lambda p: p.name)

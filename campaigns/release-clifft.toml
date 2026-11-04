@@ -44,7 +44,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 
 [variants.execution]
 batch_size = "calibrate"
@@ -85,7 +85,7 @@ workload_id = "reed-muller-measured"
 
 [[variants]]
 id = "clifft-bulk"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 
 [variants.execution]
 batch_size = "calibrate"
@@ -101,7 +101,7 @@ shots_per_call = 100000
 
 [[variants]]
 id = "clifft-coverage"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 workloads = "coverage"
 
 [variants.execution]

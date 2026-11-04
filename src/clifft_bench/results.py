@@ -306,8 +306,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
             _require(
                 metadata["sampling_backend"] == "active_statevector"
                 and metadata["installed_source_commit"] == simulator["commit_sha"]
-                and metadata["trajectory_sharing"]
-                is execution["options"].get("trajectory_sharing", True),
+                and metadata["trajectory_sharing"] is True,
                 "invalid Tsim runtime provenance",
             )
             _require(

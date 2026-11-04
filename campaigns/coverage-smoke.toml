@@ -19,7 +19,7 @@ repetitions = 1
 id = "msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
@@ -30,7 +30,7 @@ options_preset = "clifft-scheduled"
 id = "surface-code-d7-r7-p1e-3-unselected--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
@@ -41,7 +41,7 @@ options_preset = "clifft-scheduled"
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
@@ -52,7 +52,7 @@ options_preset = "clifft-scheduled"
 id = "quantum-volume-q10-seed42-all-observables--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
@@ -63,7 +63,7 @@ options_preset = "clifft-scheduled"
 id = "quantum-volume-q20-seed42-all-observables--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 1
 
 [cases.execution]
@@ -74,7 +74,7 @@ options_preset = "clifft-scheduled"
 id = "msc-d7-proxy-unverified-p1e-3--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
@@ -85,7 +85,7 @@ options_preset = "clifft-scheduled"
 id = "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
@@ -96,7 +96,7 @@ options_preset = "clifft-scheduled"
 id = "msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage"
 variant_id = "symft-coverage"
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 128
 
 [cases.execution]
@@ -109,7 +109,7 @@ sample_chunk_shots = 2048
 id = "surface-code-d7-r7-p1e-3-unselected--symft-coverage"
 variant_id = "symft-coverage"
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 128
 
 [cases.execution]
@@ -122,7 +122,7 @@ sample_chunk_shots = 2048
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage"
 variant_id = "symft-coverage"
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 128
 
 [cases.execution]
@@ -135,7 +135,7 @@ sample_chunk_shots = 2048
 id = "quantum-volume-q10-seed42-all-observables--symft-coverage"
 variant_id = "symft-coverage"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 128
 
 [cases.execution]
@@ -148,7 +148,7 @@ sample_chunk_shots = 2048
 id = "quantum-volume-q20-seed42-all-observables--symft-coverage"
 variant_id = "symft-coverage"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 1
 
 [cases.execution]
@@ -161,7 +161,7 @@ sample_chunk_shots = 2048
 id = "msc-d7-proxy-unverified-p1e-3--symft-coverage"
 variant_id = "symft-coverage"
 workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 128
 
 [cases.execution]
@@ -174,92 +174,71 @@ sample_chunk_shots = 2048
 id = "msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = 32
-
-[cases.execution.options]
-trajectory_sharing = true
 
 [[cases]]
 id = "surface-code-d7-r7-p1e-3-unselected--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = 32
-
-[cases.execution.options]
-trajectory_sharing = true
 
 [[cases]]
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = 32
-
-[cases.execution.options]
-trajectory_sharing = true
 
 [[cases]]
 id = "quantum-volume-q10-seed42-all-observables--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = 32
-
-[cases.execution.options]
-trajectory_sharing = true
 
 [[cases]]
 id = "quantum-volume-q20-seed42-all-observables--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 1
 
 [cases.execution]
 batch_size = 1
 
-[cases.execution.options]
-trajectory_sharing = true
-
 [[cases]]
 id = "msc-d7-proxy-unverified-p1e-3--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = 32
-
-[cases.execution.options]
-trajectory_sharing = true
 
 [[cases]]
 id = "msc-full-d5-cultivation-selected-p1e-3--tsim-coverage"
 variant_id = "tsim-coverage"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "tsim-0.1.5-e9406ed"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = 32
-
-[cases.execution.options]
-trajectory_sharing = true
 
 [[cases]]
 id = "msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage"
