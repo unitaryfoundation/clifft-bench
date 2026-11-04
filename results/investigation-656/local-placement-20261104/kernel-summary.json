@@ -1,0 +1,548 @@
+[
+  {
+    "workload": "coherent-d5",
+    "layouts": [
+      {
+        "alignment": 16,
+        "builds": {
+          "parent": {
+            "cycles": 17022022053.75,
+            "instructions": 58592498603.5,
+            "throughput": 12567.74948893698,
+            "worker_cycles": [
+              17041739519.5,
+              17002304588.0
+            ]
+          },
+          "candidate": {
+            "cycles": 16680192711.25,
+            "instructions": 56763336314.5,
+            "throughput": 12940.378771818361,
+            "worker_cycles": [
+              16724697294.0,
+              16635688128.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -2.0081594385238932,
+          "instructions": -3.121836980153525,
+          "throughput": 2.964964277887594
+        }
+      },
+      {
+        "alignment": 32,
+        "builds": {
+          "parent": {
+            "cycles": 17347379453.0,
+            "instructions": 58592516024.25,
+            "throughput": 11162.799350886382,
+            "worker_cycles": [
+              17359990330.0,
+              17334768576.0
+            ]
+          },
+          "candidate": {
+            "cycles": 16772059811.5,
+            "instructions": 56763343731.75,
+            "throughput": 12461.003492994249,
+            "worker_cycles": [
+              16746132391.0,
+              16797987232.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -3.3164642709219483,
+          "instructions": -3.1218531249672776,
+          "throughput": 11.629736424535686
+        }
+      },
+      {
+        "alignment": 64,
+        "builds": {
+          "parent": {
+            "cycles": 17125138855.75,
+            "instructions": 58592496221.5,
+            "throughput": 12154.812524774065,
+            "worker_cycles": [
+              17032791839.0,
+              17217485872.5
+            ]
+          },
+          "candidate": {
+            "cycles": 16848935341.75,
+            "instructions": 56763337626.75,
+            "throughput": 12506.339997218856,
+            "worker_cycles": [
+              16914553037.5,
+              16783317646.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -1.6128541574263577,
+          "instructions": -3.121830802079406,
+          "throughput": 2.8920846926129506
+        }
+      }
+    ],
+    "median_layout_cycle_change": -2.0081594385238932,
+    "median_layout_instruction_change": -3.121836980153525
+  },
+  {
+    "workload": "d3",
+    "layouts": [
+      {
+        "alignment": 16,
+        "builds": {
+          "parent": {
+            "cycles": 5666726045.75,
+            "instructions": 23285940675.75,
+            "throughput": 3001400.052254319,
+            "worker_cycles": [
+              5583903237.5,
+              5749548854.0
+            ]
+          },
+          "candidate": {
+            "cycles": 5678587662.5,
+            "instructions": 23285952607.5,
+            "throughput": 2985405.211730325,
+            "worker_cycles": [
+              5634811626.0,
+              5722363699.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": 0.2093204551311567,
+          "instructions": 5.1240145992892394e-05,
+          "throughput": -0.5329126489479585
+        }
+      },
+      {
+        "alignment": 32,
+        "builds": {
+          "parent": {
+            "cycles": 5685692680.25,
+            "instructions": 23285938613.75,
+            "throughput": 2720212.13868083,
+            "worker_cycles": [
+              5720217867.5,
+              5651167493.0
+            ]
+          },
+          "candidate": {
+            "cycles": 5657456757.5,
+            "instructions": 23285952445.0,
+            "throughput": 2767425.203013461,
+            "worker_cycles": [
+              5650542395.5,
+              5664371119.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -0.49661359376811376,
+          "instructions": 5.939743392691099e-05,
+          "throughput": 1.7356390577510927
+        }
+      },
+      {
+        "alignment": 64,
+        "builds": {
+          "parent": {
+            "cycles": 5769529405.25,
+            "instructions": 23285942032.0,
+            "throughput": 2713413.9319606186,
+            "worker_cycles": [
+              5860960031.5,
+              5678098779.0
+            ]
+          },
+          "candidate": {
+            "cycles": 5635345720.75,
+            "instructions": 23285952680.25,
+            "throughput": 2975442.832977159,
+            "worker_cycles": [
+              5640324819.0,
+              5630366622.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -2.3257301432227595,
+          "instructions": 4.5728233732944545e-05,
+          "throughput": 9.656797952209505
+        }
+      }
+    ],
+    "median_layout_cycle_change": -0.49661359376811376,
+    "median_layout_instruction_change": 5.1240145992892394e-05
+  },
+  {
+    "workload": "d5",
+    "layouts": [
+      {
+        "alignment": 16,
+        "builds": {
+          "parent": {
+            "cycles": 18634756989.0,
+            "instructions": 45990802035.25,
+            "throughput": 167862.98696676025,
+            "worker_cycles": [
+              19502844136.0,
+              17766669842.0
+            ]
+          },
+          "candidate": {
+            "cycles": 17908702088.0,
+            "instructions": 44326783601.0,
+            "throughput": 167501.98273947992,
+            "worker_cycles": [
+              18141281959.5,
+              17676122216.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -3.896240243050053,
+          "instructions": -3.6181548496906024,
+          "throughput": -0.2150588606836923
+        }
+      },
+      {
+        "alignment": 32,
+        "builds": {
+          "parent": {
+            "cycles": 19184128643.5,
+            "instructions": 45990797547.25,
+            "throughput": 171343.4645784391,
+            "worker_cycles": [
+              20315760703.5,
+              18052496583.5
+            ]
+          },
+          "candidate": {
+            "cycles": 17678344127.5,
+            "instructions": 44326761169.5,
+            "throughput": 183149.1224856369,
+            "worker_cycles": [
+              17487011434.5,
+              17869676820.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -7.849116027014302,
+          "instructions": -3.618194218181159,
+          "throughput": 6.890054392353728
+        }
+      },
+      {
+        "alignment": 64,
+        "builds": {
+          "parent": {
+            "cycles": 18343330170.75,
+            "instructions": 45990796822.25,
+            "throughput": 179943.7756975936,
+            "worker_cycles": [
+              18772650096.0,
+              17914010245.5
+            ]
+          },
+          "candidate": {
+            "cycles": 18299174774.25,
+            "instructions": 44326761076.0,
+            "throughput": 180763.2515737311,
+            "worker_cycles": [
+              18925716841.5,
+              17672632707.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -0.2407163589652317,
+          "instructions": -3.618192902117656,
+          "throughput": 0.4554066251864608
+        }
+      }
+    ],
+    "median_layout_cycle_change": -3.896240243050053,
+    "median_layout_instruction_change": -3.618192902117656
+  },
+  {
+    "workload": "draper",
+    "layouts": [
+      {
+        "alignment": 16,
+        "builds": {
+          "parent": {
+            "cycles": 5454471.5,
+            "instructions": 13070565.5,
+            "throughput": 116899753.47099452,
+            "worker_cycles": [
+              5398529.5,
+              5510413.5
+            ]
+          },
+          "candidate": {
+            "cycles": 5286308.75,
+            "instructions": 13115223.0,
+            "throughput": 81603984.96142855,
+            "worker_cycles": [
+              5238487.0,
+              5334130.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -3.08302555068809,
+          "instructions": 0.3416646357037978,
+          "throughput": -30.193193280192542
+        }
+      },
+      {
+        "alignment": 32,
+        "builds": {
+          "parent": {
+            "cycles": 5830983.75,
+            "instructions": 13068341.75,
+            "throughput": 125030485.14500171,
+            "worker_cycles": [
+              6255394.0,
+              5406573.5
+            ]
+          },
+          "candidate": {
+            "cycles": 5671656.0,
+            "instructions": 13113607.25,
+            "throughput": 132772128.10147555,
+            "worker_cycles": [
+              5944917.5,
+              5398394.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -2.732433442298654,
+          "instructions": 0.3463752392303343,
+          "throughput": 6.191804300763626
+        }
+      },
+      {
+        "alignment": 64,
+        "builds": {
+          "parent": {
+            "cycles": 5182005.5,
+            "instructions": 13069784.5,
+            "throughput": 107456101.22753453,
+            "worker_cycles": [
+              5127974.5,
+              5236036.5
+            ]
+          },
+          "candidate": {
+            "cycles": 5115485.5,
+            "instructions": 13114453.25,
+            "throughput": 103414763.30879438,
+            "worker_cycles": [
+              4976077.5,
+              5254893.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -1.2836728945964992,
+          "instructions": 0.3417711286670455,
+          "throughput": -3.7609199222506384
+        }
+      }
+    ],
+    "median_layout_cycle_change": -2.732433442298654,
+    "median_layout_instruction_change": 0.3417711286670455
+  },
+  {
+    "workload": "qv10",
+    "layouts": [
+      {
+        "alignment": 16,
+        "builds": {
+          "parent": {
+            "cycles": 19049991407.25,
+            "instructions": 49638901498.5,
+            "throughput": 21468.299285475052,
+            "worker_cycles": [
+              19133844788.5,
+              18966138026.0
+            ]
+          },
+          "candidate": {
+            "cycles": 19134740468.0,
+            "instructions": 49415756233.75,
+            "throughput": 20227.91405356431,
+            "worker_cycles": [
+              19245447612.5,
+              19024033323.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": 0.44487715998520194,
+          "instructions": -0.44953707276689236,
+          "throughput": -5.777752654817691
+        }
+      },
+      {
+        "alignment": 32,
+        "builds": {
+          "parent": {
+            "cycles": 19363239162.0,
+            "instructions": 49638912510.75,
+            "throughput": 20230.40394928075,
+            "worker_cycles": [
+              19363239800.0,
+              19363238524.0
+            ]
+          },
+          "candidate": {
+            "cycles": 19002278101.75,
+            "instructions": 49415754955.0,
+            "throughput": 21572.307833470128,
+            "worker_cycles": [
+              19128915678.0,
+              18875640525.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -1.8641563905195113,
+          "instructions": -0.4495617338548086,
+          "throughput": 6.633104744490703
+        }
+      },
+      {
+        "alignment": 64,
+        "builds": {
+          "parent": {
+            "cycles": 19156103462.25,
+            "instructions": 49638910991.5,
+            "throughput": 19861.01061752696,
+            "worker_cycles": [
+              19120497011.0,
+              19191709913.5
+            ]
+          },
+          "candidate": {
+            "cycles": 18946058472.0,
+            "instructions": 49415753996.25,
+            "throughput": 21259.474619064193,
+            "worker_cycles": [
+              18889981750.0,
+              19002135194.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -1.096491207953254,
+          "instructions": -0.44956061845959905,
+          "throughput": 7.041252977847523
+        }
+      }
+    ],
+    "median_layout_cycle_change": -1.096491207953254,
+    "median_layout_instruction_change": -0.44956061845959905
+  },
+  {
+    "workload": "surface-d7",
+    "layouts": [
+      {
+        "alignment": 16,
+        "builds": {
+          "parent": {
+            "cycles": 4388506747.75,
+            "instructions": 8048199072.5,
+            "throughput": 3852511.53930861,
+            "worker_cycles": [
+              4327581738.5,
+              4449431757.0
+            ]
+          },
+          "candidate": {
+            "cycles": 4341361496.75,
+            "instructions": 8048193932.5,
+            "throughput": 3986417.697846572,
+            "worker_cycles": [
+              4340539002.5,
+              4342183991.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -1.0742891309024727,
+          "instructions": -6.386521945733747e-05,
+          "throughput": 3.4758145996882206
+        }
+      },
+      {
+        "alignment": 32,
+        "builds": {
+          "parent": {
+            "cycles": 4385804114.0,
+            "instructions": 8048186573.5,
+            "throughput": 3722565.5802369867,
+            "worker_cycles": [
+              4423570293.5,
+              4348037934.5
+            ]
+          },
+          "candidate": {
+            "cycles": 4437779750.0,
+            "instructions": 8048193344.0,
+            "throughput": 3648664.0647929357,
+            "worker_cycles": [
+              4402015612.5,
+              4473543887.5
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": 1.185087948503849,
+          "instructions": 8.412454082229459e-05,
+          "throughput": -1.9852307192757657
+        }
+      },
+      {
+        "alignment": 64,
+        "builds": {
+          "parent": {
+            "cycles": 4472105892.25,
+            "instructions": 8048188883.5,
+            "throughput": 3222154.81224952,
+            "worker_cycles": [
+              4474988059.5,
+              4469223725.0
+            ]
+          },
+          "candidate": {
+            "cycles": 4422108085.25,
+            "instructions": 8048196065.0,
+            "throughput": 3541940.1940293554,
+            "worker_cycles": [
+              4383243321.5,
+              4460972849.0
+            ]
+          }
+        },
+        "percent_change": {
+          "cycles": -1.117992467187423,
+          "instructions": 8.923125567328327e-05,
+          "throughput": 9.92458154288931
+        }
+      }
+    ],
+    "median_layout_cycle_change": -1.0742891309024727,
+    "median_layout_instruction_change": 8.412454082229459e-05
+  }
+]

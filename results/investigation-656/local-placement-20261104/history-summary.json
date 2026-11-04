@@ -1,0 +1,517 @@
+{
+  "rows": [
+    {
+      "worker": 0,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        6645020,
+        7029274,
+        1955351,
+        5242129,
+        6818092,
+        6806681
+      ],
+      "colors": [
+        12,
+        10,
+        7,
+        1
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 35229600821.5,
+      "cycles": [
+        35393195762,
+        35066005881
+      ],
+      "median_instructions": 91666384045.0,
+      "median_throughput": 194028.9792655466
+    },
+    {
+      "worker": 1,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        7106984,
+        6990519,
+        5701161,
+        4613467,
+        8206443,
+        7013118
+      ],
+      "colors": [
+        8,
+        7,
+        9,
+        11
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 35103124304.0,
+      "cycles": [
+        34941244118,
+        35265004490
+      ],
+      "median_instructions": 91666417763.0,
+      "median_throughput": 197349.35514460522
+    },
+    {
+      "worker": 2,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        4136176,
+        5860362,
+        5996994,
+        5194220,
+        1354056,
+        7346275
+      ],
+      "colors": [
+        0,
+        10,
+        2,
+        12
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 37647035868.0,
+      "cycles": [
+        37540710337,
+        37753361399
+      ],
+      "median_instructions": 91666422274.0,
+      "median_throughput": 183301.38355184617
+    },
+    {
+      "worker": 3,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        4054108,
+        6997002,
+        6422970,
+        6789431,
+        4389884,
+        6671198
+      ],
+      "colors": [
+        12,
+        10,
+        10,
+        7
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": true,
+      "frames_stable": true,
+      "median_cycles": 38800214060.5,
+      "cycles": [
+        38363283611,
+        39237144510
+      ],
+      "median_instructions": 91666396377.0,
+      "median_throughput": 172272.70069430544
+    },
+    {
+      "worker": 4,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        8350912,
+        5764152,
+        6393476,
+        1133709,
+        6920982,
+        5768196
+      ],
+      "colors": [
+        0,
+        8,
+        4,
+        13
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 34950375314.0,
+      "cycles": [
+        35124761625,
+        34775989003
+      ],
+      "median_instructions": 91666386638.5,
+      "median_throughput": 194805.51974791987
+    },
+    {
+      "worker": 5,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        7469415,
+        4616380,
+        4110521,
+        7086245,
+        5851962,
+        7359722
+      ],
+      "colors": [
+        7,
+        12,
+        9,
+        5
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 35413697952.5,
+      "cycles": [
+        35326327360,
+        35501068545
+      ],
+      "median_instructions": 91666430622.0,
+      "median_throughput": 197566.69161980896
+    },
+    {
+      "worker": 6,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        7880498,
+        6338190,
+        5546528,
+        4409866,
+        7890461,
+        5279882
+      ],
+      "colors": [
+        2,
+        14,
+        0,
+        10
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 37283646231.0,
+      "cycles": [
+        37408549964,
+        37158742498
+      ],
+      "median_instructions": 91666425437.0,
+      "median_throughput": 185276.72785133513
+    },
+    {
+      "worker": 7,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        7012055,
+        2542503,
+        5866985,
+        5664876,
+        5344014,
+        6971495
+      ],
+      "colors": [
+        7,
+        7,
+        9,
+        12
+      ],
+      "real_match": true,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 41093871872.0,
+      "cycles": [
+        42060686211,
+        40127057533
+      ],
+      "median_instructions": 91666385250.0,
+      "median_throughput": 170663.69193443182
+    },
+    {
+      "worker": 8,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        5622319,
+        4397205,
+        4323775,
+        7280874,
+        6637722,
+        7967430
+      ],
+      "colors": [
+        15,
+        5,
+        15,
+        10
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": true,
+      "frames_stable": true,
+      "median_cycles": 39399124085.5,
+      "cycles": [
+        38313536651,
+        40484711520
+      ],
+      "median_instructions": 91666382082.0,
+      "median_throughput": 175145.9007024311
+    },
+    {
+      "worker": 9,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        6970483,
+        7268531,
+        2334165,
+        7531213,
+        5558031,
+        6634879
+      ],
+      "colors": [
+        3,
+        3,
+        5,
+        13
+      ],
+      "real_match": true,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 39855800174.5,
+      "cycles": [
+        39807581577,
+        39904018772
+      ],
+      "median_instructions": 91666426051.0,
+      "median_throughput": 169584.83589811745
+    },
+    {
+      "worker": 10,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        7278605,
+        7779765,
+        7255703,
+        8416807,
+        8247989,
+        5917716
+      ],
+      "colors": [
+        13,
+        5,
+        7,
+        7
+      ],
+      "real_match": false,
+      "imag_match": true,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 36160015854.5,
+      "cycles": [
+        36490901281,
+        35829130428
+      ],
+      "median_instructions": 91666430679.0,
+      "median_throughput": 187110.55584190582
+    },
+    {
+      "worker": 11,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        5689686,
+        7966783,
+        6943541,
+        7104642,
+        7154229,
+        4882042
+      ],
+      "colors": [
+        6,
+        15,
+        5,
+        2
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 34904542767.5,
+      "cycles": [
+        35123101890,
+        34685983645
+      ],
+      "median_instructions": 91666384444.5,
+      "median_throughput": 201654.30567615834
+    },
+    {
+      "worker": 12,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        1427683,
+        7118676,
+        6014647,
+        6733560,
+        2451447,
+        7006076
+      ],
+      "colors": [
+        3,
+        4,
+        7,
+        8
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 34728186486.0,
+      "cycles": [
+        34709586289,
+        34746786683
+      ],
+      "median_instructions": 91666380914.0,
+      "median_throughput": 196035.63169444914
+    },
+    {
+      "worker": 13,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        5308346,
+        7848580,
+        6708457,
+        7857742,
+        7430525,
+        6695630
+      ],
+      "colors": [
+        10,
+        4,
+        9,
+        14
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 34983525078.5,
+      "cycles": [
+        34986972071,
+        34980078086
+      ],
+      "median_instructions": 91666416585.5,
+      "median_throughput": 202441.6028186087
+    },
+    {
+      "worker": 14,
+      "history": "calibrate",
+      "state": "0x19baf58",
+      "real": "0x1361000",
+      "pfns": [
+        6551793,
+        7302390,
+        7277517,
+        5728955,
+        5398527,
+        6381539
+      ],
+      "colors": [
+        1,
+        6,
+        13,
+        11
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": false,
+      "frames_stable": true,
+      "median_cycles": 35395450053.0,
+      "cycles": [
+        35272313579,
+        35518586527
+      ],
+      "median_instructions": 91666420546.5,
+      "median_throughput": 191129.68718250882
+    },
+    {
+      "worker": 15,
+      "history": "direct",
+      "state": "0x1474908",
+      "real": "0x1a10000",
+      "pfns": [
+        6990519,
+        7408699,
+        6065359,
+        6424987,
+        7298394,
+        5118369
+      ],
+      "colors": [
+        7,
+        11,
+        15,
+        11
+      ],
+      "real_match": false,
+      "imag_match": false,
+      "cross_match": true,
+      "frames_stable": true,
+      "median_cycles": 36059792782.5,
+      "cycles": [
+        35958668243,
+        36160917322
+      ],
+      "median_instructions": 91666447478.0,
+      "median_throughput": 183799.65723322934
+    }
+  ],
+  "all_frames_stable": true,
+  "histories": {
+    "direct": {
+      "workers": 8,
+      "median_cycles": 35644696802.0,
+      "min_cycles": 34728186486.0,
+      "max_cycles": 41093871872.0,
+      "same_array_matches": 1
+    },
+    "calibrate": {
+      "workers": 8,
+      "median_cycles": 35786856903.5,
+      "min_cycles": 34983525078.5,
+      "max_cycles": 39855800174.5,
+      "same_array_matches": 2
+    }
+  }
+}
