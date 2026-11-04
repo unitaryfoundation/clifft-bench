@@ -1,0 +1,417 @@
+Obtaining file:///home/ubuntu/clifft-bench-rc2
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: clifft-bench
+  Building editable for clifft-bench (pyproject.toml): started
+  Building editable for clifft-bench (pyproject.toml): finished with status 'done'
+  Created wheel for clifft-bench: filename=clifft_bench-0.1.0-py3-none-any.whl size=10806 sha256=5366cbc25caa25611d781bce15f63854771a4d91b534d377cda569c77c805682
+  Stored in directory: /tmp/pip-ephem-wheel-cache-40q1op8i/wheels/bc/32/c6/cda48810bb0926fc9c4399dc215564591aa94c3048eea0c2e0
+Successfully built clifft-bench
+Installing collected packages: clifft-bench
+Successfully installed clifft-bench-0.1.0
+valid: /home/ubuntu/clifft-bench-rc2/campaigns/coverage-smoke.toml
+valid: /home/ubuntu/clifft-bench-rc2/campaigns/release-clifft.toml
+valid: /home/ubuntu/clifft-bench-rc2/campaigns/release-v1.toml
+valid: /home/ubuntu/clifft-bench-rc2/campaigns/smoke.toml
+valid: /home/ubuntu/clifft-bench-rc2/campaigns/tsim-pilot.toml
+valid: /home/ubuntu/clifft-bench-rc2/campaigns/tsim-smoke.toml
+Installing clifft-0.12.0rc1 in /home/ubuntu/clifft-bench-rc2/.campaign-envs/clifft-0.12.0rc1
+Requirement already satisfied: pip in ./.campaign-envs/clifft-0.12.0rc1/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting clifft==0.12.0rc1 (from -r /home/ubuntu/clifft-bench-rc2/environments/clifft-0.12.0rc1.txt (line 1))
+  Using cached clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Collecting numpy==2.5.2 (from -r /home/ubuntu/clifft-bench-rc2/environments/clifft-0.12.0rc1.txt (line 2))
+  Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Using cached clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.3 MB)
+Using cached numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Installing collected packages: numpy, clifft
+
+Successfully installed clifft-0.12.0rc1 numpy-2.5.2
+No broken requirements found.
+Installing clifft-0.13.0rc2 in /home/ubuntu/clifft-bench-rc2/.campaign-envs/clifft-0.13.0rc2
+Requirement already satisfied: pip in ./.campaign-envs/clifft-0.13.0rc2/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting clifft==0.13.0rc2 (from -r /home/ubuntu/clifft-bench-rc2/environments/clifft-0.13.0rc2.txt (line 1))
+  Downloading clifft-0.13.0rc2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (11 kB)
+Collecting numpy==2.5.4 (from -r /home/ubuntu/clifft-bench-rc2/environments/clifft-0.13.0rc2.txt (line 2))
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Downloading clifft-0.13.0rc2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 66.5 MB/s  0:00:00
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Installing collected packages: numpy, clifft
+
+Successfully installed clifft-0.13.0rc2 numpy-2.5.4
+No broken requirements found.
+No broken requirements found.
+No broken requirements found.
+{
+  "host": {
+    "hostname": "ip-172-31-14-93",
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "cpu_model": "AMD EPYC 9R14",
+    "physical_cores": 4,
+    "logical_cpus": 4,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "memory_bytes": 16374083584,
+    "load_average_at_start": [
+      0.2841796875,
+      0.0654296875,
+      0.021484375
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "JAX_ENABLE_X64": "true",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_PLATFORMS": "cpu",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
+    },
+    "accelerator": null,
+    "cloud": {
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "region": "us-east-1",
+      "availability_zone": "us-east-1c",
+      "provider": "aws",
+      "lifecycle": "on-demand",
+      "boot_id": "57334e03-de88-48d6-b8da-521f3d3dd6ce"
+    },
+    "suite_source": {
+      "commit": "3c89445367581edba4d9b7ec5c72e53c4e68eddc",
+      "dirty": false
+    }
+  },
+  "environments": {
+    "clifft-0.12.0rc1": {
+      "version": "0.12.0rc1",
+      "runtime_version": "0.12.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.2",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "files": {
+        "clifft-0.12.0rc1.dist-info/METADATA": "53b1161f4d26e3d0b6fdd6a6f97383c9d81144b36d7f0f0f54683cb775efdb87",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "bcd7fdf277b3fda8b9eee3aac5d7c140521a91de97e49b53af525a56fadd84cd"
+      },
+      "freeze": "clifft==0.12.0rc1\nnumpy==2.5.2\npip==26.3\n"
+    },
+    "clifft-0.13.0rc2": {
+      "version": "0.13.0rc2",
+      "runtime_version": "0.13.0rc2",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "files": {
+        "clifft-0.13.0rc2.dist-info/METADATA": "2a4d101a1c3278b206e2ceb1aa32a24b69ff21e1c3bd2edb5499c591bf7de158",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "4f17bac32593e95aaf049b718069b5292fa68e486fba3484f82f17aeaf76a55b"
+      },
+      "freeze": "clifft==0.13.0rc2\nnumpy==2.5.4\npip==26.3\n"
+    }
+  },
+  "wheels": [
+    {
+      "commit": "847757e2bc8c4f7439b9e92011550fd61719eb85",
+      "tag": "v0.12.0rc1",
+      "filename": "clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/4f/12/a81bc2dc6dbcad59915ff570f572263341a7eeba65c72d0824c1b4a86a4d/clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "e567a5e5a2db3cabe851da84e14ebea91a7f0cb838fd75cc4c633578900ae8e2"
+    },
+    {
+      "commit": "7e83ec2823bf99c54aa1b90c54a092641c10c4b0",
+      "tag": "v0.13.0rc2",
+      "filename": "clifft-0.13.0rc2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/3b/71/651b7fc08862e68e38c947fb563949d5eb9c1651350ad59ecf5acd554976/clifft-0.13.0rc2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "2f8c3e4808bd52fb4c744a29134fb2d3d29f659fc2d543ffb2a75867431c8b04"
+    }
+  ]
+}
+No broken requirements found.
+No broken requirements found.
+[1/29] preparing msc-d3-inject-cultivate-p1e-3--clifft-previous
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 1, sequence 0)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 2, sequence 1)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 3, sequence 2)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 4, sequence 3)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-previous (repetition 5, sequence 4)
+[2/29] preparing msc-d5-inject-cultivate-p1e-3--clifft-previous
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 1, sequence 5)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 2, sequence 6)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 3, sequence 7)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 4, sequence 8)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-previous (repetition 5, sequence 9)
+[3/29] preparing distillation-color-code-85q-p5e-2--clifft-previous
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 1, sequence 10)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 2, sequence 11)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 3, sequence 12)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 4, sequence 13)
+sampling distillation-color-code-85q-p5e-2--clifft-previous (repetition 5, sequence 14)
+[4/29] preparing surface-code-d7-r7-p1e-3--clifft-previous
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 1, sequence 15)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 2, sequence 16)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 3, sequence 17)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 4, sequence 18)
+sampling surface-code-d7-r7-p1e-3--clifft-previous (repetition 5, sequence 19)
+[5/29] preparing coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 1, sequence 20)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 2, sequence 21)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 3, sequence 22)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 4, sequence 23)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous (repetition 5, sequence 24)
+[6/29] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 1, sequence 25)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 2, sequence 26)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 3, sequence 27)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 4, sequence 28)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous (repetition 5, sequence 29)
+[7/29] preparing draper-adder-m16-basis-all-observables--clifft-previous
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 1, sequence 30)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 2, sequence 31)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 3, sequence 32)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 4, sequence 33)
+sampling draper-adder-m16-basis-all-observables--clifft-previous (repetition 5, sequence 34)
+[8/29] preparing distillation-15to1-rm15-p1e-3--clifft-previous
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 1, sequence 35)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 2, sequence 36)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 3, sequence 37)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 4, sequence 38)
+sampling distillation-15to1-rm15-p1e-3--clifft-previous (repetition 5, sequence 39)
+[9/29] preparing reed-muller-measured--clifft-previous
+sampling reed-muller-measured--clifft-previous (repetition 1, sequence 40)
+sampling reed-muller-measured--clifft-previous (repetition 2, sequence 41)
+sampling reed-muller-measured--clifft-previous (repetition 3, sequence 42)
+sampling reed-muller-measured--clifft-previous (repetition 4, sequence 43)
+sampling reed-muller-measured--clifft-previous (repetition 5, sequence 44)
+[10/29] preparing msc-d3-inject-cultivate-p1e-3--clifft-current
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 1, sequence 45)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 2, sequence 46)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 3, sequence 47)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 4, sequence 48)
+sampling msc-d3-inject-cultivate-p1e-3--clifft-current (repetition 5, sequence 49)
+[11/29] preparing msc-d5-inject-cultivate-p1e-3--clifft-current
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 1, sequence 50)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 2, sequence 51)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 3, sequence 52)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 4, sequence 53)
+sampling msc-d5-inject-cultivate-p1e-3--clifft-current (repetition 5, sequence 54)
+[12/29] preparing distillation-color-code-85q-p5e-2--clifft-current
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 1, sequence 55)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 2, sequence 56)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 3, sequence 57)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 4, sequence 58)
+sampling distillation-color-code-85q-p5e-2--clifft-current (repetition 5, sequence 59)
+[13/29] preparing surface-code-d7-r7-p1e-3--clifft-current
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 1, sequence 60)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 2, sequence 61)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 3, sequence 62)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 4, sequence 63)
+sampling surface-code-d7-r7-p1e-3--clifft-current (repetition 5, sequence 64)
+[14/29] preparing coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 1, sequence 65)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 2, sequence 66)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 3, sequence 67)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 4, sequence 68)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current (repetition 5, sequence 69)
+[15/29] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 1, sequence 70)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 2, sequence 71)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 3, sequence 72)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 4, sequence 73)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current (repetition 5, sequence 74)
+[16/29] preparing draper-adder-m16-basis-all-observables--clifft-current
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 1, sequence 75)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 2, sequence 76)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 3, sequence 77)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 4, sequence 78)
+sampling draper-adder-m16-basis-all-observables--clifft-current (repetition 5, sequence 79)
+[17/29] preparing distillation-15to1-rm15-p1e-3--clifft-current
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 1, sequence 80)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 2, sequence 81)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 3, sequence 82)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 4, sequence 83)
+sampling distillation-15to1-rm15-p1e-3--clifft-current (repetition 5, sequence 84)
+[18/29] preparing bt27-direct-x--clifft-current
+sampling bt27-direct-x--clifft-current (repetition 1, sequence 85)
+sampling bt27-direct-x--clifft-current (repetition 2, sequence 86)
+sampling bt27-direct-x--clifft-current (repetition 3, sequence 87)
+sampling bt27-direct-x--clifft-current (repetition 4, sequence 88)
+sampling bt27-direct-x--clifft-current (repetition 5, sequence 89)
+[19/29] preparing bt81-direct-x--clifft-current
+sampling bt81-direct-x--clifft-current (repetition 1, sequence 90)
+sampling bt81-direct-x--clifft-current (repetition 2, sequence 91)
+sampling bt81-direct-x--clifft-current (repetition 3, sequence 92)
+sampling bt81-direct-x--clifft-current (repetition 4, sequence 93)
+sampling bt81-direct-x--clifft-current (repetition 5, sequence 94)
+[20/29] preparing reed-muller-measured--clifft-current
+sampling reed-muller-measured--clifft-current (repetition 1, sequence 95)
+sampling reed-muller-measured--clifft-current (repetition 2, sequence 96)
+sampling reed-muller-measured--clifft-current (repetition 3, sequence 97)
+sampling reed-muller-measured--clifft-current (repetition 4, sequence 98)
+sampling reed-muller-measured--clifft-current (repetition 5, sequence 99)
+[21/29] preparing coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 1, sequence 100)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 2, sequence 101)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 3, sequence 102)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 4, sequence 103)
+sampling coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk (repetition 5, sequence 104)
+[22/29] preparing draper-adder-m16-basis-all-observables--clifft-bulk
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 1, sequence 105)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 2, sequence 106)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 3, sequence 107)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 4, sequence 108)
+sampling draper-adder-m16-basis-all-observables--clifft-bulk (repetition 5, sequence 109)
+[23/29] preparing msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 1, sequence 110)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 2, sequence 111)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 3, sequence 112)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 4, sequence 113)
+sampling msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage (repetition 5, sequence 114)
+[24/29] preparing surface-code-d7-r7-p1e-3-unselected--clifft-coverage
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 1, sequence 115)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 2, sequence 116)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 3, sequence 117)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 4, sequence 118)
+sampling surface-code-d7-r7-p1e-3-unselected--clifft-coverage (repetition 5, sequence 119)
+[25/29] preparing coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 1, sequence 120)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 2, sequence 121)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 3, sequence 122)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 4, sequence 123)
+sampling coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage (repetition 5, sequence 124)
+[26/29] preparing quantum-volume-q10-seed42-all-observables--clifft-coverage
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 1, sequence 125)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 2, sequence 126)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 3, sequence 127)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 4, sequence 128)
+sampling quantum-volume-q10-seed42-all-observables--clifft-coverage (repetition 5, sequence 129)
+[27/29] preparing quantum-volume-q20-seed42-all-observables--clifft-coverage
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 1, sequence 130)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 2, sequence 131)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 3, sequence 132)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 4, sequence 133)
+sampling quantum-volume-q20-seed42-all-observables--clifft-coverage (repetition 5, sequence 134)
+[28/29] preparing msc-d7-proxy-unverified-p1e-3--clifft-coverage
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 1, sequence 135)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 2, sequence 136)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 3, sequence 137)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 4, sequence 138)
+sampling msc-d7-proxy-unverified-p1e-3--clifft-coverage (repetition 5, sequence 139)
+[29/29] preparing msc-full-d5-cultivation-selected-p1e-3--clifft-coverage
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 1, sequence 140)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 2, sequence 141)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 3, sequence 142)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 4, sequence 143)
+sampling msc-full-d5-cultivation-selected-p1e-3--clifft-coverage (repetition 5, sequence 144)
+Result: /home/ubuntu/clifft-bench-ec2-results/campaign-0.13.0rc2-20261104-140104/execution (29/29 successful)
+valid: /home/ubuntu/clifft-bench-ec2-results/campaign-0.13.0rc2-20261104-140104/execution/raw.json
+# release-clifft — fc091f89-b63e-4be6-9e72-87cc15fcd04a
+
+Classification: **official**. Collected 2026-11-04T15:29:23.958328Z.
+Source: `3c89445367581edba4d9b7ec5c72e53c4e68eddc`; dirty: False.
+Host: AMD EPYC 9R14 (Linux, x86_64).
+
+## Measured implementations
+
+| Implementation | Exact version | Commit |
+| --- | --- | --- |
+| clifft-0.12.0rc1 | 0.12.0rc1 | `847757e2bc8c4f7439b9e92011550fd61719eb85` |
+| clifft-0.13.0rc2 | 0.13.0rc2 | `7e83ec2823bf99c54aa1b90c54a092641c10c4b0` |
+
+## Outcomes
+
+| Case | Outcome | Detail |
+| --- | --- | --- |
+| msc-d3-inject-cultivate-p1e-3--clifft-previous | success | 5 samples; batch 2048 |
+| msc-d5-inject-cultivate-p1e-3--clifft-previous | success | 5 samples; batch 1 |
+| distillation-color-code-85q-p5e-2--clifft-previous | success | 5 samples; batch 1024 |
+| surface-code-d7-r7-p1e-3--clifft-previous | success | 5 samples; batch 2048 |
+| coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-previous | success | 5 samples; batch 2048 |
+| coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-previous | success | 5 samples; batch 1 |
+| draper-adder-m16-basis-all-observables--clifft-previous | success | 5 samples; batch 1024 |
+| distillation-15to1-rm15-p1e-3--clifft-previous | success | 5 samples; batch 1024 |
+| reed-muller-measured--clifft-previous | success | 5 samples; batch 256 |
+| msc-d3-inject-cultivate-p1e-3--clifft-current | success | 5 samples; batch 2048 |
+| msc-d5-inject-cultivate-p1e-3--clifft-current | success | 5 samples; batch 1 |
+| distillation-color-code-85q-p5e-2--clifft-current | success | 5 samples; batch 1024 |
+| surface-code-d7-r7-p1e-3--clifft-current | success | 5 samples; batch 2048 |
+| coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-current | success | 5 samples; batch 2048 |
+| coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current | success | 5 samples; batch 1 |
+| draper-adder-m16-basis-all-observables--clifft-current | success | 5 samples; batch 1024 |
+| distillation-15to1-rm15-p1e-3--clifft-current | success | 5 samples; batch 2048 |
+| bt27-direct-x--clifft-current | success | 5 samples; batch 1 |
+| bt81-direct-x--clifft-current | success | 5 samples; batch 1024 |
+| reed-muller-measured--clifft-current | success | 5 samples; batch 256 |
+| coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk | success | 5 samples; batch 1 |
+| draper-adder-m16-basis-all-observables--clifft-bulk | success | 5 samples; batch 2048 |
+| msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage | success | 5 samples; batch 2048 |
+| surface-code-d7-r7-p1e-3-unselected--clifft-coverage | success | 5 samples; batch 2048 |
+| coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage | success | 5 samples; batch 2048 |
+| quantum-volume-q10-seed42-all-observables--clifft-coverage | success | 5 samples; batch 1 |
+| quantum-volume-q20-seed42-all-observables--clifft-coverage | success | 5 samples; batch 1 |
+| msc-d7-proxy-unverified-p1e-3--clifft-coverage | success | 5 samples; batch 1 |
+| msc-full-d5-cultivation-selected-p1e-3--clifft-coverage | success | 5 samples; batch 256 |
+
+## Paired comparisons
+
+Ratios are candidate / baseline sample medians. Failed cases have no rate or ratio.
+Bulk and short calls remain separate. Missing baselines are not regressions.
+
+| Comparison | Workload | Candidate | Candidate / baseline | Outcome |
+| --- | --- | --- | ---: | --- |
+| current-vs-previous | msc-d3-inject-cultivate-p1e-3 | clifft-current | 1.02963× | baseline: measured; candidate: measured |
+| current-vs-previous | msc-d5-inject-cultivate-p1e-3 | clifft-current | 1.00185× | baseline: measured; candidate: measured |
+| current-vs-previous | distillation-color-code-85q-p5e-2 | clifft-current | 0.999688× | baseline: measured; candidate: measured |
+| current-vs-previous | surface-code-d7-r7-p1e-3 | clifft-current | 1.00697× | baseline: measured; candidate: measured |
+| current-vs-previous | coherent-surface-d3-r3-p1e-3-rz2e-2 | clifft-current | 1.04739× | baseline: measured; candidate: measured |
+| current-vs-previous | coherent-surface-d5-r5-p1e-3-rz2e-2 | clifft-current | 0.994786× | baseline: measured; candidate: measured |
+| current-vs-previous | draper-adder-m16-basis-all-observables | clifft-current | 1.08211× | baseline: measured; candidate: measured |
+| current-vs-previous | distillation-15to1-rm15-p1e-3 | clifft-current | 222.993× | baseline: measured; candidate: measured |
+| current-vs-previous | reed-muller-measured | clifft-current | 16.2169× | baseline: measured; candidate: measured |
+| current-vs-previous | bt27-direct-x | clifft-current | — | baseline: not measured; candidate: measured |
+| current-vs-previous | bt81-direct-x | clifft-current | — | baseline: not measured; candidate: measured |
+
+Running timer as unit: clifft-rc2-completion-stop.timer
+Will run service as unit: clifft-rc2-completion-stop.service
