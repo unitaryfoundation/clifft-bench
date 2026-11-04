@@ -68,8 +68,16 @@ fixtures, with [Clifft/Merlin attribution](circuits/NOTICE-code-switching).
 BT27 adds direct-X readout on nine decoded logical qubits; BT81 is unchanged;
 Reed-Muller removes only the expectation-value declarations. All three sample
 without postselection and count observable-0 ones, not logical errors.
-Tests check probabilities 3/8 for BT and (1 − 1/√2)/2 for Reed-Muller; the BT
-reference is a logical-model prediction, not an independent full-circuit simulation.
+[Correctness tests](../tests/test_code_switching.py) derive the BT observable-0
+probability of 3/8 exactly from each checked-in circuit, independently of Clifft.
+The calculation tracks CNOT linear forms and T/T_DAG phases, retains early
+Z-measurement branches and feedback, and resolves the final raw X-readout record.
+Its measurement assumptions are checked, and tiny explicit statevectors with
+measurement branching cross-check the reference. Scalar and packed Clifft counts
+are checked against this probability with a six-standard-deviation binomial
+tolerance plus one count. This validates the unselected observable-0 marginal,
+not the full joint distribution of records, detectors, or the nine observables.
+Reed-Muller tests check probability (1 − 1/√2)/2.
 
 The regular release campaign runs BT27/BT81 on current Clifft, and Reed-Muller
 on both Clifft versions, SymFT, and Tsim. BT requires the post-0.12 compiler;
