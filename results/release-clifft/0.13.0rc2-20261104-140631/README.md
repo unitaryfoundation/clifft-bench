@@ -37,13 +37,16 @@ independent workers or placements. This run does not establish behavior for a
 different preparation history. No additional diagnostic repeat was performed.
 
 The figures use the renderer at
-[`48898bb3f9c1882e109197925b8cb2c5318e15c6`](https://github.com/unitaryfoundation/clifft-bench/tree/48898bb3f9c1882e109197925b8cb2c5318e15c6),
+[`e8ac68956bef58d3bbf65f5038c45c5ddfebf5b4`](https://github.com/unitaryfoundation/clifft-bench/tree/e8ac68956bef58d3bbf65f5038c45c5ddfebf5b4),
 separately from the collection revision above:
 
 - [Simulator throughput, light](report/simulator-throughput-light.png) and
   [dark](report/simulator-throughput-dark.png) show 14 circuit rows with
-  RC2 Clifft and the retained peer measurements, grouped by workload theme with
-  direct throughput labels. Bulk variants,
+  RC2 Clifft and the retained peer measurements in four independent log-scale
+  panels: magic-state preparation; surface-code memory and coherent noise;
+  arithmetic and code switching; and Quantum Volume. Each panel has its own
+  throughput ticks, with direct rate labels. Horizontal positions are comparable
+  within a panel. Bulk variants,
   selection-off controls, and the unverified d7 proxy remain in the detailed
   results rather than the main figure.
 - [Release changes, light](report/release-change-light.png) and

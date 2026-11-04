@@ -126,6 +126,8 @@ Each source raw/CSV retains its own call sizes, selection, and samples.
 
 Rates count attempted shots and exclude compilation; lazy planning during sampling
 is included. The main figures share circuit selection and thematic ordering.
+Throughput panels have independent logarithmic axes; compare horizontal positions
+within a panel. Quantum Volume has its own panel.
 Selection-off controls, the unverified cultivation proxy, and bulk-call variants
 remain in the detailed results above. Colors and marker shapes identify simulators.
 Unsupported pairings have
