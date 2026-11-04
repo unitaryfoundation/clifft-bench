@@ -524,8 +524,8 @@ Reuse requires matching classification, hardware epoch/reference host, host CPU,
 OS/Python/thread settings, measurement protocol, seeds, and resource limits.
 Compared workloads must also pass the digest, selection, and call-size checks
 below. Incompatible or ambiguous sources are rejected. Reports identify the peer
-run, collection time, source revision, and exact software versions; throughput
-figures label both collection dates. These cross-collection absolute rates are
+run, collection time, source revision, and exact software versions in the
+companion review. These cross-collection absolute rates are
 not a fresh paired comparison and do not acquire the paired 1.1% interpretation.
 
 Paired ratios use candidate median divided by baseline median. Pairing requires

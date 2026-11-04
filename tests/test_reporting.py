@@ -462,7 +462,6 @@ def test_peer_render_preserves_release_figures_and_source_files(
         if path.name.startswith("simulator-throughput"):
             plotted.append(sorted(float(line.get_xdata()[0]) for line in figure.axes[0].lines
                                   if line.get_marker() in ("o", "s")))
-            assert any("separate collections" in text.get_text() for text in figure.texts)
         savefig(figure, path, **kwargs)
 
     monkeypatch.setattr(Figure, "savefig", inspect)

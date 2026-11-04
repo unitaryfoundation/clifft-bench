@@ -212,8 +212,8 @@ uv run --extra report clifft-bench report /path/to/clifft-rc-execution \
 Pin both source directories to reviewed raw evidence and record their immutable
 links in the results README. This command uses the primary run for Clifft and
 release changes, and the named peer run only for non-Clifft throughput. It
-validates both inputs and their compatibility, labels the separate collections,
-and leaves the peer input untouched. `--check` validates the same selection
+validates both inputs and their compatibility, identifies the collections in
+the companion review, and leaves the peer input untouched. `--check` validates the same selection
 without writing. See the [comparison contract](docs/benchmark-contract.md#result-evidence-and-comparisons)
 for reuse requirements. Peer versions or protocols that have changed need new
 measurements.

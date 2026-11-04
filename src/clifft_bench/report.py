@@ -413,17 +413,9 @@ def _render_throughput(report, colors, grid):
     heights = [max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
                for values, name in zip(visible, names, strict=True)]
     headers, positions, extent = _layout(cases, heights)
-    peer_document = report.get("peer_document")
-    bottom = 0.92 if peer_document is not None else 0.62
-    height = extent + bottom + 0.93
+    height = extent + 1.55
     figure = plt.figure(figsize=(12, height))
-    axis = figure.add_axes((0.32, bottom / height, 0.64, extent / height))
-    if peer_document is not None:
-        primary_date = report["document"]["run"]["finished_at"][:10]
-        peer_date = peer_document["run"]["finished_at"][:10]
-        figure.text(0.035, 0.08 / height,
-                    f"Clifft: {primary_date} · peers: {peer_date} · separate collections",
-                    fontsize=10)
+    axis = figure.add_axes((0.32, 0.62 / height, 0.64, extent / height))
     rates = [
         report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
         for values in visible for _, case in values
