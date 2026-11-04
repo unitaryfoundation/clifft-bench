@@ -81,7 +81,7 @@ structured case failures. Persisted-input validation checks coverage and calibra
 evidence, then writes the derived `cases.csv` beside `raw.json`.
 
 After reviewing results, follow [release reporting](#release-reporting) to
-publish the three recurring figure pairs. Archived figures use the pinned
+publish the recurring figures. Archived figures use the pinned
 legacy tools described under [historical evidence](#historical-evidence).
 
 ## Configuration and environments
@@ -182,17 +182,19 @@ review summary without writing files or importing plotting dependencies. Without
 `--check`, install the `report` extra; the command regenerates `cases.csv` and
 writes `report/review.md` plus these light/dark PNG pairs:
 
-- `clifft-throughput-{light,dark}.png`: selected current Clifft configurations.
-- `simulator-throughput-{light,dark}.png`: declared tool comparisons, with bulk
-  and coverage groups kept separate.
-- `release-change-{light,dark}.png`: current/previous throughput on paired work.
+- `simulator-throughput-{light,dark}.png`: Clifft and peer throughput by theme.
+- `release-change-{light,dark}.png`: measured current/previous pairs in the same
+  thematic order.
+
+The generated review embeds both figures and links their dark counterparts.
+Regenerating removes superseded Clifft-only figures and numbered pages.
 
 Use `--output-dir DIR` to choose the report destination. Review failure labels,
 missing baselines, exact versions, and both themes. Smoke figures are validation
 artifacts and must not replace published performance evidence. Existing published
 figures remain frozen until reviewed reference-host results replace them.
 
-For publication, copy the three reviewed pairs to `reporting/figures/web/` and
+For publication, copy the reviewed figure pairs to `reporting/figures/web/` and
 the companion Clifft checkout's `docs/assets/performance/`. In the same
 publication PR, update README and performance-guide image links, measured
 version labels, execution links, and claims. Use the stable `release-change`

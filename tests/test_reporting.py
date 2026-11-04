@@ -104,7 +104,7 @@ def test_render_all_themes_and_regenerate_stale_csv(raw_result, tmp_path, all_fa
     (tmp_path / "cases.csv").write_text("stale table")
     report_execution(tmp_path)
     assert ("125.0" in (tmp_path / "cases.csv").read_text()) is not all_failed
-    for stem in ("clifft-throughput", "simulator-throughput", "release-change"):
+    for stem in ("simulator-throughput", "release-change"):
         for theme in ("light", "dark"):
             path = tmp_path / "report" / f"{stem}-{theme}.png"
             assert path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
@@ -115,7 +115,7 @@ def test_render_all_themes_and_regenerate_stale_csv(raw_result, tmp_path, all_fa
 
 
 @pytest.mark.parametrize("workloads", [1, 12])
-def test_compact_figures_separate_legends_and_use_ratio_ticks(
+def test_figures_cover_every_measurement_and_separate_release_scales(
     raw_result, tmp_path, monkeypatch, workloads,
 ):
     pytest.importorskip("matplotlib")
@@ -130,6 +130,7 @@ def test_compact_figures_separate_legends_and_use_ratio_ticks(
     originals = [previous, current, peer]
     contracts = [*raw_result["campaign"]["cases"], peer_contract]
     raw_result["cases"], raw_result["campaign"]["cases"] = [], []
+    current_rates = []
     for index in range(workloads):
         for original, contract in zip(originals, contracts, strict=True):
             case, declared = copy.deepcopy(original), copy.deepcopy(contract)
@@ -137,8 +138,9 @@ def test_compact_figures_separate_legends_and_use_ratio_ticks(
             case["workload"]["id"] = f"representative-workload-{index}"
             declared.update(id=case["case_id"], workload_id=case["workload"]["id"])
             if case["variant_id"] == "current":
+                rate = 22400 if index == 11 else (98 if index % 2 == 0 else 102)
+                current_rates.append(rate)
                 for sample in case["samples"]:
-                    rate = 98 if index % 2 == 0 else 102
                     sample["throughput_attempted_shots_per_second"] = rate
                     sample["duration_seconds"] = sample["attempted_shots"] / rate
             raw_result["cases"].append(case)
@@ -147,26 +149,162 @@ def test_compact_figures_separate_legends_and_use_ratio_ticks(
         {"id": "peers", "baseline_variant": "current", "candidate_variants": ["peer"]}
     )
     savefig = Figure.savefig
+    plotted = []
     inspected = []
 
     def check_layout(figure, path, **kwargs):
         figure.canvas.draw()
         renderer = figure.canvas.get_renderer()
-        axis = figure.axes[0]
-        legend = axis.get_legend()
-        if legend:
-            assert legend.get_window_extent(renderer).y1 < (
-                axis.xaxis.label.get_window_extent(renderer).y0 - figure.dpi * 0.1
-            )
         if path.name.startswith("release-change"):
-            low, high = axis.get_xlim()
-            assert 0.5 < low < 0.98 < 1 < high < 2
-            labels = axis.get_xticklabels() + axis.get_xticklabels(minor=True)
-            assert all(label.get_text().endswith("×") for label in labels if label.get_text())
-        inspected.append(path.name)
+            for axis in figure.axes:
+                low, high = axis.get_xlim()
+                if axis.get_xscale() == "linear":
+                    assert -5 < low < -2 < 0 < 2 < high < 5
+                    assert all(abs(float(line.get_xdata()[0])) <= 50
+                               for line in axis.lines if line.get_marker() == "o")
+                else:
+                    assert low < 1 < high
+                    if workloads > 11:
+                        assert 224 < high
+                    assert all(float(line.get_xdata()[0]) > 1.5
+                               for line in axis.lines if line.get_marker() == "o")
+            assert figure.axes[0].get_ylim() == figure.axes[1].get_ylim()
+        else:
+            axis = figure.axes[0]
+            legend = figure.legends[0]
+            assert legend.get_window_extent(renderer).y0 > axis.bbox.y1
+            assert legend.get_window_extent(renderer).y1 < (
+                figure._suptitle.get_window_extent(renderer).y0
+            )
+            marks = [line for line in axis.lines if line.get_marker() in ("o", "s")]
+            # Every successful value is directly annotated at the plotted position.
+            assert sorted(text.xy[0] for text in axis.texts if hasattr(text, "xy")) == (
+                sorted(float(line.get_xdata()[0]) for line in marks)
+            )
+            if path.name.endswith("-light.png"):
+                plotted.extend(float(line.get_xdata()[0]) for line in marks)
+        annotations = [text for axis in figure.axes for text in axis.texts if hasattr(text, "xy")]
+        for index, left in enumerate(annotations):
+            for right in annotations[index + 1:]:
+                assert not left.get_window_extent(renderer).overlaps(
+                    right.get_window_extent(renderer)
+                )
+        inspected.append(path)
         savefig(figure, path, **kwargs)
 
     monkeypatch.setattr(Figure, "savefig", check_layout)
     write_json(tmp_path / "raw.json", raw_result)
     report_execution(tmp_path)
-    assert len(inspected) == 6
+    assert sorted(plotted) == sorted(current_rates + [125] * workloads)
+    summary = (tmp_path / "report/review.md").read_text()
+    assert all(path.name in summary for path in inspected)
+
+
+def test_main_figures_share_selection_without_dropping_detailed_outcomes(raw_result):
+    from clifft_bench.report import _release_pairs, _throughput_entries
+
+    report = build_report(raw_result)
+    original = report["current"][0]
+    for variant, shots, family, parameters in (
+        ("clifft-bulk", 256, "coherent-noise-surface-code", {"distance": 5, "rounds": 5}),
+        ("clifft-coverage", 8, "magic-state-cultivation",
+         {"distance": 3, "postselection_pair": "selected"}),
+        ("clifft-coverage", 8, "msc-performance-proxy", {"distance": 7}),
+    ):
+        case = copy.deepcopy(original)
+        case.update(case_id=variant + family, variant_id=variant)
+        case["workload"].update(family=family, parameters=parameters)
+        case["execution"]["shots_per_call"] = shots
+        report["rows"][case["case_id"]] = report["rows"][original["case_id"]]
+        report["current"].append(case)
+        report["document"]["cases"].append(case)
+        pair = {**report["release"][0], "candidate": case, "candidate_variant": variant}
+        report["release"].append(pair)
+        report["pairs"].append(pair)
+    assert [e["cases"][e["variant"]] for e in _throughput_entries(report)] == [original]
+    assert [p["candidate"] for p in _release_pairs(report)] == [original]
+    summary = review_summary(report)
+    assert all(case["case_id"] in summary for case in report["current"])
+
+
+def test_future_release_pairs_join_the_shared_thematic_order(raw_result):
+    from clifft_bench.report import _release_pairs, _representative, _throughput_entries
+
+    # This is a synthetic campaign: its ordering and rates deliberately disagree
+    # with the desired figure order. No list of currently measured pairs is used.
+    workloads = [
+        ("cult-d3", "magic-state-cultivation", {"distance": 3}, 25),
+        ("cult-d5", "magic-state-cultivation", {"distance": 5}, 61),
+        ("end-to-end", "magic-state-cultivation-full", {"distance": 5}, 463),
+        ("distill-small", "magic-state-distillation", {"code": "[[15,1,3]]"}, 15),
+        ("distill-large", "magic-state-distillation", {"code": "large"}, 85),
+        ("rm", "reed-muller", {}, 49),
+        ("surface", "surface-code-memory", {"distance": 7, "rounds": 7}, 97),
+        ("coherent-d3", "coherent-noise-surface-code", {"distance": 3, "rounds": 3}, 17),
+        ("coherent-d5", "coherent-noise-surface-code", {"distance": 5, "rounds": 5}, 49),
+        ("adder", "prepared-basis-arithmetic", {"bits_per_operand": 16}, 33),
+        ("bt27", "code-switching", {}, 27),
+        ("bt81", "code-switching", {}, 81),
+        ("qv10", "quantum-volume", {"num_qubits": 10}, 10),
+        ("qv20", "quantum-volume", {"num_qubits": 20}, 20),
+    ]
+    missing = {"end-to-end", "bt27", "bt81", "qv10", "qv20"}
+    originals = list(zip(raw_result["cases"], raw_result["campaign"]["cases"], strict=True))
+    raw_result["cases"], raw_result["campaign"]["cases"] = [], []
+    future = []
+    for identifier, family, parameters, qubits in reversed(workloads):
+        for original, contract in originals:
+            case, declared = copy.deepcopy(original), copy.deepcopy(contract)
+            case["case_id"] += "-" + identifier
+            case["workload"].update(id=identifier, family=family, parameters=parameters)
+            case["workload"]["expected_metadata"]["num_qubits"] = qubits
+            declared.update(id=case["case_id"], workload_id=identifier)
+            if identifier in missing and case["variant_id"] == "previous":
+                future.append((case, declared))
+                continue
+            raw_result["cases"].append(case)
+            raw_result["campaign"]["cases"].append(declared)
+
+    def figure_ids():
+        report = build_report(raw_result)
+        return (
+            [_representative(e)["workload"]["id"] for e in _throughput_entries(report)],
+            [p["workload_id"] for p in _release_pairs(report)],
+        )
+
+    expected = [identifier for identifier, *_ in workloads]
+    throughput, release = figure_ids()
+    assert throughput == expected
+    assert release == [identifier for identifier in throughput if identifier not in missing]
+    for case, declared in future:
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(declared)
+        missing.remove(case["workload"]["id"])
+        throughput, release = figure_ids()
+        assert throughput == expected
+        assert release == [identifier for identifier in throughput if identifier not in missing]
+    # Collection order and measured speed cannot rearrange either figure.
+    raw_result["cases"].reverse()
+    for index, case in enumerate(raw_result["cases"]):
+        for sample in case["samples"]:
+            rate = 10 ** (index % 4)
+            sample["throughput_attempted_shots_per_second"] = rate
+            sample["duration_seconds"] = sample["attempted_shots"] / rate
+    assert figure_ids() == (expected, expected)
+
+
+def test_regeneration_removes_obsolete_pages_but_keeps_unrelated_images(raw_result, tmp_path):
+    pytest.importorskip("matplotlib")
+    write_json(tmp_path / "raw.json", raw_result)
+    destination = tmp_path / "report"
+    destination.mkdir()
+    stale = destination / "clifft-throughput-2-light.png"
+    old_gallery = destination / "clifft-throughput-light.png"
+    unrelated = destination / "clifft-throughput-notes-light.png"
+    stale.write_bytes(b"stale")
+    old_gallery.write_bytes(b"stale")
+    unrelated.write_bytes(b"keep")
+    report_execution(tmp_path)
+    assert not stale.exists()
+    assert not old_gallery.exists()
+    assert unrelated.read_bytes() == b"keep"
