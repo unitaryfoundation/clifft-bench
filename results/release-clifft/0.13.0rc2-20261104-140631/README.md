@@ -12,7 +12,7 @@ Their original dependency locks are preserved: NumPy 2.5.4 for RC2 and NumPy
 2.5.2 for the previous baseline. This is a comparison of those release
 environments, not an experiment isolating the NumPy version.
 
-Collection and report generation used the clean harness at
+Collection used the clean harness at
 [`3c89445367581edba4d9b7ec5c72e53c4e68eddc`](https://github.com/unitaryfoundation/clifft-bench/tree/3c89445367581edba4d9b7ec5c72e53c4e68eddc),
 with the committed
 [`release-clifft` campaign](https://github.com/unitaryfoundation/clifft-bench/blob/3c89445367581edba4d9b7ec5c72e53c4e68eddc/campaigns/release-clifft.toml).
@@ -36,11 +36,26 @@ the five samples quantify within-worker variability, not variation across
 independent workers or placements. This run does not establish behavior for a
 different preparation history. No additional diagnostic repeat was performed.
 
-Peer tools were not rerun. The committed figures cover Clifft throughput and
-the paired release comparison only; existing peer figures retain their original
-execution provenance. Figure labels use intended final versions 0.13.0/0.12.0;
-raw evidence and the generated review retain the exact RC identities. These are
-review artifacts, not an update to published website figures.
+The figures use the renderer at
+[`fda7460511455ee460ef82464ee10d71098b1371`](https://github.com/unitaryfoundation/clifft-bench/tree/fda7460511455ee460ef82464ee10d71098b1371),
+separately from the collection revision above:
+
+- [Simulator throughput, light](report/simulator-throughput-light.png) and
+  [dark](report/simulator-throughput-dark.png) show 14 current Clifft circuit
+  rows grouped by workload theme, with direct throughput labels. Bulk variants,
+  selection-off controls, and the unverified d7 proxy remain in the detailed
+  results rather than the main figure.
+- [Release changes, light](report/release-change-light.png) and
+  [dark](report/release-change-dark.png) show the nine measured release pairs
+  in the same thematic order. Small changes use a percentage scale with a
+  shaded ±1.1% inconclusive band; larger changes use a separate logarithmic
+  ratio scale.
+
+Peer tools were not rerun. The throughput figure therefore contains only Clifft;
+existing peer figures retain their original execution provenance. Figure labels
+use intended final versions 0.13.0/0.12.0; raw evidence and the generated review
+retain the exact RC identities. These are review artifacts, not an update to
+published website figures.
 
 ## Evidence and validation
 
@@ -64,7 +79,8 @@ review artifacts, not an update to published website figures.
   successful batch-1 candidate was selected and all five measured samples
   succeeded. This is retained in the raw calibration evidence.
 
-To regenerate the review and figures, use the pinned harness with its `report`
-extra and run `clifft-bench report` on this directory. The standard renderer
-also emits a simulator-comparison placeholder when no peer comparison is
-present; that empty figure is not included here.
+To regenerate the review and figures, use the renderer revision linked above
+with its `report` extra and run `clifft-bench report` on this directory. The
+original raw data, CSV, collection log, environment, and exit status are
+byte-identical to the collected evidence. The collection revision remains
+recorded in `raw.json` and the generated review.

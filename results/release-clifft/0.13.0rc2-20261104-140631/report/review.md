@@ -63,3 +63,29 @@ Bulk and short calls remain separate. Missing baselines are not regressions.
 | current-vs-previous | reed-muller-measured | clifft-current | 16.2169× | baseline: measured; candidate: measured |
 | current-vs-previous | bt27-direct-x | clifft-current | — | baseline: not measured; candidate: measured |
 | current-vs-previous | bt81-direct-x | clifft-current | — | baseline: not measured; candidate: measured |
+
+## Figures
+
+Rates count attempted shots and exclude compilation; lazy planning during sampling
+is included. The main figures share circuit selection and thematic ordering.
+Selection-off controls, the unverified cultivation proxy, and bulk-call variants
+remain in the detailed results above. Colors and marker shapes identify simulators.
+Unsupported pairings have
+no marker; unmeasured and failed cases are labeled. Exact identities and outcomes
+are recorded above. Call sizes are in cases.csv; postselection settings are in raw.json.
+
+Release changes within ±50% use a linear percentage axis; larger changes use
+a separate logarithmic ratio panel. The shaded ±1.1% band is the contract's
+inconclusive region, not a confidence interval. Unpaired workloads have no ratio.
+
+### CPU simulator throughput
+
+[Dark version](simulator-throughput-dark.png)
+
+![CPU simulator throughput](simulator-throughput-light.png)
+
+### Clifft release changes
+
+[Dark version](release-change-dark.png)
+
+![Clifft release changes](release-change-light.png)
