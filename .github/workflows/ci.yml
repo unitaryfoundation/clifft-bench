@@ -5,46 +5,10 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      full: ${{ steps.changes.outputs.full }}
-      test: ${{ steps.changes.outputs.test }}
-      results: ${{ steps.changes.outputs.results }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Select checks from the complete change
-        id: changes
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          BEFORE: ${{ github.event.before }}
-        run: |
-          if [[ "$EVENT_NAME" == pull_request ]]; then
-            # The checkout is GitHub's merge commit; its first parent is the base.
-            base=$(git rev-parse HEAD^1)
-          elif [[ "$BEFORE" == 0000000000000000000000000000000000000000 ]]; then
-            base=$(git hash-object -w -t tree /dev/null)
-          else
-            git fetch --no-tags --depth=1 origin "$BEFORE"
-            base=$BEFORE
-          fi
-          python3 scripts/ci_changes.py "$base"
-
   test:
-    needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.test == 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -53,29 +17,11 @@ jobs:
           cache-dependency-path: pyproject.toml
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[test,report]'
-      - if: needs.changes.outputs.full == 'true'
-        run: pytest tests
-      - if: needs.changes.outputs.full == 'true'
-        run: ruff check .
-      - if: needs.changes.outputs.full == 'true'
-        run: clifft-bench validate
-      - name: Validate changed release executions and reports
-        env:
-          RESULT_DIRS: ${{ needs.changes.outputs.results }}
-        run: |
-          python - <<'PYTHON'
-          import json
-          import os
-          from pathlib import Path
-          from clifft_bench.report import report_execution
-
-          for directory in json.loads(os.environ["RESULT_DIRS"]):
-              print(report_execution(Path(directory), check=True))
-          PYTHON
+      - run: pytest tests
+      - run: ruff check .
+      - run: clifft-bench validate
 
   adapter-smoke:
-    needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.full == 'true') }}
     runs-on: ubuntu-latest
     env:
       SYMFT_PY_NATIVE: "1"
@@ -83,10 +29,6 @@ jobs:
       QECCORE_PORTABLE: "1"
       XTIM_CXXFLAGS: "-include cstdint"
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -151,8 +93,6 @@ jobs:
             /tmp/coverage-peers/raw.json
 
   tsim-cpu:
-    needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.full == 'true') }}
     runs-on: ubuntu-latest
     env:
       NUMBA_NUM_THREADS: "1"
@@ -160,10 +100,6 @@ jobs:
       OPENBLAS_NUM_THREADS: "1"
       JAX_PLATFORMS: cpu
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -190,8 +126,6 @@ jobs:
             /tmp/coverage-tsim/raw.json
 
   clifft-current:
-    needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.full == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -199,10 +133,6 @@ jobs:
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
     steps:
-      - name: Require successful change detection
-        env:
-          CHANGES_RESULT: ${{ needs.changes.result }}
-        run: test "$CHANGES_RESULT" = success
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
