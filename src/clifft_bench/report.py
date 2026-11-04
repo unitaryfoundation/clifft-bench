@@ -7,7 +7,14 @@ import textwrap
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.results import _compatible, case_rows, comparison_pairs, export_csv, read_result
+from clifft_bench.results import (
+    _compatible,
+    case_rows,
+    comparison_pairs,
+    export_csv,
+    read_result,
+    write_json,
+)
 
 FIGURES = ("simulator-throughput", "release-change")
 WORKLOAD_GROUPS = (
@@ -236,6 +243,7 @@ def review_summary(report: dict) -> str:
                   "Each source raw/CSV retains its own call sizes, selection, and samples."]
     lines += [
         "", "## Figures", "",
+        "[Throughput data for the docs widget](simulator-throughput.json)", "",
         "Rates count attempted shots and exclude compilation; lazy planning during sampling",
         "is included. The main figures share circuit selection and thematic ordering.",
         "Throughput panels have independent logarithmic axes; compare horizontal positions",
@@ -384,26 +392,34 @@ def _header_bands(axis, headers, grid, *, left=-0.46, right=1, labels=True):
                       fontsize=13, fontweight="bold")
 
 
-def _render_throughput(report, colors, grid):
-    import matplotlib.pyplot as plt
-    from matplotlib.lines import Line2D
-    from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
-
-    entries = _throughput_entries(report)
+def _throughput_series(report: dict, entries: list[dict]) -> list[dict]:
     adapters = ("clifft", "symft", "xtim", "stim", "tsim")
-    markers = ("o", "s", "D", "^", "P")
+    markers = ("circle", "square", "diamond", "triangle", "plus")
     variants = list(dict.fromkeys(v for entry in entries for v in entry["cases"]))
     variants.sort(key=lambda v: (
         adapters.index(report["variants"][v]["adapter"])
         if v in report["variants"] and report["variants"][v]["adapter"] in adapters
         else len(adapters), v,
     ))
-    styles = {}
+    series = []
     for index, variant in enumerate(variants):
         simulator = report["variants"].get(variant)
         adapter = simulator["adapter"] if simulator else ""
         position = adapters.index(adapter) if adapter in adapters else index
-        styles[variant] = colors[position % len(colors)], markers[position % len(markers)]
+        series.append({
+            "variant_id": variant,
+            "simulator": {key: simulator[key] for key in (
+                "implementation_id", "adapter", "name", "version", "display_version",
+                "commit_sha", "source_url",
+            )} if simulator else None,
+            "marker": markers[position % len(markers)],
+            "colors": {theme: colors[position % len(colors)]
+                       for theme, (_, _, _, colors) in THEMES.items()},
+        })
+    return series
+
+
+def _throughput_panels(entries: list[dict]) -> dict[str, list[dict]]:
     panels = {}
     for entry in entries:
         case = _representative(entry)
@@ -414,8 +430,97 @@ def _render_throughput(report, colors, grid):
         elif family in {"prepared-basis-arithmetic", "code-switching"}:
             heading = "Arithmetic & code switching"
         panels.setdefault(heading, []).append(entry)
+    return panels or {"Other workloads": []}
+
+
+def _throughput_limits(rates: list[float]) -> tuple[float, float]:
+    low = min(rates) / 1.5 if rates else 0.1
+    peak = max(rates, default=1)
+    return low, peak * max(1.5, (peak / low) ** 0.14)
+
+
+def throughput_data(report: dict) -> dict:
+    """Project the plotted view; raw executions remain the authoritative evidence."""
+    documents = {"primary": report["document"]}
+    if "peer_document" in report:
+        documents["peers"] = report["peer_document"]
+    sources = {}
+    case_sources = {}
+    for role, document in documents.items():
+        sources[role] = {
+            "run": {key: document["run"][key] for key in (
+                "id", "profile_id", "classification", "started_at", "finished_at",
+                "selection", "overrides",
+            )},
+            "suite_source": document["runner"]["suite_source"],
+            "host": {key: document["runner"].get(key) for key in (
+                "cpu_model", "os", "os_release", "machine", "python",
+            )},
+            "hardware_epoch": document["campaign"].get("hardware_epoch"),
+            "measurement": document["campaign"]["measurement"],
+            "resources": document["campaign"]["resources"],
+        }
+        cases = document["cases"] if role == "primary" else report["peer_cases"]
+        case_sources.update({case["case_id"]: role for case in cases})
+    entries = _throughput_entries(report)
+    series = _throughput_series(report, entries)
+    variants = [item["variant_id"] for item in series]
+    panels = []
+    for title, group in _throughput_panels(entries).items():
+        rows, rates = [], []
+        for entry in group:
+            representative = _representative(entry)
+            workload = representative["workload"]
+            values = []
+            for variant in sorted(entry["cases"], key=variants.index):
+                case = entry["cases"][variant]
+                outcome = _outcome(case, representative, report["variants"].get(variant))
+                row = report["rows"][case["case_id"]] if case is not None else {}
+                value = {
+                    "variant_id": variant,
+                    "outcome": outcome,
+                    "case_id": case["case_id"] if case is not None else None,
+                    "source": case_sources[case["case_id"]] if case is not None else None,
+                    "error": case["error"] if case is not None else None,
+                    **{key: None if row.get(key, "") == "" else row[key] for key in (
+                        "median_attempted_shots_per_second", "mad_attempted_shots_per_second",
+                        "sample_count", "shots_per_call", "batch_size_effective",
+                        "peak_active_width",
+                    )},
+                }
+                values.append(value)
+                if outcome == "measured":
+                    rates.append(value["median_attempted_shots_per_second"])
+            rows.append({
+                "workload_id": workload["id"], "baseline_variant": entry["variant"],
+                "label": _label(representative), "artifact_sha256": workload["artifact"]["sha256"],
+                "semantics": workload["semantics"], "values": values,
+            })
+        panels.append({"title": title, "x_limits": _throughput_limits(rates), "rows": rows})
+    return {
+        "format": "clifft-bench/throughput/v1",
+        "sources": sources,
+        "themes": {theme: {"background": background, "foreground": foreground, "grid": grid}
+                   for theme, (background, foreground, grid, _) in THEMES.items()},
+        "series": series,
+        "panels": panels,
+    }
+
+
+def _render_throughput(report, theme):
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+    from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
+
+    _, _, grid, _ = THEMES[theme]
+    entries = _throughput_entries(report)
+    series = _throughput_series(report, entries)
+    variants = [item["variant_id"] for item in series]
+    markers = {"circle": "o", "square": "s", "diamond": "D", "triangle": "^", "plus": "P"}
+    styles = {item["variant_id"]: (item["colors"][theme], markers[item["marker"]])
+              for item in series}
     layouts = []
-    for heading, group in (panels or {"Other workloads": []}).items():
+    for heading, group in _throughput_panels(entries).items():
         visible = [
             sorted(((v, case) for v, case in entry["cases"].items()
                     if _outcome(case, _representative(entry), report["variants"].get(v))
@@ -444,9 +549,7 @@ def _render_throughput(report, colors, grid):
             for values in visible for _, case in values
             if case is not None and case["status"] == "success"
         ]
-        low = min(rates) / 1.5 if rates else 0.1
-        peak = max(rates, default=1)
-        high = peak * max(1.5, (peak / low) ** 0.14)
+        low, high = _throughput_limits(rates)
         axis.set_xscale("log")
         axis.set_xlim(low, high)
         axis.xaxis.set_major_locator(LogLocator(base=10, numticks=7))
@@ -597,7 +700,7 @@ def render(report: dict, output_dir: Path) -> list[Path]:
             for kind in FIGURES:
                 figure = (
                     _render_release(report, colors, foreground, grid)
-                    if kind == "release-change" else _render_throughput(report, colors, grid)
+                    if kind == "release-change" else _render_throughput(report, theme)
                 )
                 if qualifier:
                     figure.text(0.5, 1.01, qualifier.rstrip(" ·"), ha="center",
@@ -623,6 +726,7 @@ def report_execution(
     document = read_result(execution_dir / "raw.json")
     peers = read_result(peer_results / "raw.json") if peer_results is not None else None
     report = build_report(document, peer_document=peers)
+    data = throughput_data(report)
     summary = review_summary(report)
     if not check:
         # Regenerate the sole derived table from authoritative evidence; never audit
@@ -630,5 +734,6 @@ def report_execution(
         export_csv(document, execution_dir / "cases.csv")
         destination = output_dir or execution_dir / "report"
         render(report, destination)
+        write_json(destination / "simulator-throughput.json", data)
         (destination / "review.md").write_text(summary)
     return summary

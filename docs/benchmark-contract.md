@@ -89,6 +89,42 @@ compilation plus steady-state sampling, where rate is
 `median_attempted_shots_per_second`. This estimate excludes parsing, calibration,
 and warmup; `setup_seconds` records the full measured setup separately.
 
+### Throughput widget data
+
+`report/simulator-throughput.json` is a derived presentation of the same validated
+throughput view as the PNGs, including explicitly selected retained peers. Its
+`format` is `clifft-bench/throughput/v1`. It is regenerated from raw evidence;
+consumers must not treat it as a second authoritative result or join campaigns
+themselves. This is the data interface for the
+[Clifft docs widget](https://github.com/unitaryfoundation/clifft/issues/659).
+
+- `panels` and their `rows` preserve the figure's selection and order. Each panel
+  has its own logarithmic `x_limits`. Rows identify the workload and baseline
+  variant, display label, circuit digest, and selection/output `semantics`.
+- Each row's `values` follows the simulator order in `series`. Values include
+  the attempted-shot rate median and median absolute deviation (both in shots/s),
+  sample count, shots per call, effective batch size, and peak active width where
+  recorded. MAD describes sample dispersion, not a confidence interval.
+- `outcome` is `measured`, a recorded failure status, `unsupported`, or
+  `not measured`. Failed and absent cases have null rates and dispersion; missing
+  metadata is null rather than zero. Unsupported cases remain in the export for
+  accessible explanation but have no plotted marker. Recorded failures retain
+  their error detail. Missing cases have null case/source identifiers.
+- `series` supplies variant and exact simulator identities, semantic marker
+  names (`circle`, `square`, `diamond`, `triangle`, filled `plus`), and light/dark
+  colors. `themes` supplies the matching background, foreground, and grid colors.
+- Every recorded value references `sources.primary` or `sources.peers`. Each
+  source retains its run identity, collection times, classification, selection,
+  overrides, harness revision, host, hardware epoch, measurement settings, and
+  resource limits. A smoke or partial source remains validation evidence.
+  Separate collections are not represented as a fresh paired run.
+
+The timed boundaries below also apply to this export: compilation is excluded,
+and xtim includes lazy planning in a fixed-duration run starting with an empty
+cache. Publication supplies immutable evidence links for each source run; the
+recorded harness revision identifies collection code, not the commit containing
+the result files. The export does not guess evidence URLs from local paths.
+
 ## Timed boundaries
 
 | Phase | Timed as execution? |
