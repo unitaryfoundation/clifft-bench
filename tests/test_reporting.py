@@ -1,9 +1,11 @@
 import copy
+import json
+import statistics
 
 import pytest
 
 from clifft_bench.cli import main
-from clifft_bench.report import build_report, report_execution, review_summary
+from clifft_bench.report import build_report, report_execution, review_summary, throughput_data
 from clifft_bench.results import validate_result, write_json
 
 
@@ -102,6 +104,8 @@ def test_render_all_themes_and_regenerate_stale_csv(raw_result, tmp_path, all_fa
                                               "message": "timed out"})
     write_json(tmp_path / "raw.json", raw_result)
     (tmp_path / "cases.csv").write_text("stale table")
+    (tmp_path / "report").mkdir()
+    (tmp_path / "report/simulator-throughput.json").write_text("stale widget data")
     report_execution(tmp_path)
     assert ("125.0" in (tmp_path / "cases.csv").read_text()) is not all_failed
     for stem in ("simulator-throughput", "release-change"):
@@ -112,6 +116,10 @@ def test_render_all_themes_and_regenerate_stale_csv(raw_result, tmp_path, all_fa
     assert ("1.25×" in summary) is not all_failed
     if all_failed:
         assert "candidate: error" in summary
+    data = json.loads((tmp_path / "report/simulator-throughput.json").read_text())
+    value = data["panels"][0]["rows"][0]["values"][0]
+    assert (value["median_attempted_shots_per_second"] is None) is all_failed
+    assert value["outcome"] == ("error" if all_failed else "measured")
 
 
 @pytest.mark.parametrize("workloads", [1, 12])
@@ -224,6 +232,9 @@ def test_main_figures_share_selection_without_dropping_detailed_outcomes(raw_res
         report["pairs"].append(pair)
     assert [e["cases"][e["variant"]] for e in _throughput_entries(report)] == [original]
     assert [p["candidate"] for p in _release_pairs(report)] == [original]
+    values = [value for panel in throughput_data(report)["panels"]
+              for row in panel["rows"] for value in row["values"]]
+    assert [value["case_id"] for value in values] == [original["case_id"]]
     summary = review_summary(report)
     assert all(case["case_id"] in summary for case in report["current"])
 
@@ -469,7 +480,7 @@ def test_peer_render_preserves_release_figures_and_source_files(
     report_execution(primary, peer_results=peers)
     assert plotted == [[125, 250], [125, 250]]
     for path, content in before.items():
-        if (path.suffix != ".png" and path.name != "review.md"
+        if (path.suffix != ".png" and path.name not in ("review.md", "simulator-throughput.json")
                 or path.name.startswith("release-change")):
             assert path.read_bytes() == content
     assert not (peers / "cases.csv").exists()
@@ -479,7 +490,7 @@ def test_throughput_panel_ranges_are_independent(raw_result):
     pytest.importorskip("matplotlib")
     import matplotlib.pyplot as plt
 
-    from clifft_bench.report import THEMES, _render_throughput
+    from clifft_bench.report import _render_throughput
 
     original = raw_result["cases"][1]
     contract = raw_result["campaign"]["cases"][1]
@@ -502,18 +513,23 @@ def test_throughput_panel_ranges_are_independent(raw_result):
             sample["duration_seconds"] = sample["attempted_shots"] / rate
         raw_result["cases"].append(case)
         raw_result["campaign"]["cases"].append(expected)
-    _, _, grid, colors = THEMES["light"]
 
     def inspect():
-        figure = _render_throughput(build_report(raw_result), colors, grid)
+        report = build_report(raw_result)
+        data = throughput_data(report)
+        figure = _render_throughput(report, "light")
         try:
             limits, plotted = [], []
-            for axis in figure.axes:
+            for axis, panel in zip(figure.axes, data["panels"], strict=True):
                 assert axis.get_xscale() == "log"
                 assert axis.get_xlabel()
                 rates = [float(line.get_xdata()[0]) for line in axis.lines
                          if line.get_marker() == "o"]
                 low, high = axis.get_xlim()
+                assert (low, high) == panel["x_limits"]
+                assert rates == [value["median_attempted_shots_per_second"]
+                                 for row in panel["rows"] for value in row["values"]
+                                 if value["outcome"] == "measured"]
                 assert rates and all(low < rate < high for rate in rates)
                 plotted.append(rates)
                 limits.append((low, high))
@@ -530,3 +546,113 @@ def test_throughput_panel_ranges_are_independent(raw_result):
     assert before[:-1] == after[:-1]
     assert before[-1] != after[-1]
     assert plotted[:-1] == changed[:-1]
+
+
+def test_throughput_data_preserves_statistics_identities_and_sources(raw_result, peer_result):
+    for index, sample in enumerate(peer_result["cases"][-1]["samples"]):
+        rate = 100 + index * 10
+        sample.update(throughput_attempted_shots_per_second=rate,
+                      duration_seconds=sample["attempted_shots"] / rate)
+    validate_result(peer_result)
+    before = copy.deepcopy((raw_result, peer_result))
+    report = build_report(raw_result, peer_document=peer_result)
+    data = throughput_data(report)
+    assert json.dumps(data, allow_nan=False, sort_keys=True) == json.dumps(
+        throughput_data(report), allow_nan=False, sort_keys=True,
+    )
+    assert (raw_result, peer_result) == before
+    row = data["panels"][0]["rows"][0]
+    current, peer = row["values"]
+    assert current["median_attempted_shots_per_second"] == 125
+    assert current["source"] == "primary" and peer["source"] == "peers"
+    assert current["case_id"] == raw_result["cases"][1]["case_id"]
+    rates = [s["throughput_attempted_shots_per_second"]
+             for s in peer_result["cases"][-1]["samples"]]
+    assert peer["median_attempted_shots_per_second"] == statistics.median(rates)
+    assert peer["mad_attempted_shots_per_second"] == statistics.median(
+        abs(rate - statistics.median(rates)) for rate in rates
+    )
+    assert peer["sample_count"] == len(rates)
+    assert peer["shots_per_call"] == peer_result["cases"][-1]["execution"]["shots_per_call"]
+    for role, source in (("primary", raw_result), ("peers", peer_result)):
+        assert data["sources"][role]["run"]["id"] == source["run"]["id"]
+        assert data["sources"][role]["run"]["finished_at"] == source["run"]["finished_at"]
+        assert data["sources"][role]["suite_source"] == source["runner"]["suite_source"]
+    for series in data["series"]:
+        original = report["variants"][series["variant_id"]]
+        assert all(original[key] == value for key, value in series["simulator"].items())
+    assert row["semantics"] == raw_result["cases"][1]["workload"]["semantics"]
+    assert row["artifact_sha256"] == raw_result["cases"][1]["workload"]["artifact"]["sha256"]
+
+
+def test_throughput_data_preserves_absence_failure_and_partial_run(raw_result, peer_result):
+    peer_result["cases"][-1].update(
+        status="error", error={"phase": "setup", "type": "WorkerTimeout", "message": "timeout"},
+        samples=[], setup=None,
+    )
+    peer_result["cases"][-1]["execution"].pop("batch_size_effective", None)
+    for identifier, adapters in (("unmeasured", ["clifft", "symft"]),
+                                 ("unsupported", ["clifft"])):
+        case = copy.deepcopy(raw_result["cases"][1])
+        case.update(case_id=identifier)
+        case["workload"].update(id=identifier, compatible_adapters=adapters)
+        expected = copy.deepcopy(raw_result["campaign"]["cases"][1])
+        expected.update(id=identifier, workload_id=identifier)
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(expected)
+    validate_result(raw_result)
+    validate_result(peer_result)
+    data = throughput_data(build_report(raw_result, peer_document=peer_result))
+    rows = {row["workload_id"]: row for panel in data["panels"] for row in panel["rows"]}
+    for identifier, outcome in (("unmeasured", "not measured"), ("unsupported", "unsupported")):
+        value = rows[identifier]["values"][-1]
+        assert value["outcome"] == outcome
+        assert value["source"] is value["case_id"] is None
+        assert value["median_attempted_shots_per_second"] is None
+        assert value["mad_attempted_shots_per_second"] is None
+    failed = rows[peer_result["cases"][-1]["workload"]["id"]]["values"][-1]
+    assert failed["outcome"] == "error" and failed["source"] == "peers"
+    assert failed["error"]["phase"] == "setup"
+    assert failed["median_attempted_shots_per_second"] is None
+    assert failed["mad_attempted_shots_per_second"] is None
+    assert failed["batch_size_effective"] is failed["peak_active_width"] is None
+    raw_result["run"]["selection"] = "current"
+    raw_result["runner"].pop("os_release", None)
+    raw_result["runner"].pop("python", None)
+    validate_result(raw_result)
+    partial = throughput_data(build_report(raw_result))
+    assert partial["sources"]["primary"]["host"]["os_release"] is None
+    assert partial["sources"]["primary"]["run"]["selection"] == "current"
+    assert partial["sources"]["primary"]["run"]["classification"] == (
+        raw_result["run"]["classification"]
+    )
+
+
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_throughput_export_matches_plot_labels_order_and_styles(raw_result, peer_result, theme):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import _render_throughput
+
+    report = build_report(raw_result, peer_document=peer_result)
+    data = throughput_data(report)
+    figure = _render_throughput(report, theme)
+    try:
+        markers = {"circle": "o", "square": "s", "diamond": "D", "triangle": "^", "plus": "P"}
+        styles = {series["variant_id"]: series for series in data["series"]}
+        for panel, axis in zip(data["panels"], figure.axes, strict=True):
+            marks = [line for line in axis.lines if line.get_marker() in markers.values()]
+            values = [value for row in panel["rows"] for value in row["values"]
+                      if value["outcome"] == "measured"]
+            assert len(marks) == len(values)
+            for mark, value in zip(marks, values, strict=True):
+                style = styles[value["variant_id"]]
+                assert mark.get_xdata()[0] == value["median_attempted_shots_per_second"]
+                assert mark.get_color() == style["colors"][theme]
+                assert mark.get_marker() == markers[style["marker"]]
+            labels = [text.get_text().replace("\n", " ") for text in axis.texts]
+            assert panel["title"] in labels
+            assert all(row["label"] in labels for row in panel["rows"])
+    finally:
+        plt.close(figure)

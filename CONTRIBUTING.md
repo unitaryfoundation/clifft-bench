@@ -193,7 +193,8 @@ uv run clifft-bench csv /path/to/execution/raw.json
 `clifft-bench report EXECUTION_DIR --check` validates the evidence and prints a
 review summary without writing files or importing plotting dependencies. Without
 `--check`, install the `report` extra; the command regenerates `cases.csv` and
-writes `report/review.md` plus these light/dark PNG pairs:
+writes `report/review.md`, `report/simulator-throughput.json`, and these light/dark
+PNG pairs:
 
 - `simulator-throughput-{light,dark}.png`: Clifft and peer throughput in independent
   log-scale panels by theme, with Quantum Volume separate.
@@ -201,6 +202,11 @@ writes `report/review.md` plus these light/dark PNG pairs:
   thematic order.
 
 The generated review embeds both figures and links their dark counterparts.
+It also links the throughput JSON for the Clifft docs widget. The JSON
+contains the same selected rows, values, styles, and source identities as the
+throughput figures; its [field semantics](docs/benchmark-contract.md#throughput-widget-data)
+belong to the benchmark contract. Regenerate it with the same explicit peer
+input as the figures; the primary `cases.csv` alone does not contain retained peers.
 Regenerating removes superseded Clifft-only figures and numbered pages.
 
 When a new RC reruns only Clifft, reuse unchanged peer results explicitly:
@@ -225,7 +231,10 @@ artifacts and must not replace published performance evidence. Existing publishe
 figures remain frozen until reviewed reference-host results replace them.
 
 For publication, copy the reviewed figure pairs to `reporting/figures/web/` and
-the companion Clifft checkout's `docs/assets/performance/`. In the same
+the companion Clifft checkout's `docs/assets/performance/`. Copy
+`simulator-throughput.json` alongside the docs figures and
+link each exported source run to its reviewed evidence at an immutable commit.
+Do not hand-edit the JSON or let the website select a live latest execution. In the same
 publication PR, update README and performance-guide image links, measured
 version labels, execution links, and claims. Use the stable `release-change`
 filenames for the paired release plot; retire replaced release-specific assets
