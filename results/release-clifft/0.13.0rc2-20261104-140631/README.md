@@ -37,12 +37,13 @@ independent workers or placements. This run does not establish behavior for a
 different preparation history. No additional diagnostic repeat was performed.
 
 The figures use the renderer at
-[`fda7460511455ee460ef82464ee10d71098b1371`](https://github.com/unitaryfoundation/clifft-bench/tree/fda7460511455ee460ef82464ee10d71098b1371),
+[`d038b164f4d7719443c4d52f874154568bdd2e8a`](https://github.com/unitaryfoundation/clifft-bench/tree/d038b164f4d7719443c4d52f874154568bdd2e8a),
 separately from the collection revision above:
 
 - [Simulator throughput, light](report/simulator-throughput-light.png) and
-  [dark](report/simulator-throughput-dark.png) show 14 current Clifft circuit
-  rows grouped by workload theme, with direct throughput labels. Bulk variants,
+  [dark](report/simulator-throughput-dark.png) show 14 circuit rows with
+  RC2 Clifft and the retained peer measurements, grouped by workload theme with
+  direct throughput labels. Bulk variants,
   selection-off controls, and the unverified d7 proxy remain in the detailed
   results rather than the main figure.
 - [Release changes, light](report/release-change-light.png) and
@@ -51,11 +52,21 @@ separately from the collection revision above:
   shaded ±1.1% inconclusive band; larger changes use a separate logarithmic
   ratio scale.
 
-Peer tools were not rerun. The throughput figure therefore contains only Clifft;
-existing peer figures retain their original execution provenance. Figure labels
-use intended final versions 0.13.0/0.12.0; raw evidence and the generated review
-retain the exact RC identities. These are review artifacts, not an update to
-published website figures.
+Peer throughput comes from the official
+[2026-11-03 RC1 campaign](https://github.com/unitaryfoundation/clifft-bench/tree/1e16ed76602a1fac4623a1f38d163b049146eed0/results/release-v1/0.13.0rc1-20261103-183623):
+run `031a93c5-a1c7-4dc3-a045-3f8163cdc50b`, collected 18:41:59–23:17:33 UTC.
+Its 41 peer cases retain Stim 1.16.0, SymFT 0.1.1, xtim 3.2.2, and Tsim 0.1.5.
+The [peer raw evidence](https://github.com/unitaryfoundation/clifft-bench/blob/1e16ed76602a1fac4623a1f38d163b049146eed0/results/release-v1/0.13.0rc1-20261103-183623/raw.json)
+has SHA256 `5590e18927b75c15dba650ef0a9d6141aa027bbb1b22140b1d981b92342dad80`.
+
+Peer tools were not rerun. The report validates matching hardware, protocol,
+workload digests, selection semantics, and call sizes before reusing those
+values. Both throughput themes label the two collection dates. Their absolute
+rates come from separate collections; all paired release changes use only the
+RC2 execution. Each source keeps its original raw evidence and CSV. Figure
+labels use intended final versions 0.13.0/0.12.0; raw evidence and the generated
+review retain exact RC and peer identities. These are review artifacts, not an
+update to published website figures.
 
 ## Evidence and validation
 
@@ -80,7 +91,15 @@ published website figures.
   succeeded. This is retained in the raw calibration evidence.
 
 To regenerate the review and figures, use the renderer revision linked above
-with its `report` extra and run `clifft-bench report` on this directory. The
-original raw data, CSV, collection log, environment, and exit status are
-byte-identical to the collected evidence. The collection revision remains
-recorded in `raw.json` and the generated review.
+with both committed source directories:
+
+```bash
+uv run --extra report clifft-bench report \
+  results/release-clifft/0.13.0rc2-20261104-140631 \
+  --peer-results results/release-v1/0.13.0rc1-20261103-183623
+```
+
+The original RC2 raw data, CSV, collection log, environment, and exit status are
+byte-identical to the collected evidence. The peer execution is also unchanged.
+The RC2 collection revision remains recorded in `raw.json` and the generated
+review; the report identifies the peer collection separately.
