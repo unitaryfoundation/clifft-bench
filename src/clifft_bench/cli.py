@@ -54,10 +54,12 @@ def _parser() -> argparse.ArgumentParser:
     csv_command.add_argument("--output", type=Path)
 
     report = commands.add_parser(
-        "report", help="report one execution's release and tool comparisons"
+        "report", help="report release comparisons and simulator throughput"
     )
     report.add_argument("execution_dir", type=Path)
     report.add_argument("--output-dir", type=Path)
+    report.add_argument("--peer-results", type=Path, metavar="EXECUTION_DIR",
+                        help="reuse this explicit execution's peer throughput with current Clifft")
     report.add_argument("--check", action="store_true", help="validate without writing files")
 
     setup = commands.add_parser("bootstrap", help="install selected isolated environments")
@@ -171,7 +173,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             from clifft_bench.report import report_execution
 
             print(
-                report_execution(args.execution_dir, output_dir=args.output_dir, check=args.check)
+                report_execution(args.execution_dir, output_dir=args.output_dir, check=args.check,
+                                 peer_results=args.peer_results)
             )
             return 0
         raise AssertionError(f"unhandled command {args.command!r}")

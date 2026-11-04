@@ -183,8 +183,8 @@ instance promptly after retrieving the evidence.
 Each execution directory contains authoritative `raw.json` and derived `cases.csv`.
 The raw file records the selected cases, resolved campaign and comparisons, exact
 software and workload identities, host metadata, and sample/failure evidence.
-Reporting requires that directory alone, without today's configuration or earlier
-executions. To regenerate just the table:
+Single-execution reporting requires that directory alone, without today's
+configuration. To regenerate just the table:
 
 ```bash
 uv run clifft-bench csv /path/to/execution/raw.json
@@ -201,6 +201,22 @@ writes `report/review.md` plus these light/dark PNG pairs:
 
 The generated review embeds both figures and links their dark counterparts.
 Regenerating removes superseded Clifft-only figures and numbered pages.
+
+When a new RC reruns only Clifft, reuse unchanged peer results explicitly:
+
+```bash
+uv run --extra report clifft-bench report /path/to/clifft-rc-execution \
+  --peer-results /path/to/prior-full-execution
+```
+
+Pin both source directories to reviewed raw evidence and record their immutable
+links in the results README. This command uses the primary run for Clifft and
+release changes, and the named peer run only for non-Clifft throughput. It
+validates both inputs and their compatibility, labels the separate collections,
+and leaves the peer input untouched. `--check` validates the same selection
+without writing. See the [comparison contract](docs/benchmark-contract.md#result-evidence-and-comparisons)
+for reuse requirements. Peer versions or protocols that have changed need new
+measurements.
 
 Use `--output-dir DIR` to choose the report destination. Review failure labels,
 missing baselines, exact versions, and both themes. Smoke figures are validation

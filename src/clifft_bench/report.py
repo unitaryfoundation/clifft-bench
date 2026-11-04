@@ -1,4 +1,4 @@
-"""Render release and cross-tool comparisons from one recorded execution."""
+"""Render release comparisons and explicitly sourced simulator throughput."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import textwrap
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.results import case_rows, comparison_pairs, export_csv, read_result
+from clifft_bench.results import _compatible, case_rows, comparison_pairs, export_csv, read_result
 
 FIGURES = ("simulator-throughput", "release-change")
 WORKLOAD_GROUPS = (
@@ -38,7 +38,7 @@ THEMES = {
 }
 
 
-def build_report(document: dict) -> dict[str, Any]:
+def build_report(document: dict, *, peer_document: dict | None = None) -> dict[str, Any]:
     rows = {row["case_id"]: row for row in case_rows(document)}
     pairs = comparison_pairs(document)
     release = [p for p in pairs if p["comparison_id"] == "current-vs-previous"]
@@ -63,7 +63,7 @@ def build_report(document: dict) -> dict[str, Any]:
     variants = {}
     for case in document["cases"]:
         variants.setdefault(case["variant_id"], case["simulator"])
-    return {
+    report = {
         "document": document,
         "rows": rows,
         "pairs": pairs,
@@ -72,6 +72,75 @@ def build_report(document: dict) -> dict[str, Any]:
         "tools": list(groups.values()),
         "variants": variants,
     }
+    if peer_document is not None:
+        _add_peer_results(report, peer_document)
+    return report
+
+
+def _add_peer_results(report: dict, peers: dict) -> None:
+    """Join throughput views only; each raw execution and its paired ratios stay intact."""
+    document = report["document"]
+    if any(c["simulator"]["adapter"] != "clifft" for c in document["cases"]):
+        raise ValueError("--peer-results requires a Clifft-only primary execution")
+    if document["run"]["id"] == peers["run"]["id"]:
+        raise ValueError("peer results must come from a separate execution")
+    for source in (document, peers):
+        if source["run"]["selection"] is not None:
+            raise ValueError("peer reuse requires complete declared executions")
+    if document["run"]["classification"] == "official" and not document["campaign"].get(
+        "hardware_epoch"
+    ):
+        raise ValueError("peer reuse requires an explicit official hardware epoch")
+    for key in ("classification", "hardware_epoch", "reference_host", "measurement",
+                "resources", "seed"):
+        if document["campaign"].get(key) != peers["campaign"].get(key):
+            raise ValueError(f"incompatible peer collection {key}")
+    for key in ("cpu_model", "os", "os_release", "machine", "python", "thread_environment"):
+        if document["runner"].get(key) != peers["runner"].get(key):
+            raise ValueError(f"incompatible peer host {key}")
+
+    peer_cases = [c for c in peers["cases"] if c["simulator"]["adapter"] != "clifft"]
+    if not peer_cases:
+        raise ValueError("peer execution has no peer measurements")
+    if ({c["case_id"] for c in peer_cases} & report["rows"].keys()
+            or {c["variant_id"] for c in peer_cases} & report["variants"].keys()
+            or {c["simulator"]["implementation_id"] for c in peer_cases}
+            & {c["simulator"]["implementation_id"] for c in document["cases"]}):
+        raise ValueError("ambiguous peer case, variant, or implementation identity")
+    source = build_report(peers)
+    current = {(c["variant_id"], c["workload"]["id"]): c for c in report["current"]}
+    groups, variants = {}, {}
+    for entry in source["tools"]:
+        baseline = entry["variant"]
+        if source["variants"][baseline]["adapter"] != "clifft":
+            raise ValueError("peer comparisons must use a current Clifft baseline")
+        candidates = set(entry["cases"]) - {baseline}
+        if any(source["variants"][v]["adapter"] == "clifft" for v in candidates):
+            raise ValueError("peer comparisons must contain only non-Clifft candidates")
+        key = baseline, entry["workload_id"]
+        replacement = current.get(key)
+        if replacement is None:
+            raise ValueError(f"missing current Clifft case for peer comparison: {key}")
+        for case in entry["cases"].values():
+            if case is not None:
+                _compatible(replacement, case)
+        groups[key] = {**entry, "cases": {**entry["cases"], baseline: replacement}}
+        variants.setdefault(baseline, set()).update(candidates)
+    used = {c["case_id"] for e in groups.values() for v, c in e["cases"].items()
+            if v != e["variant"] and c is not None}
+    if used != {c["case_id"] for c in peer_cases}:
+        raise ValueError("peer measurements require declared Clifft comparisons")
+    # Newly measured Clifft workloads retain explicit absent/unsupported peer outcomes.
+    for (variant, workload), case in current.items():
+        if variant in variants and (variant, workload) not in groups:
+            groups[variant, workload] = {
+                "variant": variant, "workload_id": workload,
+                "cases": {variant: case, **dict.fromkeys(sorted(variants[variant]))},
+            }
+    report["tools"] = list(groups.values())
+    report["peer_document"], report["peer_cases"] = peers, peer_cases
+    report["rows"].update({r["case_id"]: r for r in case_rows(peers) if r["case_id"] in used})
+    report["variants"].update({c["variant_id"]: c["simulator"] for c in peer_cases})
 
 
 def _outcome(case: dict | None, other: dict | None, simulator: dict | None) -> str:
@@ -100,17 +169,32 @@ def review_summary(report: dict) -> str:
             f"Selection: `{run['selection']}`. Overrides: `{run['overrides']}`.",
             "",
         ]
+    peer_document = report.get("peer_document")
+    if peer_document is not None:
+        peer_run = peer_document["run"]
+        lines += [
+            "## Collection sources", "",
+            "Clifft and paired release changes use the primary execution above.",
+            f"Peer throughput is reused from run `{peer_run['id']}`, collected "
+            f"{peer_run['finished_at']}.",
+            f"Peer source: `{peer_document['runner']['suite_source']['commit']}`.",
+            "These are separate collections on matching reference hardware and protocols;",
+            "cross-collection throughput is not a fresh paired comparison.",
+            "The peer versions below retain their source measurements; peers were not rerun.",
+            "",
+        ]
+    cases = [*document["cases"], *report.get("peer_cases", [])]
     lines += [
         "## Measured implementations",
         "",
         "| Implementation | Exact version | Commit |",
         "| --- | --- | --- |",
     ]
-    identities = {c["simulator"]["implementation_id"]: c["simulator"] for c in document["cases"]}
+    identities = {c["simulator"]["implementation_id"]: c["simulator"] for c in cases}
     for identifier, simulator in identities.items():
         lines.append(f"| {identifier} | {simulator['version']} | `{simulator['commit_sha']}` |")
     lines += ["", "## Outcomes", "", "| Case | Outcome | Detail |", "| --- | --- | --- |"]
-    for case in document["cases"]:
+    for case in cases:
         error = case["error"]
         detail = (
             f"{error['phase']}: {error['type']}: {error['message']}"
@@ -146,6 +230,10 @@ def review_summary(report: dict) -> str:
         )
     if not report["pairs"]:
         lines.append("\nNo paired comparisons were selected.")
+    if peer_document is not None:
+        lines += ["", "The paired table uses only the primary execution. Peer cases in the",
+                  "outcomes and throughput figures belong to the peer source above.",
+                  "Each source raw/CSV retains its own call sizes, selection, and samples."]
     lines += [
         "", "## Figures", "",
         "Rates count attempted shots and exclude compilation; lazy planning during sampling",
@@ -154,7 +242,7 @@ def review_summary(report: dict) -> str:
         "remain in the detailed results above. Colors and marker shapes identify simulators.",
         "Unsupported pairings have",
         "no marker; unmeasured and failed cases are labeled. Exact identities and outcomes",
-        "are recorded above. Call sizes are in cases.csv; postselection settings are in raw.json.",
+        "are recorded above. Each source cases.csv/raw.json retains call sizes and postselection.",
         "",
         "Release changes within ±50% use a linear percentage axis; larger changes use",
         "a separate logarithmic ratio panel. The shaded ±1.1% band is the contract's",
@@ -325,9 +413,17 @@ def _render_throughput(report, colors, grid):
     heights = [max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
                for values, name in zip(visible, names, strict=True)]
     headers, positions, extent = _layout(cases, heights)
-    height = extent + 1.55
+    peer_document = report.get("peer_document")
+    bottom = 0.92 if peer_document is not None else 0.62
+    height = extent + bottom + 0.93
     figure = plt.figure(figsize=(12, height))
-    axis = figure.add_axes((0.32, 0.62 / height, 0.64, extent / height))
+    axis = figure.add_axes((0.32, bottom / height, 0.64, extent / height))
+    if peer_document is not None:
+        primary_date = report["document"]["run"]["finished_at"][:10]
+        peer_date = peer_document["run"]["finished_at"][:10]
+        figure.text(0.035, 0.08 / height,
+                    f"Clifft: {primary_date} · peers: {peer_date} · separate collections",
+                    fontsize=10)
     rates = [
         report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
         for values in visible for _, case in values
@@ -505,10 +601,12 @@ def render(report: dict, output_dir: Path) -> list[Path]:
 
 
 def report_execution(
-    execution_dir: Path, *, output_dir: Path | None = None, check: bool = False
+    execution_dir: Path, *, output_dir: Path | None = None, check: bool = False,
+    peer_results: Path | None = None,
 ) -> str:
     document = read_result(execution_dir / "raw.json")
-    report = build_report(document)
+    peers = read_result(peer_results / "raw.json") if peer_results is not None else None
+    report = build_report(document, peer_document=peers)
     summary = review_summary(report)
     if not check:
         # Regenerate the sole derived table from authoritative evidence; never audit

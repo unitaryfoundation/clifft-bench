@@ -514,6 +514,20 @@ adapter options and calibration probes stay in raw JSON. The report regenerates
 this table from raw evidence, so a stale CSV cannot change a performance claim.
 There is no separately stored comparison table, execution index, or release chain.
 
+A Clifft-only refresh may explicitly reuse unchanged peers from one prior
+execution for the throughput figure. Both raw files remain separate and
+self-contained; no synthetic combined execution or pooled samples are written.
+The primary execution supplies every Clifft value and all paired release ratios.
+The peer source supplies only non-Clifft values from its declared Clifft
+comparisons. Missing, unsupported, and failed peer outcomes remain distinct.
+Reuse requires matching classification, hardware epoch/reference host, host CPU,
+OS/Python/thread settings, measurement protocol, seeds, and resource limits.
+Compared workloads must also pass the digest, selection, and call-size checks
+below. Incompatible or ambiguous sources are rejected. Reports identify the peer
+run, collection time, source revision, and exact software versions; throughput
+figures label both collection dates. These cross-collection absolute rates are
+not a fresh paired comparison and do not acquire the paired 1.1% interpretation.
+
 Paired ratios use candidate median divided by baseline median. Pairing requires
 matching workload digest and selection semantics, call size, measurement settings,
 and resource limits. The raw format fixes aggregate counts, raw-record parity,
