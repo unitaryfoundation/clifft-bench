@@ -141,6 +141,19 @@ git switch -c data/release-benchmark
 ./scripts/ec2-run.sh release-v1 "$HOME/clifft-bench-ec2-results/release-benchmark"
 ```
 
+For a Clifft-only release refresh, use `release-clifft` in the same command:
+
+```bash
+./scripts/ec2-run.sh release-clifft "$HOME/clifft-bench-ec2-results/clifft-release"
+```
+
+This campaign collects the full release campaign's previous/current Clifft,
+current bulk, and current coverage cases with the same measurement settings.
+It installs only the two Clifft environments and produces a fresh paired release
+comparison. Keep existing peer measurements tied to their original execution;
+the new execution contains no peer comparison data. Use a new output directory
+for each RC or repeat, and stop the instance after retrieving its results.
+
 The wrapper arms an eight-hour shutdown guard, installs host prerequisites,
 bootstraps selected environments, and collects `raw.json` outside the checkout.
 Python checks the source, OS, architecture, instance type, On-Demand lifecycle,

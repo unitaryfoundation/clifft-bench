@@ -53,6 +53,26 @@ def test_checked_in_suites_resolve_artifacts_references_and_environments(path: P
             assert shared, f"{comparison['id']}: {variant} has no baseline workloads"
 
 
+def test_clifft_release_preserves_full_campaign_cases_and_measurement() -> None:
+    full = load_suite(ROOT / "campaigns/release-v1.toml")
+    clifft = load_suite(ROOT / "campaigns/release-clifft.toml")
+    expected = [
+        case for case in full.cases if case.implementation.definition["adapter"] == "clifft"
+    ]
+    assert [case.definition for case in clifft.cases] == [case.definition for case in expected]
+    assert [case.implementation.definition for case in clifft.cases] == [
+        case.implementation.definition for case in expected
+    ]
+    for field in ("classification", "seed", "hardware_epoch", "reference_host", "collection",
+                  "resources", "measurement"):
+        assert clifft.run[field] == full.run[field]
+    selected = {case.definition["variant_id"] for case in expected}
+    assert clifft.run["comparisons"] == [
+        comparison for comparison in full.run["comparisons"]
+        if {comparison["baseline_variant"], *comparison["candidate_variants"]} <= selected
+    ]
+
+
 def test_release_compares_distinct_clifft_implementations() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     comparison = next(c for c in suite.run["comparisons"] if c["id"] == "current-vs-previous")

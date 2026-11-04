@@ -137,7 +137,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install -r environments/clifft-0.13.0rc1.txt -e '.[test]'
+      - run: python -m pip install -r environments/clifft-0.13.0rc2.txt -e '.[test]'
       - name: Check current adapter and circuit correctness
         run: |
           ulimit -v 12582912

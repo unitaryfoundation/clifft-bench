@@ -1,0 +1,109 @@
+suite_version = "0.2.8"
+profile_id = "release-clifft"
+title = "Clifft-only single-core release benchmark"
+classification = "official"
+seed = 20260819
+hardware_epoch = "aws-m7a-xlarge-ubuntu2404-v1"
+workloads_file = "../workloads.toml"
+software_file = "../software.toml"
+
+[reference_host]
+provider = "aws"
+instance_type = "m7a.xlarge"
+architecture = "x86_64"
+os_id = "ubuntu"
+os_version = "24.04"
+
+[collection]
+run_timeout_minutes = 420
+memory_limit_gib = 12
+
+[[comparisons]]
+id = "current-vs-previous"
+baseline_variant = "clifft-previous"
+candidate_variants = ["clifft-current"]
+
+[resources]
+
+[measurement]
+setup_timeout_seconds = 1800
+request_timeout_seconds = 1800
+warmup_shots = 1
+correctness_shots = 8
+min_sample_seconds = 30
+repetitions = 5
+
+[[variants]]
+id = "clifft-previous"
+implementation_id = "clifft-0.12.0rc1"
+workloads = "qec-and-adder"
+
+[variants.execution]
+batch_size = "calibrate"
+options_preset = "clifft-scheduled"
+
+[[variants]]
+id = "clifft-current"
+implementation_id = "clifft-0.13.0rc2"
+
+[variants.execution]
+batch_size = "calibrate"
+options_preset = "clifft-scheduled"
+
+[[variants.workloads]]
+workload_id = "msc-d3-inject-cultivate-p1e-3"
+
+[[variants.workloads]]
+workload_id = "msc-d5-inject-cultivate-p1e-3"
+
+[[variants.workloads]]
+workload_id = "distillation-color-code-85q-p5e-2"
+
+[[variants.workloads]]
+workload_id = "surface-code-d7-r7-p1e-3"
+
+[[variants.workloads]]
+workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
+
+[[variants.workloads]]
+workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
+
+[[variants.workloads]]
+workload_id = "draper-adder-m16-basis-all-observables"
+
+[[variants.workloads]]
+workload_id = "distillation-15to1-rm15-p1e-3"
+
+[[variants.workloads]]
+workload_id = "bt27-direct-x"
+
+[[variants.workloads]]
+workload_id = "bt81-direct-x"
+
+[[variants.workloads]]
+workload_id = "reed-muller-measured"
+
+[[variants]]
+id = "clifft-bulk"
+implementation_id = "clifft-0.13.0rc2"
+
+[variants.execution]
+batch_size = "calibrate"
+options_preset = "clifft-scheduled"
+
+[[variants.workloads]]
+workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
+shots_per_call = 256
+
+[[variants.workloads]]
+workload_id = "draper-adder-m16-basis-all-observables"
+shots_per_call = 100000
+
+[[variants]]
+id = "clifft-coverage"
+implementation_id = "clifft-0.13.0rc2"
+workloads = "coverage"
+
+[variants.execution]
+batch_size = "calibrate"
+options_preset = "clifft-scheduled"
