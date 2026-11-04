@@ -107,4 +107,3 @@ workloads = "coverage"
 [variants.execution]
 batch_size = "calibrate"
 options_preset = "clifft-scheduled"
-
