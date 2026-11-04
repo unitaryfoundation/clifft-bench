@@ -1,0 +1,378 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": 256,
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          }
+        },
+        "id": "wheel-d3-b256-abba-03-current-wheel",
+        "implementation_id": "current-wheel",
+        "shots_per_call": 100000,
+        "variant_id": "current-wheel",
+        "workload_id": "msc-d3-inject-cultivate-p1e-3"
+      }
+    ],
+    "classification": "official",
+    "collection": {
+      "memory_limit_gib": 12,
+      "run_timeout_minutes": 420
+    },
+    "comparisons": [],
+    "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 30,
+      "repetitions": 5,
+      "request_timeout_seconds": 1800,
+      "setup_timeout_seconds": 1800,
+      "warmup_shots": 1
+    },
+    "profile_id": "wheel-d3-b256-abba-03-current-wheel",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 12884901888
+    },
+    "seed": 20260819,
+    "suite_version": "0.2.8",
+    "title": "Reference-host regression investigation"
+  },
+  "cases": [
+    {
+      "case_id": "wheel-d3-b256-abba-03-current-wheel",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 6,
+          "attempted_shots": 8,
+          "discarded_shots": 2,
+          "duration_seconds": 3.2949999877018854e-05,
+          "logical_errors": 0,
+          "stream_setup_seconds": 2.820000190695282e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": 256,
+        "batch_size_effective": 256,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 30,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 5,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 100000,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "samples": [
+        {
+          "accepted_shots": 58110600,
+          "adapter_timing_totals": {},
+          "api_calls": 846,
+          "attempted_shots": 84600000,
+          "discarded_shots": 26489400,
+          "duration_seconds": 30.025049598007172,
+          "logical_errors": 55,
+          "peak_rss_bytes": 42217472,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20271664,
+          "sequence_index": 0,
+          "started_at": "2026-11-04T03:03:38.265428Z",
+          "stream_setup_seconds": 1.6409994714194909e-06,
+          "throughput_attempted_shots_per_second": 2817647.3022584147
+        },
+        {
+          "accepted_shots": 58099179,
+          "adapter_timing_totals": {},
+          "api_calls": 846,
+          "attempted_shots": 84600000,
+          "discarded_shots": 26500821,
+          "duration_seconds": 30.016607523005405,
+          "logical_errors": 45,
+          "peak_rss_bytes": 42217472,
+          "repetition": 1,
+          "seed_first": 120270819,
+          "seed_last": 120271664,
+          "sequence_index": 1,
+          "started_at": "2026-11-04T03:04:08.294439Z",
+          "stream_setup_seconds": 3.719999767781701e-06,
+          "throughput_attempted_shots_per_second": 2818439.7565634507
+        },
+        {
+          "accepted_shots": 58106157,
+          "adapter_timing_totals": {},
+          "api_calls": 846,
+          "attempted_shots": 84600000,
+          "discarded_shots": 26493843,
+          "duration_seconds": 30.017758821001735,
+          "logical_errors": 48,
+          "peak_rss_bytes": 42217472,
+          "repetition": 2,
+          "seed_first": 220270819,
+          "seed_last": 220271664,
+          "sequence_index": 2,
+          "started_at": "2026-11-04T03:04:38.316083Z",
+          "stream_setup_seconds": 3.4499998946557753e-06,
+          "throughput_attempted_shots_per_second": 2818331.6584184873
+        },
+        {
+          "accepted_shots": 58101322,
+          "adapter_timing_totals": {},
+          "api_calls": 846,
+          "attempted_shots": 84600000,
+          "discarded_shots": 26498678,
+          "duration_seconds": 30.023090861995115,
+          "logical_errors": 65,
+          "peak_rss_bytes": 42217472,
+          "repetition": 3,
+          "seed_first": 320270819,
+          "seed_last": 320271664,
+          "sequence_index": 3,
+          "started_at": "2026-11-04T03:05:08.339260Z",
+          "stream_setup_seconds": 3.7400004657683894e-06,
+          "throughput_attempted_shots_per_second": 2817831.1283429964
+        },
+        {
+          "accepted_shots": 58108565,
+          "adapter_timing_totals": {},
+          "api_calls": 846,
+          "attempted_shots": 84600000,
+          "discarded_shots": 26491435,
+          "duration_seconds": 30.021587655006442,
+          "logical_errors": 55,
+          "peak_rss_bytes": 42217472,
+          "repetition": 4,
+          "seed_first": 420270819,
+          "seed_last": 420271664,
+          "sequence_index": 4,
+          "started_at": "2026-11-04T03:05:38.366371Z",
+          "stream_setup_seconds": 3.2699999792384915e-06,
+          "throughput_attempted_shots_per_second": 2817972.2195968535
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04036616699977458,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "explicit",
+          "batch_enabled": true,
+          "compile_seconds": 0.002328323000256205,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 256,
+          "name": "clifft",
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15,
+          "optimized_t_gates": 29,
+          "parse_seconds": 0.00013044100069237174,
+          "peak_active_width": 4,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 6901,
+            "incumbent_dense_work": 462.0,
+            "incumbent_peak": 4,
+            "result_dense_work": 454.0,
+            "result_peak": 4,
+            "swept_ops": 6304
+          },
+          "threads": 1,
+          "version": "0.13.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0rc1",
+        "implementation_id": "current-wheel",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/current-wheel/bin/python",
+        "source_tag": "v0.13.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0rc1"
+      },
+      "status": "success",
+      "variant_id": "current-wheel",
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 0,
+        "duration_seconds": 0.0008303249996970408,
+        "logical_errors": 0,
+        "stream_setup_seconds": 4.679999619838782e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-656/workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+          "sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d3-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v1",
+  "run": {
+    "classification": "official",
+    "finished_at": "2026-11-04T03:06:08.425752Z",
+    "id": "74e77296-af16-46d0-927b-57f6f93cde7c",
+    "overrides": {
+      "cpu": 0
+    },
+    "profile_id": "wheel-d3-b256-abba-03-current-wheel",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-04T03:03:38.151724Z",
+    "workflow": {
+      "image_os": "ubuntu-24.04",
+      "image_version": "ami-0f8a61b66d1accaee",
+      "provider": "aws-ec2-manual",
+      "ref": "",
+      "repository": "https://github.com/unitaryfoundation/clifft-bench.git",
+      "run_id": "74e77296-af16-46d0-927b-57f6f93cde7c",
+      "runner_name": "i-0b559eec365c2acb7",
+      "runner_os": "Linux",
+      "sha": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "workflow": "scripts/ec2-run.sh"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cloud": {
+      "availability_zone": "us-east-1c",
+      "boot_id": "245a2b00-efd4-4f77-b8d3-e9b0e71f31dc",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "lifecycle": "on-demand",
+      "provider": "aws",
+      "region": "us-east-1"
+    },
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-14-93",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "load_average_at_start": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16374087680,
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "physical_cores": 4,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  }
+}

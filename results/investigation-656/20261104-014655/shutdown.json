@@ -1,0 +1,16 @@
+{
+  "requested_at": "2026-11-04T05:18:19.440983+00:00",
+  "instance_id": "i-0b559eec365c2acb7",
+  "region": "us-east-1",
+  "command": "date -u; systemctl show clifft656.service -p ActiveState -p Result -p ExecMainStatus; systemctl show clifft656-completion-stop.timer -p ActiveState -p NextElapseUSecMonotonic; sudo shutdown -h now",
+  "ssh_exit_code": 0,
+  "stdout": "Wed Nov  4 05:18:19 UTC 2026\nResult=success\nExecMainStatus=0\nActiveState=inactive\nNextElapseUSecMonotonic=3h 45min 14.400065s\nActiveState=active\n",
+  "stderr": "",
+  "api_stopped_state_verified": false,
+  "post_shutdown_ssh_check": {
+    "at": "2026-11-04T05:19:26.425594+00:00",
+    "exit_code": 255,
+    "stderr": "ssh: connect to host 44.198.160.198 port 22: Operation timed out\n"
+  },
+  "console_verification": "No authenticated AWS browser surface available; native-app inventory unavailable while Mac locked."
+}

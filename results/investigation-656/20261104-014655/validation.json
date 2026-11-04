@@ -1,0 +1,9 @@
+{
+  "verified_at": "2026-11-04T05:18:03.407920+00:00",
+  "remote_files_sha256_matched": 170,
+  "validated_workers": 76,
+  "validated_samples": 380,
+  "csv_byte_matches": 76,
+  "max_peak_rss_bytes": 102809600,
+  "max_within_worker_relative_mad": 0.004993766118265606
+}

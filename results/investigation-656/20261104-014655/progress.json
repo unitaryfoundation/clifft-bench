@@ -1,0 +1,1775 @@
+{
+  "active": null,
+  "conditions": [
+    {
+      "batch": 1024,
+      "name": "patch-draper-b1024",
+      "pair": [
+        "parent-source",
+        "patch-source"
+      ],
+      "repeat": true,
+      "workload": "draper-adder-m16-basis-all-observables"
+    },
+    {
+      "batch": 256,
+      "name": "patch-d3-b256",
+      "pair": [
+        "parent-source",
+        "patch-source"
+      ],
+      "repeat": true,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 2048,
+      "name": "patch-d3-b2048",
+      "pair": [
+        "parent-source",
+        "patch-source"
+      ],
+      "repeat": true,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 1024,
+      "name": "wheel-draper-b1024",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "draper-adder-m16-basis-all-observables"
+    },
+    {
+      "batch": 1024,
+      "name": "rc-wheel-source-draper-b1024",
+      "pair": [
+        "current-wheel",
+        "parent-source"
+      ],
+      "repeat": true,
+      "workload": "draper-adder-m16-basis-all-observables"
+    },
+    {
+      "batch": 32,
+      "name": "wheel-d3-b32",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 256,
+      "name": "wheel-d3-b256",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 1024,
+      "name": "wheel-d3-b1024",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 2048,
+      "name": "wheel-d3-b2048",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": "calibrate",
+      "name": "wheel-d3-calibrated",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 1,
+      "name": "wheel-d5-b1",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": true,
+      "workload": "msc-d5-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": "calibrate",
+      "name": "wheel-d5-calibrated",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": true,
+      "workload": "msc-d5-inject-cultivate-p1e-3"
+    }
+  ],
+  "finished_at": "2026-11-04T05:16:27.332553Z",
+  "records": [
+    {
+      "block": "abba",
+      "condition": "patch-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 158433841.8158837,
+      "order": 1,
+      "raw": "workers/patch-draper-b1024/abba/01-parent-source/raw.json",
+      "sample_rates": [
+        158319029.13658494,
+        158404758.6157011,
+        159152474.28977787,
+        158703554.6881751,
+        158433841.8158837
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "patch-draper-b1024",
+      "implementation": "patch-source",
+      "median_rate": 174757444.1124845,
+      "order": 2,
+      "raw": "workers/patch-draper-b1024/abba/02-patch-source/raw.json",
+      "sample_rates": [
+        174757444.1124845,
+        174360904.84371984,
+        174055390.97049534,
+        175596033.5372383,
+        174802136.8796822
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "patch-draper-b1024",
+      "implementation": "patch-source",
+      "median_rate": 175769352.8459981,
+      "order": 3,
+      "raw": "workers/patch-draper-b1024/abba/03-patch-source/raw.json",
+      "sample_rates": [
+        174866013.73251522,
+        175014239.7641344,
+        176963324.88407663,
+        175814596.3107123,
+        175769352.8459981
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "patch-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 158771381.16957864,
+      "order": 4,
+      "raw": "workers/patch-draper-b1024/abba/04-parent-source/raw.json",
+      "sample_rates": [
+        157866616.28507516,
+        159171704.29237187,
+        158910026.21978366,
+        158771381.16957864,
+        157938399.46545827
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b256",
+      "implementation": "parent-source",
+      "median_rate": 2361296.6849539056,
+      "order": 1,
+      "raw": "workers/patch-d3-b256/abba/01-parent-source/raw.json",
+      "sample_rates": [
+        2361356.8823452382,
+        2361296.6849539056,
+        2361298.7122692675,
+        2360792.0640671714,
+        2360754.7126732636
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b256",
+      "implementation": "patch-source",
+      "median_rate": 2360734.613692715,
+      "order": 2,
+      "raw": "workers/patch-d3-b256/abba/02-patch-source/raw.json",
+      "sample_rates": [
+        2361984.619015402,
+        2360734.613692715,
+        2360534.257605047,
+        2360466.5717815724,
+        2360926.214495944
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b256",
+      "implementation": "patch-source",
+      "median_rate": 2361776.027581981,
+      "order": 3,
+      "raw": "workers/patch-d3-b256/abba/03-patch-source/raw.json",
+      "sample_rates": [
+        2340978.871827745,
+        2361868.1184500884,
+        2361776.027581981,
+        2361839.461292363,
+        2361101.2057070276
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b256",
+      "implementation": "parent-source",
+      "median_rate": 2360473.7617072873,
+      "order": 4,
+      "raw": "workers/patch-d3-b256/abba/04-parent-source/raw.json",
+      "sample_rates": [
+        2359362.6645769957,
+        2360702.502018019,
+        2360668.0045196745,
+        2358813.3481523013,
+        2360473.7617072873
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b2048",
+      "implementation": "parent-source",
+      "median_rate": 2715309.1656799107,
+      "order": 1,
+      "raw": "workers/patch-d3-b2048/abba/01-parent-source/raw.json",
+      "sample_rates": [
+        2715102.465546422,
+        2715291.441515328,
+        2715309.1656799107,
+        2715426.5748872194,
+        2715346.721148213
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b2048",
+      "implementation": "patch-source",
+      "median_rate": 2714684.558467478,
+      "order": 2,
+      "raw": "workers/patch-d3-b2048/abba/02-patch-source/raw.json",
+      "sample_rates": [
+        2714541.8442893177,
+        2714373.315634416,
+        2714764.3945160457,
+        2714784.8681083177,
+        2714684.558467478
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b2048",
+      "implementation": "patch-source",
+      "median_rate": 2737833.565988528,
+      "order": 3,
+      "raw": "workers/patch-d3-b2048/abba/03-patch-source/raw.json",
+      "sample_rates": [
+        2738012.562016555,
+        2737745.2300793976,
+        2737833.565988528,
+        2737926.837965863,
+        2737621.7726655463
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "patch-d3-b2048",
+      "implementation": "parent-source",
+      "median_rate": 2731871.8093244466,
+      "order": 4,
+      "raw": "workers/patch-d3-b2048/abba/04-parent-source/raw.json",
+      "sample_rates": [
+        2731871.8093244466,
+        2731701.2117911666,
+        2731806.9906307696,
+        2731914.5173530187,
+        2732058.2825528053
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-draper-b1024",
+      "implementation": "previous-wheel",
+      "median_rate": 187166683.08275378,
+      "order": 1,
+      "raw": "workers/wheel-draper-b1024/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        187166683.08275378,
+        188038236.6979452,
+        187181647.12911835,
+        186820388.1809154,
+        186707581.25196978
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 178253944.20509076,
+      "order": 2,
+      "raw": "workers/wheel-draper-b1024/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        179142960.56213534,
+        178487600.6832361,
+        177932391.78055555,
+        178017000.59337765,
+        178253944.20509076
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 180567774.8511909,
+      "order": 3,
+      "raw": "workers/wheel-draper-b1024/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        181013343.67423573,
+        180850335.35792467,
+        180567774.8511909,
+        180496350.1872488,
+        180214781.01063514
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-draper-b1024",
+      "implementation": "previous-wheel",
+      "median_rate": 187462977.37912914,
+      "order": 4,
+      "raw": "workers/wheel-draper-b1024/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        188096497.34158427,
+        187462977.37912914,
+        187207749.9107527,
+        187341807.11464432,
+        187746277.9702314
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 179157465.81353325,
+      "order": 1,
+      "raw": "workers/rc-wheel-source-draper-b1024/abba/01-current-wheel/raw.json",
+      "sample_rates": [
+        179157465.81353325,
+        178262795.3309193,
+        176751034.6983625,
+        180414145.25223014,
+        179421907.39849478
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 160574132.8041818,
+      "order": 2,
+      "raw": "workers/rc-wheel-source-draper-b1024/abba/02-parent-source/raw.json",
+      "sample_rates": [
+        160601501.830459,
+        160331693.42737952,
+        160351817.147595,
+        161000611.93950182,
+        160574132.8041818
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 159918810.40812016,
+      "order": 3,
+      "raw": "workers/rc-wheel-source-draper-b1024/abba/03-parent-source/raw.json",
+      "sample_rates": [
+        160075830.1724434,
+        159918810.40812016,
+        159784783.3576636,
+        159723611.35564262,
+        160019057.91865823
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 180273763.71428543,
+      "order": 4,
+      "raw": "workers/rc-wheel-source-draper-b1024/abba/04-current-wheel/raw.json",
+      "sample_rates": [
+        180240421.56481555,
+        179888830.49490726,
+        181306499.4324827,
+        180752348.92241716,
+        180273763.71428543
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b32",
+      "implementation": "previous-wheel",
+      "median_rate": 1919942.0809154713,
+      "order": 1,
+      "raw": "workers/wheel-d3-b32/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        1920069.8524322007,
+        1920132.763876048,
+        1919942.0809154713,
+        1919851.4506617857,
+        1919765.2559681353
+      ],
+      "selected_batch": 32
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b32",
+      "implementation": "current-wheel",
+      "median_rate": 1938564.383093296,
+      "order": 2,
+      "raw": "workers/wheel-d3-b32/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        1937696.4368287513,
+        1938564.383093296,
+        1939906.1243860982,
+        1939319.8499520905,
+        1937778.525466457
+      ],
+      "selected_batch": 32
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b32",
+      "implementation": "current-wheel",
+      "median_rate": 1947551.1650700197,
+      "order": 3,
+      "raw": "workers/wheel-d3-b32/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        1947551.1650700197,
+        1947398.4600109537,
+        1947568.019683796,
+        1948151.4440316963,
+        1947491.6435511902
+      ],
+      "selected_batch": 32
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b32",
+      "implementation": "previous-wheel",
+      "median_rate": 1922212.9221949752,
+      "order": 4,
+      "raw": "workers/wheel-d3-b32/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        1922238.1025495804,
+        1922026.608627873,
+        1922079.4234325578,
+        1922212.9221949752,
+        1922304.7755204388
+      ],
+      "selected_batch": 32
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b256",
+      "implementation": "previous-wheel",
+      "median_rate": 2751892.8089022045,
+      "order": 1,
+      "raw": "workers/wheel-d3-b256/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        2751697.854834688,
+        2751892.8089022045,
+        2751994.803057905,
+        2752073.171689152,
+        2751786.7073894157
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b256",
+      "implementation": "current-wheel",
+      "median_rate": 2803181.483217551,
+      "order": 2,
+      "raw": "workers/wheel-d3-b256/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        2801070.777936681,
+        2802924.0217792243,
+        2804379.7730171215,
+        2804142.7693646695,
+        2803181.483217551
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b256",
+      "implementation": "current-wheel",
+      "median_rate": 2817972.2195968535,
+      "order": 3,
+      "raw": "workers/wheel-d3-b256/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        2817647.3022584147,
+        2818439.7565634507,
+        2818331.6584184873,
+        2817831.1283429964,
+        2817972.2195968535
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b256",
+      "implementation": "previous-wheel",
+      "median_rate": 2744300.38039919,
+      "order": 4,
+      "raw": "workers/wheel-d3-b256/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        2744194.3458737787,
+        2739550.4655207363,
+        2745025.5508547127,
+        2744300.38039919,
+        2744797.4029103597
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b1024",
+      "implementation": "previous-wheel",
+      "median_rate": 2828523.1226675,
+      "order": 1,
+      "raw": "workers/wheel-d3-b1024/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        2828641.9871811904,
+        2828700.571046973,
+        2828444.278054305,
+        2828519.0341989133,
+        2828523.1226675
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 2904510.2541761072,
+      "order": 2,
+      "raw": "workers/wheel-d3-b1024/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        2904672.80756025,
+        2904510.2541761072,
+        2904271.3225217364,
+        2904497.3024727185,
+        2904758.176831708
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 2899926.379182696,
+      "order": 3,
+      "raw": "workers/wheel-d3-b1024/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        2899868.2876916425,
+        2899844.485207198,
+        2900104.209305348,
+        2900211.682562323,
+        2899926.379182696
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b1024",
+      "implementation": "previous-wheel",
+      "median_rate": 2821617.6443041903,
+      "order": 4,
+      "raw": "workers/wheel-d3-b1024/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        2821731.8482295913,
+        2821573.98197715,
+        2821720.7294345046,
+        2821535.407707393,
+        2821617.6443041903
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b2048",
+      "implementation": "previous-wheel",
+      "median_rate": 2844098.098915068,
+      "order": 1,
+      "raw": "workers/wheel-d3-b2048/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        2844015.8574145706,
+        2844126.688138088,
+        2844074.819001763,
+        2844098.098915068,
+        2844197.865376185
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b2048",
+      "implementation": "current-wheel",
+      "median_rate": 2913614.2464747876,
+      "order": 2,
+      "raw": "workers/wheel-d3-b2048/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        2913365.8558788267,
+        2913825.045719126,
+        2913713.5120594148,
+        2913531.0988587756,
+        2913614.2464747876
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b2048",
+      "implementation": "current-wheel",
+      "median_rate": 2915832.1211089254,
+      "order": 3,
+      "raw": "workers/wheel-d3-b2048/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        2915950.311278043,
+        2915801.4061964476,
+        2915587.460802945,
+        2915832.1211089254,
+        2915839.5908087776
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-b2048",
+      "implementation": "previous-wheel",
+      "median_rate": 2846000.2924891296,
+      "order": 4,
+      "raw": "workers/wheel-d3-b2048/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        2845985.5342945266,
+        2846000.2924891296,
+        2845959.704093375,
+        2846196.6895764302,
+        2846171.266365981
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-calibrated",
+      "implementation": "previous-wheel",
+      "median_rate": 2840857.527702713,
+      "order": 1,
+      "raw": "workers/wheel-d3-calibrated/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        2841095.2253397107,
+        2840857.527702713,
+        2841003.671305644,
+        2840496.023588644,
+        2840207.1484721387
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-calibrated",
+      "implementation": "current-wheel",
+      "median_rate": 2919218.3558332347,
+      "order": 2,
+      "raw": "workers/wheel-d3-calibrated/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        2919218.3558332347,
+        2919211.2533466183,
+        2919166.9192903508,
+        2919293.318005463,
+        2919351.942209599
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-calibrated",
+      "implementation": "current-wheel",
+      "median_rate": 2906668.4717429257,
+      "order": 3,
+      "raw": "workers/wheel-d3-calibrated/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        2906872.246159496,
+        2906619.496398621,
+        2906512.435393559,
+        2906668.4717429257,
+        2907017.293469359
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d3-calibrated",
+      "implementation": "previous-wheel",
+      "median_rate": 2842574.059534564,
+      "order": 4,
+      "raw": "workers/wheel-d3-calibrated/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        2842709.874564067,
+        2842343.5416742307,
+        2842574.059534564,
+        2842492.774773048,
+        2842712.6779021714
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-b1",
+      "implementation": "previous-wheel",
+      "median_rate": 214698.14001904186,
+      "order": 1,
+      "raw": "workers/wheel-d5-b1/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        214670.84587922588,
+        214737.60359936068,
+        214698.14001904186,
+        214703.0187598135,
+        214372.3192808023
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-b1",
+      "implementation": "current-wheel",
+      "median_rate": 215896.01713055087,
+      "order": 2,
+      "raw": "workers/wheel-d5-b1/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        213209.09286986056,
+        216105.51662259508,
+        216011.29191361685,
+        215896.01713055087,
+        215333.19103398305
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-b1",
+      "implementation": "current-wheel",
+      "median_rate": 192272.02151044892,
+      "order": 3,
+      "raw": "workers/wheel-d5-b1/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        192279.76106868117,
+        192280.7655795061,
+        192258.16117202406,
+        192272.02151044892,
+        192089.96647293007
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-b1",
+      "implementation": "previous-wheel",
+      "median_rate": 215677.05700114058,
+      "order": 4,
+      "raw": "workers/wheel-d5-b1/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        215325.82314909736,
+        215677.05700114058,
+        215727.74978934973,
+        215836.38636406307,
+        214789.4539597263
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "previous-wheel",
+      "median_rate": 215554.4280740228,
+      "order": 1,
+      "raw": "workers/wheel-d5-calibrated/abba/01-previous-wheel/raw.json",
+      "sample_rates": [
+        215570.69709341272,
+        215570.19068555412,
+        215535.2656908057,
+        215554.4280740228,
+        215340.04941779422
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "current-wheel",
+      "median_rate": 217134.70263303627,
+      "order": 2,
+      "raw": "workers/wheel-d5-calibrated/abba/02-current-wheel/raw.json",
+      "sample_rates": [
+        217209.0109466633,
+        217000.14149322742,
+        217134.70263303627,
+        217152.59235927113,
+        217075.56775355295
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "current-wheel",
+      "median_rate": 212193.83508031064,
+      "order": 3,
+      "raw": "workers/wheel-d5-calibrated/abba/03-current-wheel/raw.json",
+      "sample_rates": [
+        212410.52746006905,
+        212085.39708577088,
+        212064.90579047377,
+        212367.3989315498,
+        212193.83508031064
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "abba",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "previous-wheel",
+      "median_rate": 195665.51425146643,
+      "order": 4,
+      "raw": "workers/wheel-d5-calibrated/abba/04-previous-wheel/raw.json",
+      "sample_rates": [
+        195653.77771419837,
+        195761.07142633985,
+        195730.21658046782,
+        195665.51425146643,
+        195625.33887266793
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "patch-draper-b1024",
+      "implementation": "patch-source",
+      "median_rate": 174692254.87143278,
+      "order": 1,
+      "raw": "workers/patch-draper-b1024/baab/01-patch-source/raw.json",
+      "sample_rates": [
+        174692254.87143278,
+        175531137.290421,
+        175052083.80664715,
+        174564459.70194018,
+        174569548.63506627
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "patch-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 159631774.03490004,
+      "order": 2,
+      "raw": "workers/patch-draper-b1024/baab/02-parent-source/raw.json",
+      "sample_rates": [
+        159807377.45616582,
+        159605317.53609088,
+        159631774.03490004,
+        159593751.24715814,
+        159663354.1557767
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "patch-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 160093788.34558547,
+      "order": 3,
+      "raw": "workers/patch-draper-b1024/baab/03-parent-source/raw.json",
+      "sample_rates": [
+        160818082.15193975,
+        158932624.71169445,
+        160133604.416519,
+        158714637.5604555,
+        160093788.34558547
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "patch-draper-b1024",
+      "implementation": "patch-source",
+      "median_rate": 176130128.95089412,
+      "order": 4,
+      "raw": "workers/patch-draper-b1024/baab/04-patch-source/raw.json",
+      "sample_rates": [
+        175778299.81730923,
+        176224044.72542024,
+        176130128.95089412,
+        175379802.1357054,
+        176845517.65032414
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b256",
+      "implementation": "patch-source",
+      "median_rate": 2362232.0954543455,
+      "order": 1,
+      "raw": "workers/patch-d3-b256/baab/01-patch-source/raw.json",
+      "sample_rates": [
+        2363858.570676334,
+        2362657.926295487,
+        2362105.713295878,
+        2360986.700017119,
+        2362232.0954543455
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b256",
+      "implementation": "parent-source",
+      "median_rate": 2355900.187735839,
+      "order": 2,
+      "raw": "workers/patch-d3-b256/baab/02-parent-source/raw.json",
+      "sample_rates": [
+        2355900.187735839,
+        2355984.3569462663,
+        2356069.9994006655,
+        2355683.0367661524,
+        2355168.60797653
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b256",
+      "implementation": "parent-source",
+      "median_rate": 2364408.0084595336,
+      "order": 3,
+      "raw": "workers/patch-d3-b256/baab/03-parent-source/raw.json",
+      "sample_rates": [
+        2365103.392847593,
+        2364600.6138257864,
+        2364408.0084595336,
+        2364058.760602627,
+        2364362.426036809
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b256",
+      "implementation": "patch-source",
+      "median_rate": 2360531.8938177973,
+      "order": 4,
+      "raw": "workers/patch-d3-b256/baab/04-patch-source/raw.json",
+      "sample_rates": [
+        2363072.909780496,
+        2360531.8938177973,
+        2359410.3662015027,
+        2360491.679111178,
+        2361154.0625134674
+      ],
+      "selected_batch": 256
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b2048",
+      "implementation": "patch-source",
+      "median_rate": 2720073.467814865,
+      "order": 1,
+      "raw": "workers/patch-d3-b2048/baab/01-patch-source/raw.json",
+      "sample_rates": [
+        2719639.8661968983,
+        2720077.967506494,
+        2720028.388319775,
+        2720073.467814865,
+        2720334.766444765
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b2048",
+      "implementation": "parent-source",
+      "median_rate": 2727629.769013996,
+      "order": 2,
+      "raw": "workers/patch-d3-b2048/baab/02-parent-source/raw.json",
+      "sample_rates": [
+        2727236.0882254345,
+        2727492.1130986423,
+        2727629.769013996,
+        2727646.7810178297,
+        2727813.11195323
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b2048",
+      "implementation": "parent-source",
+      "median_rate": 2707904.3226952655,
+      "order": 3,
+      "raw": "workers/patch-d3-b2048/baab/03-parent-source/raw.json",
+      "sample_rates": [
+        2707377.9547174345,
+        2708147.3628009777,
+        2707607.134597666,
+        2707904.3226952655,
+        2708271.4165181406
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "baab",
+      "condition": "patch-d3-b2048",
+      "implementation": "patch-source",
+      "median_rate": 2729538.3569985945,
+      "order": 4,
+      "raw": "workers/patch-d3-b2048/baab/04-patch-source/raw.json",
+      "sample_rates": [
+        2729234.595163817,
+        2729538.3569985945,
+        2729564.8941620807,
+        2729546.5845513055,
+        2729111.0335625717
+      ],
+      "selected_batch": 2048
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 178735740.46070707,
+      "order": 1,
+      "raw": "workers/wheel-draper-b1024/baab/01-current-wheel/raw.json",
+      "sample_rates": [
+        179516747.4974761,
+        178735740.46070707,
+        178779963.25011432,
+        178422150.01615703,
+        178430885.71980911
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-draper-b1024",
+      "implementation": "previous-wheel",
+      "median_rate": 188296649.29766306,
+      "order": 2,
+      "raw": "workers/wheel-draper-b1024/baab/02-previous-wheel/raw.json",
+      "sample_rates": [
+        186908673.83196318,
+        187874224.40270942,
+        189600270.29982007,
+        189189157.6266179,
+        188296649.29766306
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-draper-b1024",
+      "implementation": "previous-wheel",
+      "median_rate": 186943307.11721218,
+      "order": 3,
+      "raw": "workers/wheel-draper-b1024/baab/03-previous-wheel/raw.json",
+      "sample_rates": [
+        186658062.73607144,
+        186943307.11721218,
+        186893364.76908994,
+        187560978.00483647,
+        187215871.74267384
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 181321137.91011623,
+      "order": 4,
+      "raw": "workers/wheel-draper-b1024/baab/04-current-wheel/raw.json",
+      "sample_rates": [
+        181324582.83299714,
+        180695929.18750355,
+        181321137.91011623,
+        181598391.75843862,
+        180621332.74876028
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 158938119.8265865,
+      "order": 1,
+      "raw": "workers/rc-wheel-source-draper-b1024/baab/01-parent-source/raw.json",
+      "sample_rates": [
+        159460295.73413655,
+        158869598.0699449,
+        158938119.8265865,
+        158233824.4680636,
+        159060796.71602115
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 181053327.88173148,
+      "order": 2,
+      "raw": "workers/rc-wheel-source-draper-b1024/baab/02-current-wheel/raw.json",
+      "sample_rates": [
+        180544426.50237957,
+        181505367.18515643,
+        181462953.5982105,
+        181053327.88173148,
+        180857806.0141616
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "current-wheel",
+      "median_rate": 179059837.3280354,
+      "order": 3,
+      "raw": "workers/rc-wheel-source-draper-b1024/baab/03-current-wheel/raw.json",
+      "sample_rates": [
+        179905386.5064055,
+        179075978.38777956,
+        179059837.3280354,
+        178874282.5502826,
+        178929747.51414296
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "rc-wheel-source-draper-b1024",
+      "implementation": "parent-source",
+      "median_rate": 160271284.42154166,
+      "order": 4,
+      "raw": "workers/rc-wheel-source-draper-b1024/baab/04-parent-source/raw.json",
+      "sample_rates": [
+        161101086.94887754,
+        160788544.6309293,
+        160271284.42154166,
+        160157677.5304342,
+        159558073.14648533
+      ],
+      "selected_batch": 1024
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-b1",
+      "implementation": "current-wheel",
+      "median_rate": 202959.12794179548,
+      "order": 1,
+      "raw": "workers/wheel-d5-b1/baab/01-current-wheel/raw.json",
+      "sample_rates": [
+        202198.8535018079,
+        202105.15355965967,
+        202971.88618096124,
+        202975.9859841442,
+        202959.12794179548
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-b1",
+      "implementation": "previous-wheel",
+      "median_rate": 216303.24024256633,
+      "order": 2,
+      "raw": "workers/wheel-d5-b1/baab/02-previous-wheel/raw.json",
+      "sample_rates": [
+        215824.59319485503,
+        216438.5401207498,
+        216181.81689093568,
+        216499.09513298527,
+        216303.24024256633
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-b1",
+      "implementation": "previous-wheel",
+      "median_rate": 217380.6442058133,
+      "order": 3,
+      "raw": "workers/wheel-d5-b1/baab/03-previous-wheel/raw.json",
+      "sample_rates": [
+        217441.0459242132,
+        217403.18363543862,
+        216505.943731911,
+        217380.6442058133,
+        217356.398553078
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-b1",
+      "implementation": "current-wheel",
+      "median_rate": 199772.71383548586,
+      "order": 4,
+      "raw": "workers/wheel-d5-b1/baab/04-current-wheel/raw.json",
+      "sample_rates": [
+        199697.23033560405,
+        199848.6851742859,
+        199772.71383548586,
+        199893.3527651206,
+        199724.87433853917
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "current-wheel",
+      "median_rate": 217280.6563397318,
+      "order": 1,
+      "raw": "workers/wheel-d5-calibrated/baab/01-current-wheel/raw.json",
+      "sample_rates": [
+        217274.02938646913,
+        217280.6563397318,
+        217303.3091653039,
+        217286.53283426142,
+        216988.3310727745
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "previous-wheel",
+      "median_rate": 196904.8869461399,
+      "order": 2,
+      "raw": "workers/wheel-d5-calibrated/baab/02-previous-wheel/raw.json",
+      "sample_rates": [
+        196938.504992282,
+        196877.18558957404,
+        196923.09485815,
+        196904.8869461399,
+        196813.53904109928
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "previous-wheel",
+      "median_rate": 199980.44414567447,
+      "order": 3,
+      "raw": "workers/wheel-d5-calibrated/baab/03-previous-wheel/raw.json",
+      "sample_rates": [
+        199986.77392792088,
+        199980.44414567447,
+        199958.82347261114,
+        200005.85822474887,
+        199805.517008994
+      ],
+      "selected_batch": 1
+    },
+    {
+      "block": "baab",
+      "condition": "wheel-d5-calibrated",
+      "implementation": "current-wheel",
+      "median_rate": 203940.5227043939,
+      "order": 4,
+      "raw": "workers/wheel-d5-calibrated/baab/04-current-wheel/raw.json",
+      "sample_rates": [
+        203967.72995269645,
+        203940.5227043939,
+        203812.78944022834,
+        203951.76606682144,
+        203803.68130096633
+      ],
+      "selected_batch": 1
+    }
+  ],
+  "repeat_conditions": [
+    "patch-draper-b1024",
+    "patch-d3-b256",
+    "patch-d3-b2048",
+    "wheel-draper-b1024",
+    "rc-wheel-source-draper-b1024",
+    "wheel-d5-b1",
+    "wheel-d5-calibrated"
+  ],
+  "started_at": "2026-11-04T01:55:20.230242Z",
+  "state": "complete",
+  "summaries": [
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "abba",
+      "condition": "patch-draper-b1024",
+      "largest_independent_worker_spread": 0.005790361255582743,
+      "medians": {
+        "parent-source": [
+          158433841.8158837,
+          158771381.16957864
+        ],
+        "patch-source": [
+          174757444.1124845,
+          175769352.8459981
+        ]
+      },
+      "ratio": 1.1050473685754774
+    },
+    {
+      "batches": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "block": "abba",
+      "condition": "patch-d3-b256",
+      "largest_independent_worker_spread": 0.00044113975506854253,
+      "medians": {
+        "parent-source": [
+          2361296.6849539056,
+          2360473.7617072873
+        ],
+        "patch-source": [
+          2360734.613692715,
+          2361776.027581981
+        ]
+      },
+      "ratio": 1.0001567620920722
+    },
+    {
+      "batches": [
+        2048,
+        2048,
+        2048,
+        2048
+      ],
+      "block": "abba",
+      "condition": "patch-d3-b2048",
+      "largest_independent_worker_spread": 0.00852732869049011,
+      "medians": {
+        "parent-source": [
+          2715309.1656799107,
+          2731871.8093244466
+        ],
+        "patch-source": [
+          2714684.558467478,
+          2737833.565988528
+        ]
+      },
+      "ratio": 1.0009798002813086
+    },
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "abba",
+      "condition": "wheel-draper-b1024",
+      "largest_independent_worker_spread": 0.01298052986383258,
+      "medians": {
+        "current-wheel": [
+          178253944.20509076,
+          180567774.8511909
+        ],
+        "previous-wheel": [
+          187166683.08275378,
+          187462977.37912914
+        ]
+      },
+      "ratio": 0.9578038178127392
+    },
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "abba",
+      "condition": "rc-wheel-source-draper-b1024",
+      "largest_independent_worker_spread": 0.006230819886200223,
+      "medians": {
+        "current-wheel": [
+          179157465.81353325,
+          180273763.71428543
+        ],
+        "parent-source": [
+          160574132.8041818,
+          159918810.40812016
+        ]
+      },
+      "ratio": 0.8916669362128896
+    },
+    {
+      "batches": [
+        32,
+        32,
+        32,
+        32
+      ],
+      "block": "abba",
+      "condition": "wheel-d3-b32",
+      "largest_independent_worker_spread": 0.004635792370426106,
+      "medians": {
+        "current-wheel": [
+          1938564.383093296,
+          1947551.1650700197
+        ],
+        "previous-wheel": [
+          1919942.0809154713,
+          1922212.9221949752
+        ]
+      },
+      "ratio": 1.0114416375750799
+    },
+    {
+      "batches": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "block": "abba",
+      "condition": "wheel-d3-b256",
+      "largest_independent_worker_spread": 0.005276410559877709,
+      "medians": {
+        "current-wheel": [
+          2803181.483217551,
+          2817972.2195968535
+        ],
+        "previous-wheel": [
+          2751892.8089022045,
+          2744300.38039919
+        ]
+      },
+      "ratio": 1.022735829911556
+    },
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "abba",
+      "condition": "wheel-d3-b1024",
+      "largest_independent_worker_spread": 0.002447347314137094,
+      "medians": {
+        "current-wheel": [
+          2904510.2541761072,
+          2899926.379182696
+        ],
+        "previous-wheel": [
+          2828523.1226675,
+          2821617.6443041903
+        ]
+      },
+      "ratio": 1.0273083225269466
+    },
+    {
+      "batches": [
+        2048,
+        2048,
+        2048,
+        2048
+      ],
+      "block": "abba",
+      "condition": "wheel-d3-b2048",
+      "largest_independent_worker_spread": 0.0007612108009222851,
+      "medians": {
+        "current-wheel": [
+          2913614.2464747876,
+          2915832.1211089254
+        ],
+        "previous-wheel": [
+          2844098.098915068,
+          2846000.2924891296
+        ]
+      },
+      "ratio": 1.0244895547658759
+    },
+    {
+      "batches": [
+        2048,
+        2048,
+        1024,
+        2048
+      ],
+      "block": "abba",
+      "condition": "wheel-d3-calibrated",
+      "largest_independent_worker_spread": 0.00431761799197683,
+      "medians": {
+        "current-wheel": [
+          2919218.3558332347,
+          2906668.4717429257
+        ],
+        "previous-wheel": [
+          2840857.527702713,
+          2842574.059534564
+        ]
+      },
+      "ratio": 1.0250650048570622
+    },
+    {
+      "batches": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "block": "abba",
+      "condition": "wheel-d5-b1",
+      "largest_independent_worker_spread": 0.12286756770182561,
+      "medians": {
+        "current-wheel": [
+          215896.01713055087,
+          192272.02151044892
+        ],
+        "previous-wheel": [
+          214698.14001904186,
+          215677.05700114058
+        ]
+      },
+      "ratio": 0.9484004688631227
+    },
+    {
+      "batches": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "block": "abba",
+      "condition": "wheel-d5-calibrated",
+      "largest_independent_worker_spread": 0.1016475176969378,
+      "medians": {
+        "current-wheel": [
+          217134.70263303627,
+          212193.83508031064
+        ],
+        "previous-wheel": [
+          215554.4280740228,
+          195665.51425146643
+        ]
+      },
+      "ratio": 1.044036277242421
+    },
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "baab",
+      "condition": "patch-draper-b1024",
+      "largest_independent_worker_spread": 0.008230897703619178,
+      "medians": {
+        "parent-source": [
+          159631774.03490004,
+          160093788.34558547
+        ],
+        "patch-source": [
+          174692254.87143278,
+          176130128.95089412
+        ]
+      },
+      "ratio": 1.097260979729969
+    },
+    {
+      "batches": [
+        256,
+        256,
+        256,
+        256
+      ],
+      "block": "baab",
+      "condition": "patch-d3-b256",
+      "largest_independent_worker_spread": 0.0036112823319018883,
+      "medians": {
+        "parent-source": [
+          2355900.187735839,
+          2364408.0084595336
+        ],
+        "patch-source": [
+          2362232.0954543455,
+          2360531.8938177973
+        ]
+      },
+      "ratio": 1.000520261172512
+    },
+    {
+      "batches": [
+        2048,
+        2048,
+        2048,
+        2048
+      ],
+      "block": "baab",
+      "condition": "patch-d3-b2048",
+      "largest_independent_worker_spread": 0.007284395594559623,
+      "medians": {
+        "parent-source": [
+          2727629.769013996,
+          2707904.3226952655
+        ],
+        "patch-source": [
+          2720073.467814865,
+          2729538.3569985945
+        ]
+      },
+      "ratio": 1.0025899447720639
+    },
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "baab",
+      "condition": "wheel-draper-b1024",
+      "largest_independent_worker_spread": 0.014464915873820594,
+      "medians": {
+        "current-wheel": [
+          178735740.46070707,
+          181321137.91011623
+        ],
+        "previous-wheel": [
+          188296649.29766306,
+          186943307.11721218
+        ]
+      },
+      "ratio": 0.9595376830625543
+    },
+    {
+      "batches": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "block": "baab",
+      "condition": "rc-wheel-source-draper-b1024",
+      "largest_independent_worker_spread": 0.01113309708890231,
+      "medians": {
+        "current-wheel": [
+          181053327.88173148,
+          179059837.3280354
+        ],
+        "parent-source": [
+          158938119.8265865,
+          160271284.42154166
+        ]
+      },
+      "ratio": 0.8864141472367106
+    },
+    {
+      "batches": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "block": "baab",
+      "condition": "wheel-d5-b1",
+      "largest_independent_worker_spread": 0.015950196826848284,
+      "medians": {
+        "current-wheel": [
+          202959.12794179548,
+          199772.71383548586
+        ],
+        "previous-wheel": [
+          216303.24024256633,
+          217380.6442058133
+        ]
+      },
+      "ratio": 0.9286299450336564
+    },
+    {
+      "batches": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "block": "baab",
+      "condition": "wheel-d5-calibrated",
+      "largest_independent_worker_spread": 0.06541188312375779,
+      "medians": {
+        "current-wheel": [
+          217280.6563397318,
+          203940.5227043939
+        ],
+        "previous-wheel": [
+          196904.8869461399,
+          199980.44414567447
+        ]
+      },
+      "ratio": 1.061317075855045
+    }
+  ]
+}

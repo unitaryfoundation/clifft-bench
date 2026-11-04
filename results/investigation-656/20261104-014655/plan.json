@@ -1,0 +1,133 @@
+{
+  "conditions": [
+    {
+      "batch": 1024,
+      "name": "patch-draper-b1024",
+      "pair": [
+        "parent-source",
+        "patch-source"
+      ],
+      "repeat": true,
+      "workload": "draper-adder-m16-basis-all-observables"
+    },
+    {
+      "batch": 256,
+      "name": "patch-d3-b256",
+      "pair": [
+        "parent-source",
+        "patch-source"
+      ],
+      "repeat": true,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 2048,
+      "name": "patch-d3-b2048",
+      "pair": [
+        "parent-source",
+        "patch-source"
+      ],
+      "repeat": true,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 1024,
+      "name": "wheel-draper-b1024",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "draper-adder-m16-basis-all-observables"
+    },
+    {
+      "batch": 1024,
+      "name": "rc-wheel-source-draper-b1024",
+      "pair": [
+        "current-wheel",
+        "parent-source"
+      ],
+      "repeat": true,
+      "workload": "draper-adder-m16-basis-all-observables"
+    },
+    {
+      "batch": 32,
+      "name": "wheel-d3-b32",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 256,
+      "name": "wheel-d3-b256",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 1024,
+      "name": "wheel-d3-b1024",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 2048,
+      "name": "wheel-d3-b2048",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": "calibrate",
+      "name": "wheel-d3-calibrated",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": false,
+      "workload": "msc-d3-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": 1,
+      "name": "wheel-d5-b1",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": true,
+      "workload": "msc-d5-inject-cultivate-p1e-3"
+    },
+    {
+      "batch": "calibrate",
+      "name": "wheel-d5-calibrated",
+      "pair": [
+        "previous-wheel",
+        "current-wheel"
+      ],
+      "repeat": true,
+      "workload": "msc-d5-inject-cultivate-p1e-3"
+    }
+  ],
+  "initial_order": "ABBA",
+  "preparation_seed": 520270819,
+  "repeat_order": "BAAB",
+  "repeat_rule": "Always repeat patch, source/wheel bridge, and d5 history controls; also repeat a >1.1% slowdown or >1.1% independent-worker spread.",
+  "sample_seconds": 30,
+  "sample_seed_first": 20270819,
+  "sample_seed_stride": 100000000,
+  "samples_per_worker": 5,
+  "sampling_seed": 20260818
+}

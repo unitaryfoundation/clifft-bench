@@ -1,0 +1,659 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": "calibrate",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          }
+        },
+        "id": "wheel-d3-calibrated-abba-04-previous-wheel",
+        "implementation_id": "previous-wheel",
+        "shots_per_call": 100000,
+        "variant_id": "previous-wheel",
+        "workload_id": "msc-d3-inject-cultivate-p1e-3"
+      }
+    ],
+    "classification": "official",
+    "collection": {
+      "memory_limit_gib": 12,
+      "run_timeout_minutes": 420
+    },
+    "comparisons": [],
+    "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 30,
+      "repetitions": 5,
+      "request_timeout_seconds": 1800,
+      "setup_timeout_seconds": 1800,
+      "warmup_shots": 1
+    },
+    "profile_id": "wheel-d3-calibrated-abba-04-previous-wheel",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 12884901888
+    },
+    "seed": 20260819,
+    "suite_version": "0.2.8",
+    "title": "Reference-host regression investigation"
+  },
+  "cases": [
+    {
+      "case_id": "wheel-d3-calibrated-abba-04-previous-wheel",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 6,
+          "attempted_shots": 8,
+          "discarded_shots": 2,
+          "duration_seconds": 2.6140999580093194e-05,
+          "logical_errors": 0,
+          "stream_setup_seconds": 1.5300001905416138e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": 2048,
+        "batch_size_effective": 2048,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 30,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 5,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 100000,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "bounded-v3"
+      },
+      "samples": [
+        {
+          "accepted_shots": 58573873,
+          "adapter_timing_totals": {},
+          "api_calls": 853,
+          "attempted_shots": 85300000,
+          "discarded_shots": 26726127,
+          "duration_seconds": 30.0065795539831,
+          "logical_errors": 54,
+          "peak_rss_bytes": 43290624,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20271671,
+          "sequence_index": 0,
+          "started_at": "2026-11-04T03:37:31.659761Z",
+          "stream_setup_seconds": 1.4299994290922768e-06,
+          "throughput_attempted_shots_per_second": 2842709.874564067
+        },
+        {
+          "accepted_shots": 58576946,
+          "adapter_timing_totals": {},
+          "api_calls": 853,
+          "attempted_shots": 85300000,
+          "discarded_shots": 26723054,
+          "duration_seconds": 30.010446924989083,
+          "logical_errors": 58,
+          "peak_rss_bytes": 43290624,
+          "repetition": 1,
+          "seed_first": 120270819,
+          "seed_last": 120271671,
+          "sequence_index": 1,
+          "started_at": "2026-11-04T03:38:01.670638Z",
+          "stream_setup_seconds": 3.410000317671802e-06,
+          "throughput_attempted_shots_per_second": 2842343.5416742307
+        },
+        {
+          "accepted_shots": 58578191,
+          "adapter_timing_totals": {},
+          "api_calls": 853,
+          "attempted_shots": 85300000,
+          "discarded_shots": 26721809,
+          "duration_seconds": 30.00801323500673,
+          "logical_errors": 63,
+          "peak_rss_bytes": 43290624,
+          "repetition": 2,
+          "seed_first": 220270819,
+          "seed_last": 220271671,
+          "sequence_index": 2,
+          "started_at": "2026-11-04T03:38:31.685344Z",
+          "stream_setup_seconds": 2.9000002541579306e-06,
+          "throughput_attempted_shots_per_second": 2842574.059534564
+        },
+        {
+          "accepted_shots": 58587920,
+          "adapter_timing_totals": {},
+          "api_calls": 853,
+          "attempted_shots": 85300000,
+          "discarded_shots": 26712080,
+          "duration_seconds": 30.00887135300127,
+          "logical_errors": 58,
+          "peak_rss_bytes": 43290624,
+          "repetition": 3,
+          "seed_first": 320270819,
+          "seed_last": 320271671,
+          "sequence_index": 3,
+          "started_at": "2026-11-04T03:39:01.700810Z",
+          "stream_setup_seconds": 3.870000000461005e-06,
+          "throughput_attempted_shots_per_second": 2842492.774773048
+        },
+        {
+          "accepted_shots": 58588786,
+          "adapter_timing_totals": {},
+          "api_calls": 853,
+          "attempted_shots": 85300000,
+          "discarded_shots": 26711214,
+          "duration_seconds": 30.006549963026373,
+          "logical_errors": 50,
+          "peak_rss_bytes": 43290624,
+          "repetition": 4,
+          "seed_first": 420270819,
+          "seed_last": 420271671,
+          "sequence_index": 4,
+          "started_at": "2026-11-04T03:39:31.715303Z",
+          "stream_setup_seconds": 3.789999936998356e-06,
+          "throughput_attempted_shots_per_second": 2842712.6779021714
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 18.784968340999512,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_calibration": {
+            "budget_scope": "between-candidates",
+            "budget_seconds": 60.0,
+            "candidates": [
+              1,
+              32,
+              64,
+              256,
+              1024,
+              2048
+            ],
+            "duration_seconds": 18.78378670500024,
+            "policy": "bounded-v3",
+            "probe_seconds": 1.0,
+            "repetitions": 3,
+            "results": [
+              {
+                "batch_size": 1,
+                "duration_seconds": 3.2038583200001085,
+                "effective_batch_size": 1,
+                "error": null,
+                "median_attempted_shots_per_second": 1358915.6345574213,
+                "samples": [
+                  {
+                    "api_calls": 14,
+                    "attempted_shots": 1400000,
+                    "duration_seconds": 1.0302331979983137,
+                    "peak_rss_bytes": 42110976,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270832,
+                    "stream_setup_seconds": 5.449999662232585e-06,
+                    "throughput_attempted_shots_per_second": 1358915.6345574213
+                  },
+                  {
+                    "api_calls": 14,
+                    "attempted_shots": 1400000,
+                    "duration_seconds": 1.0304116280021844,
+                    "peak_rss_bytes": 42110976,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270832,
+                    "stream_setup_seconds": 3.189999915775843e-06,
+                    "throughput_attempted_shots_per_second": 1358680.3195480166
+                  },
+                  {
+                    "api_calls": 14,
+                    "attempted_shots": 1400000,
+                    "duration_seconds": 1.0300361869985863,
+                    "peak_rss_bytes": 42110976,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270832,
+                    "stream_setup_seconds": 2.189999577240087e-06,
+                    "throughput_attempted_shots_per_second": 1359175.5490449788
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 32,
+                "duration_seconds": 3.182440345000032,
+                "effective_batch_size": 32,
+                "error": null,
+                "median_attempted_shots_per_second": 1918373.5139223796,
+                "samples": [
+                  {
+                    "api_calls": 20,
+                    "attempted_shots": 2000000,
+                    "duration_seconds": 1.0425498399999924,
+                    "peak_rss_bytes": 42110976,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270838,
+                    "stream_setup_seconds": 2.1200003175181337e-06,
+                    "throughput_attempted_shots_per_second": 1918373.5139223796
+                  },
+                  {
+                    "api_calls": 20,
+                    "attempted_shots": 2000000,
+                    "duration_seconds": 1.042478348998884,
+                    "peak_rss_bytes": 42110976,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270838,
+                    "stream_setup_seconds": 2.189999577240087e-06,
+                    "throughput_attempted_shots_per_second": 1918505.0719956402
+                  },
+                  {
+                    "api_calls": 20,
+                    "attempted_shots": 2000000,
+                    "duration_seconds": 1.0425926799998706,
+                    "peak_rss_bytes": 42110976,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270838,
+                    "stream_setup_seconds": 1.4299994290922768e-06,
+                    "throughput_attempted_shots_per_second": 1918294.688200044
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 64,
+                "duration_seconds": 3.0973577450004086,
+                "effective_batch_size": 64,
+                "error": null,
+                "median_attempted_shots_per_second": 2358815.422397144,
+                "samples": [
+                  {
+                    "api_calls": 24,
+                    "attempted_shots": 2400000,
+                    "duration_seconds": 1.017368734997035,
+                    "peak_rss_bytes": 42242048,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270842,
+                    "stream_setup_seconds": 1.5100004020496272e-06,
+                    "throughput_attempted_shots_per_second": 2359026.690560718
+                  },
+                  {
+                    "api_calls": 24,
+                    "attempted_shots": 2400000,
+                    "duration_seconds": 1.0174598559988226,
+                    "peak_rss_bytes": 42242048,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270842,
+                    "stream_setup_seconds": 1.880000127130188e-06,
+                    "throughput_attempted_shots_per_second": 2358815.422397144
+                  },
+                  {
+                    "api_calls": 24,
+                    "attempted_shots": 2400000,
+                    "duration_seconds": 1.0174966959966696,
+                    "peak_rss_bytes": 42242048,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270842,
+                    "stream_setup_seconds": 2.1100004232721403e-06,
+                    "throughput_attempted_shots_per_second": 2358730.017937921
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 256,
+                "duration_seconds": 3.095638226000119,
+                "effective_batch_size": 256,
+                "error": null,
+                "median_attempted_shots_per_second": 2750175.81014467,
+                "samples": [
+                  {
+                    "api_calls": 28,
+                    "attempted_shots": 2800000,
+                    "duration_seconds": 1.0215525000012349,
+                    "peak_rss_bytes": 42242048,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270846,
+                    "stream_setup_seconds": 1.7100001059588976e-06,
+                    "throughput_attempted_shots_per_second": 2740926.1883227886
+                  },
+                  {
+                    "api_calls": 28,
+                    "attempted_shots": 2800000,
+                    "duration_seconds": 1.0181167290002122,
+                    "peak_rss_bytes": 42242048,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270846,
+                    "stream_setup_seconds": 1.720000000204891e-06,
+                    "throughput_attempted_shots_per_second": 2750175.81014467
+                  },
+                  {
+                    "api_calls": 28,
+                    "attempted_shots": 2800000,
+                    "duration_seconds": 1.016835171000821,
+                    "peak_rss_bytes": 42242048,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270846,
+                    "stream_setup_seconds": 1.8199998521595262e-06,
+                    "throughput_attempted_shots_per_second": 2753641.9666169663
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 1024,
+                "duration_seconds": 3.11154926800009,
+                "effective_batch_size": 1024,
+                "error": null,
+                "median_attempted_shots_per_second": 2831056.8162775906,
+                "samples": [
+                  {
+                    "api_calls": 29,
+                    "attempted_shots": 2900000,
+                    "duration_seconds": 1.0247465159982312,
+                    "peak_rss_bytes": 42635264,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270847,
+                    "stream_setup_seconds": 3.000000106112566e-06,
+                    "throughput_attempted_shots_per_second": 2829968.1479522157
+                  },
+                  {
+                    "api_calls": 29,
+                    "attempted_shots": 2900000,
+                    "duration_seconds": 1.0243524550005532,
+                    "peak_rss_bytes": 42635264,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270847,
+                    "stream_setup_seconds": 1.5799996617715806e-06,
+                    "throughput_attempted_shots_per_second": 2831056.8162775906
+                  },
+                  {
+                    "api_calls": 29,
+                    "attempted_shots": 2900000,
+                    "duration_seconds": 1.0242670349998662,
+                    "peak_rss_bytes": 42635264,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270847,
+                    "stream_setup_seconds": 1.7000002117129043e-06,
+                    "throughput_attempted_shots_per_second": 2831292.9157193652
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 2048,
+                "duration_seconds": 3.0907569070004683,
+                "effective_batch_size": 2048,
+                "error": null,
+                "median_attempted_shots_per_second": 2849777.387090343,
+                "samples": [
+                  {
+                    "api_calls": 29,
+                    "attempted_shots": 2900000,
+                    "duration_seconds": 1.0176233459978903,
+                    "peak_rss_bytes": 43290624,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270847,
+                    "stream_setup_seconds": 1.8900000213761814e-06,
+                    "throughput_attempted_shots_per_second": 2849777.387090343
+                  },
+                  {
+                    "api_calls": 29,
+                    "attempted_shots": 2900000,
+                    "duration_seconds": 1.0174501959972986,
+                    "peak_rss_bytes": 43290624,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270847,
+                    "stream_setup_seconds": 1.499999598308932e-06,
+                    "throughput_attempted_shots_per_second": 2850262.3631198355
+                  },
+                  {
+                    "api_calls": 29,
+                    "attempted_shots": 2900000,
+                    "duration_seconds": 1.0176732570025706,
+                    "peak_rss_bytes": 43290624,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270847,
+                    "stream_setup_seconds": 1.3199996828916483e-06,
+                    "throughput_attempted_shots_per_second": 2849637.6219432037
+                  }
+                ],
+                "status": "success"
+              }
+            ],
+            "search_seconds": 18.781658281999626,
+            "selected_batch_size": 2048,
+            "selection_statistic": "median_attempted_shots_per_second",
+            "tie_break": "smaller_batch_size"
+          },
+          "batch_control": "explicit",
+          "batch_enabled": true,
+          "compile_seconds": 0.001828880000175559,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 2048,
+          "name": "clifft",
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15,
+          "optimized_t_gates": 29,
+          "parse_seconds": 0.00012267099918972235,
+          "peak_active_width": 4,
+          "postselection_before_optimization": false,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 6901,
+            "incumbent_dense_work": 462.0,
+            "incumbent_peak": 4,
+            "result_dense_work": 454.0,
+            "result_peak": 4,
+            "swept_ops": 6304
+          },
+          "threads": 1,
+          "version": "0.12.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "847757e2bc8c4f7439b9e92011550fd61719eb85",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.12.0rc1",
+        "implementation_id": "previous-wheel",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/previous-wheel/bin/python",
+        "source_tag": "v0.12.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.12.0rc1"
+      },
+      "status": "success",
+      "variant_id": "previous-wheel",
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 0,
+        "duration_seconds": 3.274000027886359e-05,
+        "logical_errors": 0,
+        "stream_setup_seconds": 3.690000085043721e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-656/workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim",
+          "sha256": "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 20,
+          "num_measurements": 21,
+          "num_observables": 1,
+          "num_qubits": 15
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d3-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v1",
+  "run": {
+    "classification": "official",
+    "finished_at": "2026-11-04T03:40:01.760064Z",
+    "id": "380415c3-3275-4ec9-96be-d24602ff30e0",
+    "overrides": {
+      "cpu": 0
+    },
+    "profile_id": "wheel-d3-calibrated-abba-04-previous-wheel",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-04T03:37:12.803214Z",
+    "workflow": {
+      "image_os": "ubuntu-24.04",
+      "image_version": "ami-0f8a61b66d1accaee",
+      "provider": "aws-ec2-manual",
+      "ref": "",
+      "repository": "https://github.com/unitaryfoundation/clifft-bench.git",
+      "run_id": "380415c3-3275-4ec9-96be-d24602ff30e0",
+      "runner_name": "i-0b559eec365c2acb7",
+      "runner_os": "Linux",
+      "sha": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "workflow": "scripts/ec2-run.sh"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cloud": {
+      "availability_zone": "us-east-1c",
+      "boot_id": "245a2b00-efd4-4f77-b8d3-e9b0e71f31dc",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "lifecycle": "on-demand",
+      "provider": "aws",
+      "region": "us-east-1"
+    },
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-14-93",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "load_average_at_start": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16374087680,
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "physical_cores": 4,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  }
+}

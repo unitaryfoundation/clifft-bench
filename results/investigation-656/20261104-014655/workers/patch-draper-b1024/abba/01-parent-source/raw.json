@@ -1,0 +1,393 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": 1024,
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          }
+        },
+        "id": "patch-draper-b1024-abba-01-parent-source",
+        "implementation_id": "parent-source",
+        "shots_per_call": 2048,
+        "variant_id": "parent-source",
+        "workload_id": "draper-adder-m16-basis-all-observables"
+      }
+    ],
+    "classification": "official",
+    "collection": {
+      "memory_limit_gib": 12,
+      "run_timeout_minutes": 420
+    },
+    "comparisons": [],
+    "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 30,
+      "repetitions": 5,
+      "request_timeout_seconds": 1800,
+      "setup_timeout_seconds": 1800,
+      "warmup_shots": 1
+    },
+    "profile_id": "patch-draper-b1024-abba-01-parent-source",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 12884901888
+    },
+    "seed": 20260819,
+    "suite_version": "0.2.8",
+    "title": "Reference-host regression investigation"
+  },
+  "cases": [
+    {
+      "case_id": "patch-draper-b1024-abba-01-parent-source",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 8,
+          "attempted_shots": 8,
+          "discarded_shots": 0,
+          "duration_seconds": 2.3049999981594738e-05,
+          "logical_errors": 0,
+          "stream_setup_seconds": 2.190000031987438e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": 1024,
+        "batch_size_effective": 1024,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 30,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": false,
+        "repetitions": 5,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 2048,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "samples": [
+        {
+          "accepted_shots": 4749572096,
+          "adapter_timing_totals": {},
+          "api_calls": 2319127,
+          "attempted_shots": 4749572096,
+          "discarded_shots": 0,
+          "duration_seconds": 30.000007717975905,
+          "logical_errors": 0,
+          "peak_rss_bytes": 40828928,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 22589945,
+          "sequence_index": 0,
+          "started_at": "2026-11-04T01:55:20.651216Z",
+          "stream_setup_seconds": 1.8599999975776882e-06,
+          "throughput_attempted_shots_per_second": 158319029.13658494
+        },
+        {
+          "accepted_shots": 4752144384,
+          "adapter_timing_totals": {},
+          "api_calls": 2320383,
+          "attempted_shots": 4752144384,
+          "discarded_shots": 0,
+          "duration_seconds": 30.000010261869534,
+          "logical_errors": 0,
+          "peak_rss_bytes": 40828928,
+          "repetition": 1,
+          "seed_first": 120270819,
+          "seed_last": 122591201,
+          "sequence_index": 1,
+          "started_at": "2026-11-04T01:55:53.422158Z",
+          "stream_setup_seconds": 3.700000092976552e-06,
+          "throughput_attempted_shots_per_second": 158404758.6157011
+        },
+        {
+          "accepted_shots": 4774576128,
+          "adapter_timing_totals": {},
+          "api_calls": 2331336,
+          "attempted_shots": 4774576128,
+          "discarded_shots": 0,
+          "duration_seconds": 30.00001193388084,
+          "logical_errors": 0,
+          "peak_rss_bytes": 40828928,
+          "repetition": 2,
+          "seed_first": 220270819,
+          "seed_last": 222602154,
+          "sequence_index": 2,
+          "started_at": "2026-11-04T01:56:26.217224Z",
+          "stream_setup_seconds": 3.0300000162242213e-06,
+          "throughput_attempted_shots_per_second": 159152474.28977787
+        },
+        {
+          "accepted_shots": 4761108480,
+          "adapter_timing_totals": {},
+          "api_calls": 2324760,
+          "attempted_shots": 4761108480,
+          "discarded_shots": 0,
+          "duration_seconds": 30.00001158987743,
+          "logical_errors": 0,
+          "peak_rss_bytes": 40828928,
+          "repetition": 3,
+          "seed_first": 320270819,
+          "seed_last": 322595578,
+          "sequence_index": 3,
+          "started_at": "2026-11-04T01:56:58.948342Z",
+          "stream_setup_seconds": 3.11000007968687e-06,
+          "throughput_attempted_shots_per_second": 158703554.6881751
+        },
+        {
+          "accepted_shots": 4753016832,
+          "adapter_timing_totals": {},
+          "api_calls": 2320809,
+          "attempted_shots": 4753016832,
+          "discarded_shots": 0,
+          "duration_seconds": 30.00000995698565,
+          "logical_errors": 0,
+          "peak_rss_bytes": 40828928,
+          "repetition": 4,
+          "seed_first": 420270819,
+          "seed_last": 422591627,
+          "sequence_index": 4,
+          "started_at": "2026-11-04T01:57:31.706345Z",
+          "stream_setup_seconds": 3.7199999951553764e-06,
+          "throughput_attempted_shots_per_second": 158433841.8158837
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04093527299994548,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "explicit",
+          "batch_enabled": true,
+          "compile_seconds": 0.0025438140000915155,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1024,
+          "installed_direct_url": {
+            "url": "https://github.com/unitaryfoundation/clifft.git",
+            "vcs_info": {
+              "commit_id": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+              "requested_revision": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+          "name": "clifft",
+          "num_detectors": 0,
+          "num_measurements": 32,
+          "num_observables": 33,
+          "num_qubits": 32,
+          "optimized_t_gates": 0,
+          "parse_seconds": 0.0005007129999512472,
+          "peak_active_width": 0,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": false,
+            "classification_probes": 0,
+            "incumbent_dense_work": 0.0,
+            "incumbent_peak": 0,
+            "result_dense_work": 0.0,
+            "result_peak": 0,
+            "swept_ops": 0
+          },
+          "threads": 1,
+          "version": "0.13.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [
+            "CLIFFT_CPU_BASELINE=x86-64-v2",
+            "CMAKE_BUILD_TYPE=Release",
+            "CMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF",
+            "CLIFFT_OPENMP=AUTO",
+            "CC=/usr/bin/gcc",
+            "CXX=/usr/bin/g++"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0rc1",
+        "implementation_id": "parent-source",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/bin/python",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0rc1"
+      },
+      "status": "success",
+      "variant_id": "parent-source",
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 0,
+        "duration_seconds": 5.013999998482177e-05,
+        "logical_errors": 0,
+        "stream_setup_seconds": 4.5600000930789975e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-656/workloads/circuits/draper_adder_16_basis.stim",
+          "sha256": "25cf840f9339b4ccf61b3501978cf3217066b1823d210e3a3164b6845b248800"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 0,
+          "num_measurements": 32,
+          "num_observables": 33,
+          "num_qubits": 32
+        },
+        "family": "prepared-basis-arithmetic",
+        "id": "draper-adder-m16-basis-all-observables",
+        "parameters": {
+          "bits_per_operand": 16,
+          "input_a": 37449,
+          "input_b": 18724,
+          "mqt_bench_version": "2.3.0",
+          "optimization_level": 0,
+          "output_a": 37449,
+          "output_b": 56173,
+          "qiskit_version": "2.5.2"
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0. The Apache-2.0 exported fixture was copied from tools/bench/fixtures/draper_adder_16_basis.stim in Clifft commit 037551a9b38258fe4f8465bcb4670e7f3e888d99; one observable per measurement was appended after observable 0 to expose the complete terminal readout as declared observables.",
+          "source_commit": "2cd3f3b08d5d8866595948fbce955e701e86a5df",
+          "source_path": "src/mqt/bench/benchmarks/draper_qft_adder.py",
+          "source_url": "https://github.com/munich-quantum-toolkit/bench"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": false
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v1",
+  "run": {
+    "classification": "official",
+    "finished_at": "2026-11-04T01:58:04.516286Z",
+    "id": "cd041f26-8f7a-4e18-9583-90cc10db80d2",
+    "overrides": {
+      "cpu": 0
+    },
+    "profile_id": "patch-draper-b1024-abba-01-parent-source",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-04T01:55:20.533140Z",
+    "workflow": {
+      "image_os": "ubuntu-24.04",
+      "image_version": "ami-0f8a61b66d1accaee",
+      "provider": "aws-ec2-manual",
+      "ref": "",
+      "repository": "https://github.com/unitaryfoundation/clifft-bench.git",
+      "run_id": "cd041f26-8f7a-4e18-9583-90cc10db80d2",
+      "runner_name": "i-0b559eec365c2acb7",
+      "runner_os": "Linux",
+      "sha": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "workflow": "scripts/ec2-run.sh"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cloud": {
+      "availability_zone": "us-east-1c",
+      "boot_id": "245a2b00-efd4-4f77-b8d3-e9b0e71f31dc",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "lifecycle": "on-demand",
+      "provider": "aws",
+      "region": "us-east-1"
+    },
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-14-93",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "load_average_at_start": [
+      2.203125,
+      0.79541015625,
+      0.30078125
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16374087680,
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "physical_cores": 4,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  }
+}

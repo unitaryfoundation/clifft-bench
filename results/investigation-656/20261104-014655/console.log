@@ -1,0 +1,1394 @@
+Requirement already satisfied: pip in /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/build-tools/lib/python3.12/site-packages (24.0)
+Collecting pip
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-26.3
+Collecting numpy==2.5.4
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting scikit-build-core
+  Downloading scikit_build_core-1.1.2-py3-none-any.whl.metadata (19 kB)
+Collecting nanobind
+  Downloading nanobind-3.1.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting setuptools-scm
+  Downloading setuptools_scm-10.3.4-py3-none-any.whl.metadata (6.7 kB)
+Collecting setuptools
+  Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting cmake
+  Downloading cmake-4.4.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (7.0 kB)
+Collecting ninja
+  Downloading ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.4 kB)
+Collecting packaging>=23.2 (from scikit-build-core)
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pathspec>=0.12.0 (from scikit-build-core)
+  Using cached pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Collecting vcs-versioning<3,>=2.5.0.dev0 (from setuptools-scm)
+  Downloading vcs_versioning-2.6.0-py3-none-any.whl.metadata (1.7 kB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Downloading scikit_build_core-1.1.2-py3-none-any.whl (295 kB)
+Downloading nanobind-3.1.0-py3-none-any.whl (316 kB)
+Downloading setuptools_scm-10.3.4-py3-none-any.whl (33 kB)
+Downloading vcs_versioning-2.6.0-py3-none-any.whl (123 kB)
+Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+Downloading cmake-4.4.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (30.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 30.2/30.2 MB 189.2 MB/s  0:00:00
+Downloading ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (183 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
+Installing collected packages: setuptools, pathspec, packaging, numpy, ninja, nanobind, cmake, vcs-versioning, scikit-build-core, setuptools-scm
+
+Successfully installed cmake-4.4.4 nanobind-3.1.0 ninja-1.13.2 numpy-2.5.4 packaging-26.3 pathspec-1.1.1 scikit-build-core-1.1.2 setuptools-84.2.1 setuptools-scm-10.3.4 vcs-versioning-2.6.0
+Collecting clifft==0.12.0rc1
+  Using cached clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Collecting numpy==2.5.4
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Using cached clifft-0.12.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.3 MB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Installing collected packages: numpy, clifft
+Successfully installed clifft-0.12.0rc1 numpy-2.5.4
+No broken requirements found.
+Collecting clifft==0.13.0rc1
+  Using cached clifft-0.13.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (11 kB)
+Collecting numpy==2.5.4
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Using cached clifft-0.13.0rc1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Installing collected packages: numpy, clifft
+Successfully installed clifft-0.13.0rc1 numpy-2.5.4
+No broken requirements found.
+Collecting cmake==4.4.4 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 1))
+  Using cached cmake-4.4.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (7.0 kB)
+Collecting nanobind==3.1.0 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 2))
+  Using cached nanobind-3.1.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting ninja==1.13.2 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 3))
+  Using cached ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.4 kB)
+Collecting numpy==2.5.4 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 4))
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging==26.3 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 5))
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pathspec==1.1.1 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 6))
+  Using cached pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Collecting pip==26.3 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 7))
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting scikit_build_core==1.1.2 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 8))
+  Using cached scikit_build_core-1.1.2-py3-none-any.whl.metadata (19 kB)
+Collecting setuptools==84.2.1 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 9))
+  Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting setuptools-scm==10.3.4 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 10))
+  Using cached setuptools_scm-10.3.4-py3-none-any.whl.metadata (6.7 kB)
+Collecting vcs-versioning==2.6.0 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 11))
+  Using cached vcs_versioning-2.6.0-py3-none-any.whl.metadata (1.7 kB)
+Using cached cmake-4.4.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (30.2 MB)
+Using cached nanobind-3.1.0-py3-none-any.whl (316 kB)
+Using cached ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (183 kB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Using cached scikit_build_core-1.1.2-py3-none-any.whl (295 kB)
+Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+Using cached setuptools_scm-10.3.4-py3-none-any.whl (33 kB)
+Using cached vcs_versioning-2.6.0-py3-none-any.whl (123 kB)
+Installing collected packages: setuptools, pip, pathspec, packaging, numpy, ninja, nanobind, cmake, vcs-versioning, scikit_build_core, setuptools-scm
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed cmake-4.4.4 nanobind-3.1.0 ninja-1.13.2 numpy-2.5.4 packaging-26.3 pathspec-1.1.1 pip-26.3 scikit_build_core-1.1.2 setuptools-84.2.1 setuptools-scm-10.3.4 vcs-versioning-2.6.0
+Using pip 26.3 from /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/pip (python 3.12)
+Collecting clifft @ git+https://github.com/unitaryfoundation/clifft.git@69b5869267c1823ded4bc7156c76d9673c350ba5
+  Cloning https://github.com/unitaryfoundation/clifft.git (to revision 69b5869267c1823ded4bc7156c76d9673c350ba5) to /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f
+  Running command git version
+  git version 2.43.0
+  Running command git clone --filter=blob:none https://github.com/unitaryfoundation/clifft.git /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f
+  Cloning into '/tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f'...
+  Running command git show-ref 69b5869267c1823ded4bc7156c76d9673c350ba5
+  Running command git rev-parse -q --verify '69b5869267c1823ded4bc7156c76d9673c350ba5^{commit}'
+  69b5869267c1823ded4bc7156c76d9673c350ba5
+  Running command git rev-parse HEAD
+  69b5869267c1823ded4bc7156c76d9673c350ba5
+  Resolved https://github.com/unitaryfoundation/clifft.git to commit 69b5869267c1823ded4bc7156c76d9673c350ba5
+  Running command git rev-parse HEAD
+  69b5869267c1823ded4bc7156c76d9673c350ba5
+  Preparing metadata (pyproject.toml): started
+  Running command Preparing metadata (pyproject.toml)
+  *** scikit-build-core 1.1.2 using CMake 4.4.4 (metadata_wheel)
+  WARNING: Unsupported CMAKE_ARGS ignored: -DCMAKE_BUILD_TYPE=Release
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: clifft
+  Running command git rev-parse HEAD
+  69b5869267c1823ded4bc7156c76d9673c350ba5
+  Running command git show-ref 69b5869267c1823ded4bc7156c76d9673c350ba5
+  Building wheel for clifft (pyproject.toml): started
+  Running command Building wheel for clifft (pyproject.toml)
+  *** scikit-build-core 1.1.2 using CMake 4.4.4 (wheel)
+  WARNING: Unsupported CMAKE_ARGS ignored: -DCMAKE_BUILD_TYPE=Release
+  *** Configuring CMake...
+  loading initial cache file build/cp312-abi3-linux_x86_64/CMakeInit.txt
+  -- The CXX compiler identification is GNU 13.3.0
+  -- Detecting CXX compiler ABI info
+  -- Detecting CXX compiler ABI info - done
+  -- Check for working CXX compiler: /usr/bin/g++ - skipped
+  -- Detecting CXX compile features
+  -- Detecting CXX compile features - done
+  -- Clifft version from scikit-build-core: 0.13.0rc1
+  -- CLIFFT_CPU_BASELINE = x86-64-v2
+  -- CLIFFT_OPENMP = AUTO (enabled: ON)
+  -- Using x86-64-v2 CPU baseline: -march=x86-64-v2 -ffast-math
+  -- Tests are disabled. Set FASTFLOAT_TEST to ON to run tests.
+  -- Benchmarks are disabled. Set FASTFLOAT_BENCHMARKS to ON to build benchmarks (assumes C++17).
+  -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+  -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+  -- Found Threads: TRUE
+  -- Found Python: /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/bin/python (found suitable version "3.12.3", minimum required is "3.12") found components: Interpreter Development.Module Development.SABIModule
+  -- Performing Test NB_HAS_MTLS_GNU2
+  -- Performing Test NB_HAS_MTLS_GNU2 - Success
+  -- Configuring done (1.2s)
+  -- Generating done (0.0s)
+  -- Build files have been written to: /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/build/cp312-abi3-linux_x86_64
+  *** Building project with Ninja...
+  [1/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/tableau/pauli_string.cc.o
+  [2/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/tableau/tableau.cc.o
+  [3/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/hir_pass_manager.cc.o
+  [4/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/circuit/qasm2_parser.cc.o
+  [5/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/active_width_analysis.cc.o
+  [6/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/frontend/frontend.cc.o
+  [7/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/circuit/parser.cc.o
+  [8/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/drop_non_unitary_pass.cc.o
+  [9/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/commutation.cc.o
+  [10/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/pass_factory.cc.o
+  [11/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/peephole.cc.o
+  [12/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/phase_polynomial.cc.o
+  [13/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/tohpe.cc.o
+  [14/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/known_stabilizers.cc.o
+  [15/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/wide_phase_region.cc.o
+  [16/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/symbolic_stabilizers.cc.o
+  [17/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/remove_noise_pass.cc.o
+  [18/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/schedule_dependence.cc.o
+  [19/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/rotation_simplification_pass.cc.o
+  [20/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/phase_polynomial_pass.cc.o
+  [21/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/statevector_squeeze_pass.cc.o
+  [22/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/inspection_format.cc.o
+  [23/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/plan_inspection.cc.o
+  [24/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/active_width_schedule_pass.cc.o
+  [25/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/pauli_preparation.cc.o
+  [26/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/planner_frame.cc.o
+  [27/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/plan.cc.o
+  [28/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/bits.cc.o
+  [29/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/random_bits.cc.o
+  [30/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/external_inputs.cc.o
+  [31/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/planner.cc.o
+  [32/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/policy.cc.o
+  [33/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/executor.cc.o
+  [34/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/tuning.cc.o
+  [35/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernel_dispatch.cc.o
+  [36/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executable_plan.cc.o
+  [37/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executable_plan_inspection.cc.o
+  [38/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/presampled_program.cc.o
+  [39/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/interleaved_kernels.cc.o
+  [40/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/interleaved_state.cc.o
+  [41/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/fused_rotation.cc.o
+  [42/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executable_plan_builder.cc.o
+  [43/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/state.cc.o
+  [44/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernels.cc.o
+  [45/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executor.cc.o
+  [46/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/api/reference_syndrome.cc.o
+  [47/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/api/basis_probabilities.cc.o
+  [48/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/api/statevector.cc.o
+  [49/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/page_allocation.cc.o
+  [50/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/runtime_isa.cc.o
+  [51/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/hir_introspection.cc.o
+  [52/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/fault_sampling.cc.o
+  [53/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/xoshiro.cc.o
+  [54/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/transition_instrument.cc.o
+  [55/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/interaction.cc.o
+  [56/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/classifier.cc.o
+  [57/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/status_walk.cc.o
+  [58/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/preparation.cc.o
+  [59/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/rewriter.cc.o
+  [60/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/model.cc.o
+  [61/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/sampler.cc.o
+  [62/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/resolution.cc.o
+  [63/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/program.cc.o
+  [64/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/fixed_classical.cc.o
+  [65/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/online.cc.o
+  [66/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernels_avx2.cc.o
+  [67/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernels_avx512.cc.o
+  [68/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/fixed.cc.o
+  [69/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_internals.cpp.o
+  [70/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/trajectory_driver.cc.o
+  [71/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_func.cpp.o
+  [72/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_static_property.cpp.o
+  [73/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_ndarray.cpp.o
+  [74/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_enum.cpp.o
+  [75/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_type.cpp.o
+  [76/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/nb_datetime.cpp.o
+  [77/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/error.cpp.o
+  [78/88] Linking CXX static library src/clifft/libclifft_core.a
+  [79/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/common.cpp.o
+  [80/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/trampoline.cpp.o
+  [81/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/parent-source/lib/python3.12/site-packages/nanobind/src/implicit.cpp.o
+  [82/88] Linking CXX static library src/python/libnanobind-static-abi3.a
+  [83/88] Building CXX object src/clifft/CMakeFiles/clifft_cuda_plan.dir/sampling/cuda/executable_plan.cc.o
+  [84/88] Linking CXX static library src/clifft/libclifft_cuda_plan.a
+  [85/88] Building CXX object src/clifft/CMakeFiles/clifft_hip_plan.dir/sampling/hip/executable_plan.cc.o
+  [86/88] Linking CXX static library src/clifft/libclifft_hip_plan.a
+  [87/88] Building CXX object src/python/CMakeFiles/_clifft_core.dir/bindings.cc.o
+  In file included from /usr/include/c++/13/bits/char_traits.h:57,
+                   from /usr/include/c++/13/string_view:40,
+                   from /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/clifft/../clifft/circuit/gate_data.h:15,
+                   from /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/clifft/../clifft/tableau/tableau.h:5,
+                   from /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/clifft/../clifft/frontend/hir.h:14,
+                   from /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/clifft/../clifft/api/reference_syndrome.h:3,
+                   from /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/python/bindings.cc:1:
+  In function ‘constexpr decltype (::new(void*(0)) _Tp) std::construct_at(_Tp*, _Args&& ...) [with _Tp = unsigned char; _Args = {const unsigned char&}]’,
+      inlined from ‘static constexpr void std::allocator_traits<std::allocator<_CharT> >::construct(allocator_type&, _Up*, _Args&& ...) [with _Up = unsigned char; _Args = {const unsigned char&}; _Tp = unsigned char]’ at /usr/include/c++/13/bits/alloc_traits.h:540:21,
+      inlined from ‘constexpr void std::vector<_Tp, _Alloc>::_M_realloc_insert(iterator, _Args&& ...) [with _Args = {const unsigned char&}; _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]’ at /usr/include/c++/13/bits/vector.tcc:468:28,
+      inlined from ‘constexpr void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]’ at /usr/include/c++/13/bits/stl_vector.h:1292:21,
+      inlined from ‘nanobind__clifft_core_exec_impl(nanobind::module_)::<lambda(const clifft::sampling::ExecutablePlan&, std::vector<nanobind::object>)>’ at /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/python/bindings.cc:1858:41:
+  /usr/include/c++/13/bits/stl_construct.h:97:14: warning: ‘bit’ may be used uninitialized [-Wmaybe-uninitialized]
+     97 |     { return ::new((void*)__location) _Tp(std::forward<_Args>(__args)...); }
+        |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/python/bindings.cc: In function ‘nanobind__clifft_core_exec_impl(nanobind::module_)::<lambda(const clifft::sampling::ExecutablePlan&, std::vector<nanobind::object>)>’:
+  /tmp/pip-install-duhviq0u/clifft_77d5153fb37c4ef2a88a36663f09835f/src/python/bindings.cc:1854:25: note: ‘bit’ was declared here
+   1854 |                 uint8_t bit;
+        |                         ^~~
+  [88/88] Linking CXX shared module src/python/_clifft_core.abi3.so
+  *** Installing project into wheel...
+  -- Install configuration: "Release"
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/fast_float.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/constexpr_feature_detect.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/digit_comparison.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/float_common.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/bigint.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/fast_table.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/ascii_number.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/decimal_to_binary.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/include/fast_float/parse_number.h
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/share/cmake/FastFloat/FastFloatConfig.cmake
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/share/cmake/FastFloat/FastFloatConfigVersion.cmake
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/share/cmake/FastFloat/fast_float-targets.cmake
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/_clifft_core.abi3.so
+  -- Up-to-date: /tmp/tmp6vhklll4/wheel/platlib/clifft
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/_sample_result.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/__init__.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/_build_config.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/_cpu_check.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/noncomp.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/sinter.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/experimental
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/experimental/hip.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/experimental/__init__.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/experimental/cuda.py
+  -- Installing: /tmp/tmp6vhklll4/wheel/platlib/clifft/_build_config.py
+  *** Making wheel...
+  *** Created clifft-0.13.0rc1-cp312-abi3-linux_x86_64.whl
+  Building wheel for clifft (pyproject.toml): finished with status 'done'
+  Created wheel for clifft: filename=clifft-0.13.0rc1-cp312-abi3-linux_x86_64.whl size=1019839 sha256=c0ee4e2d6575ddeeb6601da977e65070b0d08cf4202bbd59764c941364ede696
+  Stored in directory: /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-cache/parent-source/wheels/1c/9e/c5/27da4916d44948f2e779535aa83beca7dd05c679db3023a578
+Successfully built clifft
+Installing collected packages: clifft
+Successfully installed clifft-0.13.0rc1
+No broken requirements found.
+Collecting cmake==4.4.4 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 1))
+  Using cached cmake-4.4.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (7.0 kB)
+Collecting nanobind==3.1.0 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 2))
+  Using cached nanobind-3.1.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting ninja==1.13.2 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 3))
+  Using cached ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.4 kB)
+Collecting numpy==2.5.4 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 4))
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging==26.3 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 5))
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pathspec==1.1.1 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 6))
+  Using cached pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Collecting pip==26.3 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 7))
+  Using cached pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting scikit_build_core==1.1.2 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 8))
+  Using cached scikit_build_core-1.1.2-py3-none-any.whl.metadata (19 kB)
+Collecting setuptools==84.2.1 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 9))
+  Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting setuptools-scm==10.3.4 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 10))
+  Using cached setuptools_scm-10.3.4-py3-none-any.whl.metadata (6.7 kB)
+Collecting vcs-versioning==2.6.0 (from -r /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-tools.txt (line 11))
+  Using cached vcs_versioning-2.6.0-py3-none-any.whl.metadata (1.7 kB)
+Using cached cmake-4.4.4-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (30.2 MB)
+Using cached nanobind-3.1.0-py3-none-any.whl (316 kB)
+Using cached ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (183 kB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
+Using cached pip-26.3-py3-none-any.whl (2.0 MB)
+Using cached scikit_build_core-1.1.2-py3-none-any.whl (295 kB)
+Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+Using cached setuptools_scm-10.3.4-py3-none-any.whl (33 kB)
+Using cached vcs_versioning-2.6.0-py3-none-any.whl (123 kB)
+Installing collected packages: setuptools, pip, pathspec, packaging, numpy, ninja, nanobind, cmake, vcs-versioning, scikit_build_core, setuptools-scm
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed cmake-4.4.4 nanobind-3.1.0 ninja-1.13.2 numpy-2.5.4 packaging-26.3 pathspec-1.1.1 pip-26.3 scikit_build_core-1.1.2 setuptools-84.2.1 setuptools-scm-10.3.4 vcs-versioning-2.6.0
+Using pip 26.3 from /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/pip (python 3.12)
+Collecting clifft @ git+https://github.com/unitaryfoundation/clifft.git@6abe2509d57acedbae2b2b497e28379f106194f4
+  Cloning https://github.com/unitaryfoundation/clifft.git (to revision 6abe2509d57acedbae2b2b497e28379f106194f4) to /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf
+  Running command git version
+  git version 2.43.0
+  Running command git clone --filter=blob:none https://github.com/unitaryfoundation/clifft.git /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf
+  Cloning into '/tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf'...
+  Running command git show-ref 6abe2509d57acedbae2b2b497e28379f106194f4
+  Running command git rev-parse -q --verify '6abe2509d57acedbae2b2b497e28379f106194f4^{commit}'
+  6abe2509d57acedbae2b2b497e28379f106194f4
+  Running command git rev-parse HEAD
+  69b5869267c1823ded4bc7156c76d9673c350ba5
+  Running command git checkout -q 6abe2509d57acedbae2b2b497e28379f106194f4
+  Resolved https://github.com/unitaryfoundation/clifft.git to commit 6abe2509d57acedbae2b2b497e28379f106194f4
+  Running command git rev-parse HEAD
+  6abe2509d57acedbae2b2b497e28379f106194f4
+  Preparing metadata (pyproject.toml): started
+  Running command Preparing metadata (pyproject.toml)
+  *** scikit-build-core 1.1.2 using CMake 4.4.4 (metadata_wheel)
+  WARNING: Unsupported CMAKE_ARGS ignored: -DCMAKE_BUILD_TYPE=Release
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: clifft
+  Running command git rev-parse HEAD
+  6abe2509d57acedbae2b2b497e28379f106194f4
+  Running command git show-ref 6abe2509d57acedbae2b2b497e28379f106194f4
+  Building wheel for clifft (pyproject.toml): started
+  Running command Building wheel for clifft (pyproject.toml)
+  *** scikit-build-core 1.1.2 using CMake 4.4.4 (wheel)
+  WARNING: Unsupported CMAKE_ARGS ignored: -DCMAKE_BUILD_TYPE=Release
+  *** Configuring CMake...
+  loading initial cache file build/cp312-abi3-linux_x86_64/CMakeInit.txt
+  -- The CXX compiler identification is GNU 13.3.0
+  -- Detecting CXX compiler ABI info
+  -- Detecting CXX compiler ABI info - done
+  -- Check for working CXX compiler: /usr/bin/g++ - skipped
+  -- Detecting CXX compile features
+  -- Detecting CXX compile features - done
+  -- Clifft version from scikit-build-core: 0.13.0rc2.dev1+g6abe2509d
+  -- CLIFFT_CPU_BASELINE = x86-64-v2
+  -- CLIFFT_OPENMP = AUTO (enabled: ON)
+  -- Using x86-64-v2 CPU baseline: -march=x86-64-v2 -ffast-math
+  -- Tests are disabled. Set FASTFLOAT_TEST to ON to run tests.
+  -- Benchmarks are disabled. Set FASTFLOAT_BENCHMARKS to ON to build benchmarks (assumes C++17).
+  -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+  -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+  -- Found Threads: TRUE
+  -- Found Python: /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/bin/python (found suitable version "3.12.3", minimum required is "3.12") found components: Interpreter Development.Module Development.SABIModule
+  -- Performing Test NB_HAS_MTLS_GNU2
+  -- Performing Test NB_HAS_MTLS_GNU2 - Success
+  -- Configuring done (1.0s)
+  -- Generating done (0.0s)
+  -- Build files have been written to: /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/build/cp312-abi3-linux_x86_64
+  *** Building project with Ninja...
+  [1/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/tableau/pauli_string.cc.o
+  [2/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/tableau/tableau.cc.o
+  [3/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/hir_pass_manager.cc.o
+  [4/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/circuit/qasm2_parser.cc.o
+  [5/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/active_width_analysis.cc.o
+  [6/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/frontend/frontend.cc.o
+  [7/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/circuit/parser.cc.o
+  [8/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/drop_non_unitary_pass.cc.o
+  [9/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/commutation.cc.o
+  [10/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/pass_factory.cc.o
+  [11/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/peephole.cc.o
+  [12/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/phase_polynomial.cc.o
+  [13/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/tohpe.cc.o
+  [14/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/known_stabilizers.cc.o
+  [15/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/wide_phase_region.cc.o
+  [16/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/remove_noise_pass.cc.o
+  [17/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/symbolic_stabilizers.cc.o
+  [18/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/schedule_dependence.cc.o
+  [19/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/rotation_simplification_pass.cc.o
+  [20/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/phase_polynomial_pass.cc.o
+  [21/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/statevector_squeeze_pass.cc.o
+  [22/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/inspection_format.cc.o
+  [23/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/plan_inspection.cc.o
+  [24/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/optimizer/active_width_schedule_pass.cc.o
+  [25/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/pauli_preparation.cc.o
+  [26/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/planner_frame.cc.o
+  [27/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/bits.cc.o
+  [28/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/plan.cc.o
+  [29/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/random_bits.cc.o
+  [30/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/external_inputs.cc.o
+  [31/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/planner.cc.o
+  [32/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/policy.cc.o
+  [33/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/executor.cc.o
+  [34/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/tuning.cc.o
+  [35/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernel_dispatch.cc.o
+  [36/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executable_plan.cc.o
+  [37/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executable_plan_inspection.cc.o
+  [38/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/presampled_program.cc.o
+  [39/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/interleaved_kernels.cc.o
+  [40/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/fused_rotation.cc.o
+  [41/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/batch/interleaved_state.cc.o
+  [42/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executable_plan_builder.cc.o
+  [43/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernels.cc.o
+  [44/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/state.cc.o
+  [45/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/executor.cc.o
+  [46/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/api/reference_syndrome.cc.o
+  [47/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/api/basis_probabilities.cc.o
+  [48/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/api/statevector.cc.o
+  [49/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/page_allocation.cc.o
+  [50/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/fault_sampling.cc.o
+  [51/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/hir_introspection.cc.o
+  [52/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/runtime_isa.cc.o
+  [53/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/util/xoshiro.cc.o
+  [54/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/transition_instrument.cc.o
+  [55/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/interaction.cc.o
+  [56/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/classifier.cc.o
+  [57/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/status_walk.cc.o
+  [58/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/preparation.cc.o
+  [59/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/model.cc.o
+  [60/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/rewriter.cc.o
+  [61/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/sampler.cc.o
+  [62/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/resolution.cc.o
+  [63/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/program.cc.o
+  [64/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/fixed_classical.cc.o
+  [65/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/online.cc.o
+  [66/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernels_avx2.cc.o
+  [67/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/sampling/kernels_avx512.cc.o
+  [68/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_internals.cpp.o
+  [69/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/fixed.cc.o
+  [70/88] Building CXX object src/clifft/CMakeFiles/clifft_core.dir/noncomp/trajectory_driver.cc.o
+  [71/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_func.cpp.o
+  [72/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_static_property.cpp.o
+  [73/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_enum.cpp.o
+  [74/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_ndarray.cpp.o
+  [75/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_type.cpp.o
+  [76/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/nb_datetime.cpp.o
+  [77/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/common.cpp.o
+  [78/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/error.cpp.o
+  [79/88] Linking CXX static library src/clifft/libclifft_core.a
+  [80/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/trampoline.cpp.o
+  [81/88] Building CXX object src/python/CMakeFiles/nanobind-static-abi3.dir/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/patch-source/lib/python3.12/site-packages/nanobind/src/implicit.cpp.o
+  [82/88] Linking CXX static library src/python/libnanobind-static-abi3.a
+  [83/88] Building CXX object src/clifft/CMakeFiles/clifft_cuda_plan.dir/sampling/cuda/executable_plan.cc.o
+  [84/88] Linking CXX static library src/clifft/libclifft_cuda_plan.a
+  [85/88] Building CXX object src/clifft/CMakeFiles/clifft_hip_plan.dir/sampling/hip/executable_plan.cc.o
+  [86/88] Linking CXX static library src/clifft/libclifft_hip_plan.a
+  [87/88] Building CXX object src/python/CMakeFiles/_clifft_core.dir/bindings.cc.o
+  In file included from /usr/include/c++/13/bits/char_traits.h:57,
+                   from /usr/include/c++/13/string_view:40,
+                   from /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/clifft/../clifft/circuit/gate_data.h:15,
+                   from /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/clifft/../clifft/tableau/tableau.h:5,
+                   from /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/clifft/../clifft/frontend/hir.h:14,
+                   from /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/clifft/../clifft/api/reference_syndrome.h:3,
+                   from /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/python/bindings.cc:1:
+  In function ‘constexpr decltype (::new(void*(0)) _Tp) std::construct_at(_Tp*, _Args&& ...) [with _Tp = unsigned char; _Args = {const unsigned char&}]’,
+      inlined from ‘static constexpr void std::allocator_traits<std::allocator<_CharT> >::construct(allocator_type&, _Up*, _Args&& ...) [with _Up = unsigned char; _Args = {const unsigned char&}; _Tp = unsigned char]’ at /usr/include/c++/13/bits/alloc_traits.h:540:21,
+      inlined from ‘constexpr void std::vector<_Tp, _Alloc>::_M_realloc_insert(iterator, _Args&& ...) [with _Args = {const unsigned char&}; _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]’ at /usr/include/c++/13/bits/vector.tcc:468:28,
+      inlined from ‘constexpr void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = unsigned char; _Alloc = std::allocator<unsigned char>]’ at /usr/include/c++/13/bits/stl_vector.h:1292:21,
+      inlined from ‘nanobind__clifft_core_exec_impl(nanobind::module_)::<lambda(const clifft::sampling::ExecutablePlan&, std::vector<nanobind::object>)>’ at /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/python/bindings.cc:1858:41:
+  /usr/include/c++/13/bits/stl_construct.h:97:14: warning: ‘bit’ may be used uninitialized [-Wmaybe-uninitialized]
+     97 |     { return ::new((void*)__location) _Tp(std::forward<_Args>(__args)...); }
+        |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/python/bindings.cc: In function ‘nanobind__clifft_core_exec_impl(nanobind::module_)::<lambda(const clifft::sampling::ExecutablePlan&, std::vector<nanobind::object>)>’:
+  /tmp/pip-install-klj578tq/clifft_399bb888cb804652bb4ab939e1a88ebf/src/python/bindings.cc:1854:25: note: ‘bit’ was declared here
+   1854 |                 uint8_t bit;
+        |                         ^~~
+  [88/88] Linking CXX shared module src/python/_clifft_core.abi3.so
+  *** Installing project into wheel...
+  -- Install configuration: "Release"
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/fast_float.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/constexpr_feature_detect.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/digit_comparison.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/float_common.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/bigint.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/fast_table.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/ascii_number.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/decimal_to_binary.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/include/fast_float/parse_number.h
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/share/cmake/FastFloat/FastFloatConfig.cmake
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/share/cmake/FastFloat/FastFloatConfigVersion.cmake
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/share/cmake/FastFloat/fast_float-targets.cmake
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/_clifft_core.abi3.so
+  -- Up-to-date: /tmp/tmp2momjdm8/wheel/platlib/clifft
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/_sample_result.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/__init__.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/_build_config.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/_cpu_check.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/noncomp.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/sinter.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/experimental
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/experimental/hip.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/experimental/__init__.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/experimental/cuda.py
+  -- Installing: /tmp/tmp2momjdm8/wheel/platlib/clifft/_build_config.py
+  *** Making wheel...
+  *** Created clifft-0.13.0rc2.dev1+g6abe2509d-cp312-abi3-linux_x86_64.whl
+  Building wheel for clifft (pyproject.toml): finished with status 'done'
+  Created wheel for clifft: filename=clifft-0.13.0rc2.dev1+g6abe2509d-cp312-abi3-linux_x86_64.whl size=1019999 sha256=4040f4a4dab0bd0e90a0230187a934c116be830d84458b6a26bc017c769937d1
+  Stored in directory: /home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/build-cache/patch-source/wheels/25/e7/b6/bb7e78e155710368bfbfadc5ca640a687342d9e58b4eb9af96
+Successfully built clifft
+Installing collected packages: clifft
+Successfully installed clifft-0.13.0rc2.dev1+g6abe2509d
+No broken requirements found.
+{
+  "host": {
+    "hostname": "ip-172-31-14-93",
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "cpu_model": "AMD EPYC 9R14",
+    "physical_cores": 4,
+    "logical_cpus": 4,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "memory_bytes": 16374087680,
+    "load_average_at_start": [
+      2.203125,
+      0.79541015625,
+      0.30078125
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "JAX_ENABLE_X64": "true",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_PLATFORMS": "cpu",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
+    },
+    "accelerator": null,
+    "cloud": {
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "region": "us-east-1",
+      "availability_zone": "us-east-1c",
+      "provider": "aws",
+      "lifecycle": "on-demand",
+      "boot_id": "245a2b00-efd4-4f77-b8d3-e9b0e71f31dc"
+    },
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    }
+  },
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "lscpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               AuthenticAMD\nModel name:                              AMD EPYC 9R14\nCPU family:                              25\nModel:                                   17\nThread(s) per core:                      1\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                1\nBogoMIPS:                                5199.99\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch topoext perfctr_core ssbd perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx512_bf16 clzero xsaveerptr rdpru wbnoinvd arat avx512vbmi pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid flush_l1d\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               128 KiB (4 instances)\nL1i cache:                               128 KiB (4 instances)\nL2 cache:                                4 MiB (4 instances)\nL3 cache:                                16 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Mitigation; Safe RET\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP disabled; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Mitigation; Clear CPU buffers\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n",
+  "build_settings": {
+    "CC": "/usr/bin/gcc",
+    "CXX": "/usr/bin/g++",
+    "CMAKE_ARGS": "-DCMAKE_BUILD_TYPE=Release",
+    "CMAKE_BUILD_PARALLEL_LEVEL": "4",
+    "CLIFFT_CPU_BASELINE": "x86-64-v2",
+    "CLIFFT_INTERPROCEDURAL_OPTIMIZATION": "OFF",
+    "CLIFFT_OPENMP": "AUTO"
+  },
+  "environments": {
+    "previous-wheel": {
+      "version": "0.12.0rc1",
+      "runtime_version": "0.12.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "direct_url": {},
+      "files": {
+        "clifft-0.12.0rc1.dist-info/METADATA": "53b1161f4d26e3d0b6fdd6a6f97383c9d81144b36d7f0f0f54683cb775efdb87",
+        "clifft-0.12.0rc1.dist-info/RECORD": "41937d3764743c868f1d8e5a50bdddc77a824a8d2de217522fd416fe7c6c4f66",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "bcd7fdf277b3fda8b9eee3aac5d7c140521a91de97e49b53af525a56fadd84cd"
+      },
+      "freeze": "clifft==0.12.0rc1\nnumpy==2.5.4\npip==24.0\n"
+    },
+    "current-wheel": {
+      "version": "0.13.0rc1",
+      "runtime_version": "0.13.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "direct_url": {},
+      "files": {
+        "clifft-0.13.0rc1.dist-info/METADATA": "b008c447786663ac698608ad5771fcdfca1f9894b516dcb3758e588255cf4683",
+        "clifft-0.13.0rc1.dist-info/RECORD": "97b026e653db6a8075b11a2b543723bcb35b07e1b5bd72bf97f390d9cb3e52d7",
+        "clifft.libs/libomp-a6168d0c.so": "a15640f7b7800b0736d02e0f756b9e0ba9fefc27b5080a22696116f746e7bd4c",
+        "clifft/_clifft_core.abi3.so": "75b71fd3f1f6c2a22141f3f965bd02958f0a68a2d4d08be7b406e006ee2207b4"
+      },
+      "freeze": "clifft==0.13.0rc1\nnumpy==2.5.4\npip==24.0\n"
+    },
+    "parent-source": {
+      "version": "0.13.0rc1",
+      "runtime_version": "0.13.0rc1",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "direct_url": {
+        "url": "https://github.com/unitaryfoundation/clifft.git",
+        "vcs_info": {
+          "commit_id": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+          "requested_revision": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+          "vcs": "git"
+        }
+      },
+      "files": {
+        "clifft-0.13.0rc1.dist-info/METADATA": "b008c447786663ac698608ad5771fcdfca1f9894b516dcb3758e588255cf4683",
+        "clifft-0.13.0rc1.dist-info/RECORD": "2c41f03acacf5d83c1b34f16860cc6d2fbf7fe07e83e8165364aaf3536f921a2",
+        "clifft/_clifft_core.abi3.so": "c5a290450561319d2dcbaa52b3cb03ce4c201af476c5481e0694bdc790c85ac9"
+      },
+      "freeze": "clifft @ git+https://github.com/unitaryfoundation/clifft.git@69b5869267c1823ded4bc7156c76d9673c350ba5\ncmake==4.4.4\nnanobind==3.1.0\nninja==1.13.2\nnumpy==2.5.4\npackaging==26.3\npathspec==1.1.1\npip==26.3\nscikit_build_core==1.1.2\nsetuptools==84.2.1\nsetuptools-scm==10.3.4\nvcs-versioning==2.6.0\n"
+    },
+    "patch-source": {
+      "version": "0.13.0rc2.dev1+g6abe2509d",
+      "runtime_version": "0.13.0rc2.dev1+g6abe2509d",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "cpu_baseline": "x86-64-v2",
+      "runtime_isa": "avx512",
+      "direct_url": {
+        "url": "https://github.com/unitaryfoundation/clifft.git",
+        "vcs_info": {
+          "commit_id": "6abe2509d57acedbae2b2b497e28379f106194f4",
+          "requested_revision": "6abe2509d57acedbae2b2b497e28379f106194f4",
+          "vcs": "git"
+        }
+      },
+      "files": {
+        "clifft-0.13.0rc2.dev1+g6abe2509d.dist-info/METADATA": "80de4114133a1158bb407f4c21d1fcbe48ab5324cee995050c90021121c6e8a6",
+        "clifft-0.13.0rc2.dev1+g6abe2509d.dist-info/RECORD": "efc9bda58001dcb972c644f9c25586cc0f5d2ac68af03c37a15f860eeaa1da16",
+        "clifft/_clifft_core.abi3.so": "d4fb1ea84f8dd55b3d97b0d84539aad75d0b87a3e07fe9821340509dce1cb827"
+      },
+      "freeze": "clifft @ git+https://github.com/unitaryfoundation/clifft.git@6abe2509d57acedbae2b2b497e28379f106194f4\ncmake==4.4.4\nnanobind==3.1.0\nninja==1.13.2\nnumpy==2.5.4\npackaging==26.3\npathspec==1.1.1\npip==26.3\nscikit_build_core==1.1.2\nsetuptools==84.2.1\nsetuptools-scm==10.3.4\nvcs-versioning==2.6.0\n"
+    }
+  },
+  "wheels": [
+    {
+      "environment": "patch-source",
+      "path": "wheels/patch-source/clifft-0.13.0rc2.dev1+g6abe2509d-cp312-abi3-linux_x86_64.whl",
+      "sha256": "4040f4a4dab0bd0e90a0230187a934c116be830d84458b6a26bc017c769937d1"
+    },
+    {
+      "environment": "parent-source",
+      "path": "wheels/parent-source/clifft-0.13.0rc1-cp312-abi3-linux_x86_64.whl",
+      "sha256": "c0ee4e2d6575ddeeb6601da977e65070b0d08cf4202bbd59764c941364ede696"
+    }
+  ]
+}
+START patch-draper-b1024-abba-01-parent-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-abba-01-parent-source
+sampling patch-draper-b1024-abba-01-parent-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-abba-01-parent-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-abba-01-parent-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-abba-01-parent-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-abba-01-parent-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-abba-01-parent-source median 158433841.8158837
+START patch-draper-b1024-abba-02-patch-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-abba-02-patch-source
+sampling patch-draper-b1024-abba-02-patch-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-abba-02-patch-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-abba-02-patch-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-abba-02-patch-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-abba-02-patch-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-abba-02-patch-source median 174757444.1124845
+START patch-draper-b1024-abba-03-patch-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-abba-03-patch-source
+sampling patch-draper-b1024-abba-03-patch-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-abba-03-patch-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-abba-03-patch-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-abba-03-patch-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-abba-03-patch-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-abba-03-patch-source median 175769352.8459981
+START patch-draper-b1024-abba-04-parent-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-abba-04-parent-source
+sampling patch-draper-b1024-abba-04-parent-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-abba-04-parent-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-abba-04-parent-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-abba-04-parent-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-abba-04-parent-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-abba-04-parent-source median 158771381.16957864
+BLOCK {"condition": "patch-draper-b1024", "block": "abba", "medians": {"parent-source": [158433841.8158837, 158771381.16957864], "patch-source": [174757444.1124845, 175769352.8459981]}, "ratio": 1.1050473685754774, "largest_independent_worker_spread": 0.005790361255582743, "batches": [1024, 1024, 1024, 1024]}
+START patch-d3-b256-abba-01-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-abba-01-parent-source
+sampling patch-d3-b256-abba-01-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b256-abba-01-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b256-abba-01-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b256-abba-01-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b256-abba-01-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-abba-01-parent-source median 2361296.6849539056
+START patch-d3-b256-abba-02-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-abba-02-patch-source
+sampling patch-d3-b256-abba-02-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b256-abba-02-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b256-abba-02-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b256-abba-02-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b256-abba-02-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-abba-02-patch-source median 2360734.613692715
+START patch-d3-b256-abba-03-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-abba-03-patch-source
+sampling patch-d3-b256-abba-03-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b256-abba-03-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b256-abba-03-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b256-abba-03-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b256-abba-03-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-abba-03-patch-source median 2361776.027581981
+START patch-d3-b256-abba-04-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-abba-04-parent-source
+sampling patch-d3-b256-abba-04-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b256-abba-04-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b256-abba-04-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b256-abba-04-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b256-abba-04-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-abba-04-parent-source median 2360473.7617072873
+BLOCK {"condition": "patch-d3-b256", "block": "abba", "medians": {"parent-source": [2361296.6849539056, 2360473.7617072873], "patch-source": [2360734.613692715, 2361776.027581981]}, "ratio": 1.0001567620920722, "largest_independent_worker_spread": 0.00044113975506854253, "batches": [256, 256, 256, 256]}
+START patch-d3-b2048-abba-01-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-abba-01-parent-source
+sampling patch-d3-b2048-abba-01-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-abba-01-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-abba-01-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-abba-01-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-abba-01-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-abba-01-parent-source median 2715309.1656799107
+START patch-d3-b2048-abba-02-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-abba-02-patch-source
+sampling patch-d3-b2048-abba-02-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-abba-02-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-abba-02-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-abba-02-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-abba-02-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-abba-02-patch-source median 2714684.558467478
+START patch-d3-b2048-abba-03-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-abba-03-patch-source
+sampling patch-d3-b2048-abba-03-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-abba-03-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-abba-03-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-abba-03-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-abba-03-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-abba-03-patch-source median 2737833.565988528
+START patch-d3-b2048-abba-04-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-abba-04-parent-source
+sampling patch-d3-b2048-abba-04-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-abba-04-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-abba-04-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-abba-04-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-abba-04-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-abba-04-parent-source median 2731871.8093244466
+BLOCK {"condition": "patch-d3-b2048", "block": "abba", "medians": {"parent-source": [2715309.1656799107, 2731871.8093244466], "patch-source": [2714684.558467478, 2737833.565988528]}, "ratio": 1.0009798002813086, "largest_independent_worker_spread": 0.00852732869049011, "batches": [2048, 2048, 2048, 2048]}
+START wheel-draper-b1024-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-abba-01-previous-wheel
+sampling wheel-draper-b1024-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-abba-01-previous-wheel median 187166683.08275378
+START wheel-draper-b1024-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-abba-02-current-wheel
+sampling wheel-draper-b1024-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-abba-02-current-wheel median 178253944.20509076
+START wheel-draper-b1024-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-abba-03-current-wheel
+sampling wheel-draper-b1024-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-abba-03-current-wheel median 180567774.8511909
+START wheel-draper-b1024-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-abba-04-previous-wheel
+sampling wheel-draper-b1024-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-abba-04-previous-wheel median 187462977.37912914
+BLOCK {"condition": "wheel-draper-b1024", "block": "abba", "medians": {"previous-wheel": [187166683.08275378, 187462977.37912914], "current-wheel": [178253944.20509076, 180567774.8511909]}, "ratio": 0.9578038178127392, "largest_independent_worker_spread": 0.01298052986383258, "batches": [1024, 1024, 1024, 1024]}
+START rc-wheel-source-draper-b1024-abba-01-current-wheel
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-abba-01-current-wheel
+sampling rc-wheel-source-draper-b1024-abba-01-current-wheel (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-abba-01-current-wheel (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-abba-01-current-wheel (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-abba-01-current-wheel (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-abba-01-current-wheel (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-abba-01-current-wheel median 179157465.81353325
+START rc-wheel-source-draper-b1024-abba-02-parent-source
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-abba-02-parent-source
+sampling rc-wheel-source-draper-b1024-abba-02-parent-source (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-abba-02-parent-source (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-abba-02-parent-source (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-abba-02-parent-source (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-abba-02-parent-source (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-abba-02-parent-source median 160574132.8041818
+START rc-wheel-source-draper-b1024-abba-03-parent-source
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-abba-03-parent-source
+sampling rc-wheel-source-draper-b1024-abba-03-parent-source (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-abba-03-parent-source (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-abba-03-parent-source (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-abba-03-parent-source (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-abba-03-parent-source (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-abba-03-parent-source median 159918810.40812016
+START rc-wheel-source-draper-b1024-abba-04-current-wheel
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-abba-04-current-wheel
+sampling rc-wheel-source-draper-b1024-abba-04-current-wheel (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-abba-04-current-wheel (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-abba-04-current-wheel (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-abba-04-current-wheel (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-abba-04-current-wheel (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-abba-04-current-wheel median 180273763.71428543
+BLOCK {"condition": "rc-wheel-source-draper-b1024", "block": "abba", "medians": {"current-wheel": [179157465.81353325, 180273763.71428543], "parent-source": [160574132.8041818, 159918810.40812016]}, "ratio": 0.8916669362128896, "largest_independent_worker_spread": 0.006230819886200223, "batches": [1024, 1024, 1024, 1024]}
+START wheel-d3-b32-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b32-abba-01-previous-wheel
+sampling wheel-d3-b32-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b32-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b32-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b32-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b32-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b32-abba-01-previous-wheel median 1919942.0809154713
+START wheel-d3-b32-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b32-abba-02-current-wheel
+sampling wheel-d3-b32-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b32-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b32-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b32-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b32-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b32-abba-02-current-wheel median 1938564.383093296
+START wheel-d3-b32-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b32-abba-03-current-wheel
+sampling wheel-d3-b32-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b32-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b32-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b32-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b32-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b32-abba-03-current-wheel median 1947551.1650700197
+START wheel-d3-b32-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b32-abba-04-previous-wheel
+sampling wheel-d3-b32-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b32-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b32-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b32-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b32-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b32-abba-04-previous-wheel median 1922212.9221949752
+BLOCK {"condition": "wheel-d3-b32", "block": "abba", "medians": {"previous-wheel": [1919942.0809154713, 1922212.9221949752], "current-wheel": [1938564.383093296, 1947551.1650700197]}, "ratio": 1.0114416375750799, "largest_independent_worker_spread": 0.004635792370426106, "batches": [32, 32, 32, 32]}
+START wheel-d3-b256-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b256-abba-01-previous-wheel
+sampling wheel-d3-b256-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b256-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b256-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b256-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b256-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b256-abba-01-previous-wheel median 2751892.8089022045
+START wheel-d3-b256-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b256-abba-02-current-wheel
+sampling wheel-d3-b256-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b256-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b256-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b256-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b256-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b256-abba-02-current-wheel median 2803181.483217551
+START wheel-d3-b256-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b256-abba-03-current-wheel
+sampling wheel-d3-b256-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b256-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b256-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b256-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b256-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b256-abba-03-current-wheel median 2817972.2195968535
+START wheel-d3-b256-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b256-abba-04-previous-wheel
+sampling wheel-d3-b256-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b256-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b256-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b256-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b256-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b256-abba-04-previous-wheel median 2744300.38039919
+BLOCK {"condition": "wheel-d3-b256", "block": "abba", "medians": {"previous-wheel": [2751892.8089022045, 2744300.38039919], "current-wheel": [2803181.483217551, 2817972.2195968535]}, "ratio": 1.022735829911556, "largest_independent_worker_spread": 0.005276410559877709, "batches": [256, 256, 256, 256]}
+START wheel-d3-b1024-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b1024-abba-01-previous-wheel
+sampling wheel-d3-b1024-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b1024-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b1024-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b1024-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b1024-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b1024-abba-01-previous-wheel median 2828523.1226675
+START wheel-d3-b1024-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b1024-abba-02-current-wheel
+sampling wheel-d3-b1024-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b1024-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b1024-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b1024-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b1024-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b1024-abba-02-current-wheel median 2904510.2541761072
+START wheel-d3-b1024-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b1024-abba-03-current-wheel
+sampling wheel-d3-b1024-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b1024-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b1024-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b1024-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b1024-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b1024-abba-03-current-wheel median 2899926.379182696
+START wheel-d3-b1024-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b1024-abba-04-previous-wheel
+sampling wheel-d3-b1024-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b1024-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b1024-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b1024-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b1024-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b1024-abba-04-previous-wheel median 2821617.6443041903
+BLOCK {"condition": "wheel-d3-b1024", "block": "abba", "medians": {"previous-wheel": [2828523.1226675, 2821617.6443041903], "current-wheel": [2904510.2541761072, 2899926.379182696]}, "ratio": 1.0273083225269466, "largest_independent_worker_spread": 0.002447347314137094, "batches": [1024, 1024, 1024, 1024]}
+START wheel-d3-b2048-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b2048-abba-01-previous-wheel
+sampling wheel-d3-b2048-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b2048-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b2048-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b2048-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b2048-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b2048-abba-01-previous-wheel median 2844098.098915068
+START wheel-d3-b2048-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b2048-abba-02-current-wheel
+sampling wheel-d3-b2048-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b2048-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b2048-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b2048-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b2048-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b2048-abba-02-current-wheel median 2913614.2464747876
+START wheel-d3-b2048-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b2048-abba-03-current-wheel
+sampling wheel-d3-b2048-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b2048-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b2048-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b2048-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b2048-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b2048-abba-03-current-wheel median 2915832.1211089254
+START wheel-d3-b2048-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-b2048-abba-04-previous-wheel
+sampling wheel-d3-b2048-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-b2048-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-b2048-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-b2048-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-b2048-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-b2048-abba-04-previous-wheel median 2846000.2924891296
+BLOCK {"condition": "wheel-d3-b2048", "block": "abba", "medians": {"previous-wheel": [2844098.098915068, 2846000.2924891296], "current-wheel": [2913614.2464747876, 2915832.1211089254]}, "ratio": 1.0244895547658759, "largest_independent_worker_spread": 0.0007612108009222851, "batches": [2048, 2048, 2048, 2048]}
+START wheel-d3-calibrated-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-calibrated-abba-01-previous-wheel
+sampling wheel-d3-calibrated-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-calibrated-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-calibrated-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-calibrated-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-calibrated-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-calibrated-abba-01-previous-wheel median 2840857.527702713
+START wheel-d3-calibrated-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-calibrated-abba-02-current-wheel
+sampling wheel-d3-calibrated-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-calibrated-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-calibrated-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-calibrated-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-calibrated-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-calibrated-abba-02-current-wheel median 2919218.3558332347
+START wheel-d3-calibrated-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-calibrated-abba-03-current-wheel
+sampling wheel-d3-calibrated-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d3-calibrated-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d3-calibrated-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d3-calibrated-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d3-calibrated-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-calibrated-abba-03-current-wheel median 2906668.4717429257
+START wheel-d3-calibrated-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d3-calibrated-abba-04-previous-wheel
+sampling wheel-d3-calibrated-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d3-calibrated-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d3-calibrated-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d3-calibrated-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d3-calibrated-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d3-calibrated-abba-04-previous-wheel median 2842574.059534564
+BLOCK {"condition": "wheel-d3-calibrated", "block": "abba", "medians": {"previous-wheel": [2840857.527702713, 2842574.059534564], "current-wheel": [2919218.3558332347, 2906668.4717429257]}, "ratio": 1.0250650048570622, "largest_independent_worker_spread": 0.00431761799197683, "batches": [2048, 2048, 1024, 2048]}
+START wheel-d5-b1-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-abba-01-previous-wheel
+sampling wheel-d5-b1-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-abba-01-previous-wheel median 214698.14001904186
+START wheel-d5-b1-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-abba-02-current-wheel
+sampling wheel-d5-b1-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-abba-02-current-wheel median 215896.01713055087
+START wheel-d5-b1-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-abba-03-current-wheel
+sampling wheel-d5-b1-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-abba-03-current-wheel median 192272.02151044892
+START wheel-d5-b1-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-abba-04-previous-wheel
+sampling wheel-d5-b1-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-abba-04-previous-wheel median 215677.05700114058
+BLOCK {"condition": "wheel-d5-b1", "block": "abba", "medians": {"previous-wheel": [214698.14001904186, 215677.05700114058], "current-wheel": [215896.01713055087, 192272.02151044892]}, "ratio": 0.9484004688631227, "largest_independent_worker_spread": 0.12286756770182561, "batches": [1, 1, 1, 1]}
+START wheel-d5-calibrated-abba-01-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-abba-01-previous-wheel
+sampling wheel-d5-calibrated-abba-01-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-abba-01-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-abba-01-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-abba-01-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-abba-01-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-abba-01-previous-wheel median 215554.4280740228
+START wheel-d5-calibrated-abba-02-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-abba-02-current-wheel
+sampling wheel-d5-calibrated-abba-02-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-abba-02-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-abba-02-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-abba-02-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-abba-02-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-abba-02-current-wheel median 217134.70263303627
+START wheel-d5-calibrated-abba-03-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-abba-03-current-wheel
+sampling wheel-d5-calibrated-abba-03-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-abba-03-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-abba-03-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-abba-03-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-abba-03-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-abba-03-current-wheel median 212193.83508031064
+START wheel-d5-calibrated-abba-04-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-abba-04-previous-wheel
+sampling wheel-d5-calibrated-abba-04-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-abba-04-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-abba-04-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-abba-04-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-abba-04-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-abba-04-previous-wheel median 195665.51425146643
+BLOCK {"condition": "wheel-d5-calibrated", "block": "abba", "medians": {"previous-wheel": [215554.4280740228, 195665.51425146643], "current-wheel": [217134.70263303627, 212193.83508031064]}, "ratio": 1.044036277242421, "largest_independent_worker_spread": 0.1016475176969378, "batches": [1, 1, 1, 1]}
+START patch-draper-b1024-baab-01-patch-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-baab-01-patch-source
+sampling patch-draper-b1024-baab-01-patch-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-baab-01-patch-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-baab-01-patch-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-baab-01-patch-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-baab-01-patch-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-baab-01-patch-source median 174692254.87143278
+START patch-draper-b1024-baab-02-parent-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-baab-02-parent-source
+sampling patch-draper-b1024-baab-02-parent-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-baab-02-parent-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-baab-02-parent-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-baab-02-parent-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-baab-02-parent-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-baab-02-parent-source median 159631774.03490004
+START patch-draper-b1024-baab-03-parent-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-baab-03-parent-source
+sampling patch-draper-b1024-baab-03-parent-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-baab-03-parent-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-baab-03-parent-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-baab-03-parent-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-baab-03-parent-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-baab-03-parent-source median 160093788.34558547
+START patch-draper-b1024-baab-04-patch-source
+No broken requirements found.
+[1/1] preparing patch-draper-b1024-baab-04-patch-source
+sampling patch-draper-b1024-baab-04-patch-source (repetition 1, sequence 0)
+sampling patch-draper-b1024-baab-04-patch-source (repetition 2, sequence 1)
+sampling patch-draper-b1024-baab-04-patch-source (repetition 3, sequence 2)
+sampling patch-draper-b1024-baab-04-patch-source (repetition 4, sequence 3)
+sampling patch-draper-b1024-baab-04-patch-source (repetition 5, sequence 4)
+FINISHED patch-draper-b1024-baab-04-patch-source median 176130128.95089412
+BLOCK {"condition": "patch-draper-b1024", "block": "baab", "medians": {"parent-source": [159631774.03490004, 160093788.34558547], "patch-source": [174692254.87143278, 176130128.95089412]}, "ratio": 1.097260979729969, "largest_independent_worker_spread": 0.008230897703619178, "batches": [1024, 1024, 1024, 1024]}
+START patch-d3-b256-baab-01-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-baab-01-patch-source
+sampling patch-d3-b256-baab-01-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b256-baab-01-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b256-baab-01-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b256-baab-01-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b256-baab-01-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-baab-01-patch-source median 2362232.0954543455
+START patch-d3-b256-baab-02-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-baab-02-parent-source
+sampling patch-d3-b256-baab-02-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b256-baab-02-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b256-baab-02-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b256-baab-02-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b256-baab-02-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-baab-02-parent-source median 2355900.187735839
+START patch-d3-b256-baab-03-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-baab-03-parent-source
+sampling patch-d3-b256-baab-03-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b256-baab-03-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b256-baab-03-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b256-baab-03-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b256-baab-03-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-baab-03-parent-source median 2364408.0084595336
+START patch-d3-b256-baab-04-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b256-baab-04-patch-source
+sampling patch-d3-b256-baab-04-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b256-baab-04-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b256-baab-04-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b256-baab-04-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b256-baab-04-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b256-baab-04-patch-source median 2360531.8938177973
+BLOCK {"condition": "patch-d3-b256", "block": "baab", "medians": {"parent-source": [2355900.187735839, 2364408.0084595336], "patch-source": [2362232.0954543455, 2360531.8938177973]}, "ratio": 1.000520261172512, "largest_independent_worker_spread": 0.0036112823319018883, "batches": [256, 256, 256, 256]}
+START patch-d3-b2048-baab-01-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-baab-01-patch-source
+sampling patch-d3-b2048-baab-01-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-baab-01-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-baab-01-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-baab-01-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-baab-01-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-baab-01-patch-source median 2720073.467814865
+START patch-d3-b2048-baab-02-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-baab-02-parent-source
+sampling patch-d3-b2048-baab-02-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-baab-02-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-baab-02-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-baab-02-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-baab-02-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-baab-02-parent-source median 2727629.769013996
+START patch-d3-b2048-baab-03-parent-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-baab-03-parent-source
+sampling patch-d3-b2048-baab-03-parent-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-baab-03-parent-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-baab-03-parent-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-baab-03-parent-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-baab-03-parent-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-baab-03-parent-source median 2707904.3226952655
+START patch-d3-b2048-baab-04-patch-source
+No broken requirements found.
+[1/1] preparing patch-d3-b2048-baab-04-patch-source
+sampling patch-d3-b2048-baab-04-patch-source (repetition 1, sequence 0)
+sampling patch-d3-b2048-baab-04-patch-source (repetition 2, sequence 1)
+sampling patch-d3-b2048-baab-04-patch-source (repetition 3, sequence 2)
+sampling patch-d3-b2048-baab-04-patch-source (repetition 4, sequence 3)
+sampling patch-d3-b2048-baab-04-patch-source (repetition 5, sequence 4)
+FINISHED patch-d3-b2048-baab-04-patch-source median 2729538.3569985945
+BLOCK {"condition": "patch-d3-b2048", "block": "baab", "medians": {"parent-source": [2727629.769013996, 2707904.3226952655], "patch-source": [2720073.467814865, 2729538.3569985945]}, "ratio": 1.0025899447720639, "largest_independent_worker_spread": 0.007284395594559623, "batches": [2048, 2048, 2048, 2048]}
+START wheel-draper-b1024-baab-01-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-baab-01-current-wheel
+sampling wheel-draper-b1024-baab-01-current-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-baab-01-current-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-baab-01-current-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-baab-01-current-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-baab-01-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-baab-01-current-wheel median 178735740.46070707
+START wheel-draper-b1024-baab-02-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-baab-02-previous-wheel
+sampling wheel-draper-b1024-baab-02-previous-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-baab-02-previous-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-baab-02-previous-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-baab-02-previous-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-baab-02-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-baab-02-previous-wheel median 188296649.29766306
+START wheel-draper-b1024-baab-03-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-baab-03-previous-wheel
+sampling wheel-draper-b1024-baab-03-previous-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-baab-03-previous-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-baab-03-previous-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-baab-03-previous-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-baab-03-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-baab-03-previous-wheel median 186943307.11721218
+START wheel-draper-b1024-baab-04-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-draper-b1024-baab-04-current-wheel
+sampling wheel-draper-b1024-baab-04-current-wheel (repetition 1, sequence 0)
+sampling wheel-draper-b1024-baab-04-current-wheel (repetition 2, sequence 1)
+sampling wheel-draper-b1024-baab-04-current-wheel (repetition 3, sequence 2)
+sampling wheel-draper-b1024-baab-04-current-wheel (repetition 4, sequence 3)
+sampling wheel-draper-b1024-baab-04-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-draper-b1024-baab-04-current-wheel median 181321137.91011623
+BLOCK {"condition": "wheel-draper-b1024", "block": "baab", "medians": {"previous-wheel": [188296649.29766306, 186943307.11721218], "current-wheel": [178735740.46070707, 181321137.91011623]}, "ratio": 0.9595376830625543, "largest_independent_worker_spread": 0.014464915873820594, "batches": [1024, 1024, 1024, 1024]}
+START rc-wheel-source-draper-b1024-baab-01-parent-source
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-baab-01-parent-source
+sampling rc-wheel-source-draper-b1024-baab-01-parent-source (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-baab-01-parent-source (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-baab-01-parent-source (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-baab-01-parent-source (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-baab-01-parent-source (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-baab-01-parent-source median 158938119.8265865
+START rc-wheel-source-draper-b1024-baab-02-current-wheel
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-baab-02-current-wheel
+sampling rc-wheel-source-draper-b1024-baab-02-current-wheel (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-baab-02-current-wheel (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-baab-02-current-wheel (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-baab-02-current-wheel (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-baab-02-current-wheel (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-baab-02-current-wheel median 181053327.88173148
+START rc-wheel-source-draper-b1024-baab-03-current-wheel
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-baab-03-current-wheel
+sampling rc-wheel-source-draper-b1024-baab-03-current-wheel (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-baab-03-current-wheel (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-baab-03-current-wheel (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-baab-03-current-wheel (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-baab-03-current-wheel (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-baab-03-current-wheel median 179059837.3280354
+START rc-wheel-source-draper-b1024-baab-04-parent-source
+No broken requirements found.
+[1/1] preparing rc-wheel-source-draper-b1024-baab-04-parent-source
+sampling rc-wheel-source-draper-b1024-baab-04-parent-source (repetition 1, sequence 0)
+sampling rc-wheel-source-draper-b1024-baab-04-parent-source (repetition 2, sequence 1)
+sampling rc-wheel-source-draper-b1024-baab-04-parent-source (repetition 3, sequence 2)
+sampling rc-wheel-source-draper-b1024-baab-04-parent-source (repetition 4, sequence 3)
+sampling rc-wheel-source-draper-b1024-baab-04-parent-source (repetition 5, sequence 4)
+FINISHED rc-wheel-source-draper-b1024-baab-04-parent-source median 160271284.42154166
+BLOCK {"condition": "rc-wheel-source-draper-b1024", "block": "baab", "medians": {"current-wheel": [181053327.88173148, 179059837.3280354], "parent-source": [158938119.8265865, 160271284.42154166]}, "ratio": 0.8864141472367106, "largest_independent_worker_spread": 0.01113309708890231, "batches": [1024, 1024, 1024, 1024]}
+START wheel-d5-b1-baab-01-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-baab-01-current-wheel
+sampling wheel-d5-b1-baab-01-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-baab-01-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-baab-01-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-baab-01-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-baab-01-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-baab-01-current-wheel median 202959.12794179548
+START wheel-d5-b1-baab-02-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-baab-02-previous-wheel
+sampling wheel-d5-b1-baab-02-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-baab-02-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-baab-02-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-baab-02-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-baab-02-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-baab-02-previous-wheel median 216303.24024256633
+START wheel-d5-b1-baab-03-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-baab-03-previous-wheel
+sampling wheel-d5-b1-baab-03-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-baab-03-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-baab-03-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-baab-03-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-baab-03-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-baab-03-previous-wheel median 217380.6442058133
+START wheel-d5-b1-baab-04-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-b1-baab-04-current-wheel
+sampling wheel-d5-b1-baab-04-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-b1-baab-04-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-b1-baab-04-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-b1-baab-04-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-b1-baab-04-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-b1-baab-04-current-wheel median 199772.71383548586
+BLOCK {"condition": "wheel-d5-b1", "block": "baab", "medians": {"previous-wheel": [216303.24024256633, 217380.6442058133], "current-wheel": [202959.12794179548, 199772.71383548586]}, "ratio": 0.9286299450336564, "largest_independent_worker_spread": 0.015950196826848284, "batches": [1, 1, 1, 1]}
+START wheel-d5-calibrated-baab-01-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-baab-01-current-wheel
+sampling wheel-d5-calibrated-baab-01-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-baab-01-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-baab-01-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-baab-01-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-baab-01-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-baab-01-current-wheel median 217280.6563397318
+START wheel-d5-calibrated-baab-02-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-baab-02-previous-wheel
+sampling wheel-d5-calibrated-baab-02-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-baab-02-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-baab-02-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-baab-02-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-baab-02-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-baab-02-previous-wheel median 196904.8869461399
+START wheel-d5-calibrated-baab-03-previous-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-baab-03-previous-wheel
+sampling wheel-d5-calibrated-baab-03-previous-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-baab-03-previous-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-baab-03-previous-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-baab-03-previous-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-baab-03-previous-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-baab-03-previous-wheel median 199980.44414567447
+START wheel-d5-calibrated-baab-04-current-wheel
+No broken requirements found.
+[1/1] preparing wheel-d5-calibrated-baab-04-current-wheel
+sampling wheel-d5-calibrated-baab-04-current-wheel (repetition 1, sequence 0)
+sampling wheel-d5-calibrated-baab-04-current-wheel (repetition 2, sequence 1)
+sampling wheel-d5-calibrated-baab-04-current-wheel (repetition 3, sequence 2)
+sampling wheel-d5-calibrated-baab-04-current-wheel (repetition 4, sequence 3)
+sampling wheel-d5-calibrated-baab-04-current-wheel (repetition 5, sequence 4)
+FINISHED wheel-d5-calibrated-baab-04-current-wheel median 203940.5227043939
+BLOCK {"condition": "wheel-d5-calibrated", "block": "baab", "medians": {"previous-wheel": [196904.8869461399, 199980.44414567447], "current-wheel": [217280.6563397318, 203940.5227043939]}, "ratio": 1.061317075855045, "largest_independent_worker_spread": 0.06541188312375779, "batches": [1, 1, 1, 1]}
+Running timer as unit: clifft656-completion-stop.timer
+Will run service as unit: clifft656-completion-stop.service

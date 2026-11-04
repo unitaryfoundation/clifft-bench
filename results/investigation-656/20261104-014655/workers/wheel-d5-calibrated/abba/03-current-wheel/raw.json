@@ -1,0 +1,659 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": "calibrate",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          }
+        },
+        "id": "wheel-d5-calibrated-abba-03-current-wheel",
+        "implementation_id": "current-wheel",
+        "shots_per_call": 20000,
+        "variant_id": "current-wheel",
+        "workload_id": "msc-d5-inject-cultivate-p1e-3"
+      }
+    ],
+    "classification": "official",
+    "collection": {
+      "memory_limit_gib": 12,
+      "run_timeout_minutes": 420
+    },
+    "comparisons": [],
+    "hardware_epoch": "aws-m7a-xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 30,
+      "repetitions": 5,
+      "request_timeout_seconds": 1800,
+      "setup_timeout_seconds": 1800,
+      "warmup_shots": 1
+    },
+    "profile_id": "wheel-d5-calibrated-abba-03-current-wheel",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 12884901888
+    },
+    "seed": 20260819,
+    "suite_version": "0.2.8",
+    "title": "Reference-host regression investigation"
+  },
+  "cases": [
+    {
+      "case_id": "wheel-d5-calibrated-abba-03-current-wheel",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 0,
+          "attempted_shots": 8,
+          "discarded_shots": 8,
+          "duration_seconds": 3.663000006781658e-05,
+          "logical_errors": 0,
+          "stream_setup_seconds": 1.6399999367422424e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": 1,
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 30,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 5,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 20000,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "bounded-v3"
+      },
+      "samples": [
+        {
+          "accepted_shots": 917703,
+          "adapter_timing_totals": {},
+          "api_calls": 319,
+          "attempted_shots": 6380000,
+          "discarded_shots": 5462297,
+          "duration_seconds": 30.036176060997605,
+          "logical_errors": 0,
+          "peak_rss_bytes": 102768640,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20271137,
+          "sequence_index": 0,
+          "started_at": "2026-11-04T03:56:13.671151Z",
+          "stream_setup_seconds": 1.5000005078036338e-06,
+          "throughput_attempted_shots_per_second": 212410.52746006905
+        },
+        {
+          "accepted_shots": 918032,
+          "adapter_timing_totals": {},
+          "api_calls": 319,
+          "attempted_shots": 6380000,
+          "discarded_shots": 5461968,
+          "duration_seconds": 30.082222008994904,
+          "logical_errors": 0,
+          "peak_rss_bytes": 102768640,
+          "repetition": 1,
+          "seed_first": 120270819,
+          "seed_last": 120271137,
+          "sequence_index": 1,
+          "started_at": "2026-11-04T03:56:43.710233Z",
+          "stream_setup_seconds": 3.979999746661633e-06,
+          "throughput_attempted_shots_per_second": 212085.39708577088
+        },
+        {
+          "accepted_shots": 918573,
+          "adapter_timing_totals": {},
+          "api_calls": 319,
+          "attempted_shots": 6380000,
+          "discarded_shots": 5461427,
+          "duration_seconds": 30.085128777996033,
+          "logical_errors": 0,
+          "peak_rss_bytes": 102768640,
+          "repetition": 2,
+          "seed_first": 220270819,
+          "seed_last": 220271137,
+          "sequence_index": 2,
+          "started_at": "2026-11-04T03:57:13.795281Z",
+          "stream_setup_seconds": 3.96999985241564e-06,
+          "throughput_attempted_shots_per_second": 212064.90579047377
+        },
+        {
+          "accepted_shots": 917694,
+          "adapter_timing_totals": {},
+          "api_calls": 319,
+          "attempted_shots": 6380000,
+          "discarded_shots": 5462306,
+          "duration_seconds": 30.042275943005734,
+          "logical_errors": 0,
+          "peak_rss_bytes": 102768640,
+          "repetition": 3,
+          "seed_first": 320270819,
+          "seed_last": 320271137,
+          "sequence_index": 3,
+          "started_at": "2026-11-04T03:57:43.883288Z",
+          "stream_setup_seconds": 3.6100000215810724e-06,
+          "throughput_attempted_shots_per_second": 212367.3989315498
+        },
+        {
+          "accepted_shots": 918769,
+          "adapter_timing_totals": {},
+          "api_calls": 319,
+          "attempted_shots": 6380000,
+          "discarded_shots": 5461231,
+          "duration_seconds": 30.06684900899836,
+          "logical_errors": 0,
+          "peak_rss_bytes": 102768640,
+          "repetition": 4,
+          "seed_first": 420270819,
+          "seed_last": 420271137,
+          "sequence_index": 4,
+          "started_at": "2026-11-04T03:58:13.928363Z",
+          "stream_setup_seconds": 3.6399997043190524e-06,
+          "throughput_attempted_shots_per_second": 212193.83508031064
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpu": 0,
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 22.25262590999955,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_calibration": {
+            "budget_scope": "between-candidates",
+            "budget_seconds": 60.0,
+            "candidates": [
+              1,
+              32,
+              64,
+              256,
+              1024,
+              2048
+            ],
+            "duration_seconds": 22.25147730200024,
+            "policy": "bounded-v3",
+            "probe_seconds": 1.0,
+            "repetitions": 3,
+            "results": [
+              {
+                "batch_size": 1,
+                "duration_seconds": 3.2859947669994654,
+                "effective_batch_size": 1,
+                "error": null,
+                "median_attempted_shots_per_second": 210930.9643383372,
+                "samples": [
+                  {
+                    "api_calls": 11,
+                    "attempted_shots": 220000,
+                    "duration_seconds": 1.0429952790009338,
+                    "peak_rss_bytes": 51167232,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270829,
+                    "stream_setup_seconds": 3.3100004657171667e-06,
+                    "throughput_attempted_shots_per_second": 210930.9643383372
+                  },
+                  {
+                    "api_calls": 11,
+                    "attempted_shots": 220000,
+                    "duration_seconds": 1.0451436630000899,
+                    "peak_rss_bytes": 51167232,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270829,
+                    "stream_setup_seconds": 3.4900003811344504e-06,
+                    "throughput_attempted_shots_per_second": 210497.37733517797
+                  },
+                  {
+                    "api_calls": 11,
+                    "attempted_shots": 220000,
+                    "duration_seconds": 1.0423971069994877,
+                    "peak_rss_bytes": 51167232,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270829,
+                    "stream_setup_seconds": 2.9200000426499173e-06,
+                    "throughput_attempted_shots_per_second": 211052.00553871848
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 32,
+                "duration_seconds": 3.6024969469999633,
+                "effective_batch_size": 32,
+                "error": null,
+                "median_attempted_shots_per_second": 55732.23178746294,
+                "samples": [
+                  {
+                    "api_calls": 3,
+                    "attempted_shots": 60000,
+                    "duration_seconds": 1.0725821690002704,
+                    "peak_rss_bytes": 52215808,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270821,
+                    "stream_setup_seconds": 3.629999810073059e-06,
+                    "throughput_attempted_shots_per_second": 55939.77014919486
+                  },
+                  {
+                    "api_calls": 3,
+                    "attempted_shots": 60000,
+                    "duration_seconds": 1.0772332459991958,
+                    "peak_rss_bytes": 52215808,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270821,
+                    "stream_setup_seconds": 2.6999996407539584e-06,
+                    "throughput_attempted_shots_per_second": 55698.24383237128
+                  },
+                  {
+                    "api_calls": 3,
+                    "attempted_shots": 60000,
+                    "duration_seconds": 1.0765763020008308,
+                    "peak_rss_bytes": 52215808,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270821,
+                    "stream_setup_seconds": 2.7400001272326335e-06,
+                    "throughput_attempted_shots_per_second": 55732.23178746294
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 64,
+                "duration_seconds": 4.184056991999569,
+                "effective_batch_size": 64,
+                "error": null,
+                "median_attempted_shots_per_second": 62395.09648919527,
+                "samples": [
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.2813483010004347,
+                    "peak_rss_bytes": 52346880,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270822,
+                    "stream_setup_seconds": 2.8399999791872688e-06,
+                    "throughput_attempted_shots_per_second": 62434.234265217834
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.2824510670016025,
+                    "peak_rss_bytes": 52346880,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270822,
+                    "stream_setup_seconds": 3.3000005714711733e-06,
+                    "throughput_attempted_shots_per_second": 62380.54773274249
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.2821520359993883,
+                    "peak_rss_bytes": 52346880,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270822,
+                    "stream_setup_seconds": 3.059999471588526e-06,
+                    "throughput_attempted_shots_per_second": 62395.09648919527
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 256,
+                "duration_seconds": 4.018017869999312,
+                "effective_batch_size": 256,
+                "error": null,
+                "median_attempted_shots_per_second": 64990.63847219332,
+                "samples": [
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.2309465160005857,
+                    "peak_rss_bytes": 58728448,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270822,
+                    "stream_setup_seconds": 4.08000050811097e-06,
+                    "throughput_attempted_shots_per_second": 64990.63847219332
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.2320754910006144,
+                    "peak_rss_bytes": 58728448,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270822,
+                    "stream_setup_seconds": 3.29000067722518e-06,
+                    "throughput_attempted_shots_per_second": 64931.086272180466
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.2284441309984686,
+                    "peak_rss_bytes": 58728448,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270822,
+                    "stream_setup_seconds": 3.8299995139823295e-06,
+                    "throughput_attempted_shots_per_second": 65123.02674683032
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 1024,
+                "duration_seconds": 3.616891571999986,
+                "effective_batch_size": 1024,
+                "error": null,
+                "median_attempted_shots_per_second": 72363.81350105804,
+                "samples": [
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.1095833350000248,
+                    "peak_rss_bytes": 77602816,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270822,
+                    "stream_setup_seconds": 4.319999789004214e-06,
+                    "throughput_attempted_shots_per_second": 72099.13620413037
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.1055249319997529,
+                    "peak_rss_bytes": 77602816,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270822,
+                    "stream_setup_seconds": 3.1500003387918696e-06,
+                    "throughput_attempted_shots_per_second": 72363.81350105804
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.10551710099935,
+                    "peak_rss_bytes": 77602816,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270822,
+                    "stream_setup_seconds": 3.629999810073059e-06,
+                    "throughput_attempted_shots_per_second": 72364.32609471414
+                  }
+                ],
+                "status": "success"
+              },
+              {
+                "batch_size": 2048,
+                "duration_seconds": 3.5262080399998013,
+                "effective_batch_size": 2048,
+                "error": null,
+                "median_attempted_shots_per_second": 74039.92761351926,
+                "samples": [
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.0827486480002335,
+                    "peak_rss_bytes": 102768640,
+                    "repetition": 0,
+                    "seed_first": 520270819,
+                    "seed_last": 520270822,
+                    "stream_setup_seconds": 4.4300004446995445e-06,
+                    "throughput_attempted_shots_per_second": 73886.03084174228
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.0804980850007269,
+                    "peak_rss_bytes": 102768640,
+                    "repetition": 1,
+                    "seed_first": 521270819,
+                    "seed_last": 521270822,
+                    "stream_setup_seconds": 2.8700005714199506e-06,
+                    "throughput_attempted_shots_per_second": 74039.92761351926
+                  },
+                  {
+                    "api_calls": 4,
+                    "attempted_shots": 80000,
+                    "duration_seconds": 1.0721695460015326,
+                    "peak_rss_bytes": 102768640,
+                    "repetition": 2,
+                    "seed_first": 522270819,
+                    "seed_last": 522270822,
+                    "stream_setup_seconds": 3.629999810073059e-06,
+                    "throughput_attempted_shots_per_second": 74615.06465870618
+                  }
+                ],
+                "status": "success"
+              }
+            ],
+            "search_seconds": 22.23374948899982,
+            "selected_batch_size": 1,
+            "selection_statistic": "median_attempted_shots_per_second",
+            "tie_break": "smaller_batch_size"
+          },
+          "batch_control": "explicit",
+          "batch_enabled": false,
+          "compile_seconds": 0.01682443899971986,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "num_detectors": 107,
+          "num_measurements": 112,
+          "num_observables": 1,
+          "num_qubits": 42,
+          "optimized_t_gates": 91,
+          "parse_seconds": 0.00046275299973785877,
+          "peak_active_width": 10,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 51797,
+            "incumbent_dense_work": 58686.0,
+            "incumbent_peak": 10,
+            "result_dense_work": 56778.0,
+            "result_peak": 10,
+            "swept_ops": 50237
+          },
+          "threads": 1,
+          "version": "0.13.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "69b5869267c1823ded4bc7156c76d9673c350ba5",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0rc1",
+        "implementation_id": "current-wheel",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-ec2-results/investigation-656-20261104-014655/.campaign-envs/current-wheel/bin/python",
+        "source_tag": "v0.13.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0rc1"
+      },
+      "status": "success",
+      "variant_id": "current-wheel",
+      "warmup": {
+        "accepted_shots": 0,
+        "attempted_shots": 1,
+        "contract_errors": [],
+        "discarded_shots": 1,
+        "duration_seconds": 6.368100002873689e-05,
+        "logical_errors": 0,
+        "stream_setup_seconds": 3.510000169626437e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-656/workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim",
+          "sha256": "c2b4566917bd9bf27a5705284dac02700ef0dcc7c03c91066670db376d633a6d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 107,
+          "num_measurements": 112,
+          "num_observables": 1,
+          "num_qubits": 42
+        },
+        "family": "magic-state-cultivation",
+        "id": "msc-d5-inject-cultivate-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "stages": [
+            "injection",
+            "cultivation"
+          ]
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/cultivation_d5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v1",
+  "run": {
+    "classification": "official",
+    "finished_at": "2026-11-04T03:58:44.030947Z",
+    "id": "4beac51b-f9a2-4fac-a751-b24a53079c8a",
+    "overrides": {
+      "cpu": 0
+    },
+    "profile_id": "wheel-d5-calibrated-abba-03-current-wheel",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-04T03:55:51.347511Z",
+    "workflow": {
+      "image_os": "ubuntu-24.04",
+      "image_version": "ami-0f8a61b66d1accaee",
+      "provider": "aws-ec2-manual",
+      "ref": "",
+      "repository": "https://github.com/unitaryfoundation/clifft-bench.git",
+      "run_id": "4beac51b-f9a2-4fac-a751-b24a53079c8a",
+      "runner_name": "i-0b559eec365c2acb7",
+      "runner_os": "Linux",
+      "sha": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "workflow": "scripts/ec2-run.sh"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cloud": {
+      "availability_zone": "us-east-1c",
+      "boot_id": "245a2b00-efd4-4f77-b8d3-e9b0e71f31dc",
+      "image_id": "ami-0f8a61b66d1accaee",
+      "instance_id": "i-0b559eec365c2acb7",
+      "instance_type": "m7a.xlarge",
+      "lifecycle": "on-demand",
+      "provider": "aws",
+      "region": "us-east-1"
+    },
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-14-93",
+    "kernel_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "load_average_at_start": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16374087680,
+    "os": "Linux",
+    "os_release": "7.0.0-1014-aws",
+    "physical_cores": 4,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "d2e711f61b4cad439a5f1752edefc51bb96905f1",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  }
+}

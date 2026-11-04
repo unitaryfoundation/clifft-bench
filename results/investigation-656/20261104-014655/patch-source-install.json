@@ -1,0 +1,66 @@
+{
+  "version": "1",
+  "pip_version": "26.3",
+  "install": [
+    {
+      "download_info": {
+        "url": "https://github.com/unitaryfoundation/clifft.git",
+        "vcs_info": {
+          "vcs": "git",
+          "commit_id": "6abe2509d57acedbae2b2b497e28379f106194f4",
+          "requested_revision": "6abe2509d57acedbae2b2b497e28379f106194f4"
+        }
+      },
+      "is_direct": true,
+      "is_yanked": false,
+      "requested": true,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "clifft",
+        "version": "0.13.0rc2.dev1+g6abe2509d",
+        "summary": "Clifft - fast exact simulator for near-Clifford quantum circuits",
+        "description": "<p align=\"center\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/unitaryfoundation/clifft/main/docs/assets/logos/clifft-logo-dark.png\">\n    <img src=\"https://raw.githubusercontent.com/unitaryfoundation/clifft/main/docs/assets/logos/clifft-logo-light.png\" alt=\"Clifft\" width=\"420\">\n  </picture>\n</p>\n\n[![Unitary Foundation](https://img.shields.io/badge/Supported%20By-Unitary%20Foundation-FFFF00.svg)](https://unitary.foundation)\n[![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://unitaryfoundation.github.io/clifft/)\n[![arXiv](https://img.shields.io/badge/arXiv-2604.27058-b31b1b.svg)](https://arxiv.org/abs/2604.27058)\n[![License](https://img.shields.io/github/license/unitaryfoundation/clifft.svg)](https://github.com/unitaryfoundation/clifft/blob/main/LICENSE)\n[![Discord Chat](https://img.shields.io/badge/dynamic/json?color=orange&label=Discord&query=approximate_presence_count&suffix=%20online.&url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FJqVGmpkP96%3Fwith_counts%3Dtrue)](http://discord.unitary.foundation)\n\n\n[![PyPI version](https://img.shields.io/pypi/v/clifft.svg?color=blue)](https://pypi.org/project/clifft/)\n[![Downloads](https://static.pepy.tech/badge/clifft)](https://pepy.tech/project/clifft)\n[![CI](https://github.com/unitaryfoundation/clifft/actions/workflows/ci.yml/badge.svg)](https://github.com/unitaryfoundation/clifft/actions/workflows/ci.yml)\n[![codecov](https://codecov.io/gh/unitaryfoundation/clifft/graph/badge.svg)](https://codecov.io/gh/unitaryfoundation/clifft)\n[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://github.com/unitaryfoundation/clifft/blob/main/CODE_OF_CONDUCT.md)\n\n\n**Clifft** is a fast exact simulator for near-Clifford quantum circuits.\n\nBuilt and maintained by the [Unitary Foundation](https://unitary.foundation).\n\nClifft accepts Stim-format circuits, extends them with non-Clifford gates, and\ncompiles them into symbolic-coordinate sampling plans. It is designed for\ncircuits whose dominant structure is Clifford, but whose behavior depends on\nlocalized non-Clifford operations.\n\nThe dense active state has `2^k` amplitudes, where `k` is its active width. The\nmain simulation cost therefore scales with `2^k`, rather than directly with the\ntotal number of physical qubits `n`. Non-Clifford operations can increase `k`,\nwhile measurements can reduce it.\n\nClifft's original design established this factored active-state architecture,\ndescribed in the [Clifft paper](https://arxiv.org/abs/2604.27058).\n[SymFT](https://arxiv.org/abs/2607.28600), by Wang Fang, Huazhe Lou, and Riling\nLi, is the second-generation successor to\n[SOFT](https://arxiv.org/abs/2512.23037). Its planner builds on SOFT's\ngeneralized-stabilizer simulation and Clifft's dense active-state\nrepresentation. SymFT adds symbolic Clifford-Pauli-frame factorization,\nadaptive stabilizer-coordinate planning, and direct multi-coordinate kernels.\nClifft's current sampler adopts these SymFT developments alongside\nClifft-specific compiler, continuation, and API machinery.\nSee the [theoretical overview](https://unitaryfoundation.github.io/clifft/stable/theory/overview/#method-provenance)\nfor the fuller lineage and implementation boundaries. The\n[symbolic sampling update](https://unitaryfoundation.github.io/clifft/stable/updates/symbolic-sampling/)\nexplains the migration from the original SVM and reports matched release-target\nbenchmarks.\n\n## Why Clifft?\n\n- **Stim-compatible format and API**: parse Stim-format circuits with noise,\n  detectors, observables, and repeat blocks, plus non-Clifford extensions.\n- **Exact near-Clifford simulation**: simulate localized non-Clifford effects\n  without approximating the quantum state.\n- **Optimizing compiler pipeline**: resolve Clifford coordinates and symbolic\n  dependencies once, then sample many shots from a prepared plan.\n- **Active-width scaling**: for low-magic circuits, runtime and memory scale\n  with the localized active state rather than the full Hilbert space.\n\nFor QEC workflows, Clifft also supports detector-based post-selection, survivor\nsampling, and stratified importance sampling for rare-event estimation.\n\nExperimental [AMD HIP](https://unitaryfoundation.github.io/clifft/stable/development/hip-backend/)\nand [NVIDIA CUDA](https://unitaryfoundation.github.io/clifft/stable/development/cuda-backend/)\nbackends are available through an explicit source build and separate APIs.\nThey are not part of the published wheels or selected automatically.\n\n## Performance\n\n**Clifft reaches millions of attempted shots per second** on several complete\nnear-Clifford circuits using one CPU core. Its compiler keeps the dense quantum\nstate small so that exact near-Clifford simulation can approach the throughput\nusually associated with specialized Clifford tools.\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/unitaryfoundation/clifft/main/docs/assets/performance/clifft-throughput-dark.png\">\n  <img src=\"https://raw.githubusercontent.com/unitaryfoundation/clifft/main/docs/assets/performance/clifft-throughput-light.png\" alt=\"Clifft v0.12 attempted shots per second across seven QEC workloads\">\n</picture>\n\nSee the [Performance guide](https://unitaryfoundation.github.io/clifft/stable/guide/performance/)\nfor comparisons with other simulators, release history, dense Quantum Volume\nresults, and measurement details.\n\n## Installation\n\n<!--pytest.mark.skip-->\n\n```bash\npip install clifft\n```\n\n| Platform / CPU family | PyPI wheel |\n|---|---|\n| Linux `x86_64` with x86-64-v2 support | Supported |\n| Linux `aarch64` | Supported |\n| macOS 15+ `arm64` | Supported |\n| Windows `amd64` | Supported |\n\nAll other platforms and CPU families should build from source. See the\n[installation docs](https://unitaryfoundation.github.io/clifft/stable/getting-started/installation/#from-source).\n\n## Quick Start\n\n```python\nimport clifft\n\nprogram = clifft.compile(\"\"\"\n    H 0\n    CNOT 0 1\n    T 2\n    M 0 1 2\n\"\"\")\n\nresult = clifft.sample(program, shots=1000, seed=42)\nprint(result.measurements[:5])\n```\n\nContinue with the [Quick Start](https://unitaryfoundation.github.io/clifft/stable/getting-started/quickstart/),\nor use [Choose a Workflow](https://unitaryfoundation.github.io/clifft/stable/getting-started/choosing-a-workflow/)\nto select an API by the result you need. You can also try Clifft in the\nweb-based [interactive playground](https://unitaryfoundation.github.io/clifft/playground/).\n\n## Circuit Inputs\n\n| Starting point | Path |\n|---|---|\n| Stim circuits with Clifft extensions | Use the native `clifft` API for the broadest feature support. |\n| OpenQASM 2 text | Pass `input_format=\"qasm2\"` for supported unitary circuits. |\n| Qiskit `QuantumCircuit` | Use [`clifft-qiskit`](https://github.com/unitaryfoundation/clifft-qiskit), a Qiskit `BackendV2` provider. |\n| Cirq `cirq.Circuit` | Use [`clifft-cirq`](https://github.com/unitaryfoundation/clifft-cirq), a converter and Cirq-style sampler. |\n\nSee [Circuit Inputs](https://unitaryfoundation.github.io/clifft/stable/guide/circuit-inputs/)\nfor installation commands, minimal examples, and current limitations.\n\n## Acknowledgments\n\nClifft has benefited from the following research and software:\n\n- [Stim](https://github.com/quantumlib/Stim) for its circuit format, sampling\n  interfaces, original tableau foundation, and independent validation.\n- [SOFT and SymFT](https://github.com/haoliri0/SOFT) for generalized-stabilizer\n  simulation, cultivation circuits, symbolic sampling, adaptive coordinate\n  planning, and inspiration for packed execution.\n- [Tsim](https://github.com/QuEraComputing/tsim) for Stim-compatible universal\n  simulation design and open code and data enabling comparisons.\n- [SqaleSim](https://arxiv.org/abs/2509.13247) for motivating the leakage/loss\n  instrument design and providing a five-level neutral-atom model and examples.\n- [deltakit-stim](https://github.com/Deltakit/deltakit-stim) for inspiring\n  configurable leakage partner effects and status-conditioned fixed execution.\n- [Microsoft QDK](https://github.com/microsoft/qdk) for development comparisons\n  informing online Clifford-frame execution for leakage and loss.\n- [TOHPE](https://doi.org/10.22331/q-2025-09-16-1860) for T-count reduction in\n  the phase-polynomial optimizer.\n- [Merlin](https://arxiv.org/abs/2610.06811) for code-switching benchmark circuits\n  and the affine-support, cubic-phase viewpoint that motivated extending static\n  optimization to measured preparations and complete phase regions.\n- [Pauli Frame Sparse Representation](https://arxiv.org/abs/2603.14670) for\n  the importance-sampling approach used in cultivation analysis.\n- [Magic-state cultivation](https://github.com/Strilanc/magic-state-cultivation)\n  for protocols, circuits, data, and analysis tools used in examples and benchmarks.\n- [xoshiro256++](https://prng.di.unimi.it/) for the sampling random-number generator.\n\nSee [Acknowledgments and references](https://unitaryfoundation.github.io/clifft/stable/acknowledgments/)\nfor the specific contributions and associated papers, software, and artifacts.\n\n## Citation\n\nIf you use Clifft in your work, please cite the arXiv [preprint](https://arxiv.org/abs/2604.27058) below.\n```\n@misc{chase2026clifftfastexactsimulation,\n      title={Clifft: Fast Exact Simulation of Near-Clifford Quantum Circuits},\n      author={Bradley A. Chase and Farrokh Labib},\n      year={2026},\n      eprint={2604.27058},\n      archivePrefix={arXiv},\n      primaryClass={quant-ph},\n      url={https://arxiv.org/abs/2604.27058},\n}\n```\n\n## Development\n\nSee the [building from source](https://unitaryfoundation.github.io/clifft/stable/development/building/) guide for build\ninstructions.\n\nFollow current priorities and release plans in the public\n[Clifft development project](https://github.com/orgs/unitaryfoundation/projects/35).\nIts README describes the planning and triage workflow.\n\n## AI Acknowledgement\n\nWe used generative AI tools during parts of the research, software-development,\nand writing workflow for this project. These tools assisted with code generation\nand review, implementation analysis, documentation editing, and checks of\nselected derivations or arguments. All substantive design, validation, and\nrelease decisions were made by the human contributors.\n\n## Funding\n\nThis work was supported by the U.S. Department of Energy, Office of Science,\nOffice of Advanced Scientific Computing Research, Accelerated Research in\nQuantum Computing under Award Number DE-SC0025336.\n\nThis material is also based upon work supported by the U.S. Department of\nEnergy, Office of Science, National Quantum Information Science Research\nCenters, Quantum Science Center.\n\n## License\n\nApache-2.0\n",
+        "description_content_type": "text/markdown",
+        "keywords": [
+          "quantum",
+          "compiler",
+          "simulation",
+          "clifford",
+          "stabilizer"
+        ],
+        "author_email": "Brad Chase <brad@unitary.foundation>, Farrokh Labib <farrokh@unitary.foundation>",
+        "license_expression": "Apache-2.0",
+        "classifier": [
+          "Development Status :: 3 - Alpha",
+          "Intended Audience :: Science/Research",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: C++",
+          "Topic :: Scientific/Engineering :: Physics"
+        ],
+        "requires_dist": [
+          "numpy>=1.26",
+          "sinter<2,>=1.15; extra == \"sinter\"",
+          "stim<2,>=1.16; extra == \"sinter\""
+        ],
+        "requires_python": ">=3.12",
+        "provides_extra": [
+          "sinter"
+        ]
+      }
+    }
+  ],
+  "environment": {
+    "implementation_name": "cpython",
+    "implementation_version": "3.12.3",
+    "os_name": "posix",
+    "platform_machine": "x86_64",
+    "platform_release": "7.0.0-1014-aws",
+    "platform_system": "Linux",
+    "platform_version": "#14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026",
+    "python_full_version": "3.12.3",
+    "platform_python_implementation": "CPython",
+    "python_version": "3.12",
+    "sys_platform": "linux"
+  }
+}
