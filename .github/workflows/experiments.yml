@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'experiments/**'
+      - '!experiments/**/*.md'
       - 'workloads.toml'
       - 'workloads/circuits/**'
       - '.github/workflows/experiments.yml'
@@ -12,6 +13,7 @@ on:
     branches: [main]
     paths:
       - 'experiments/**'
+      - '!experiments/**/*.md'
       - 'workloads.toml'
       - 'workloads/circuits/**'
       - '.github/workflows/experiments.yml'

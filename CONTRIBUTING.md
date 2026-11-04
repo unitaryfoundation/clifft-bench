@@ -22,7 +22,11 @@ List smoke cases without importing a simulator:
 uv run clifft-bench list
 ```
 
-CI tests the harness, reporting, and adapter contracts. Optional studies have
+CI tests the harness, reporting, and adapter contracts when maintained code,
+configuration, dependencies, or workload inputs change. Documentation and figure
+changes skip simulator jobs. Changes within a current result execution validate
+its authoritative `raw.json` and report without rerunning measurements. Unknown
+paths run the full suite. Optional studies have
 [separate checks](.github/workflows/experiments.yml) triggered by changes to their
 code or inputs, or by manual dispatch. Before changing measurements or results,
 read the [benchmark contract](docs/benchmark-contract.md).
