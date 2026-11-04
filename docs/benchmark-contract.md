@@ -60,6 +60,21 @@ Repeated QV sampling measures a different question from the optional
 Reports distinguish recorded failures, unsupported adapter pairings, and
 unmeasured combinations. Failed cases have no plotted throughput.
 
+Throughput figures group workloads by family and measurement configuration,
+with at most seven workloads per image. Each measured rate is directly labeled;
+short workload names and consistent simulator colors and shapes aid comparison.
+Call sizes remain visible on each row. Unsupported pairings have no marker;
+failed and unmeasured cases are labeled, with full distinctions in the review
+tables. Every selected current case and declared peer comparison remains in
+the report across its pages.
+
+Release figures show changes within ±50% on a linear percentage axis and larger
+changes on a separate logarithmic ratio panel. This display threshold keeps
+modest changes visible alongside large gains or losses; it is not a significance
+threshold. The percentage panel shades the ±1.1% inconclusive band defined below.
+Unpaired workloads are listed without a ratio. Exact identities remain in the
+review tables and `cases.csv`.
+
 Use the existing `cases.csv` compilation and throughput columns when reporting
 the adder. For a stated shot count N, `compile_seconds + N / rate` estimates
 compilation plus steady-state sampling, where rate is

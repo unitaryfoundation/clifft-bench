@@ -81,7 +81,7 @@ structured case failures. Persisted-input validation checks coverage and calibra
 evidence, then writes the derived `cases.csv` beside `raw.json`.
 
 After reviewing results, follow [release reporting](#release-reporting) to
-publish the three recurring figure pairs. Archived figures use the pinned
+publish the recurring figures. Archived figures use the pinned
 legacy tools described under [historical evidence](#historical-evidence).
 
 ## Configuration and environments
@@ -187,12 +187,17 @@ writes `report/review.md` plus these light/dark PNG pairs:
   and coverage groups kept separate.
 - `release-change-{light,dark}.png`: current/previous throughput on paired work.
 
+Throughput figures split into pages by workload and measurement group. The first
+page uses the names above; additional pages use numbered names such as
+`simulator-throughput-2-light.png`. The generated review embeds every page and
+links its dark counterpart. Regenerating removes obsolete numbered pages.
+
 Use `--output-dir DIR` to choose the report destination. Review failure labels,
 missing baselines, exact versions, and both themes. Smoke figures are validation
 artifacts and must not replace published performance evidence. Existing published
 figures remain frozen until reviewed reference-host results replace them.
 
-For publication, copy the three reviewed pairs to `reporting/figures/web/` and
+For publication, copy the reviewed figure pairs to `reporting/figures/web/` and
 the companion Clifft checkout's `docs/assets/performance/`. In the same
 publication PR, update README and performance-guide image links, measured
 version labels, execution links, and claims. Use the stable `release-change`
