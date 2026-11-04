@@ -1,0 +1,769 @@
+{
+  "purpose": "Local independent BT observable-0 correctness; no performance claims",
+  "started_at": "2026-11-04T18:09:07.335939Z",
+  "command": [
+    "/Users/bchase/.codex/worktrees/60a2/clifft-bench/.venv/bin/python",
+    "evidence/bt69/validate.py",
+    "evidence/bt69/raw.json"
+  ],
+  "host": {
+    "hostname": "Bradleys-MacBook-Pro.local",
+    "os": "Darwin",
+    "os_release": "25.6.0",
+    "kernel_version": "Darwin Kernel Version 25.6.0: Fri Jul 31 19:17:26 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T6041",
+    "machine": "arm64",
+    "python": "3.14.5",
+    "python_compiler": "Clang 22.1.3 ",
+    "cpu_model": "Apple M4 Pro",
+    "physical_cores": 14,
+    "logical_cpus": 14,
+    "allowed_logical_cpus": null,
+    "memory_bytes": 51539607552,
+    "load_average_at_start": [
+      2.05322265625,
+      2.33056640625,
+      2.5029296875
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "JAX_ENABLE_X64": "true",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_PLATFORMS": "cpu",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
+    },
+    "accelerator": null,
+    "cloud": null,
+    "suite_source": {
+      "commit": "565798b1475f386b81af8eb016e121f555705def",
+      "dirty": false
+    }
+  },
+  "reference": {
+    "file": "tests/test_code_switching.py",
+    "sha256": "21e3b76f6d2148680251ba78b958aa2c5a67aa45a0185dcb7f3a79893b6b4e8a",
+    "method": "Exact CNOT linear forms / T phase difference with deferred branch records",
+    "scope": "Raw unselected observable-0 marginal only; not the full joint distribution"
+  },
+  "bounds": {
+    "overall_seconds": 900,
+    "setup_seconds": 300,
+    "request_seconds": 120,
+    "requested_memory_limit_gib": 12,
+    "note": "The worker records actual affinity and address-space enforcement; macOS does not support the harness Linux affinity/RLIMIT_AS enforcement."
+  },
+  "cases": [
+    {
+      "workload_id": "bt27-direct-x",
+      "workload": {
+        "id": "bt27-direct-x",
+        "family": "code-switching",
+        "description": "Noiseless BT27 code switching on 135 qubits with direct logical-X readout.",
+        "compatible_adapters": [
+          "clifft"
+        ],
+        "shots_per_call": 2048,
+        "artifact": {
+          "path": "workloads/circuits/bt27_direct_x.stim",
+          "sha256": "28339beeffe1b18f81b3be07c24210a77ba7f1edb2292ccd0afc47e8cb745a64"
+        },
+        "parameters": {
+          "physical_error_rate": 0,
+          "readout": "direct-X"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": false
+        },
+        "expected_metadata": {
+          "num_qubits": 135,
+          "num_measurements": 135,
+          "num_detectors": 72,
+          "num_observables": 9
+        },
+        "provenance": {
+          "source_url": "https://github.com/unitaryfoundation/clifft",
+          "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+          "source_path": "tests/fixtures/merlin_bt27.stim",
+          "license": "Apache-2.0",
+          "notes": "Merlin generator 097380fac1a3968ca47925146e211fe990f4c396, p_phys=0, target_scoring=False. Append MX and nine observable declarations on decoded logical qubits 0,1,2,27,28,29,54,55,56."
+        }
+      },
+      "artifact_sha256": "28339beeffe1b18f81b3be07c24210a77ba7f1edb2292ccd0afc47e8cb745a64",
+      "implementation": {
+        "id": "clifft-0.13.0rc2",
+        "name": "Clifft",
+        "adapter": "clifft",
+        "distribution": "clifft",
+        "version": "0.13.0rc2",
+        "display_version": "0.13.0",
+        "commit_sha": "7e83ec2823bf99c54aa1b90c54a092641c10c4b0",
+        "source_tag": "v0.13.0rc2",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "dependency_distributions": [
+          "numpy"
+        ],
+        "environment": {
+          "import_modules": [
+            "clifft"
+          ]
+        },
+        "build": {
+          "precision": "complex-fp64",
+          "compiler_flags": []
+        }
+      },
+      "execution": {
+        "batch_size": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "search_budget": 16.0,
+            "noise_transparent": true,
+            "sink_neutral_rotations": true
+          }
+        }
+      },
+      "exact_probability": "3/8",
+      "setup_seed": 17,
+      "shots_per_sample": 65537,
+      "seeds": [
+        361946700,
+        4142359794,
+        1763590486,
+        321869424
+      ],
+      "samples": [
+        {
+          "seed": 361946700,
+          "ok": true,
+          "duration_seconds": 0.28959474992007017,
+          "stream_setup_seconds": 3.4999102354049683e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24745,
+          "contract_errors": []
+        },
+        {
+          "seed": 4142359794,
+          "ok": true,
+          "duration_seconds": 0.2891171248629689,
+          "stream_setup_seconds": 3.7085264921188354e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24375,
+          "contract_errors": []
+        },
+        {
+          "seed": 1763590486,
+          "ok": true,
+          "duration_seconds": 0.29010120779275894,
+          "stream_setup_seconds": 2.9997900128364563e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24361,
+          "contract_errors": []
+        },
+        {
+          "seed": 321869424,
+          "ok": true,
+          "duration_seconds": 0.29306349996477365,
+          "stream_setup_seconds": 3.8333237171173096e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24619,
+          "contract_errors": []
+        }
+      ],
+      "setup": {
+        "ok": true,
+        "duration_seconds": 0.6394043331965804,
+        "affinity": {
+          "requested": false,
+          "logical_cpu": null,
+          "applied": false,
+          "available_before": null,
+          "available_after": null,
+          "reason": "no logical CPU requested on this platform"
+        },
+        "adapter_version": "1",
+        "runtime_metadata": {
+          "name": "clifft",
+          "version": "0.13.0rc2",
+          "threads": 1,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "batch_enabled": false,
+          "effective_batch_size": 1,
+          "batch_control": "explicit",
+          "postselection_before_optimization": true,
+          "num_qubits": 135,
+          "num_measurements": 135,
+          "num_detectors": 72,
+          "num_observables": 9,
+          "peak_active_width": 9,
+          "parse_seconds": 0.0005648331716656685,
+          "compile_seconds": 0.05926266685128212,
+          "cpu_baseline": "generic",
+          "sampling_backend": "symbolic-coordinate",
+          "optimized_t_gates": 37,
+          "scheduler_statistics": {
+            "applied": true,
+            "incumbent_peak": 9,
+            "result_peak": 9,
+            "incumbent_dense_work": 10068.0,
+            "result_dense_work": 7680.0,
+            "swept_ops": 5982,
+            "classification_probes": 50433
+          },
+          "address_space_limit_bytes": null
+        },
+        "dependencies": {
+          "numpy": "2.5.4"
+        }
+      },
+      "passed": true,
+      "children_peak_rss_native_units": 52002816
+    },
+    {
+      "workload_id": "bt27-direct-x",
+      "workload": {
+        "id": "bt27-direct-x",
+        "family": "code-switching",
+        "description": "Noiseless BT27 code switching on 135 qubits with direct logical-X readout.",
+        "compatible_adapters": [
+          "clifft"
+        ],
+        "shots_per_call": 2048,
+        "artifact": {
+          "path": "workloads/circuits/bt27_direct_x.stim",
+          "sha256": "28339beeffe1b18f81b3be07c24210a77ba7f1edb2292ccd0afc47e8cb745a64"
+        },
+        "parameters": {
+          "physical_error_rate": 0,
+          "readout": "direct-X"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": false
+        },
+        "expected_metadata": {
+          "num_qubits": 135,
+          "num_measurements": 135,
+          "num_detectors": 72,
+          "num_observables": 9
+        },
+        "provenance": {
+          "source_url": "https://github.com/unitaryfoundation/clifft",
+          "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+          "source_path": "tests/fixtures/merlin_bt27.stim",
+          "license": "Apache-2.0",
+          "notes": "Merlin generator 097380fac1a3968ca47925146e211fe990f4c396, p_phys=0, target_scoring=False. Append MX and nine observable declarations on decoded logical qubits 0,1,2,27,28,29,54,55,56."
+        }
+      },
+      "artifact_sha256": "28339beeffe1b18f81b3be07c24210a77ba7f1edb2292ccd0afc47e8cb745a64",
+      "implementation": {
+        "id": "clifft-0.13.0rc2",
+        "name": "Clifft",
+        "adapter": "clifft",
+        "distribution": "clifft",
+        "version": "0.13.0rc2",
+        "display_version": "0.13.0",
+        "commit_sha": "7e83ec2823bf99c54aa1b90c54a092641c10c4b0",
+        "source_tag": "v0.13.0rc2",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "dependency_distributions": [
+          "numpy"
+        ],
+        "environment": {
+          "import_modules": [
+            "clifft"
+          ]
+        },
+        "build": {
+          "precision": "complex-fp64",
+          "compiler_flags": []
+        }
+      },
+      "execution": {
+        "batch_size": 32,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "search_budget": 16.0,
+            "noise_transparent": true,
+            "sink_neutral_rotations": true
+          }
+        }
+      },
+      "exact_probability": "3/8",
+      "setup_seed": 17,
+      "shots_per_sample": 65537,
+      "seeds": [
+        3290762425,
+        4093855278,
+        3219724700,
+        3801078969
+      ],
+      "samples": [
+        {
+          "seed": 3290762425,
+          "ok": true,
+          "duration_seconds": 0.15983649995177984,
+          "stream_setup_seconds": 4.166737198829651e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24631,
+          "contract_errors": []
+        },
+        {
+          "seed": 4093855278,
+          "ok": true,
+          "duration_seconds": 0.16036229208111763,
+          "stream_setup_seconds": 3.291293978691101e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24401,
+          "contract_errors": []
+        },
+        {
+          "seed": 3219724700,
+          "ok": true,
+          "duration_seconds": 0.15973650012165308,
+          "stream_setup_seconds": 3.3332034945487976e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24510,
+          "contract_errors": []
+        },
+        {
+          "seed": 3801078969,
+          "ok": true,
+          "duration_seconds": 0.16118370834738016,
+          "stream_setup_seconds": 2.50060111284256e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24433,
+          "contract_errors": []
+        }
+      ],
+      "setup": {
+        "ok": true,
+        "duration_seconds": 0.07516391668468714,
+        "affinity": {
+          "requested": false,
+          "logical_cpu": null,
+          "applied": false,
+          "available_before": null,
+          "available_after": null,
+          "reason": "no logical CPU requested on this platform"
+        },
+        "adapter_version": "1",
+        "runtime_metadata": {
+          "name": "clifft",
+          "version": "0.13.0rc2",
+          "threads": 1,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "batch_enabled": true,
+          "effective_batch_size": 32,
+          "batch_control": "explicit",
+          "postselection_before_optimization": true,
+          "num_qubits": 135,
+          "num_measurements": 135,
+          "num_detectors": 72,
+          "num_observables": 9,
+          "peak_active_width": 9,
+          "parse_seconds": 0.000492374412715435,
+          "compile_seconds": 0.05492612440139055,
+          "cpu_baseline": "generic",
+          "sampling_backend": "symbolic-coordinate",
+          "optimized_t_gates": 37,
+          "scheduler_statistics": {
+            "applied": true,
+            "incumbent_peak": 9,
+            "result_peak": 9,
+            "incumbent_dense_work": 10068.0,
+            "result_dense_work": 7680.0,
+            "swept_ops": 5982,
+            "classification_probes": 50433
+          },
+          "address_space_limit_bytes": null
+        },
+        "dependencies": {
+          "numpy": "2.5.4"
+        }
+      },
+      "passed": true,
+      "children_peak_rss_native_units": 52002816
+    },
+    {
+      "workload_id": "bt81-direct-x",
+      "workload": {
+        "id": "bt81-direct-x",
+        "family": "code-switching",
+        "description": "Noiseless BT81 code switching on 405 qubits with direct logical-X readout.",
+        "compatible_adapters": [
+          "clifft"
+        ],
+        "shots_per_call": 2048,
+        "artifact": {
+          "path": "workloads/circuits/bt81_direct_x.stim",
+          "sha256": "12a3a86a310ff52dbcbc2525554fd3f1dd87b2da8a0c5a27ee84f9c5271b5abe"
+        },
+        "parameters": {
+          "physical_error_rate": 0,
+          "readout": "direct-X"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": false
+        },
+        "expected_metadata": {
+          "num_qubits": 405,
+          "num_measurements": 405,
+          "num_detectors": 234,
+          "num_observables": 9
+        },
+        "provenance": {
+          "source_url": "https://github.com/unitaryfoundation/clifft",
+          "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+          "source_path": "tests/fixtures/merlin_bt81_direct_x.stim",
+          "license": "Apache-2.0",
+          "notes": "Unmodified direct-X fixture from the same Merlin generator as BT27; no inverse scoring."
+        }
+      },
+      "artifact_sha256": "12a3a86a310ff52dbcbc2525554fd3f1dd87b2da8a0c5a27ee84f9c5271b5abe",
+      "implementation": {
+        "id": "clifft-0.13.0rc2",
+        "name": "Clifft",
+        "adapter": "clifft",
+        "distribution": "clifft",
+        "version": "0.13.0rc2",
+        "display_version": "0.13.0",
+        "commit_sha": "7e83ec2823bf99c54aa1b90c54a092641c10c4b0",
+        "source_tag": "v0.13.0rc2",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "dependency_distributions": [
+          "numpy"
+        ],
+        "environment": {
+          "import_modules": [
+            "clifft"
+          ]
+        },
+        "build": {
+          "precision": "complex-fp64",
+          "compiler_flags": []
+        }
+      },
+      "execution": {
+        "batch_size": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "search_budget": 16.0,
+            "noise_transparent": true,
+            "sink_neutral_rotations": true
+          }
+        }
+      },
+      "exact_probability": "3/8",
+      "setup_seed": 17,
+      "shots_per_sample": 65537,
+      "seeds": [
+        167140022,
+        1777190248,
+        184780307,
+        173937531
+      ],
+      "samples": [
+        {
+          "seed": 167140022,
+          "ok": true,
+          "duration_seconds": 0.26824399922043085,
+          "stream_setup_seconds": 4.583969712257385e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24464,
+          "contract_errors": []
+        },
+        {
+          "seed": 1777190248,
+          "ok": true,
+          "duration_seconds": 0.2609285833314061,
+          "stream_setup_seconds": 3.0407682061195374e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24535,
+          "contract_errors": []
+        },
+        {
+          "seed": 184780307,
+          "ok": true,
+          "duration_seconds": 0.266185499727726,
+          "stream_setup_seconds": 2.041459083557129e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24594,
+          "contract_errors": []
+        },
+        {
+          "seed": 173937531,
+          "ok": true,
+          "duration_seconds": 0.2597739165648818,
+          "stream_setup_seconds": 2.250075340270996e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24601,
+          "contract_errors": []
+        }
+      ],
+      "setup": {
+        "ok": true,
+        "duration_seconds": 0.8109772922471166,
+        "affinity": {
+          "requested": false,
+          "logical_cpu": null,
+          "applied": false,
+          "available_before": null,
+          "available_after": null,
+          "reason": "no logical CPU requested on this platform"
+        },
+        "adapter_version": "1",
+        "runtime_metadata": {
+          "name": "clifft",
+          "version": "0.13.0rc2",
+          "threads": 1,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "batch_enabled": false,
+          "effective_batch_size": 1,
+          "batch_control": "explicit",
+          "postselection_before_optimization": true,
+          "num_qubits": 405,
+          "num_measurements": 405,
+          "num_detectors": 234,
+          "num_observables": 9,
+          "peak_active_width": 6,
+          "parse_seconds": 0.00263404194265604,
+          "compile_seconds": 0.7888135416433215,
+          "cpu_baseline": "generic",
+          "sampling_backend": "symbolic-coordinate",
+          "optimized_t_gates": 23,
+          "scheduler_statistics": {
+            "applied": false,
+            "incumbent_peak": 6,
+            "result_peak": 6,
+            "incumbent_dense_work": 1244.0,
+            "result_dense_work": 1244.0,
+            "swept_ops": 5925,
+            "classification_probes": 20796
+          },
+          "address_space_limit_bytes": null
+        },
+        "dependencies": {
+          "numpy": "2.5.4"
+        }
+      },
+      "passed": true,
+      "children_peak_rss_native_units": 55361536
+    },
+    {
+      "workload_id": "bt81-direct-x",
+      "workload": {
+        "id": "bt81-direct-x",
+        "family": "code-switching",
+        "description": "Noiseless BT81 code switching on 405 qubits with direct logical-X readout.",
+        "compatible_adapters": [
+          "clifft"
+        ],
+        "shots_per_call": 2048,
+        "artifact": {
+          "path": "workloads/circuits/bt81_direct_x.stim",
+          "sha256": "12a3a86a310ff52dbcbc2525554fd3f1dd87b2da8a0c5a27ee84f9c5271b5abe"
+        },
+        "parameters": {
+          "physical_error_rate": 0,
+          "readout": "direct-X"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": false
+        },
+        "expected_metadata": {
+          "num_qubits": 405,
+          "num_measurements": 405,
+          "num_detectors": 234,
+          "num_observables": 9
+        },
+        "provenance": {
+          "source_url": "https://github.com/unitaryfoundation/clifft",
+          "source_commit": "3d2f43f57db9a9b29c6207212c80b27d571e4d0f",
+          "source_path": "tests/fixtures/merlin_bt81_direct_x.stim",
+          "license": "Apache-2.0",
+          "notes": "Unmodified direct-X fixture from the same Merlin generator as BT27; no inverse scoring."
+        }
+      },
+      "artifact_sha256": "12a3a86a310ff52dbcbc2525554fd3f1dd87b2da8a0c5a27ee84f9c5271b5abe",
+      "implementation": {
+        "id": "clifft-0.13.0rc2",
+        "name": "Clifft",
+        "adapter": "clifft",
+        "distribution": "clifft",
+        "version": "0.13.0rc2",
+        "display_version": "0.13.0",
+        "commit_sha": "7e83ec2823bf99c54aa1b90c54a092641c10c4b0",
+        "source_tag": "v0.13.0rc2",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "dependency_distributions": [
+          "numpy"
+        ],
+        "environment": {
+          "import_modules": [
+            "clifft"
+          ]
+        },
+        "build": {
+          "precision": "complex-fp64",
+          "compiler_flags": []
+        }
+      },
+      "execution": {
+        "batch_size": 32,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "search_budget": 16.0,
+            "noise_transparent": true,
+            "sink_neutral_rotations": true
+          }
+        }
+      },
+      "exact_probability": "3/8",
+      "setup_seed": 17,
+      "shots_per_sample": 65537,
+      "seeds": [
+        1079561286,
+        2914836467,
+        3733075451,
+        2582106207
+      ],
+      "samples": [
+        {
+          "seed": 1079561286,
+          "ok": true,
+          "duration_seconds": 0.03725491650402546,
+          "stream_setup_seconds": 4.916451871395111e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24440,
+          "contract_errors": []
+        },
+        {
+          "seed": 2914836467,
+          "ok": true,
+          "duration_seconds": 0.03728604130446911,
+          "stream_setup_seconds": 2.874992787837982e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24540,
+          "contract_errors": []
+        },
+        {
+          "seed": 3733075451,
+          "ok": true,
+          "duration_seconds": 0.038002084009349346,
+          "stream_setup_seconds": 3.2493844628334045e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24649,
+          "contract_errors": []
+        },
+        {
+          "seed": 2582106207,
+          "ok": true,
+          "duration_seconds": 0.038162291049957275,
+          "stream_setup_seconds": 1.5832483768463135e-06,
+          "attempted_shots": 65537,
+          "accepted_shots": 65537,
+          "discarded_shots": 0,
+          "logical_errors": 24299,
+          "contract_errors": []
+        }
+      ],
+      "setup": {
+        "ok": true,
+        "duration_seconds": 0.821207333356142,
+        "affinity": {
+          "requested": false,
+          "logical_cpu": null,
+          "applied": false,
+          "available_before": null,
+          "available_after": null,
+          "reason": "no logical CPU requested on this platform"
+        },
+        "adapter_version": "1",
+        "runtime_metadata": {
+          "name": "clifft",
+          "version": "0.13.0rc2",
+          "threads": 1,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "batch_enabled": true,
+          "effective_batch_size": 32,
+          "batch_control": "explicit",
+          "postselection_before_optimization": true,
+          "num_qubits": 405,
+          "num_measurements": 405,
+          "num_detectors": 234,
+          "num_observables": 9,
+          "peak_active_width": 6,
+          "parse_seconds": 0.002723083831369877,
+          "compile_seconds": 0.7994504580274224,
+          "cpu_baseline": "generic",
+          "sampling_backend": "symbolic-coordinate",
+          "optimized_t_gates": 23,
+          "scheduler_statistics": {
+            "applied": false,
+            "incumbent_peak": 6,
+            "result_peak": 6,
+            "incumbent_dense_work": 1244.0,
+            "result_dense_work": 1244.0,
+            "swept_ops": 5925,
+            "classification_probes": 20796
+          },
+          "address_space_limit_bytes": null
+        },
+        "dependencies": {
+          "numpy": "2.5.4"
+        }
+      },
+      "passed": true,
+      "children_peak_rss_native_units": 57114624
+    }
+  ],
+  "passed": true,
+  "finished_at": "2026-11-04T18:09:12.977207Z"
+}
