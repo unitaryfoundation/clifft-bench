@@ -1,0 +1,318 @@
+{
+  "workers": [
+    {
+      "worker": 0,
+      "variant": "parent",
+      "pair": 0,
+      "conditions": {
+        "N": {
+          "cycles": [
+            34517474095,
+            34520478447
+          ],
+          "median_cycles": 34518976271.0,
+          "median_instructions": 92869232969.0,
+          "repeat_range_percent": 0.00870385820159747
+        },
+        "R": {
+          "cycles": [
+            37419973669,
+            37420107372
+          ],
+          "median_cycles": 37420040520.5,
+          "median_instructions": 92869231103.5,
+          "repeat_range_percent": 0.00035730383238785635
+        }
+      },
+      "penalty_percent": 8.40425923041419
+    },
+    {
+      "worker": 1,
+      "variant": "candidate",
+      "pair": 0,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33375002242,
+            33337275677
+          ],
+          "median_cycles": 33356138959.5,
+          "median_instructions": 89539594456.0,
+          "repeat_range_percent": 0.11316631078535089
+        },
+        "R": {
+          "cycles": [
+            35969091154,
+            35949171631
+          ],
+          "median_cycles": 35959131392.5,
+          "median_instructions": 89539592675.5,
+          "repeat_range_percent": 0.05541024200630407
+        }
+      },
+      "penalty_percent": 7.80363829327031
+    },
+    {
+      "worker": 2,
+      "variant": "candidate",
+      "pair": 1,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33373081531,
+            33410513701
+          ],
+          "median_cycles": 33391797616.0,
+          "median_instructions": 89539592592.5,
+          "repeat_range_percent": 0.11216276197099084
+        },
+        "R": {
+          "cycles": [
+            36064312258,
+            36089795057
+          ],
+          "median_cycles": 36077053657.5,
+          "median_instructions": 89539595210.5,
+          "repeat_range_percent": 0.0706593233158026
+        }
+      },
+      "penalty_percent": 8.041663621647421
+    },
+    {
+      "worker": 3,
+      "variant": "parent",
+      "pair": 1,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33799612869,
+            33791999472
+          ],
+          "median_cycles": 33795806170.5,
+          "median_instructions": 92869230140.5,
+          "repeat_range_percent": 0.022530176133273017
+        },
+        "R": {
+          "cycles": [
+            36587360890,
+            36622632945
+          ],
+          "median_cycles": 36604996917.5,
+          "median_instructions": 92869232949.0,
+          "repeat_range_percent": 0.09640502660479555
+        }
+      },
+      "penalty_percent": 8.312246593046545
+    },
+    {
+      "worker": 4,
+      "variant": "parent",
+      "pair": 2,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33872065014,
+            33889394963
+          ],
+          "median_cycles": 33880729988.5,
+          "median_instructions": 92869232127.5,
+          "repeat_range_percent": 0.05116295387610492
+        },
+        "R": {
+          "cycles": [
+            37326755145,
+            37312257474
+          ],
+          "median_cycles": 37319506309.5,
+          "median_instructions": 92869232314.0,
+          "repeat_range_percent": 0.03885498220015382
+        }
+      },
+      "penalty_percent": 10.149652389919606
+    },
+    {
+      "worker": 5,
+      "variant": "candidate",
+      "pair": 2,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33420612303,
+            33396797222
+          ],
+          "median_cycles": 33408704762.5,
+          "median_instructions": 89539594611.0,
+          "repeat_range_percent": 0.07130947570119783
+        },
+        "R": {
+          "cycles": [
+            36060680324,
+            36048192660
+          ],
+          "median_cycles": 36054436492.0,
+          "median_instructions": 89539593388.0,
+          "repeat_range_percent": 0.03464158139017126
+        }
+      },
+      "penalty_percent": 7.919288545629977
+    },
+    {
+      "worker": 6,
+      "variant": "candidate",
+      "pair": 3,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33408866919,
+            33379014618
+          ],
+          "median_cycles": 33393940768.5,
+          "median_instructions": 89539592621.5,
+          "repeat_range_percent": 0.08943433873540574
+        },
+        "R": {
+          "cycles": [
+            35982250665,
+            35999290685
+          ],
+          "median_cycles": 35990770675.0,
+          "median_instructions": 89539595909.0,
+          "repeat_range_percent": 0.04735673751663505
+        }
+      },
+      "penalty_percent": 7.776350579592428
+    },
+    {
+      "worker": 7,
+      "variant": "parent",
+      "pair": 3,
+      "conditions": {
+        "N": {
+          "cycles": [
+            33846590438,
+            33888734782
+          ],
+          "median_cycles": 33867662610.0,
+          "median_instructions": 92869229390.5,
+          "repeat_range_percent": 0.12451577383312262
+        },
+        "R": {
+          "cycles": [
+            36792861822,
+            36664428277
+          ],
+          "median_cycles": 36728645049.5,
+          "median_instructions": 92869233826.5,
+          "repeat_range_percent": 0.35029468898215566
+        }
+      },
+      "penalty_percent": 8.44753437060415
+    }
+  ],
+  "builds": {
+    "parent": {
+      "penalties_percent": [
+        8.40425923041419,
+        8.312246593046545,
+        10.149652389919606,
+        8.44753437060415
+      ],
+      "median_penalty_percent": 8.42589680050917,
+      "range_penalty_percent": [
+        8.312246593046545,
+        10.149652389919606
+      ],
+      "positive_workers": 4,
+      "median_instructions": 92869232369.0
+    },
+    "candidate": {
+      "penalties_percent": [
+        7.80363829327031,
+        8.041663621647421,
+        7.919288545629977,
+        7.776350579592428
+      ],
+      "median_penalty_percent": 7.861463419450143,
+      "range_penalty_percent": [
+        7.776350579592428,
+        8.041663621647421
+      ],
+      "positive_workers": 4,
+      "median_instructions": 89539594440.0
+    }
+  },
+  "blocks": [
+    {
+      "pair": 0,
+      "parent_penalty_percent": 8.40425923041419,
+      "candidate_penalty_percent": 7.80363829327031,
+      "difference_percentage_points": -0.6006209371438809
+    },
+    {
+      "pair": 1,
+      "parent_penalty_percent": 8.312246593046545,
+      "candidate_penalty_percent": 8.041663621647421,
+      "difference_percentage_points": -0.2705829713991239
+    },
+    {
+      "pair": 2,
+      "parent_penalty_percent": 10.149652389919606,
+      "candidate_penalty_percent": 7.919288545629977,
+      "difference_percentage_points": -2.230363844289629
+    },
+    {
+      "pair": 3,
+      "parent_penalty_percent": 8.44753437060415,
+      "candidate_penalty_percent": 7.776350579592428,
+      "difference_percentage_points": -0.6711837910117211
+    }
+  ],
+  "references": [
+    {
+      "worker": 8,
+      "variant": "parent",
+      "cycles": [
+        34062962755,
+        34103023450,
+        34018770025,
+        33960075289
+      ],
+      "range_percent": 0.42093004736742934,
+      "cpu_to_wall": [
+        0.9998684581168108,
+        0.9998730554006089,
+        0.9998797141805539,
+        0.9998846382579479
+      ]
+    },
+    {
+      "worker": 9,
+      "variant": "candidate",
+      "cycles": [
+        33405579694,
+        33415653118,
+        33387851635,
+        33336537150
+      ],
+      "range_percent": 0.23732509361729104,
+      "cpu_to_wall": [
+        0.9998711051441496,
+        0.9998685481580137,
+        0.9998754579263996,
+        0.9998662113481536
+      ]
+    }
+  ],
+  "profiled_passes": 40,
+  "measured_attempted_shots": 80000000,
+  "full_output_seed_checks": 54,
+  "restored_workers": 8,
+  "exited_workers": 10,
+  "instruction_change_percent": -3.585297136698895,
+  "median_penalty_difference_percentage_points": -0.5644333810590272,
+  "blocks_with_smaller_candidate_penalty": 4,
+  "cpu_to_wall_range": [
+    0.9998349109444151,
+    0.9998907386662527
+  ]
+}
