@@ -209,6 +209,11 @@ belong to the benchmark contract. Regenerate it with the same explicit peer
 input as the figures; the primary `cases.csv` alone does not contain retained peers.
 Regenerating removes superseded Clifft-only figures and numbered pages.
 
+Current adapters may reject retired options in older executions. Validate those
+executions using the collection harness revision recorded in `raw.json` under
+`runner.suite_source.commit`; regenerate published reports using the compatible
+renderer revision documented alongside the results.
+
 When a new RC reruns only Clifft, reuse unchanged peer results explicitly:
 
 ```bash
