@@ -14,7 +14,7 @@ from typing import Any
 import pytest
 from toml_helpers import write_toml
 
-from clifft_bench.config import load_suite, read_toml
+from clifft_bench.config import load_suite, read_toml, repository_root
 from clifft_bench.results import validate_result
 from clifft_bench.runner import (
     SEED_REPETITION_STRIDE,
@@ -267,11 +267,11 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     workload["expected_metadata"].update(num_qubits=2, num_measurements=2, num_detectors=1)
     _write(tmp_path / "workloads.toml", workloads)
     implementation = software["implementations"][0]
-    implementation.update(
-        adapter="symft", name="SymFT", distribution="symft", version="0.1.1",
-        commit_sha="c89b98514a919240b8afa53a271e08d926d3c987",
-        source_url="https://github.com/haoliri0/SOFT",
+    pinned = next(
+        item for item in read_toml(repository_root() / "software.toml")["implementations"]
+        if item["adapter"] == "symft"
     )
+    implementation.update({k: v for k, v in pinned.items() if k != "id"})
     _write(tmp_path / "software.toml", software)
     run["cases"] = run["cases"][:1]
     run["cases"][0]["shots_per_call"] = 67
@@ -317,11 +317,11 @@ def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
     workloads["workloads"][0]["compatible_adapters"] = ["tsim"]
     _write(tmp_path / "workloads.toml", workloads)
     implementation = software["implementations"][0]
-    implementation.update(
-        adapter="tsim", name="Tsim", distribution="bloqade-tsim", version="0.1.5",
-        commit_sha="e9406ed5bb49fcff1b04b65534cf56bbb756b3a6",
-        source_url="https://github.com/QuEraComputing/tsim",
+    pinned = next(
+        item for item in read_toml(repository_root() / "software.toml")["implementations"]
+        if item["adapter"] == "tsim"
     )
+    implementation.update({k: v for k, v in pinned.items() if k != "id"})
     _write(tmp_path / "software.toml", software)
     run["cases"] = run["cases"][:1]
     run["measurement"]["setup_timeout_seconds"] = 120

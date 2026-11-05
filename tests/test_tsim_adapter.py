@@ -8,8 +8,8 @@ from types import SimpleNamespace
 import pytest
 
 from clifft_bench.adapters import _shared
-from clifft_bench.adapters.base import validate_counts
-from clifft_bench.adapters.tsim import TsimAdapter
+from clifft_bench.adapters.base import Counts, validate_counts
+from clifft_bench.adapters.tsim import TsimAdapter, _PreparedTsim
 from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,7 +23,7 @@ def single_thread(monkeypatch):
     monkeypatch.setenv("NUMBA_NUM_THREADS", "1")
 
 
-def prepare(tmp_path, text, *, observable=0, postselect=True, batch=256, sharing=True, seed=42):
+def prepare(tmp_path, text, *, observable=0, postselect=True, batch=256, seed=42):
     pytest.importorskip("tsim")
     artifact = tmp_path / "circuit.stim"
     artifact.write_text(text)
@@ -32,7 +32,7 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, batch=256, sharing
         workload={"semantics": {
             **SEMANTICS, "observable_index": observable, "postselect_all_detectors": postselect,
         }},
-        execution={"batch_size": batch, "options": {"trajectory_sharing": sharing}},
+        execution={"batch_size": batch, "options": {}},
         seed=seed,
     )
 
@@ -48,16 +48,15 @@ def test_tsim_raw_nonzero_parity_and_observable_index_beyond_first_byte(tmp_path
     assert c.accepted_shots == c.logical_errors == 0
 
 
-@pytest.mark.parametrize("sharing", [False, True])
 @pytest.mark.parametrize("postselect", [False, True])
-def test_tsim_joint_quantum_noise_and_postselection_law(tmp_path, sharing, postselect):
+def test_tsim_joint_quantum_noise_and_postselection_law(tmp_path, postselect):
     # P(m0=1)=sin(pi/8)^2; m1=m0 exactly. An independent classical detector
     # fires with p=.2. These test both component pruning and direct rejection.
     p = prepare(tmp_path,
         "RX 0\nT 0\nH 0\nCX 0 1\nM 0 1\nDETECTOR rec[-2]\n"
         "OBSERVABLE_INCLUDE(0) rec[-1]\n"
         "X_ERROR(0.2) 2\nM 2\nDETECTOR rec[-1]\n",
-        sharing=sharing, postselect=postselect, batch=257,
+        postselect=postselect, batch=257,
     )
     shots = 30001  # Exercise a partial final batch.
     counts = p.sample(shots, 99)
@@ -69,7 +68,7 @@ def test_tsim_joint_quantum_noise_and_postselection_law(tmp_path, sharing, posts
     else:
         assert counts.accepted_shots == shots
         assert counts.logical_errors / shots == pytest.approx(q, abs=.015)
-    assert p.runtime_metadata["trajectory_sharing"] is sharing
+    assert p.runtime_metadata["trajectory_sharing"] is True
     assert p.runtime_metadata["precision"] == "complex-fp64"
     assert p.runtime_metadata["batch_size_applicable"] is True
 
@@ -94,6 +93,55 @@ def test_tsim_continuous_seeded_stream_does_not_recompile_or_replay(tmp_path, mo
     assert second == b.sample(30001, 999)
     assert first != second
     assert a.runtime_metadata["initial_seed"] == 123
+
+
+@pytest.mark.parametrize("postselect", [False, True])
+def test_tsim_seeded_counts_do_not_depend_on_batch_capacity(tmp_path, postselect):
+    text = (
+        "RX 0\nT 0\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+        "X_ERROR(0.25) 1\nM 1\nDETECTOR rec[-1]\n"
+    )
+    counts = [
+        prepare(tmp_path, text, batch=batch, postselect=postselect).sample(1031, 7)
+        for batch in [1, 7, 256]
+    ]
+    assert counts[0] == counts[1] == counts[2]
+
+
+@pytest.mark.parametrize("rows", [0, 3, 7])
+def test_tsim_survivor_rows_keep_attempted_shot_denominator(rows):
+    np = pytest.importorskip("numpy")
+    sampler = SimpleNamespace(
+        circuit=SimpleNamespace(num_detectors=1),
+        sample=lambda **kwargs: (
+            np.zeros((rows, 1), dtype=bool), np.ones((rows, 1), dtype=bool),
+        ),
+    )
+    p = _PreparedTsim(sampler, batch=4, postselect=True, observable=0,
+                      metadata={"num_detectors": 1, "num_observables": 1})
+    assert p.sample(7, 9) == Counts(7, rows, 7 - rows, rows)
+
+
+@pytest.mark.parametrize("damage", [
+    "unselected_missing", "extra", "unequal_rows", "width", "dtype",
+])
+def test_tsim_rejects_inconsistent_native_rows(damage):
+    np = pytest.importorskip("numpy")
+    rows = 8 if damage == "extra" else 3
+    dets = np.zeros((rows, 1), dtype=bool)
+    obs = np.zeros((rows, 1), dtype=bool)
+    if damage == "unequal_rows":
+        dets = dets[:2]
+    if damage == "width":
+        obs = np.zeros((rows, 2), dtype=bool)
+    if damage == "dtype":
+        dets = dets.astype(np.uint8)
+    sampler = SimpleNamespace(circuit=SimpleNamespace(num_detectors=1),
+                              sample=lambda **kwargs: (dets, obs))
+    p = _PreparedTsim(sampler, batch=4, postselect=damage != "unselected_missing",
+                      observable=0, metadata={"num_detectors": 1, "num_observables": 1})
+    with pytest.raises(RuntimeError, match="inconsistent detector/observable rows"):
+        p.sample(7, 9)
 
 
 def test_tsim_requires_explicit_and_effective_single_thread(tmp_path, monkeypatch):

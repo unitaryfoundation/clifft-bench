@@ -412,10 +412,10 @@ observable counts plus these aggregate invariants:
 
 Before calibration, the SymFT adapter verifies the installed package's PEP 610
 Git commit and repository URL against the manifest and records both in runtime
-metadata. A PyPI wheel with the same version string is rejected. The current
-`haoliri0/SOFT` pin replaces a snapshot from `haoliri0/SymFT_Test`; those are
-separate Git histories, so the two snapshots are identified by repository and
-commit rather than treated as an ancestor/descendant update.
+metadata. A PyPI wheel with the same version string is rejected. SymFT uses its
+default CPU counts executor, with the harness's explicit batch size and chunk
+settings. Its opt-in compiled CPU executor changes the effective batch capacity
+and is outside this calibrated execution configuration.
 
 Each implementation records its exact package version, source commit, optional
 release tag, build settings, actual worker interpreter, and dependency versions.
@@ -441,29 +441,28 @@ its results change.
 
 ## Tsim active-statevector CPU comparison
 
-`tsim-vs-current` adds the pinned upstream Tsim source at
-`e9406ed5bb49fcff1b04b65534cf56bbb756b3a6` to all eight current-Clifft release
-workloads. The distribution still identifies as `bloqade-tsim 0.1.5`; its
-active-statevector implementation is newer than that PyPI release. The adapter
-checks the installed Git URL and complete commit, so installing a same-version
-release wheel fails verification. Dependencies, including Numba/LLVM and
-zxparam, are locked in `environments/tsim-0.1.5-e9406ed.txt`.
+`tsim-vs-current` uses the Tsim 1.0.0 source identified in
+[`software.toml`](../software.toml). The adapter checks the installed Git URL
+and complete commit, so installing a same-version release wheel fails
+verification. Dependencies, including Numba/LLVM and zxparam, are locked in
+[`environments/tsim-1.0.0.txt`](../environments/tsim-1.0.0.txt).
 
-Compilation explicitly requests `strategy="active_statevector"` and
-`trajectory_sharing=True`. This is a complex128 CPU implementation; it does not
-need CUDA. The worker sets `NUMBA_NUM_THREADS=1` before imports, and the adapter
+Compilation explicitly requests `strategy="active_statevector"`; trajectory
+sharing is always enabled upstream. This is a complex128 CPU implementation;
+it does not need CUDA. The worker sets `NUMBA_NUM_THREADS=1` before imports, and the adapter
 checks Numba's effective thread count. The existing Linux affinity, 12 GiB
 address-space ceiling, and preparation/request deadlines also apply. There is
 no fallback to a different Tsim strategy when preparation or sampling fails.
 
 Tsim returns raw detector and observable arrays. Both reference-sample flags
-are explicitly false. The adapter passes an all-detector postselection mask
-when the workload requests it, allowing native early rejection. All attempted
-rows are returned, but rejected rows may have later outputs cleared. The adapter
-reapplies the detector mask and counts observable 0 only on survivors. Dense
-boolean array materialization and the adapter's NumPy mask reduction and
-aggregate counting are inside execution time. Clifft returns native aggregate
-counts, so the tools can spend different fractions of their call time producing
+are explicitly false. The adapter passes the workload's detector selection mask,
+allowing native early rejection. With a mask, only surviving rows are returned;
+without one, every attempted row is returned. The adapter validates matching
+boolean array shapes and counts the selected observable on returned rows.
+Accepted shots equal the row count, while attempted shots remain the requested
+count, including when every shot is rejected. Dense boolean array materialization
+and NumPy aggregate counting are inside execution time. Clifft returns native
+aggregate counts, so the tools can spend different fractions of their call time producing
 the shared aggregate endpoint. This is the same timing boundary used for Stim
 and xtim. Any reported postprocessing percentage must come from a separate,
 reproducible profile specifying the workload, shots per call, batch capacity,
@@ -480,18 +479,17 @@ candidate's probes. The selected configuration is freshly prepared with the
 final initial seed. No private RNG fields are changed and no compilation is
 performed inside timed calls.
 
-Tsim uses the [bounded calibration policy](#batching). With direct-detector
-postselection, the batch capacity applies to the survivors passed to the statevector backend. Fully direct circuits bypass that
-backend; the recorded capacity is the API setting, not a claim that quantum
-lanes were allocated. Raw metadata and `cases.csv` expose
+Tsim uses the [bounded calibration policy](#batching). The batch capacity bounds
+attempted shots in each thread's execution chunk; rejection and trajectory
+sharing can reduce the statevector work within that chunk. Fully direct
+circuits bypass statevector execution; the recorded capacity is the API setting,
+not a claim that quantum lanes were allocated. Raw metadata and `cases.csv` expose
 `batch_parameter=statevector-batch-shots` and `batch_size_applicable`: false for
 a fully direct compiled program, true when statevector components exist. This
 flag describes the compiled program, not whether any shots survive postselection
 in a particular call. A blank flag in older data means unknown. Raw metadata
 also records component widths, strategy, sharing, precision, seed policy, and
-effective threads. Setting
-`execution.options.trajectory_sharing=false` explicitly supports diagnostic manifests only;
-the primary campaign enables sharing.
+effective threads. Tsim exposes no adapter options.
 
 Parsing and ZX compilation/planning have separate timers. During preparation,
 a one-shot sample without postselection warms quantum kernels even when all

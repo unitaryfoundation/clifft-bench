@@ -20,12 +20,13 @@ precision = "complex-fp64"
 compiler_flags = []
 
 [[implementations]]
-id = "symft-0.1.1-c89b985"
+id = "symft-2026.10.8"
 name = "SymFT"
 adapter = "symft"
 distribution = "symft"
-version = "0.1.1"
-commit_sha = "c89b98514a919240b8afa53a271e08d926d3c987"
+version = "2026.10.8"
+commit_sha = "81d28499b6da8c0b84b7567482c4692f509bd416"
+source_tag = "v0.1.0"
 source_url = "https://github.com/haoliri0/SOFT"
 dependency_distributions = ["numpy"]
 
@@ -80,13 +81,13 @@ precision = "complex-fp64"
 compiler_flags = ["-O3", "-funroll-loops", "QECCORE_PORTABLE=1", "CXXFLAGS=-include cstdint"]
 
 [[implementations]]
-id = "tsim-0.1.5-e9406ed"
-display_version = "0.1.5+e9406ed"
+id = "tsim-1.0.0"
 name = "Tsim"
 adapter = "tsim"
 distribution = "bloqade-tsim"
-version = "0.1.5"
-commit_sha = "e9406ed5bb49fcff1b04b65534cf56bbb756b3a6"
+version = "1.0.0"
+commit_sha = "136bcc6bec7edba88bbb28152da05e33d17f77d0"
+source_tag = "v1.0.0"
 source_url = "https://github.com/QuEraComputing/tsim"
 dependency_distributions = ["numpy", "numba", "llvmlite", "zxparam", "stim", "jax", "jaxlib", "equinox"]
 
@@ -98,14 +99,13 @@ precision = "complex-fp64"
 compiler_flags = []
 
 [[implementations]]
-id = "clifft-0.13.0rc2"
+id = "clifft-0.13.0"
 name = "Clifft"
 adapter = "clifft"
 distribution = "clifft"
-version = "0.13.0rc2"
-display_version = "0.13.0"
-commit_sha = "7e83ec2823bf99c54aa1b90c54a092641c10c4b0"
-source_tag = "v0.13.0rc2"
+version = "0.13.0"
+commit_sha = "9b9091c8267321e2a2fd967f0674a65e4baf0e38"
+source_tag = "v0.13.0"
 source_url = "https://github.com/unitaryfoundation/clifft"
 dependency_distributions = ["numpy"]
 

@@ -19,7 +19,7 @@ repetitions = 2
 id = "distillation-15to1-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "distillation-15to1-rm15-p1e-3"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 10000
 
 [cases.execution]
@@ -31,7 +31,7 @@ batch_size = 1024
 id = "distillation-15to1-smoke-symft"
 variant_id = "symft-current"
 workload_id = "distillation-15to1-rm15-p1e-3"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 10000
 
 [cases.execution]
@@ -68,7 +68,7 @@ batch_size = "calibrate"
 id = "draper-adder-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "draper-adder-m16-basis-all-observables"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 2
 
 [cases.execution]
@@ -80,7 +80,7 @@ batch_size = 1
 id = "msc-d3-smoke-clifft-calibrated"
 variant_id = "clifft-current"
 workload_id = "msc-d3-inject-cultivate-p1e-3"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
@@ -91,7 +91,7 @@ options_preset = "clifft-scheduled"
 id = "msc-d3-smoke-symft-calibrated"
 variant_id = "symft-current"
 workload_id = "msc-d3-inject-cultivate-p1e-3"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 2048
 
 [cases.execution]
@@ -104,7 +104,7 @@ sample_chunk_shots = 2048
 id = "distillation-85q-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "distillation-color-code-85q-p5e-2"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 8
 
 [cases.execution]
@@ -115,7 +115,7 @@ options_preset = "clifft-scheduled"
 id = "distillation-85q-smoke-symft-calibrated"
 variant_id = "symft-current"
 workload_id = "distillation-color-code-85q-p5e-2"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 8
 
 [cases.execution]
@@ -140,7 +140,7 @@ batch_size = "calibrate"
 id = "bt27-direct-x-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "bt27-direct-x"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
@@ -151,7 +151,7 @@ options_preset = "clifft-scheduled"
 id = "bt81-direct-x-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "bt81-direct-x"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
@@ -162,7 +162,7 @@ options_preset = "clifft-scheduled"
 id = "reed-muller-measured-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "reed-muller-measured"
-implementation_id = "clifft-0.13.0rc2"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
@@ -173,7 +173,7 @@ options_preset = "clifft-scheduled"
 id = "reed-muller-measured-smoke-symft"
 variant_id = "symft-current"
 workload_id = "reed-muller-measured"
-implementation_id = "symft-0.1.1-c89b985"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 2048
 
 [cases.execution]

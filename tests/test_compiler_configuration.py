@@ -77,7 +77,7 @@ def test_scheduler_requires_explicit_options(tmp_path):
 @pytest.mark.parametrize("adapter, options", [
     ("symft", {"sample_chunk_shots": True}),
     ("symft", {"sample_chunk_shots": -1}),
-    ("tsim", {"trajectory_sharing": 1}),
+    ("tsim", {"unsupported_option": True}),
     ("stim", {"trajectory_sharing": True}),
     ("xtim", {"sample_chunk_shots": 0}),
     ("clifft", {"scheduler": {}}),

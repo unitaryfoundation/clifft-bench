@@ -24,7 +24,6 @@ class _PreparedTsim(PreparedAdapter):
         self._observable = observable
         self._postselect = postselect
         self._mask = np.ones(sampler.circuit.num_detectors, dtype=bool) if postselect else None
-        self._partial_selection = selection is not None
         if selection is not None:
             self._mask = np.asarray(selection, dtype=bool)
         self.runtime_metadata = metadata
@@ -46,28 +45,23 @@ class _PreparedTsim(PreparedAdapter):
             use_observable_reference_sample=False,
             postselection_mask=self._mask,
         )
-        if detectors.shape != (shots, self.runtime_metadata["num_detectors"]) or (
-            observables.shape != (shots, self.runtime_metadata["num_observables"])
+        accepted = len(observables)
+        if (
+            detectors.shape != (accepted, self.runtime_metadata["num_detectors"])
+            or observables.shape != (accepted, self.runtime_metadata["num_observables"])
+            or detectors.dtype != np.bool_ or observables.dtype != np.bool_
+            or not 0 <= accepted <= shots
+            or (not self._postselect and accepted != shots)
         ):
-            raise RuntimeError("Tsim must return one detector/observable row per attempted shot")
-        # Rejected rows retain the rejecting detector but later outputs can be
-        # zero-filled. Only count the requested observable on surviving rows.
-        checked = detectors[:, self._mask] if self._partial_selection else detectors
-        keep = ~np.any(checked, axis=1) if self._postselect else np.ones(shots, dtype=bool)
-        accepted = int(np.count_nonzero(keep))
-        errors = int(np.count_nonzero(observables[keep, self._observable]))
+            raise RuntimeError("Tsim returned inconsistent detector/observable rows")
+        # Native postselection returns survivors only, including an empty array
+        # when every attempted shot is rejected. The denominator remains shots.
+        errors = int(np.count_nonzero(observables[:, self._observable]))
         return Counts(shots, accepted, shots - accepted, errors)
 
 
 class TsimAdapter(Adapter):
     name = "tsim"
-
-    def validate_options(self, options: dict[str, Any]) -> None:
-        if options.keys() - {"trajectory_sharing"}:
-            raise ValueError(f"unknown Tsim options: {sorted(options)}")
-        if type(options.get("trajectory_sharing", True)) is not bool:
-            raise ValueError("trajectory_sharing must be boolean")
-
 
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
@@ -92,9 +86,6 @@ class TsimAdapter(Adapter):
         batch = int(execution["batch_size"])
         if not 1 <= batch <= MAX_BATCH_SIZE:
             raise ValueError("Tsim requires batch_size in [1, 65536]")
-        sharing = execution.get("options", {}).get("trajectory_sharing", True)
-        if not isinstance(sharing, bool):
-            raise ValueError("tsim_trajectory_sharing must be boolean")
         started = time.perf_counter()
         circuit = tsim.Circuit(artifact_path.read_text())
         selection = detector_mask(semantics, circuit.num_detectors)
@@ -104,7 +95,7 @@ class TsimAdapter(Adapter):
         parse_seconds = time.perf_counter() - started
         started = time.perf_counter()
         sampler = circuit.compile_detector_sampler(
-            strategy="active_statevector", trajectory_sharing=sharing, seed=seed
+            strategy="active_statevector", seed=seed
         )
         compile_seconds = time.perf_counter() - started
         # Read-only introspection of the pinned implementation for provenance.
@@ -113,7 +104,7 @@ class TsimAdapter(Adapter):
         metadata = {
             "name": "tsim", "version": version("bloqade-tsim"), "threads": threads,
             "precision": "complex-fp64", "reference_convention": "raw-record-parity",
-            "sampling_backend": "active_statevector", "trajectory_sharing": sharing,
+            "sampling_backend": "active_statevector", "trajectory_sharing": True,
             "batch_enabled": batch > 1, "effective_batch_size": batch,
             "batch_parameter": "statevector-batch-shots",
             "batch_size_applicable": bool(sampler._program.components),
