@@ -724,6 +724,12 @@ def report_execution(
     peer_results: Path | None = None,
 ) -> str:
     document = read_result(execution_dir / "raw.json")
+    if "scaling" in document["campaign"]:
+        from clifft_bench.scaling_report import report_scaling
+
+        if peer_results is not None:
+            raise ValueError("thread scaling requires same-run baselines, without --peer-results")
+        return report_scaling(document, execution_dir, output_dir=output_dir, check=check)
     peers = read_result(peer_results / "raw.json") if peer_results is not None else None
     report = build_report(document, peer_document=peers)
     data = throughput_data(report)

@@ -33,6 +33,13 @@ class Counts:
 class PreparedAdapter(ABC):
     runtime_metadata: dict[str, Any]
 
+    def prepare_sampling(self, shots: int, seed: int) -> None:
+        """Resolve native tuning once for the public call shape, outside timing."""
+
+    def sampling_metadata(self) -> dict[str, Any]:
+        """Return observable native execution choices for a completed sample."""
+        return {}
+
     def begin_sample(self, seed: int) -> None:
         """Initialize a repetition's random stream outside the sampling timer."""
 
@@ -44,10 +51,25 @@ class PreparedAdapter(ABC):
 class Adapter(ABC):
     name: str
     adapter_version = ADAPTER_API_VERSION
+    native_threads = False
+
+    def thread_budget(self, execution: dict[str, Any]) -> int:
+        threads = execution.get("threads", 1)
+        if type(threads) is not int or threads < 1:
+            raise ValueError("threads must be a positive integer")
+        if execution["batch_size"] == "native":
+            if not self.native_threads:
+                raise ValueError(f"{self.name} has no native threading recipe")
+        elif threads != 1:
+            raise ValueError("multiple threads require native configuration")
+        return threads
 
     def validate_options(self, options: dict[str, Any]) -> None:
         if options:
             raise ValueError(f"{self.name} does not accept options: {sorted(options)}")
+
+    def validate_native_options(self, options: dict[str, Any]) -> None:
+        self.validate_options(options)
 
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         """Verify source identity when the adapter requires a source-built package."""

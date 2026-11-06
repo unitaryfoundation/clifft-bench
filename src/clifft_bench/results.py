@@ -19,6 +19,7 @@ from clifft_bench.calibration import (
     calibration_candidates,
 )
 from clifft_bench.selection import detector_mask, has_postselection
+from clifft_bench.system import native_thread_environment
 
 FORMAT = "clifft-bench/raw/v1"
 CONTRACT_KEYS = (
@@ -181,6 +182,8 @@ def _validate_result(document: dict[str, Any]) -> None:
         )
     if run["classification"] == "official":
         _validate_official(document)
+    if "scaling" in campaign:
+        _validate_scaling(document)
     # Comparison validation also runs when regenerating CSV without plotting.
     comparison_pairs(document)
 
@@ -221,14 +224,17 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     load_adapter(simulator["adapter"]).validate_options(execution["options"])
     _require(execution["options"] == contract["execution"]["options"], "mismatched options")
     requested_batch = contract["execution"]["batch_size"]
-    if requested_batch != "calibrate":
+    native = requested_batch == "native"
+    _require(native == ("scaling" in campaign), "native policy requires a scaling campaign")
+    if requested_batch not in ("calibrate", "native"):
         _number(requested_batch, "requested batch size", integer=True, positive=True)
     if requested_batch != "calibrate" or case["setup"] is None:
         _require(execution["batch_size"] == requested_batch, "mismatched requested batch size")
-    if execution["batch_size"] != "calibrate":
+    if execution["batch_size"] not in ("calibrate", "native"):
         _number(execution["batch_size"], "batch size", integer=True, positive=True)
     _require(
-        execution["batch_enabled"] is (execution["batch_size"] != 1),
+        (native and execution["batch_enabled"] in (None, True, False))
+        or execution["batch_enabled"] is (execution["batch_size"] != 1),
         "batching differs from batch size",
     )
     _number(execution["shots_per_call"], "shots_per_call", integer=True, positive=True)
@@ -240,7 +246,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         "mismatched memory limit",
     )
     _require(
-        execution["threads_requested"] == 1
+        execution["threads_requested"] == (contract["execution"]["threads"] if native else 1)
         and execution["postselection"] is has_postselection(semantics),
         "invalid thread or selection contract",
     )
@@ -284,19 +290,23 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
                 "runtime circuit metadata mismatch",
             )
         _require(
-            metadata["threads"] == execution["threads_effective"] == 1,
-            "worker did not use one thread",
+            metadata["threads"] == execution["threads_effective"]
+            and type(metadata["threads"]) is int
+            and 1 <= metadata["threads"] <= execution["threads_requested"],
+            "worker exceeded the thread budget",
         )
         _require(metadata["version"] == simulator["version"], "runtime version mismatch")
         _require(
             metadata["batch_enabled"] is execution["batch_enabled"],
             "runtime batching mismatch",
         )
-        _number(execution["batch_size_effective"], "effective batch", integer=True, positive=True)
-        _require(
-            execution["batch_size_effective"] <= execution["shots_per_call"],
-            "effective batch exceeds public call size",
-        )
+        if not (native and simulator["adapter"] == "tsim"):
+            _number(execution["batch_size_effective"], "effective batch",
+                    integer=True, positive=True)
+            _require(
+                execution["batch_size_effective"] <= execution["shots_per_call"],
+                "effective batch exceeds public call size",
+            )
         if "scheduler" in execution["options"] and case["status"] == "success":
             _require(
                 type(metadata["scheduler_statistics"]["applied"]) is bool,
@@ -313,6 +323,8 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
                 case["warmup"]["attempted_shots"] >= execution["shots_per_call"],
                 "Tsim requires a full-call warmup",
             )
+        if native:
+            _validate_native_setup(case, campaign)
     _validate_calibration_record(contract, case)
     for repetition, sample in enumerate(case["samples"]):
         _counts(sample, execution["postselection"])
@@ -332,6 +344,112 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
             ),
             "sample throughput differs from counts/duration",
         )
+        if native:
+            _number(sample["process_cpu_seconds"], "process CPU seconds")
+            _number(sample["sampling_wall_seconds"], "sampling wall seconds", positive=True)
+            lo, hi = sample["active_threads_min"], sample["active_threads_max"]
+            if simulator["adapter"] == "symft":
+                _require(type(lo) is int and type(hi) is int
+                         and 1 <= lo <= hi <= execution["threads_effective"],
+                         "invalid observed active threads")
+            else:
+                _require(lo is None and hi is None, "unavailable active thread observation")
+
+
+def _validate_native_setup(case: dict, campaign: dict) -> None:
+    execution, setup = case["execution"], case["setup"]
+    metadata = setup["runtime_metadata"]
+    budget = execution["threads_requested"]
+    cpus = [c["logical_cpu"] for c in campaign["resources"]["physical_cores"][:budget]]
+    _require(len(cpus) == budget and setup["affinity"]["applied"] is True
+             and setup["affinity"]["logical_cpus"] == cpus
+             and setup["affinity"]["available_after"] == sorted(cpus),
+             "native CPU allocation mismatch")
+    _require(metadata["thread_environment"] == native_thread_environment(budget),
+             "native pre-import thread environment mismatch")
+    _require(metadata["address_space_limit_bytes"] == execution["memory_limit_bytes"],
+             "native memory ceiling mismatch")
+    _number(metadata["peak_rss_bytes"], "setup peak RSS", integer=True, positive=True)
+    adapter = case["simulator"]["adapter"]
+    _require(metadata["batch_control"] == ("native-tune" if adapter == "clifft" else "native-auto"),
+             "native configuration policy mismatch")
+    if adapter == "tsim":
+        _require(execution["batch_size_effective"] is None
+                 and metadata["effective_batch_size"] is None
+                 and execution["batch_enabled"] is None, "Tsim must retain automatic batching")
+    else:
+        _require(execution["batch_size_effective"] == min(
+            metadata["effective_batch_size"], execution["shots_per_call"]),
+            "native batch size mismatch")
+    if adapter == "symft":
+        _require(metadata["batch_enabled"] is True, "native SymFT requires batch counts")
+        _number(metadata["sample_chunk_shots"], "native chunk size", integer=True, positive=True)
+    if adapter == "clifft":
+        report = metadata["native_tuning"]
+        for key in ("batch_size", "baseline_batch_size", "shot_workers", "intra_shot_workers"):
+            _number(report[key], key, integer=True, positive=True)
+        _require(report["shot_workers"] * report["intra_shot_workers"] == metadata["threads"]
+                 and report["batch_size"] == metadata["effective_batch_size"]
+                 and report["budget_seconds"] == 0.25, "native Clifft tuning selection mismatch")
+        _require(type(report["sufficient_measurements"]) is bool
+                 and isinstance(report["stop_reason"], str) and bool(report["stop_reason"])
+                 and isinstance(report["trials"], list), "missing native Clifft tuning evidence")
+        _number(report["elapsed_seconds"], "native calibration duration")
+        _number(report["trial_shots"], "native calibration shots", integer=True)
+        for trial in report["trials"]:
+            for key in ("batch_size", "shot_workers"):
+                _number(trial[key], key, integer=True, positive=True)
+            for key in ("setup_seconds", "warmup_seconds", "elapsed_seconds", "shots_per_second"):
+                _number(trial[key], key)
+            for key in ("warmup_shots", "shots"):
+                _number(trial[key], key, integer=True)
+            _require(type(trial["used_warmup"]) is bool, "missing native trial warmup flag")
+
+
+def _validate_scaling(document: dict) -> None:
+    campaign, resources = document["campaign"], document["campaign"]["resources"]
+    budgets = campaign["scaling"]["threads"]
+    _require(isinstance(budgets, list) and bool(budgets)
+             and all(type(p) is int and p > 0 for p in budgets)
+             and budgets == sorted(set(budgets)) and budgets[0] == 1, "invalid scaling budgets")
+    _require(campaign["classification"] == "smoke" and not campaign.get("comparisons")
+             and document["runner"]["os"] == "Linux" and resources["logical_cpu"] is None
+             and resources["smt_policy"] == "one-logical-cpu-per-core", "invalid scaling resources")
+    _number(resources["memory_limit_bytes"], "scaling memory limit", integer=True, positive=True)
+    cores = resources["physical_cores"]
+    _require(isinstance(cores, list) and bool(cores), "missing physical core allocation")
+    for core in cores:
+        for key in ("logical_cpu", "package_id", "core_id"):
+            _number(core[key], key, integer=True)
+    cpus = [c["logical_cpu"] for c in cores]
+    _require(len(set(cpus)) == len(cpus)
+             and len({(c["package_id"], c["core_id"]) for c in cores}) == len(cores)
+             and set(cpus).issubset(document["runner"]["allowed_logical_cpus"]),
+             "scaling allocation repeats a core or uses an unavailable CPU")
+    workloads, groups = {}, {}
+    for case in document["cases"]:
+        execution = case["execution"]
+        budget = execution["threads_requested"]
+        _require(type(budget) is int and budget in budgets and execution["threads"] == budget
+                 and execution["tuning_policy"] == "native", "invalid native thread request")
+        _require(load_adapter(case["simulator"]["adapter"]).native_threads,
+                 "adapter has no native threading recipe")
+        load_adapter(case["simulator"]["adapter"]).validate_native_options(execution["options"])
+        workload = case["workload"]["id"]
+        reference = workloads.setdefault(workload, case)
+        _compatible(reference, case, same_threads=False)
+        _require(reference["simulator"]["build"]["precision"]
+                 == case["simulator"]["build"]["precision"], "scaling precision mismatch")
+        key = case["simulator"]["implementation_id"], workload
+        group = groups.setdefault(key, {})
+        _require(budget not in group, "duplicate scaling point")
+        if group:
+            _require(next(iter(group.values()))["execution"]["options"] == execution["options"],
+                     "scaling changed simulator options across thread budgets")
+        group[budget] = case
+    if document["run"]["selection"] is None:
+        _require(all(set(group) == set(budgets) for group in groups.values()),
+                 "missing scaling points")
 
 
 def _validate_official(document: dict) -> None:
@@ -436,7 +554,7 @@ def comparison_pairs(document: dict) -> list[dict]:
     return pairs
 
 
-def _compatible(left: dict, right: dict) -> None:
+def _compatible(left: dict, right: dict, *, same_threads: bool = True) -> None:
     a, b = left["workload"], right["workload"]
     _require(
         a["artifact"]["sha256"] == b["artifact"]["sha256"]
@@ -451,6 +569,8 @@ def _compatible(left: dict, right: dict) -> None:
         "request_timeout_seconds",
         "repetitions",
     ):
+        if key == "threads_requested" and not same_threads:
+            continue
         _require(
             left["execution"][key] == right["execution"][key], f"incompatible comparison {key}"
         )
@@ -506,7 +626,8 @@ def case_rows(document: dict) -> list[dict]:
                     for k in ("compile_seconds", "peak_active_width", "kernel_warmup_seconds")
                 },
                 "warmup_seconds": (case["warmup"] or {}).get("duration_seconds", ""),
-                "peak_rss_bytes": max((s["peak_rss_bytes"] for s in case["samples"]), default=""),
+                "peak_rss_bytes": max((s["peak_rss_bytes"] for s in case["samples"]),
+                                      default=metadata.get("peak_rss_bytes", "")),
             }
         )
     return rows

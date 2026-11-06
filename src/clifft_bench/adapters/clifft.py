@@ -22,17 +22,52 @@ class _PreparedClifft(PreparedAdapter):
         observable_index: int,
         runtime_metadata: dict[str, Any],
         batch_size: int,
+        threads: int = 1,
+        native: bool = False,
     ) -> None:
         self._clifft = clifft
         self._program = program
         self._observable_index = observable_index
         self._batch_size = batch_size
+        self._threads = threads
+        self._native = native
+        self._layout = None
         self.runtime_metadata = runtime_metadata
+
+    def prepare_sampling(self, shots: int, seed: int) -> None:
+        if not self._native:
+            return
+        result = self._clifft.sample_survivors(
+            self._program, shots, seed=seed, keep_records=False,
+            threads=self._threads, batch_size="tune", tuning_budget_seconds=0.25,
+        )
+        report = result.batch_tuning
+        if report is None:
+            raise RuntimeError("Clifft did not return native tuning evidence")
+        self._batch_size = int(report.batch_size)
+        self._layout = (int(report.shot_workers), int(report.intra_shot_workers))
+        if (min(self._layout) < 1 or math.prod(self._layout) > self._threads
+                or self._batch_size < 1):
+            raise RuntimeError("Clifft native tuning exceeded the thread budget")
+        evidence = {key: getattr(report, key) for key in (
+            "batch_size", "baseline_batch_size", "shot_workers", "intra_shot_workers",
+            "elapsed_seconds", "trial_shots", "sufficient_measurements", "stop_reason",
+        )}
+        evidence["budget_seconds"] = 0.25
+        evidence["trials"] = [{key: getattr(trial, key) for key in (
+            "batch_size", "shot_workers", "setup_seconds", "warmup_shots", "warmup_seconds",
+            "shots", "elapsed_seconds", "shots_per_second", "used_warmup",
+        )} for trial in report.trials]
+        self.runtime_metadata.update(
+            native_tuning=evidence, threads=math.prod(self._layout),
+            batch_enabled=self._batch_size > 1, effective_batch_size=self._batch_size,
+        )
 
     def sample(self, shots: int, seed: int) -> Counts:
         result = self._clifft.sample_survivors(
             self._program, shots, seed=seed, keep_records=False,
-            threads=1, batch_size=self._batch_size,
+            threads=self._threads, batch_size=self._batch_size,
+            **({"thread_layout": self._layout} if self._layout is not None else {}),
         )
         return Counts(
             attempted_shots=int(result.total_shots),
@@ -44,6 +79,7 @@ class _PreparedClifft(PreparedAdapter):
 
 class ClifftAdapter(Adapter):
     name = "clifft"
+    native_threads = True
 
     def validate_options(self, options: dict[str, Any]) -> None:
         if options.keys() - {"scheduler"}:
@@ -86,6 +122,8 @@ class ClifftAdapter(Adapter):
         seed: int = 0,
     ) -> PreparedAdapter:
         self.validate_options(execution.get("options", {}))
+        threads = self.thread_budget(execution)
+        native = execution["batch_size"] == "native"
         import clifft
 
         scheduler_config = execution.get("options", {}).get("scheduler")
@@ -97,7 +135,7 @@ class ClifftAdapter(Adapter):
                 )
             scheduler = clifft.ActiveWidthSchedulePass(**scheduler_config)
 
-        requested_batch_size = execution["batch_size"]
+        requested_batch_size = 1 if native else execution["batch_size"]
         if type(requested_batch_size) is not int or requested_batch_size < 1:
             raise ValueError("Clifft requires a positive integer batch size")
         batch_enabled = requested_batch_size > 1
@@ -125,12 +163,12 @@ class ClifftAdapter(Adapter):
         metadata = {
             "name": "clifft",
             "version": str(clifft.version()),
-            "threads": 1,
+            "threads": threads,
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
             "batch_enabled": batch_enabled,
             "effective_batch_size": requested_batch_size,
-            "batch_control": "explicit",
+            "batch_control": "native-tune" if native else "explicit",
             "postselection_before_optimization": early_postselection,
             "num_qubits": int(program.num_qubits),
             "num_measurements": int(program.num_measurements),
@@ -163,4 +201,6 @@ class ClifftAdapter(Adapter):
             int(workload["semantics"]["observable_index"]),
             metadata,
             requested_batch_size,
+            threads=threads,
+            native=native,
         )

@@ -69,6 +69,8 @@ timing, aggregate-count endpoints, and build settings. The
 - [Generate release reports](CONTRIBUTING.md#release-reporting) from one execution.
   The published figures above use [archived tools](CONTRIBUTING.md#historical-evidence).
 - [Collect release benchmarks](CONTRIBUTING.md#reference-host-collection) on the reference EC2 host.
+- [Run the optional native thread scaling pilot](CONTRIBUTING.md#native-thread-scaling-pilot)
+  on existing circuits, separately from the recurring single-core campaign.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including
   [Quantum Volume comparisons](experiments/qv/README.md) and the

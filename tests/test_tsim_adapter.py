@@ -147,13 +147,13 @@ def test_tsim_rejects_inconsistent_native_rows(damage):
 def test_tsim_requires_explicit_and_effective_single_thread(tmp_path, monkeypatch):
     monkeypatch.delenv("NUMBA_NUM_THREADS")
     with pytest.raises(ValueError, match="NUMBA_NUM_THREADS"):
-        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution={})
+        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution={"batch_size": 1})
     monkeypatch.setenv("NUMBA_NUM_THREADS", "1")
     numba = pytest.importorskip("numba")
     pytest.importorskip("tsim")
     monkeypatch.setattr(numba, "get_num_threads", lambda: 2)
     with pytest.raises(RuntimeError, match="effective Numba thread"):
-        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution={})
+        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution={"batch_size": 1})
 
 
 @pytest.mark.parametrize("mismatch", ["wheel", "commit", "repository", None])

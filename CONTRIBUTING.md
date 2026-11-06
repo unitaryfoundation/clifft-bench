@@ -59,6 +59,8 @@ For a new Clifft release:
    Update the Clifft smoke, coverage smoke and pilot cases and the `clifft-current` CI install
    to the same new implementation. Keep the intended scheduler settings in
    the shared `clifft-scheduled` option preset in `software.toml`.
+   Keep the optional `thread-scaling` campaign's three native variants on the
+   maintained Clifft, SymFT, and Tsim implementations when refreshing their pins.
 4. Keep each workload's `shots_per_call` aligned across every variant and
    release within each comparison. Update those workload-level values only when measurement evidence
    requires it; batch size remains a separately calibrated implementation choice.
@@ -311,3 +313,39 @@ uv run clifft-bench validate /tmp/tsim-pilot/raw.json
 
 The pilot records diagnostics under the same bounded calibration policy as the
 release campaign. Review reference-host evidence before making performance claims.
+
+## Native thread scaling pilot
+
+`thread-scaling` is a separate optional campaign over existing workload IDs;
+it does not run as part of release collection. Its
+[contract](docs/benchmark-contract.md#optional-native-thread-scaling-pilot)
+defines the fixed work, resource allocation, and per-tool native recipes.
+
+On an existing Linux host, use Python 3.12 and the isolated pinned environments:
+
+```bash
+uv run --python 3.12 clifft-bench bootstrap thread-scaling
+uv run --python 3.12 clifft-bench run thread-scaling --output-dir /tmp/thread-scaling
+uv run clifft-bench validate /tmp/thread-scaling/raw.json
+uv run --extra report clifft-bench report /tmp/thread-scaling
+```
+
+The declared run has a 30-minute deadline, a 12 GiB per-worker address-space
+ceiling, and 1/2/4/8-core points. Use a fresh output path. Unavailable core
+budgets and case failures remain in `raw.json`; `run` exits nonzero for failures,
+but completed evidence can still be validated and reported. On smaller hosts,
+`--case='--t(1|2)$'` selects a bounded one/two-core pilot and records that selection.
+The host must support Linux affinity and expose physical-core topology; macOS
+cannot enforce this contract. No new host is provisioned by these commands.
+
+`report` automatically generates `report/thread-scaling.png` and
+`report/review.md` for scaling evidence, alongside the existing `cases.csv`.
+`report --check` validates and prints the review without writing artifacts.
+The report requires same-run baselines and does not support `--peer-results`.
+
+The separate [Native thread scaling workflow](.github/workflows/thread-scaling.yml)
+checks fresh native workers and collects one/two-core validation evidence on
+existing circuits. Shared CI results are smoke evidence, not official rates.
+Keep collected raw files, generated reports/figures, and any one-off investigation
+scripts on an evidence branch. Link an immutable evidence commit from the issue
+or PR; do not merge those artifacts into mainline. This pilot does not gate an RC.
