@@ -107,6 +107,7 @@ def scaling_summary(document: dict, rows: list[dict]) -> str:
                                                "compile_seconds", "kernel_warmup_seconds",
                                                "warmup_seconds")],
             ]) + " |")
+        for row in selected:
             if row["error_message"]:
                 message = row["error_message"].replace("\n", " ")
                 lines += ["", f"{row['case_id']}: {row['error_phase']} / "
