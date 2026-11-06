@@ -1,0 +1,5239 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "threads": 1
+        },
+        "id": "distillation-color-code-85q-p5e-2--clifft-native--t1",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 100000,
+        "variant_id": "clifft-native--t1",
+        "workload_id": "distillation-color-code-85q-p5e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "threads": 2
+        },
+        "id": "distillation-color-code-85q-p5e-2--clifft-native--t2",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 100000,
+        "variant_id": "clifft-native--t2",
+        "workload_id": "distillation-color-code-85q-p5e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "threads": 1
+        },
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-native--t1",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 256,
+        "variant_id": "clifft-native--t1",
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "threads": 2
+        },
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-native--t2",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 256,
+        "variant_id": "clifft-native--t2",
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "threads": 1
+        },
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-native--t1",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 1,
+        "variant_id": "clifft-native--t1",
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "threads": 2
+        },
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-native--t2",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 1,
+        "variant_id": "clifft-native--t2",
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 1
+        },
+        "id": "distillation-color-code-85q-p5e-2--symft-native--t1",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 100000,
+        "variant_id": "symft-native--t1",
+        "workload_id": "distillation-color-code-85q-p5e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 2
+        },
+        "id": "distillation-color-code-85q-p5e-2--symft-native--t2",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 100000,
+        "variant_id": "symft-native--t2",
+        "workload_id": "distillation-color-code-85q-p5e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 1
+        },
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-native--t1",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 256,
+        "variant_id": "symft-native--t1",
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 2
+        },
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-native--t2",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 256,
+        "variant_id": "symft-native--t2",
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 1
+        },
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft-native--t1",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 1,
+        "variant_id": "symft-native--t1",
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 2
+        },
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft-native--t2",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 1,
+        "variant_id": "symft-native--t2",
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 1
+        },
+        "id": "distillation-color-code-85q-p5e-2--tsim-native--t1",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 100000,
+        "variant_id": "tsim-native--t1",
+        "workload_id": "distillation-color-code-85q-p5e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 2
+        },
+        "id": "distillation-color-code-85q-p5e-2--tsim-native--t2",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 100000,
+        "variant_id": "tsim-native--t2",
+        "workload_id": "distillation-color-code-85q-p5e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 1
+        },
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-native--t1",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 256,
+        "variant_id": "tsim-native--t1",
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 2
+        },
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-native--t2",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 256,
+        "variant_id": "tsim-native--t2",
+        "workload_id": "coherent-surface-d5-r5-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 1
+        },
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-native--t1",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 1,
+        "variant_id": "tsim-native--t1",
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+      },
+      {
+        "execution": {
+          "batch_size": "native",
+          "options": {},
+          "threads": 2
+        },
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-native--t2",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 1,
+        "variant_id": "tsim-native--t2",
+        "workload_id": "coherent-surface-d3-r3-p1e-3-rz2e-2"
+      }
+    ],
+    "classification": "smoke",
+    "collection": {
+      "memory_limit_gib": 12,
+      "run_timeout_minutes": 30
+    },
+    "measurement": {
+      "correctness_shots": 256,
+      "min_sample_seconds": 1,
+      "repetitions": 3,
+      "request_timeout_seconds": 60,
+      "setup_timeout_seconds": 180,
+      "warmup_shots": 256
+    },
+    "profile_id": "native-thread-scaling",
+    "resources": {
+      "logical_cpu": null,
+      "memory_limit_bytes": 12884901888,
+      "physical_cores": [
+        {
+          "core_id": 0,
+          "logical_cpu": 0,
+          "package_id": 0
+        },
+        {
+          "core_id": 1,
+          "logical_cpu": 2,
+          "package_id": 0
+        }
+      ],
+      "smt_policy": "one-logical-cpu-per-core"
+    },
+    "scaling": {
+      "threads": [
+        1,
+        2,
+        4,
+        8
+      ]
+    },
+    "seed": 20260819,
+    "suite_version": "0.2.8"
+  },
+  "cases": [
+    {
+      "case_id": "distillation-color-code-85q-p5e-2--clifft-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 25,
+          "attempted_shots": 256,
+          "discarded_shots": 231,
+          "duration_seconds": 0.0001580409999917265,
+          "logical_errors": 11,
+          "stream_setup_seconds": 5.616000009922573e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 2048,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 100000,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 175454,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 22,
+          "attempted_shots": 2200000,
+          "discarded_shots": 2024546,
+          "duration_seconds": 1.0238393289999976,
+          "logical_errors": 74113,
+          "peak_rss_bytes": 50876416,
+          "process_cpu_seconds": 1.0239513169999999,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0239762349999921,
+          "seed_first": 20270819,
+          "seed_last": 20270840,
+          "sequence_index": 0,
+          "started_at": "2026-11-06T19:03:35.337070Z",
+          "stream_setup_seconds": 3.110999983846341e-06,
+          "throughput_attempted_shots_per_second": 2148774.654074658
+        },
+        {
+          "accepted_shots": 175722,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 22,
+          "attempted_shots": 2200000,
+          "discarded_shots": 2024278,
+          "duration_seconds": 1.0248617679999938,
+          "logical_errors": 74348,
+          "peak_rss_bytes": 50876416,
+          "process_cpu_seconds": 1.024943875,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.024979600999984,
+          "seed_first": 120270819,
+          "seed_last": 120270840,
+          "sequence_index": 1,
+          "started_at": "2026-11-06T19:03:36.363493Z",
+          "stream_setup_seconds": 3.923000008398958e-06,
+          "throughput_attempted_shots_per_second": 2146630.95911293
+        },
+        {
+          "accepted_shots": 175632,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 22,
+          "attempted_shots": 2200000,
+          "discarded_shots": 2024368,
+          "duration_seconds": 1.0265798700000346,
+          "logical_errors": 73946,
+          "peak_rss_bytes": 50876416,
+          "process_cpu_seconds": 1.026648207,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0266936479999913,
+          "seed_first": 220270819,
+          "seed_last": 220270840,
+          "sequence_index": 2,
+          "started_at": "2026-11-06T19:03:37.391361Z",
+          "stream_setup_seconds": 6.41700000869605e-06,
+          "throughput_attempted_shots_per_second": 2143038.320048031
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.34421865800001683,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-tune",
+          "batch_enabled": true,
+          "compile_seconds": 0.0032489159999897765,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 2048,
+          "name": "clifft",
+          "native_tuning": {
+            "baseline_batch_size": 256,
+            "batch_size": 2048,
+            "budget_seconds": 0.25,
+            "elapsed_seconds": 0.24949947400000003,
+            "intra_shot_workers": 1,
+            "shot_workers": 1,
+            "stop_reason": "completed",
+            "sufficient_measurements": true,
+            "trial_shots": 445440,
+            "trials": [
+              {
+                "batch_size": 256,
+                "elapsed_seconds": 0.050567656,
+                "setup_seconds": 3.9980000000000005e-06,
+                "shot_workers": 1,
+                "shots": 106240,
+                "shots_per_second": 2100947.688775608,
+                "used_warmup": false,
+                "warmup_seconds": 0.001065834,
+                "warmup_shots": 256
+              },
+              {
+                "batch_size": 1,
+                "elapsed_seconds": 0.050444126,
+                "setup_seconds": 2.612999999998533e-06,
+                "shot_workers": 1,
+                "shots": 33791,
+                "shots_per_second": 669869.867504494,
+                "used_warmup": false,
+                "warmup_seconds": 6.669e-06,
+                "warmup_shots": 1
+              },
+              {
+                "batch_size": 64,
+                "elapsed_seconds": 0.049398895,
+                "setup_seconds": 4.418000000006028e-06,
+                "shot_workers": 1,
+                "shots": 96192,
+                "shots_per_second": 1947250.0346414633,
+                "used_warmup": false,
+                "warmup_seconds": 3.8667e-05,
+                "warmup_shots": 64
+              },
+              {
+                "batch_size": 1024,
+                "elapsed_seconds": 0.04949399100000001,
+                "setup_seconds": 4.006200000000737e-05,
+                "shot_workers": 1,
+                "shots": 105472,
+                "shots_per_second": 2131006.1659808354,
+                "used_warmup": false,
+                "warmup_seconds": 0.0005564820000000001,
+                "warmup_shots": 1024
+              },
+              {
+                "batch_size": 2048,
+                "elapsed_seconds": 0.046783061,
+                "setup_seconds": 4.642500000001659e-05,
+                "shot_workers": 1,
+                "shots": 100352,
+                "shots_per_second": 2145049.8931653914,
+                "used_warmup": false,
+                "warmup_seconds": 0.00101184,
+                "warmup_shots": 2048
+              }
+            ]
+          },
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85,
+          "optimized_t_gates": 5,
+          "parse_seconds": 0.00018393100000935192,
+          "peak_active_width": 3,
+          "peak_rss_bytes": 50876416,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 1763,
+            "incumbent_dense_work": 186.0,
+            "incumbent_peak": 5,
+            "result_dense_work": 86.0,
+            "result_peak": 3,
+            "swept_ops": 1640
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-native--t1",
+      "warmup": {
+        "accepted_shots": 7969,
+        "attempted_shots": 100000,
+        "contract_errors": [],
+        "discarded_shots": 92031,
+        "duration_seconds": 0.046892864000000145,
+        "logical_errors": 3325,
+        "stream_setup_seconds": 8.111999989068863e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "distillation-color-code-85q-p5e-2--clifft-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 25,
+          "attempted_shots": 256,
+          "discarded_shots": 231,
+          "duration_seconds": 0.00016585699998472592,
+          "logical_errors": 11,
+          "stream_setup_seconds": 4.566999990629483e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 2048,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 100000,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 318778,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 40,
+          "attempted_shots": 4000000,
+          "discarded_shots": 3681222,
+          "duration_seconds": 1.0101653599999736,
+          "logical_errors": 134488,
+          "peak_rss_bytes": 51642368,
+          "process_cpu_seconds": 1.9805754819999999,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0104532240000026,
+          "seed_first": 20270819,
+          "seed_last": 20270858,
+          "sequence_index": 3,
+          "started_at": "2026-11-06T19:03:38.874694Z",
+          "stream_setup_seconds": 3.238000005012509e-06,
+          "throughput_attempted_shots_per_second": 3959747.738726761
+        },
+        {
+          "accepted_shots": 335141,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 42,
+          "attempted_shots": 4200000,
+          "discarded_shots": 3864859,
+          "duration_seconds": 1.0091629329999705,
+          "logical_errors": 141662,
+          "peak_rss_bytes": 51642368,
+          "process_cpu_seconds": 1.9865542440000001,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.009401333999989,
+          "seed_first": 120270819,
+          "seed_last": 120270860,
+          "sequence_index": 4,
+          "started_at": "2026-11-06T19:03:39.890230Z",
+          "stream_setup_seconds": 7.610000011482043e-06,
+          "throughput_attempted_shots_per_second": 4161865.108852668
+        },
+        {
+          "accepted_shots": 334377,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 42,
+          "attempted_shots": 4200000,
+          "discarded_shots": 3865623,
+          "duration_seconds": 1.0108501209999758,
+          "logical_errors": 141008,
+          "peak_rss_bytes": 51642368,
+          "process_cpu_seconds": 1.9767244479999997,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0110807930000192,
+          "seed_first": 220270819,
+          "seed_last": 220270860,
+          "sequence_index": 5,
+          "started_at": "2026-11-06T19:03:40.902678Z",
+          "stream_setup_seconds": 6.769000009398951e-06,
+          "throughput_attempted_shots_per_second": 4154918.6301181642
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.32184939799998347,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-tune",
+          "batch_enabled": true,
+          "compile_seconds": 0.0032441040000037447,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 2048,
+          "name": "clifft",
+          "native_tuning": {
+            "baseline_batch_size": 256,
+            "batch_size": 2048,
+            "budget_seconds": 0.25,
+            "elapsed_seconds": 0.24985941500000003,
+            "intra_shot_workers": 1,
+            "shot_workers": 2,
+            "stop_reason": "completed",
+            "sufficient_measurements": true,
+            "trial_shots": 851968,
+            "trials": [
+              {
+                "batch_size": 256,
+                "elapsed_seconds": 0.048816741999999996,
+                "setup_seconds": 6.360000000000001e-06,
+                "shot_workers": 2,
+                "shots": 200192,
+                "shots_per_second": 4100888.17479872,
+                "used_warmup": false,
+                "warmup_seconds": 0.001206381,
+                "warmup_shots": 512
+              },
+              {
+                "batch_size": 1,
+                "elapsed_seconds": 0.050848446,
+                "setup_seconds": 4.1620000000019974e-06,
+                "shot_workers": 2,
+                "shots": 65534,
+                "shots_per_second": 1288810.2814390827,
+                "used_warmup": false,
+                "warmup_seconds": 3.7118e-05,
+                "warmup_shots": 2
+              },
+              {
+                "batch_size": 64,
+                "elapsed_seconds": 0.04958478800000001,
+                "setup_seconds": 7.010000000001737e-06,
+                "shot_workers": 2,
+                "shots": 184192,
+                "shots_per_second": 3714687.6578357047,
+                "used_warmup": false,
+                "warmup_seconds": 9.035300000000001e-05,
+                "warmup_shots": 128
+              },
+              {
+                "batch_size": 1024,
+                "elapsed_seconds": 0.04983180100000001,
+                "setup_seconds": 9.980999999997797e-05,
+                "shot_workers": 2,
+                "shots": 198656,
+                "shots_per_second": 3986530.6092388667,
+                "used_warmup": false,
+                "warmup_seconds": 0.0006126080000000001,
+                "warmup_shots": 2048
+              },
+              {
+                "batch_size": 2048,
+                "elapsed_seconds": 0.04726040700000001,
+                "setup_seconds": 0.00019442999999999544,
+                "shot_workers": 2,
+                "shots": 196608,
+                "shots_per_second": 4160099.594571836,
+                "used_warmup": false,
+                "warmup_seconds": 0.001185843,
+                "warmup_shots": 4096
+              }
+            ]
+          },
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85,
+          "optimized_t_gates": 5,
+          "parse_seconds": 0.00019776700000306846,
+          "peak_active_width": 3,
+          "peak_rss_bytes": 51642368,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 1763,
+            "incumbent_dense_work": 186.0,
+            "incumbent_peak": 5,
+            "result_dense_work": 86.0,
+            "result_peak": 3,
+            "swept_ops": 1640
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "version": "0.13.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-native--t2",
+      "warmup": {
+        "accepted_shots": 7969,
+        "attempted_shots": 100000,
+        "contract_errors": [],
+        "discarded_shots": 92031,
+        "duration_seconds": 0.023919994000010547,
+        "logical_errors": 3325,
+        "stream_setup_seconds": 1.1873999994804763e-05
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 4,
+          "attempted_shots": 256,
+          "discarded_shots": 252,
+          "duration_seconds": 0.02636260700001003,
+          "logical_errors": 0,
+          "stream_setup_seconds": 3.3299999984137685e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 61,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 40,
+          "attempted_shots": 10240,
+          "discarded_shots": 10179,
+          "duration_seconds": 1.0137276719999022,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50434048,
+          "process_cpu_seconds": 1.013811125,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0138923120000243,
+          "seed_first": 20270819,
+          "seed_last": 20270858,
+          "sequence_index": 6,
+          "started_at": "2026-11-06T19:03:42.163314Z",
+          "stream_setup_seconds": 2.7929999930620397e-06,
+          "throughput_attempted_shots_per_second": 10101.332224460562
+        },
+        {
+          "accepted_shots": 71,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 40,
+          "attempted_shots": 10240,
+          "discarded_shots": 10169,
+          "duration_seconds": 1.0064693329998988,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50434048,
+          "process_cpu_seconds": 1.006469056,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.00662662900001,
+          "seed_first": 120270819,
+          "seed_last": 120270858,
+          "sequence_index": 7,
+          "started_at": "2026-11-06T19:03:43.180308Z",
+          "stream_setup_seconds": 3.9889999925435404e-06,
+          "throughput_attempted_shots_per_second": 10174.17984259738
+        },
+        {
+          "accepted_shots": 72,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 40,
+          "attempted_shots": 10240,
+          "discarded_shots": 10168,
+          "duration_seconds": 1.0072011089999933,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50434048,
+          "process_cpu_seconds": 1.0071627300000001,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0073548329999937,
+          "seed_first": 220270819,
+          "seed_last": 220270858,
+          "sequence_index": 8,
+          "started_at": "2026-11-06T19:03:44.190332Z",
+          "stream_setup_seconds": 4.562999976087667e-06,
+          "throughput_attempted_shots_per_second": 10166.78785249438
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.08634713500001112,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-tune",
+          "batch_enabled": false,
+          "compile_seconds": 0.01451868600000239,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "native_tuning": {
+            "baseline_batch_size": 1,
+            "batch_size": 1,
+            "budget_seconds": 0.25,
+            "elapsed_seconds": 1.8170000000000001e-06,
+            "intra_shot_workers": 1,
+            "shot_workers": 1,
+            "stop_reason": "single_candidate",
+            "sufficient_measurements": false,
+            "trial_shots": 0,
+            "trials": []
+          },
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "optimized_t_gates": 0,
+          "parse_seconds": 0.00043144200000710953,
+          "peak_active_width": 13,
+          "peak_rss_bytes": 50434048,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 255765,
+            "incumbent_dense_work": 2186274.0,
+            "incumbent_peak": 13,
+            "result_dense_work": 856016.0,
+            "result_peak": 13,
+            "swept_ops": 20095
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-native--t1",
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 255,
+        "duration_seconds": 0.02676826300000812,
+        "logical_errors": 0,
+        "stream_setup_seconds": 5.971000007320981e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 4,
+          "attempted_shots": 256,
+          "discarded_shots": 252,
+          "duration_seconds": 0.013738319999987425,
+          "logical_errors": 0,
+          "stream_setup_seconds": 4.566000001204884e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 256,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 123,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 75,
+          "attempted_shots": 19200,
+          "discarded_shots": 19077,
+          "duration_seconds": 1.0087850350000167,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50614272,
+          "process_cpu_seconds": 1.951391079,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0091519050000102,
+          "seed_first": 20270819,
+          "seed_last": 20270893,
+          "sequence_index": 9,
+          "started_at": "2026-11-06T19:03:45.410614Z",
+          "stream_setup_seconds": 7.586999998920874e-06,
+          "throughput_attempted_shots_per_second": 19032.79621906731
+        },
+        {
+          "accepted_shots": 153,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 75,
+          "attempted_shots": 19200,
+          "discarded_shots": 19047,
+          "duration_seconds": 1.004660445999889,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50614272,
+          "process_cpu_seconds": 1.9439666020000002,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.004923679000001,
+          "seed_first": 120270819,
+          "seed_last": 120270893,
+          "sequence_index": 10,
+          "started_at": "2026-11-06T19:03:46.423059Z",
+          "stream_setup_seconds": 7.675000006202026e-06,
+          "throughput_attempted_shots_per_second": 19110.934521654417
+        },
+        {
+          "accepted_shots": 142,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 76,
+          "attempted_shots": 19456,
+          "discarded_shots": 19314,
+          "duration_seconds": 1.0132476710001583,
+          "logical_errors": 0,
+          "peak_rss_bytes": 50614272,
+          "process_cpu_seconds": 1.9574222070000005,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0135019720000003,
+          "seed_first": 220270819,
+          "seed_last": 220270894,
+          "sequence_index": 11,
+          "started_at": "2026-11-06T19:03:47.431379Z",
+          "stream_setup_seconds": 7.518999979083674e-06,
+          "throughput_attempted_shots_per_second": 19201.623213005107
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.07533458200001064,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-tune",
+          "batch_enabled": false,
+          "compile_seconds": 0.014439887999998291,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "native_tuning": {
+            "baseline_batch_size": 1,
+            "batch_size": 1,
+            "budget_seconds": 0.25,
+            "elapsed_seconds": 2.193e-06,
+            "intra_shot_workers": 1,
+            "shot_workers": 2,
+            "stop_reason": "single_candidate",
+            "sufficient_measurements": false,
+            "trial_shots": 0,
+            "trials": []
+          },
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "optimized_t_gates": 0,
+          "parse_seconds": 0.00043761099999528597,
+          "peak_active_width": 13,
+          "peak_rss_bytes": 50614272,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 255765,
+            "incumbent_dense_work": 2186274.0,
+            "incumbent_peak": 13,
+            "result_dense_work": 856016.0,
+            "result_peak": 13,
+            "swept_ops": 20095
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "version": "0.13.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-native--t2",
+      "warmup": {
+        "accepted_shots": 1,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 255,
+        "duration_seconds": 0.01345238999999765,
+        "logical_errors": 0,
+        "stream_setup_seconds": 9.257999977307918e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 99,
+          "attempted_shots": 256,
+          "discarded_shots": 157,
+          "duration_seconds": 0.00025272900001027665,
+          "logical_errors": 0,
+          "stream_setup_seconds": 2.8950000228178396e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 1,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 43276,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 115421,
+          "attempted_shots": 115421,
+          "discarded_shots": 72145,
+          "duration_seconds": 1.0000013469996532,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49758208,
+          "process_cpu_seconds": 1.200648852,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.2007072279999988,
+          "seed_first": 20270819,
+          "seed_last": 20386239,
+          "sequence_index": 12,
+          "started_at": "2026-11-06T19:03:48.602172Z",
+          "stream_setup_seconds": 2.3979999923540163e-06,
+          "throughput_attempted_shots_per_second": 115420.84452816246
+        },
+        {
+          "accepted_shots": 42835,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 115230,
+          "attempted_shots": 115230,
+          "discarded_shots": 72395,
+          "duration_seconds": 1.0000009719953482,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49758208,
+          "process_cpu_seconds": 1.207027282,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.2070521699999972,
+          "seed_first": 120270819,
+          "seed_last": 120386048,
+          "sequence_index": 13,
+          "started_at": "2026-11-06T19:03:49.806649Z",
+          "stream_setup_seconds": 4.7129999813932955e-06,
+          "throughput_attempted_shots_per_second": 115229.8879970849
+        },
+        {
+          "accepted_shots": 42105,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 112731,
+          "attempted_shots": 112731,
+          "discarded_shots": 70626,
+          "duration_seconds": 1.0000051159924794,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49758208,
+          "process_cpu_seconds": 1.201980764,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.2020237670000142,
+          "seed_first": 220270819,
+          "seed_last": 220383549,
+          "sequence_index": 14,
+          "started_at": "2026-11-06T19:03:51.017168Z",
+          "stream_setup_seconds": 4.927000020416017e-06,
+          "throughput_attempted_shots_per_second": 112730.42327200234
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.046457046000000446,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-tune",
+          "batch_enabled": false,
+          "compile_seconds": 0.0014329780000252867,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "native_tuning": {
+            "baseline_batch_size": 1,
+            "batch_size": 1,
+            "budget_seconds": 0.25,
+            "elapsed_seconds": 1.2050000000000001e-06,
+            "intra_shot_workers": 1,
+            "shot_workers": 1,
+            "stop_reason": "single_candidate",
+            "sufficient_measurements": false,
+            "trial_shots": 0,
+            "trials": []
+          },
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26,
+          "optimized_t_gates": 0,
+          "parse_seconds": 7.801999998946485e-05,
+          "peak_active_width": 4,
+          "peak_rss_bytes": 49758208,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 8304,
+            "incumbent_dense_work": 1390.0,
+            "incumbent_peak": 5,
+            "result_dense_work": 420.0,
+            "result_peak": 4,
+            "swept_ops": 3686
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-native--t1",
+      "warmup": {
+        "accepted_shots": 77,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 179,
+        "duration_seconds": 0.000318501000009519,
+        "logical_errors": 0,
+        "stream_setup_seconds": 5.64199999075754e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--clifft-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 99,
+          "attempted_shots": 256,
+          "discarded_shots": 157,
+          "duration_seconds": 0.00024294900001109454,
+          "logical_errors": 0,
+          "stream_setup_seconds": 2.9119999851445755e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": false,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 1,
+        "threads": 2,
+        "threads_effective": 1,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 42909,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 114356,
+          "attempted_shots": 114356,
+          "discarded_shots": 71447,
+          "duration_seconds": 1.0000047220046042,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49782784,
+          "process_cpu_seconds": 1.198721627,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.198775057000006,
+          "seed_first": 20270819,
+          "seed_last": 20385174,
+          "sequence_index": 15,
+          "started_at": "2026-11-06T19:03:52.385082Z",
+          "stream_setup_seconds": 8.739999998397252e-06,
+          "throughput_attempted_shots_per_second": 114355.4600129913
+        },
+        {
+          "accepted_shots": 42761,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 115018,
+          "attempted_shots": 115018,
+          "discarded_shots": 72257,
+          "duration_seconds": 1.0000069540050163,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49782784,
+          "process_cpu_seconds": 1.201582989,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.2016223809999929,
+          "seed_first": 120270819,
+          "seed_last": 120385836,
+          "sequence_index": 16,
+          "started_at": "2026-11-06T19:03:53.633000Z",
+          "stream_setup_seconds": 1.2546000021984582e-05,
+          "throughput_attempted_shots_per_second": 115017.20016981306
+        },
+        {
+          "accepted_shots": 42952,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 115037,
+          "attempted_shots": 115037,
+          "discarded_shots": 72085,
+          "duration_seconds": 1.0000016519996393,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49782784,
+          "process_cpu_seconds": 1.198951482,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.1990138470000034,
+          "seed_first": 220270819,
+          "seed_last": 220385855,
+          "sequence_index": 17,
+          "started_at": "2026-11-06T19:03:54.882532Z",
+          "stream_setup_seconds": 1.0784000011199169e-05,
+          "throughput_attempted_shots_per_second": 115036.80995923144
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04723246300000028,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-tune",
+          "batch_enabled": false,
+          "compile_seconds": 0.001462888000020257,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1,
+          "name": "clifft",
+          "native_tuning": {
+            "baseline_batch_size": 1,
+            "batch_size": 1,
+            "budget_seconds": 0.25,
+            "elapsed_seconds": 1.072e-06,
+            "intra_shot_workers": 1,
+            "shot_workers": 1,
+            "stop_reason": "single_candidate",
+            "sufficient_measurements": false,
+            "trial_shots": 0,
+            "trials": []
+          },
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26,
+          "optimized_t_gates": 0,
+          "parse_seconds": 8.305500000460597e-05,
+          "peak_active_width": 4,
+          "peak_rss_bytes": 49782784,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 8304,
+            "incumbent_dense_work": 1390.0,
+            "incumbent_peak": 5,
+            "result_dense_work": 420.0,
+            "result_peak": 4,
+            "swept_ops": 3686
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-native--t2",
+      "warmup": {
+        "accepted_shots": 77,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 179,
+        "duration_seconds": 0.00029349199999728626,
+        "logical_errors": 0,
+        "stream_setup_seconds": 5.9719999967455806e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "distillation-color-code-85q-p5e-2--symft-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 19,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.000135839,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 4.9211e-05,
+            "sample_s": 0.000185393
+          },
+          "attempted_shots": 256,
+          "discarded_shots": 237,
+          "duration_seconds": 0.00020519199998147997,
+          "logical_errors": 9,
+          "stream_setup_seconds": 5.082000001266351e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 1024,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 100000,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 135674,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.761421077,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.2995725920000001,
+            "sample_s": 1.061075743
+          },
+          "api_calls": 17,
+          "attempted_shots": 1700000,
+          "discarded_shots": 1564326,
+          "duration_seconds": 1.0618284990000006,
+          "logical_errors": 57166,
+          "peak_rss_bytes": 49532928,
+          "process_cpu_seconds": 1.062030695,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0620854720000068,
+          "seed_first": 20270819,
+          "seed_last": 20270835,
+          "sequence_index": 18,
+          "started_at": "2026-11-06T19:03:56.296327Z",
+          "stream_setup_seconds": 3.646000010348871e-06,
+          "throughput_attempted_shots_per_second": 1601011.8409903396
+        },
+        {
+          "accepted_shots": 135371,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.757189718,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.2958363030000001,
+            "sample_s": 1.053103922
+          },
+          "api_calls": 17,
+          "attempted_shots": 1700000,
+          "discarded_shots": 1564629,
+          "duration_seconds": 1.0538407000000234,
+          "logical_errors": 57200,
+          "peak_rss_bytes": 49532928,
+          "process_cpu_seconds": 1.053994858,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0540336859999968,
+          "seed_first": 120270819,
+          "seed_last": 120270835,
+          "sequence_index": 19,
+          "started_at": "2026-11-06T19:03:57.362697Z",
+          "stream_setup_seconds": 4.520999993928854e-06,
+          "throughput_attempted_shots_per_second": 1613147.0344616242
+        },
+        {
+          "accepted_shots": 135604,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.7554970010000001,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.29646667799999993,
+            "sample_s": 1.052040752
+          },
+          "api_calls": 17,
+          "attempted_shots": 1700000,
+          "discarded_shots": 1564396,
+          "duration_seconds": 1.0525566279999339,
+          "logical_errors": 56943,
+          "peak_rss_bytes": 49532928,
+          "process_cpu_seconds": 1.0527104619999998,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0527425479999977,
+          "seed_first": 220270819,
+          "seed_last": 220270835,
+          "sequence_index": 20,
+          "started_at": "2026-11-06T19:03:58.420774Z",
+          "stream_setup_seconds": 5.600999998023326e-06,
+          "throughput_attempted_shots_per_second": 1615115.001679612
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04183436499999971,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": true,
+          "effective_batch_size": 1024,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85,
+          "peak_active_width": 5,
+          "peak_rss_bytes": 49139712,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "2026.10.8",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-native--t1",
+      "warmup": {
+        "accepted_shots": 7855,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 0.044831972000000005,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 0.01800108,
+          "sample_s": 0.062838644
+        },
+        "attempted_shots": 100000,
+        "contract_errors": [],
+        "discarded_shots": 92145,
+        "duration_seconds": 0.06289337100000125,
+        "logical_errors": 3357,
+        "stream_setup_seconds": 5.552000004627189e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "distillation-color-code-85q-p5e-2--symft-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 19,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.00013948,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 4.9301e-05,
+            "sample_s": 0.000189088
+          },
+          "attempted_shots": 256,
+          "discarded_shots": 237,
+          "duration_seconds": 0.0002060779999908391,
+          "logical_errors": 9,
+          "stream_setup_seconds": 4.327999988618103e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 1024,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 100000,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 247728,
+          "active_threads_max": 2,
+          "active_threads_min": 2,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 1.432954215,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.548804168,
+            "sample_s": 1.0038189249999998
+          },
+          "api_calls": 31,
+          "attempted_shots": 3100000,
+          "discarded_shots": 2852272,
+          "duration_seconds": 1.0049697509999476,
+          "logical_errors": 104500,
+          "peak_rss_bytes": 51011584,
+          "process_cpu_seconds": 1.9861962739999999,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0053064850000055,
+          "seed_first": 20270819,
+          "seed_last": 20270849,
+          "sequence_index": 21,
+          "started_at": "2026-11-06T19:03:59.659336Z",
+          "stream_setup_seconds": 3.1769999964126328e-06,
+          "throughput_attempted_shots_per_second": 3084669.958389784
+        },
+        {
+          "accepted_shots": 255149,
+          "active_threads_max": 2,
+          "active_threads_min": 2,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 1.4686134110000002,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.5641589169999999,
+            "sample_s": 1.028534802
+          },
+          "api_calls": 32,
+          "attempted_shots": 3200000,
+          "discarded_shots": 2944851,
+          "duration_seconds": 1.029477149999991,
+          "logical_errors": 107704,
+          "peak_rss_bytes": 51011584,
+          "process_cpu_seconds": 2.036947403,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0297910040000033,
+          "seed_first": 120270819,
+          "seed_last": 120270850,
+          "sequence_index": 22,
+          "started_at": "2026-11-06T19:04:00.668774Z",
+          "stream_setup_seconds": 6.0429999848565785e-06,
+          "throughput_attempted_shots_per_second": 3108373.9935364546
+        },
+        {
+          "accepted_shots": 246411,
+          "active_threads_max": 2,
+          "active_threads_min": 2,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 1.4294331379999998,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.548282012,
+            "sample_s": 0.9996804039999999
+          },
+          "api_calls": 31,
+          "attempted_shots": 3100000,
+          "discarded_shots": 2853589,
+          "duration_seconds": 1.0006990010000152,
+          "logical_errors": 103760,
+          "peak_rss_bytes": 51011584,
+          "process_cpu_seconds": 1.9819155949999994,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0010481810000158,
+          "seed_first": 220270819,
+          "seed_last": 220270849,
+          "sequence_index": 23,
+          "started_at": "2026-11-06T19:04:01.702545Z",
+          "stream_setup_seconds": 7.5929999923118885e-06,
+          "throughput_attempted_shots_per_second": 3097834.6105093723
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04223076700000661,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": true,
+          "effective_batch_size": 1024,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85,
+          "peak_active_width": 5,
+          "peak_rss_bytes": 50356224,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "version": "2026.10.8",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-native--t2",
+      "warmup": {
+        "accepted_shots": 7855,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 0.046126715,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 0.018022698,
+          "sample_s": 0.032693012
+        },
+        "attempted_shots": 100000,
+        "contract_errors": [],
+        "discarded_shots": 92145,
+        "duration_seconds": 0.032732240999990836,
+        "logical_errors": 3357,
+        "stream_setup_seconds": 6.01799999344621e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.308159444,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.2383e-05,
+            "sample_s": 7.308182958
+          },
+          "attempted_shots": 256,
+          "discarded_shots": 255,
+          "duration_seconds": 7.30826131500001,
+          "logical_errors": 0,
+          "stream_setup_seconds": 6.454999976313047e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 0,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.054886794,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.293e-05,
+            "sample_s": 7.054910827
+          },
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 256,
+          "duration_seconds": 7.054984934999993,
+          "logical_errors": 0,
+          "peak_rss_bytes": 82198528,
+          "process_cpu_seconds": 7.054824436999999,
+          "repetition": 0,
+          "sampling_wall_seconds": 7.05501883300002,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 24,
+          "started_at": "2026-11-06T19:04:17.342234Z",
+          "stream_setup_seconds": 7.23799999491348e-06,
+          "throughput_attempted_shots_per_second": 36.28639924232528
+        },
+        {
+          "accepted_shots": 2,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.249666483,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.2145e-05,
+            "sample_s": 7.24968991
+          },
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 254,
+          "duration_seconds": 7.249763865000006,
+          "logical_errors": 0,
+          "peak_rss_bytes": 82198528,
+          "process_cpu_seconds": 7.249583278999999,
+          "repetition": 1,
+          "sampling_wall_seconds": 7.2497905230000015,
+          "seed_first": 120270819,
+          "seed_last": 120270819,
+          "sequence_index": 25,
+          "started_at": "2026-11-06T19:04:24.401789Z",
+          "stream_setup_seconds": 6.286999990834374e-06,
+          "throughput_attempted_shots_per_second": 35.311494935152595
+        },
+        {
+          "accepted_shots": 3,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.337091249,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.1683e-05,
+            "sample_s": 7.337114241
+          },
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 253,
+          "duration_seconds": 7.337188467999994,
+          "logical_errors": 0,
+          "peak_rss_bytes": 82198528,
+          "process_cpu_seconds": 7.329777119000003,
+          "repetition": 2,
+          "sampling_wall_seconds": 7.337210206999998,
+          "seed_first": 220270819,
+          "seed_last": 220270819,
+          "sequence_index": 26,
+          "started_at": "2026-11-06T19:04:31.656047Z",
+          "stream_setup_seconds": 8.858000001055188e-06,
+          "throughput_attempted_shots_per_second": 34.890748836084036
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.07174670099999503,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": true,
+          "effective_batch_size": 1,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "peak_active_width": 22,
+          "peak_rss_bytes": 82198528,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "2026.10.8",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-native--t1",
+      "warmup": {
+        "accepted_shots": 1,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 7.14692223,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 3.2436e-05,
+          "sample_s": 7.146956267
+        },
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 255,
+        "duration_seconds": 7.147036473000014,
+        "logical_errors": 0,
+        "stream_setup_seconds": 6.106000000727363e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.281544916,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.0554e-05,
+            "sample_s": 7.281566786
+          },
+          "attempted_shots": 256,
+          "discarded_shots": 255,
+          "duration_seconds": 7.281659408999985,
+          "logical_errors": 0,
+          "stream_setup_seconds": 6.0769999947751785e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 256,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 0,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.041316833,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.1417e-05,
+            "sample_s": 7.041339467
+          },
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 256,
+          "duration_seconds": 7.041412465000008,
+          "logical_errors": 0,
+          "peak_rss_bytes": 115691520,
+          "process_cpu_seconds": 7.0412048689999995,
+          "repetition": 0,
+          "sampling_wall_seconds": 7.041444025000004,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 27,
+          "started_at": "2026-11-06T19:04:53.631224Z",
+          "stream_setup_seconds": 6.376000015961836e-06,
+          "throughput_attempted_shots_per_second": 36.35634203683873
+        },
+        {
+          "accepted_shots": 2,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.24549566,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.1701e-05,
+            "sample_s": 7.245518425
+          },
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 254,
+          "duration_seconds": 7.245591101000002,
+          "logical_errors": 0,
+          "peak_rss_bytes": 115691520,
+          "process_cpu_seconds": 7.245402341999998,
+          "repetition": 1,
+          "sampling_wall_seconds": 7.245617892000013,
+          "seed_first": 120270819,
+          "seed_last": 120270819,
+          "sequence_index": 28,
+          "started_at": "2026-11-06T19:05:00.679191Z",
+          "stream_setup_seconds": 5.541999996694358e-06,
+          "throughput_attempted_shots_per_second": 35.331830961958104
+        },
+        {
+          "accepted_shots": 3,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 7.372256253,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.7221e-05,
+            "sample_s": 7.372284642
+          },
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 253,
+          "duration_seconds": 7.372357995000016,
+          "logical_errors": 0,
+          "peak_rss_bytes": 115691520,
+          "process_cpu_seconds": 7.3720757019999965,
+          "repetition": 2,
+          "sampling_wall_seconds": 7.372378856000012,
+          "seed_first": 220270819,
+          "seed_last": 220270819,
+          "sequence_index": 29,
+          "started_at": "2026-11-06T19:05:07.929700Z",
+          "stream_setup_seconds": 6.047000027820104e-06,
+          "throughput_attempted_shots_per_second": 34.724303970808386
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.08730960200000482,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": true,
+          "effective_batch_size": 1,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "peak_active_width": 22,
+          "peak_rss_bytes": 115560448,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "version": "2026.10.8",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-native--t2",
+      "warmup": {
+        "accepted_shots": 1,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 7.155927876,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 4.9105e-05,
+          "sample_s": 7.155978564
+        },
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 255,
+        "duration_seconds": 7.156062314999986,
+        "logical_errors": 0,
+        "stream_setup_seconds": 9.477000020297055e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 95,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.000542896,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 3.845e-06,
+            "sample_s": 0.000546953
+          },
+          "attempted_shots": 256,
+          "discarded_shots": 161,
+          "duration_seconds": 0.0005643529999872499,
+          "logical_errors": 0,
+          "stream_setup_seconds": 3.2030000056693098e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 1,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 35333,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.4472045260000036,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.04867664400000024,
+            "sample_s": 0.5075319680000075
+          },
+          "api_calls": 94337,
+          "attempted_shots": 94337,
+          "discarded_shots": 59004,
+          "duration_seconds": 1.0000028569958204,
+          "logical_errors": 0,
+          "peak_rss_bytes": 48693248,
+          "process_cpu_seconds": 1.274073079,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.2740918159999808,
+          "seed_first": 20270819,
+          "seed_last": 20365155,
+          "sequence_index": 30,
+          "started_at": "2026-11-06T19:05:15.457166Z",
+          "stream_setup_seconds": 3.2819999944422307e-06,
+          "throughput_attempted_shots_per_second": 94336.73048035531
+        },
+        {
+          "accepted_shots": 35400,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.4489819640000025,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.04870237599999972,
+            "sample_s": 0.5092745069999931
+          },
+          "api_calls": 94653,
+          "attempted_shots": 94653,
+          "discarded_shots": 59253,
+          "duration_seconds": 1.0000006989959047,
+          "logical_errors": 0,
+          "peak_rss_bytes": 48693248,
+          "process_cpu_seconds": 1.278857773,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.278882225000018,
+          "seed_first": 120270819,
+          "seed_last": 120365471,
+          "sequence_index": 31,
+          "started_at": "2026-11-06T19:05:16.736012Z",
+          "stream_setup_seconds": 6.388999963746755e-06,
+          "throughput_attempted_shots_per_second": 94652.93383798687
+        },
+        {
+          "accepted_shots": 35139,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.44729355900000106,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.04907839199999938,
+            "sample_s": 0.5080477899999987
+          },
+          "api_calls": 94371,
+          "attempted_shots": 94371,
+          "discarded_shots": 59232,
+          "duration_seconds": 1.0000058090033122,
+          "logical_errors": 0,
+          "peak_rss_bytes": 48693248,
+          "process_cpu_seconds": 1.2729173489999996,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.2729379900000026,
+          "seed_first": 220270819,
+          "seed_last": 220365189,
+          "sequence_index": 32,
+          "started_at": "2026-11-06T19:05:18.019763Z",
+          "stream_setup_seconds": 4.353000008450181e-06,
+          "throughput_attempted_shots_per_second": 94370.45180173291
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.040957112999990386,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": true,
+          "effective_batch_size": 256,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26,
+          "peak_active_width": 7,
+          "peak_rss_bytes": 48562176,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "2026.10.8",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-native--t1",
+      "warmup": {
+        "accepted_shots": 100,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 0.000611751,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 5.662e-06,
+          "sample_s": 0.000618358
+        },
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 156,
+        "duration_seconds": 0.0006405840000240914,
+        "logical_errors": 0,
+        "stream_setup_seconds": 6.057999996755825e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--symft-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 95,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.00054396,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 3.907e-06,
+            "sample_s": 0.000548084
+          },
+          "attempted_shots": 256,
+          "discarded_shots": 161,
+          "duration_seconds": 0.0005639259999838941,
+          "logical_errors": 0,
+          "stream_setup_seconds": 3.0599999831792957e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "native",
+        "batch_size_effective": 1,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 1,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 35073,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.44687072700000074,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.046850105999999496,
+            "sample_s": 0.5049126529999985
+          },
+          "api_calls": 93631,
+          "attempted_shots": 93631,
+          "discarded_shots": 58558,
+          "duration_seconds": 1.0000064939903268,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49725440,
+          "process_cpu_seconds": 1.274831074,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.2748590950000107,
+          "seed_first": 20270819,
+          "seed_last": 20364449,
+          "sequence_index": 33,
+          "started_at": "2026-11-06T19:05:19.446807Z",
+          "stream_setup_seconds": 2.861000041320949e-06,
+          "throughput_attempted_shots_per_second": 93630.39196514028
+        },
+        {
+          "accepted_shots": 35098,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.44861383400000476,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0472740729999988,
+            "sample_s": 0.5070607469999946
+          },
+          "api_calls": 93831,
+          "attempted_shots": 93831,
+          "discarded_shots": 58733,
+          "duration_seconds": 1.0000047789940254,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49725440,
+          "process_cpu_seconds": 1.2746154659999998,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.2746807309999895,
+          "seed_first": 120270819,
+          "seed_last": 120364649,
+          "sequence_index": 34,
+          "started_at": "2026-11-06T19:05:20.726606Z",
+          "stream_setup_seconds": 9.009000052628835e-06,
+          "throughput_attempted_shots_per_second": 93830.55158435457
+        },
+        {
+          "accepted_shots": 34882,
+          "active_threads_max": 1,
+          "active_threads_min": 1,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.4463369860000066,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.04714838699999936,
+            "sample_s": 0.5046480429999972
+          },
+          "api_calls": 93656,
+          "attempted_shots": 93656,
+          "discarded_shots": 58774,
+          "duration_seconds": 1.0000041470017322,
+          "logical_errors": 0,
+          "peak_rss_bytes": 49725440,
+          "process_cpu_seconds": 1.2749913789999998,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.2750367950000054,
+          "seed_first": 220270819,
+          "seed_last": 220364474,
+          "sequence_index": 35,
+          "started_at": "2026-11-06T19:05:22.006226Z",
+          "stream_setup_seconds": 9.888000022328924e-06,
+          "throughput_attempted_shots_per_second": 93655.61161001642
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04098558100002947,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": true,
+          "effective_batch_size": 256,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26,
+          "peak_active_width": 7,
+          "peak_rss_bytes": 49594368,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "version": "2026.10.8",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-native--t2",
+      "warmup": {
+        "accepted_shots": 100,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 0.000643447,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 9.163e-06,
+          "sample_s": 0.000653472
+        },
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 156,
+        "duration_seconds": 0.0006774640000344334,
+        "logical_errors": 0,
+        "stream_setup_seconds": 4.82100000454011e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "distillation-color-code-85q-p5e-2--tsim-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 20,
+          "attempted_shots": 256,
+          "discarded_shots": 236,
+          "duration_seconds": 0.0008221699999921839,
+          "logical_errors": 12,
+          "stream_setup_seconds": 5.848999990121229e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "native",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 100000,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 551105,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 69,
+          "attempted_shots": 6900000,
+          "discarded_shots": 6348895,
+          "duration_seconds": 1.005460051,
+          "logical_errors": 232379,
+          "peak_rss_bytes": 621776896,
+          "process_cpu_seconds": 1.005088102000002,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0058938020000028,
+          "seed_first": 20270819,
+          "seed_last": 20270887,
+          "sequence_index": 36,
+          "started_at": "2026-11-06T19:05:38.991268Z",
+          "stream_setup_seconds": 5.074000000604428e-06,
+          "throughput_attempted_shots_per_second": 6862530.234928249
+        },
+        {
+          "accepted_shots": 559319,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 70,
+          "attempted_shots": 7000000,
+          "discarded_shots": 6440681,
+          "duration_seconds": 1.0131245420002983,
+          "logical_errors": 235739,
+          "peak_rss_bytes": 621776896,
+          "process_cpu_seconds": 1.0134829269999983,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0135350720000247,
+          "seed_first": 120270819,
+          "seed_last": 120270888,
+          "sequence_index": 37,
+          "started_at": "2026-11-06T19:05:40.002421Z",
+          "stream_setup_seconds": 8.744000012939068e-06,
+          "throughput_attempted_shots_per_second": 6909318.360977913
+        },
+        {
+          "accepted_shots": 557998,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 70,
+          "attempted_shots": 7000000,
+          "discarded_shots": 6442002,
+          "duration_seconds": 1.0108880740001496,
+          "logical_errors": 235666,
+          "peak_rss_bytes": 621776896,
+          "process_cpu_seconds": 1.0113112700000002,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.011299489999999,
+          "seed_first": 220270819,
+          "seed_last": 220270888,
+          "sequence_index": 38,
+          "started_at": "2026-11-06T19:05:41.020942Z",
+          "stream_setup_seconds": 5.950999991455319e-06,
+          "throughput_attempted_shots_per_second": 6924604.394926282
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 15.334985088999986,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.04459676300001547,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+          "kernel_warmup_seconds": 14.472055204000014,
+          "kernel_warmup_shots": 1,
+          "name": "tsim",
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85,
+          "parse_seconds": 0.0013204910000013115,
+          "peak_active_width": 3,
+          "peak_rss_bytes": 621383680,
+          "precision": "complex-fp64",
+          "record_materialization": "boolean-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            3
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-native--t1",
+      "warmup": {
+        "accepted_shots": 8034,
+        "attempted_shots": 100000,
+        "contract_errors": [],
+        "discarded_shots": 91966,
+        "duration_seconds": 0.2562601969999605,
+        "logical_errors": 3502,
+        "stream_setup_seconds": 7.977999985087081e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "distillation-color-code-85q-p5e-2--tsim-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 20,
+          "attempted_shots": 256,
+          "discarded_shots": 236,
+          "duration_seconds": 0.0007744479999587384,
+          "logical_errors": 12,
+          "stream_setup_seconds": 5.4050000244387775e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "native",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 100000,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 910321,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 114,
+          "attempted_shots": 11400000,
+          "discarded_shots": 10489679,
+          "duration_seconds": 1.005287133000138,
+          "logical_errors": 383880,
+          "peak_rss_bytes": 501567488,
+          "process_cpu_seconds": 1.9443000659999994,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0059342139999785,
+          "seed_first": 20270819,
+          "seed_last": 20270932,
+          "sequence_index": 39,
+          "started_at": "2026-11-06T19:05:44.947804Z",
+          "stream_setup_seconds": 4.656999976759835e-06,
+          "throughput_attempted_shots_per_second": 11340043.680832066
+        },
+        {
+          "accepted_shots": 917501,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 115,
+          "attempted_shots": 11500000,
+          "discarded_shots": 10582499,
+          "duration_seconds": 1.0042885169999636,
+          "logical_errors": 386961,
+          "peak_rss_bytes": 501567488,
+          "process_cpu_seconds": 1.9659456410000002,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0049353269999983,
+          "seed_first": 120270819,
+          "seed_last": 120270933,
+          "sequence_index": 40,
+          "started_at": "2026-11-06T19:05:45.958786Z",
+          "stream_setup_seconds": 1.0708000047543464e-05,
+          "throughput_attempted_shots_per_second": 11450892.652196297
+        },
+        {
+          "accepted_shots": 924211,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 116,
+          "attempted_shots": 11600000,
+          "discarded_shots": 10675789,
+          "duration_seconds": 1.0053602670000714,
+          "logical_errors": 389741,
+          "peak_rss_bytes": 501567488,
+          "process_cpu_seconds": 1.9817532859999991,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.006003007000004,
+          "seed_first": 220270819,
+          "seed_last": 220270934,
+          "sequence_index": 41,
+          "started_at": "2026-11-06T19:05:46.968695Z",
+          "stream_setup_seconds": 6.447000032494543e-06,
+          "throughput_attempted_shots_per_second": 11538152.422328796
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.1277087419999816,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.04456413300005124,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+          "kernel_warmup_seconds": 0.25673149399995054,
+          "kernel_warmup_shots": 1,
+          "name": "tsim",
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85,
+          "parse_seconds": 0.001427062000004753,
+          "peak_active_width": 3,
+          "peak_rss_bytes": 480481280,
+          "precision": "complex-fp64",
+          "record_materialization": "boolean-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            3
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "trajectory_sharing": true,
+          "version": "1.0.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-native--t2",
+      "warmup": {
+        "accepted_shots": 8034,
+        "attempted_shots": 100000,
+        "contract_errors": [],
+        "discarded_shots": 91966,
+        "duration_seconds": 1.2865620590000049,
+        "logical_errors": 3502,
+        "stream_setup_seconds": 1.2210000022605527e-05
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/distillation.stim",
+          "sha256": "188bd53c48dbc21f840fb297df6f41c61f5bad6a856bba621f00ff42078921c1"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 40,
+          "num_measurements": 85,
+          "num_observables": 5,
+          "num_qubits": 85
+        },
+        "family": "magic-state-distillation",
+        "id": "distillation-color-code-85q-p5e-2",
+        "parameters": {
+          "blocks": 5,
+          "code": "[17,1,5] color code",
+          "preparation_error_rate": 0.05
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload; the benchmark contract selects observable 0 of 5.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/distillation.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 2,
+          "attempted_shots": 256,
+          "discarded_shots": 254,
+          "duration_seconds": 0.025156375999983993,
+          "logical_errors": 0,
+          "stream_setup_seconds": 4.481000019040948e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "native",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 101,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 48,
+          "attempted_shots": 12288,
+          "discarded_shots": 12187,
+          "duration_seconds": 1.020111638000344,
+          "logical_errors": 0,
+          "peak_rss_bytes": 503099392,
+          "process_cpu_seconds": 1.020388037,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.020443742999987,
+          "seed_first": 20270819,
+          "seed_last": 20270866,
+          "sequence_index": 42,
+          "started_at": "2026-11-06T19:05:49.820235Z",
+          "stream_setup_seconds": 4.816000000573695e-06,
+          "throughput_attempted_shots_per_second": 12045.74042904494
+        },
+        {
+          "accepted_shots": 109,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 49,
+          "attempted_shots": 12544,
+          "discarded_shots": 12435,
+          "duration_seconds": 1.002563104999922,
+          "logical_errors": 0,
+          "peak_rss_bytes": 503611392,
+          "process_cpu_seconds": 1.002865173,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0029079239999987,
+          "seed_first": 120270819,
+          "seed_last": 120270867,
+          "sequence_index": 43,
+          "started_at": "2026-11-06T19:05:50.845886Z",
+          "stream_setup_seconds": 5.575999978191248e-06,
+          "throughput_attempted_shots_per_second": 12511.930608099703
+        },
+        {
+          "accepted_shots": 93,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 47,
+          "attempted_shots": 12032,
+          "discarded_shots": 11939,
+          "duration_seconds": 1.0155129690002127,
+          "logical_errors": 0,
+          "peak_rss_bytes": 503611392,
+          "process_cpu_seconds": 1.0157858690000001,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0158491120000122,
+          "seed_first": 220270819,
+          "seed_last": 220270865,
+          "sequence_index": 44,
+          "started_at": "2026-11-06T19:05:51.854080Z",
+          "stream_setup_seconds": 5.2589999768315465e-06,
+          "throughput_attempted_shots_per_second": 11848.199252290868
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.4414846530000318,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.3694503060000329,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+          "kernel_warmup_seconds": 0.25063303600001063,
+          "kernel_warmup_shots": 1,
+          "name": "tsim",
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "parse_seconds": 0.001525412999967557,
+          "peak_active_width": 11,
+          "peak_rss_bytes": 483061760,
+          "precision": "complex-fp64",
+          "record_materialization": "boolean-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            11
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-native--t1",
+      "warmup": {
+        "accepted_shots": 2,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 254,
+        "duration_seconds": 0.02903983999999582,
+        "logical_errors": 0,
+        "stream_setup_seconds": 8.84500002484856e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 2,
+          "attempted_shots": 256,
+          "discarded_shots": 254,
+          "duration_seconds": 0.012350407999974777,
+          "logical_errors": 0,
+          "stream_setup_seconds": 7.40899997708766e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "native",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 256,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 187,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 87,
+          "attempted_shots": 22272,
+          "discarded_shots": 22085,
+          "duration_seconds": 1.004883679999864,
+          "logical_errors": 0,
+          "peak_rss_bytes": 506613760,
+          "process_cpu_seconds": 1.7309933849999999,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.005431174000023,
+          "seed_first": 20270819,
+          "seed_last": 20270905,
+          "sequence_index": 45,
+          "started_at": "2026-11-06T19:05:54.624154Z",
+          "stream_setup_seconds": 4.2130000110773835e-06,
+          "throughput_attempted_shots_per_second": 22163.759292023744
+        },
+        {
+          "accepted_shots": 168,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 85,
+          "attempted_shots": 21760,
+          "discarded_shots": 21592,
+          "duration_seconds": 1.0117896490000362,
+          "logical_errors": 0,
+          "peak_rss_bytes": 506613760,
+          "process_cpu_seconds": 1.7524384960000003,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0123345220000033,
+          "seed_first": 120270819,
+          "seed_last": 120270903,
+          "sequence_index": 46,
+          "started_at": "2026-11-06T19:05:55.635643Z",
+          "stream_setup_seconds": 5.853000004663045e-06,
+          "throughput_attempted_shots_per_second": 21506.446544008104
+        },
+        {
+          "accepted_shots": 172,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 87,
+          "attempted_shots": 22272,
+          "discarded_shots": 22100,
+          "duration_seconds": 1.0022492749998833,
+          "logical_errors": 0,
+          "peak_rss_bytes": 506613760,
+          "process_cpu_seconds": 1.7332955700000001,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0027919149999889,
+          "seed_first": 220270819,
+          "seed_last": 220270905,
+          "sequence_index": 47,
+          "started_at": "2026-11-06T19:05:56.653244Z",
+          "stream_setup_seconds": 6.59900001664937e-06,
+          "throughput_attempted_shots_per_second": 22222.016573673845
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.422048717999985,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.34850388600000315,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+          "kernel_warmup_seconds": 0.2578099879999627,
+          "kernel_warmup_shots": 1,
+          "name": "tsim",
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64,
+          "parse_seconds": 0.001583277999998245,
+          "peak_active_width": 11,
+          "peak_rss_bytes": 485134336,
+          "precision": "complex-fp64",
+          "record_materialization": "boolean-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            11
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "trajectory_sharing": true,
+          "version": "1.0.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-native--t2",
+      "warmup": {
+        "accepted_shots": 2,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 254,
+        "duration_seconds": 0.01892312600000423,
+        "logical_errors": 0,
+        "stream_setup_seconds": 7.684000024710258e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d5_r5.stim",
+          "sha256": "54088bbd5f06b441596e414f9fa99d8eeaff8a4a1a862b911e0ad40092c5e549"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 120,
+          "num_measurements": 145,
+          "num_observables": 1,
+          "num_qubits": 64
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d5-r5-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 5,
+          "physical_error_rate": 0.001,
+          "rounds": 5
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d5_r5.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-native--t1",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 83,
+          "attempted_shots": 256,
+          "discarded_shots": 173,
+          "duration_seconds": 0.0006093870000540846,
+          "logical_errors": 0,
+          "stream_setup_seconds": 4.086999979335815e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "native",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 1,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 1245,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 3227,
+          "attempted_shots": 3227,
+          "discarded_shots": 1982,
+          "duration_seconds": 1.0001756229981424,
+          "logical_errors": 0,
+          "peak_rss_bytes": 482525184,
+          "process_cpu_seconds": 1.0130621220000002,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.0131106229999887,
+          "seed_first": 20270819,
+          "seed_last": 20274045,
+          "sequence_index": 48,
+          "started_at": "2026-11-06T19:05:59.060115Z",
+          "stream_setup_seconds": 6.64499998492829e-06,
+          "throughput_attempted_shots_per_second": 3226.43336409929
+        },
+        {
+          "accepted_shots": 1217,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 3216,
+          "attempted_shots": 3216,
+          "discarded_shots": 1999,
+          "duration_seconds": 1.0001008400022329,
+          "logical_errors": 0,
+          "peak_rss_bytes": 483049472,
+          "process_cpu_seconds": 1.013110695,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.0131461329999638,
+          "seed_first": 120270819,
+          "seed_last": 120274034,
+          "sequence_index": 49,
+          "started_at": "2026-11-06T19:06:00.078957Z",
+          "stream_setup_seconds": 6.007000024510489e-06,
+          "throughput_attempted_shots_per_second": 3215.6757312520804
+        },
+        {
+          "accepted_shots": 1185,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 3222,
+          "attempted_shots": 3222,
+          "discarded_shots": 2037,
+          "duration_seconds": 1.000064752001208,
+          "logical_errors": 0,
+          "peak_rss_bytes": 483704832,
+          "process_cpu_seconds": 1.0131382659999995,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0131878290000031,
+          "seed_first": 220270819,
+          "seed_last": 220274040,
+          "sequence_index": 50,
+          "started_at": "2026-11-06T19:06:01.097947Z",
+          "stream_setup_seconds": 5.182999984754133e-06,
+          "throughput_attempted_shots_per_second": 3221.791382560504
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.0960791989999734,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.024285254000005807,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+          "kernel_warmup_seconds": 0.2504977220000342,
+          "kernel_warmup_shots": 1,
+          "name": "tsim",
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26,
+          "parse_seconds": 0.001367380999965917,
+          "peak_active_width": 4,
+          "peak_rss_bytes": 481738752,
+          "precision": "complex-fp64",
+          "record_materialization": "boolean-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            4
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-native--t1",
+      "warmup": {
+        "accepted_shots": 100,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 156,
+        "duration_seconds": 0.004644460999998046,
+        "logical_errors": 0,
+        "stream_setup_seconds": 8.648000004995993e-06
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "coherent-surface-d3-r3-p1e-3-rz2e-2--tsim-native--t2",
+      "correctness": {
+        "check_id": "aggregate-count-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 83,
+          "attempted_shots": 256,
+          "discarded_shots": 173,
+          "duration_seconds": 0.0005900619999579249,
+          "logical_errors": 0,
+          "stream_setup_seconds": 4.489000048124581e-06
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "native",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 12884901888,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselection": true,
+        "repetitions": 3,
+        "request_timeout_seconds": 60,
+        "shots_per_call": 1,
+        "threads": 2,
+        "threads_effective": 2,
+        "threads_requested": 2,
+        "tuning_policy": "native"
+      },
+      "samples": [
+        {
+          "accepted_shots": 1231,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 3192,
+          "attempted_shots": 3192,
+          "discarded_shots": 1961,
+          "duration_seconds": 1.000191373001428,
+          "logical_errors": 0,
+          "peak_rss_bytes": 484728832,
+          "process_cpu_seconds": 1.012812909,
+          "repetition": 0,
+          "sampling_wall_seconds": 1.012961400999984,
+          "seed_first": 20270819,
+          "seed_last": 20274010,
+          "sequence_index": 51,
+          "started_at": "2026-11-06T19:06:03.513386Z",
+          "stream_setup_seconds": 3.663999962100206e-06,
+          "throughput_attempted_shots_per_second": 3191.3892542596873
+        },
+        {
+          "accepted_shots": 1214,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 3197,
+          "attempted_shots": 3197,
+          "discarded_shots": 1983,
+          "duration_seconds": 1.0000186859990094,
+          "logical_errors": 0,
+          "peak_rss_bytes": 485253120,
+          "process_cpu_seconds": 1.0127713199999997,
+          "repetition": 1,
+          "sampling_wall_seconds": 1.012933228999998,
+          "seed_first": 120270819,
+          "seed_last": 120274015,
+          "sequence_index": 52,
+          "started_at": "2026-11-06T19:06:04.532883Z",
+          "stream_setup_seconds": 5.1850000204467506e-06,
+          "throughput_attempted_shots_per_second": 3196.9402619774314
+        },
+        {
+          "accepted_shots": 1177,
+          "active_threads_max": null,
+          "active_threads_min": null,
+          "adapter_timing_totals": {},
+          "api_calls": 3203,
+          "attempted_shots": 3203,
+          "discarded_shots": 2026,
+          "duration_seconds": 1.0000618780000536,
+          "logical_errors": 0,
+          "peak_rss_bytes": 485908480,
+          "process_cpu_seconds": 1.0127884329999994,
+          "repetition": 2,
+          "sampling_wall_seconds": 1.0129350579999823,
+          "seed_first": 220270819,
+          "seed_last": 220274021,
+          "sequence_index": 53,
+          "started_at": "2026-11-06T19:06:05.551683Z",
+          "stream_setup_seconds": 7.3680000127751555e-06,
+          "throughput_attempted_shots_per_second": 3202.8018170289943
+        }
+      ],
+      "setup": {
+        "adapter_version": "1",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            2
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "logical_cpus": [
+            0,
+            2
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.0960183130000019,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 12884901888,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.02393173600000864,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+          "kernel_warmup_seconds": 0.2542244539999956,
+          "kernel_warmup_shots": 1,
+          "name": "tsim",
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26,
+          "parse_seconds": 0.0013729469999930188,
+          "peak_active_width": 4,
+          "peak_rss_bytes": 484073472,
+          "precision": "complex-fp64",
+          "record_materialization": "boolean-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            4
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "2",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_DYNAMIC": "FALSE",
+            "OMP_MAX_ACTIVE_LEVELS": "1",
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "FALSE",
+            "OMP_THREAD_LIMIT": "2",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "trajectory_sharing": true,
+          "version": "1.0.0",
+          "warmup_full_call": true
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/runner/work/clifft-bench/clifft-bench/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-native--t2",
+      "warmup": {
+        "accepted_shots": 100,
+        "attempted_shots": 256,
+        "contract_errors": [],
+        "discarded_shots": 156,
+        "duration_seconds": 0.004839443999969717,
+        "logical_errors": 0,
+        "stream_setup_seconds": 1.105500001585824e-05
+      },
+      "workload": {
+        "artifact": {
+          "path": "/home/runner/work/clifft-bench/clifft-bench/workloads/circuits/coherent_d3_r3.stim",
+          "sha256": "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 24,
+          "num_measurements": 33,
+          "num_observables": 1,
+          "num_qubits": 26
+        },
+        "family": "coherent-noise-surface-code",
+        "id": "coherent-surface-d3-r3-p1e-3-rz2e-2",
+        "parameters": {
+          "coherent_z_rotation": 0.02,
+          "distance": 3,
+          "physical_error_rate": 0.001,
+          "rounds": 3
+        },
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/coherent_d3_r3.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v1",
+  "run": {
+    "classification": "smoke",
+    "finished_at": "2026-11-06T19:06:06.789049Z",
+    "id": "8eef88d5-2fb7-4faf-9531-f5ca9194bb63",
+    "overrides": {},
+    "profile_id": "native-thread-scaling",
+    "schedule_policy": "serial-campaign-order",
+    "selection": "--t(1|2)$",
+    "started_at": "2026-11-06T19:03:34.865178Z",
+    "workflow": {
+      "image_os": "ubuntu26",
+      "image_version": "20261101.186.1",
+      "provider": "github-actions",
+      "ref": "refs/pull/113/merge",
+      "repository": "unitaryfoundation/clifft-bench",
+      "run_attempt": "1",
+      "run_id": "42275862772",
+      "runner_name": "GitHub Actions 1000142516",
+      "runner_os": "Linux",
+      "sha": "c36eaf901d2da9900ed2fcea59afd5815d24a57f",
+      "workflow": "Native thread scaling"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cloud": null,
+    "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "hostname": "runnervmwuk1x",
+    "kernel_version": "#20-Ubuntu SMP PREEMPT Mon Oct 19 22:41:16 UTC 2026",
+    "load_average_at_start": [
+      1.0087890625,
+      0.5380859375,
+      0.21435546875
+    ],
+    "logical_cpus": 4,
+    "machine": "x86_64",
+    "memory_bytes": 16758403072,
+    "os": "Linux",
+    "os_release": "7.0.0-1019-azure",
+    "physical_cores": 2,
+    "python": "3.12.16",
+    "python_compiler": "GCC 15.2.0",
+    "suite_source": {
+      "commit": "c36eaf901d2da9900ed2fcea59afd5815d24a57f",
+      "dirty": false
+    },
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+      "JAX_ENABLE_X64": "true",
+      "JAX_PLATFORMS": "cpu",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+      "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+    }
+  }
+}
