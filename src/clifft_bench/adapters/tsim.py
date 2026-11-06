@@ -38,7 +38,7 @@ class _PreparedTsim(PreparedAdapter):
             raise ValueError("Tsim shots per call must be positive")
         detectors, observables = self._sampler.sample(
             shots=shots,
-            batch_size=min(self._batch, shots),
+            batch_size=None if self._batch is None else min(self._batch, shots),
             separate_observables=True,
             bit_packed=False,
             use_detector_reference_sample=False,
@@ -62,6 +62,7 @@ class _PreparedTsim(PreparedAdapter):
 
 class TsimAdapter(Adapter):
     name = "tsim"
+    native_threads = True
 
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
@@ -72,19 +73,23 @@ class TsimAdapter(Adapter):
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
         self.validate_options(execution.get("options", {}))
+        requested_threads = self.thread_budget(execution)
+        native = execution["batch_size"] == "native"
         # NUMBA_NUM_THREADS must be set before import: limiting BLAS/OpenMP
         # alone does not constrain Numba's independent thread pool.
-        if os.environ.get("NUMBA_NUM_THREADS") != "1":
-            raise ValueError("Tsim requires NUMBA_NUM_THREADS=1 before importing numba")
+        if os.environ.get("NUMBA_NUM_THREADS") != str(requested_threads):
+            raise ValueError(f"Tsim requires NUMBA_NUM_THREADS={requested_threads} before import")
         import numba
         import tsim
 
         threads = numba.get_num_threads()
-        if threads != 1:
-            raise RuntimeError(f"Tsim requires one effective Numba thread, got {threads}")
+        if threads != requested_threads:
+            raise RuntimeError(
+                f"Tsim effective Numba thread count {threads} != {requested_threads}"
+            )
         semantics = workload["semantics"]
-        batch = int(execution["batch_size"])
-        if not 1 <= batch <= MAX_BATCH_SIZE:
+        batch = None if native else int(execution["batch_size"])
+        if batch is not None and not 1 <= batch <= MAX_BATCH_SIZE:
             raise ValueError("Tsim requires batch_size in [1, 65536]")
         started = time.perf_counter()
         circuit = tsim.Circuit(artifact_path.read_text())
@@ -105,7 +110,8 @@ class TsimAdapter(Adapter):
             "name": "tsim", "version": version("bloqade-tsim"), "threads": threads,
             "precision": "complex-fp64", "reference_convention": "raw-record-parity",
             "sampling_backend": "active_statevector", "trajectory_sharing": True,
-            "batch_enabled": batch > 1, "effective_batch_size": batch,
+            "batch_enabled": None if native else batch > 1, "effective_batch_size": batch,
+            **({"batch_control": "native-auto"} if native else {}),
             "batch_parameter": "statevector-batch-shots",
             "batch_size_applicable": bool(sampler._program.components),
             "seed_policy": "continuous-stream-seeded-at-prepare",

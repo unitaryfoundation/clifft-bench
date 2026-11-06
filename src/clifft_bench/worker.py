@@ -24,7 +24,12 @@ from clifft_bench.calibration import (
     calibration_candidates,
 )
 from clifft_bench.selection import has_postselection
-from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
+from clifft_bench.system import (
+    apply_address_space_limit,
+    apply_affinity,
+    native_thread_environment,
+    utc_now,
+)
 
 BATCH_CALIBRATION_REPETITIONS = 3
 BATCH_CALIBRATION_SECONDS = 1.0
@@ -116,6 +121,9 @@ def aggregate_sample(
     elapsed = 0.0
     adapter_timing_totals: dict[str, float] = defaultdict(float)
     started_at = utc_now()
+    native = prepared.runtime_metadata.get("batch_control", "").startswith("native-")
+    cpu_started, wall_started = time.process_time(), time.perf_counter()
+    active_min = active_max = None
     while calls == 0 or elapsed < min_seconds:
         if calls >= max_api_calls:
             raise RuntimeError(
@@ -136,6 +144,16 @@ def aggregate_sample(
                 adapter_timing_totals[key] += float(value)
         elapsed += duration
         calls += 1
+        if native:
+            active = prepared.sampling_metadata().get("active_threads")
+            if active is not None:
+                active_min = active if active_min is None else min(active_min, active)
+                active_max = active if active_max is None else max(active_max, active)
+    activity = {
+        "process_cpu_seconds": time.process_time() - cpu_started,
+        "sampling_wall_seconds": time.perf_counter() - wall_started,
+        "active_threads_min": active_min, "active_threads_max": active_max,
+    } if native else {}
     return {
         "started_at": started_at,
         "duration_seconds": elapsed,
@@ -148,6 +166,7 @@ def aggregate_sample(
         "adapter_timing_totals": dict(sorted(adapter_timing_totals.items())),
         "peak_rss_bytes": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         * (1 if sys.platform == "darwin" else 1024),
+        **activity,
     }
 
 
@@ -330,6 +349,19 @@ def main() -> int:
                     request.get("memory_limit_gib")
                 )
                 adapter = load_adapter(request["adapter"])
+                execution = request["execution"]
+                native = execution["batch_size"] == "native"
+                if native:
+                    threads = adapter.thread_budget(execution)
+                    expected_env = native_thread_environment(threads)
+                    if any(os.environ.get(k) != v for k, v in expected_env.items()):
+                        raise ValueError("native thread environment was not set before imports")
+                    if (not affinity["applied"]
+                            or len(affinity["available_after"]) != threads):
+                        raise ValueError("native thread CPU allocation was not applied")
+                    if (address_space_limit is None
+                            or address_space_limit != int(request["memory_limit_gib"] * (1 << 30))):
+                        raise ValueError("native thread memory ceiling was not applied")
                 started = time.perf_counter()
                 with deadline(float(request["timeout_seconds"])):
                     with redirect_stdout(sys.stderr):
@@ -338,7 +370,6 @@ def main() -> int:
                             source_url=request["source_url"],
                         )
                         artifact_path = Path(request["artifact_path"])
-                        execution = request["execution"]
                         if execution["batch_size"] == "calibrate":
                             prepared = calibrate_batch_size(
                                 adapter,
@@ -356,6 +387,9 @@ def main() -> int:
                                 execution=execution,
                                 seed=int(request["sampling_seed"]),
                             )
+                        if native:
+                            prepared.prepare_sampling(int(request["shots_per_call"]),
+                                                      int(request["seed"]))
                 duration = time.perf_counter() - started
                 expected_version = str(request["expected_version"])
                 runtime_version = str(prepared.runtime_metadata["version"])
@@ -368,6 +402,12 @@ def main() -> int:
                     **prepared.runtime_metadata,
                     **installation,
                     "address_space_limit_bytes": address_space_limit,
+                    **({
+                        "warmup_full_call": True,
+                        "thread_environment": expected_env,
+                        "peak_rss_bytes": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+                        * (1 if sys.platform == "darwin" else 1024),
+                    } if native else {}),
                 }
                 emit(
                     {

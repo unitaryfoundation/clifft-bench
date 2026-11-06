@@ -19,6 +19,11 @@ class _PreparedSymft(PreparedAdapter):
 
     def sample(self, shots: int, seed: int) -> Counts:
         result = self._sampler.sample(shots=shots, stream_id=seed)
+        if self.runtime_metadata.get("batch_control") == "native-auto":
+            active = result["active_threads"]
+            if type(active) is not int or not 1 <= active <= self.runtime_metadata["threads"]:
+                raise RuntimeError("SymFT returned an invalid active thread count")
+            self._active_threads = active
         timing = {key: float(value) for key, value in dict(result.get("timing", {})).items()}
         return Counts(
             attempted_shots=int(result["shots"]),
@@ -27,6 +32,10 @@ class _PreparedSymft(PreparedAdapter):
             logical_errors=int(result["logical_errors"]),
             adapter_timing=timing or None,
         )
+
+    def sampling_metadata(self) -> dict[str, Any]:
+        return ({"active_threads": self._active_threads}
+                if hasattr(self, "_active_threads") else {})
 
 
 class _PreparedSymftRecords(PreparedAdapter):
@@ -109,6 +118,12 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
 
 class SymftAdapter(Adapter):
     name = "symft"
+    native_threads = True
+
+    def validate_native_options(self, options: dict[str, Any]) -> None:
+        self.validate_options(options)
+        if options.get("sample_chunk_shots", 0) != 0:
+            raise ValueError("native SymFT requires automatic sample_chunk_shots=0")
 
     def validate_options(self, options: dict[str, Any]) -> None:
         if options.keys() - {"sample_chunk_shots"}:
@@ -132,6 +147,10 @@ class SymftAdapter(Adapter):
         seed: int = 0,
     ) -> PreparedAdapter:
         self.validate_options(execution.get("options", {}))
+        threads = self.thread_budget(execution)
+        native = execution["batch_size"] == "native"
+        if native:
+            self.validate_native_options(execution.get("options", {}))
         require_all_or_none(workload["semantics"], self.name)
         import symft
 
@@ -139,34 +158,37 @@ class SymftAdapter(Adapter):
         observable = int(workload["semantics"]["observable_index"])
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
         if not postselect and circuit.num_detectors:
+            if native:
+                raise NotImplementedError("SymFT's unselected-record path has no native threading")
             return _prepare_unselected_records(circuit, execution, observable, symft)
-        requested_batch_size = int(execution["batch_size"])
-        batch = requested_batch_size > 1
+        requested_batch_size = 0 if native else int(execution["batch_size"])
+        batch = native or requested_batch_size > 1
+        chunk = 0 if native else int(execution.get("options", {}).get("sample_chunk_shots", 0))
         sampler = circuit.compile_counts_sampler(
             batch=batch,
             observable=observable,
             postselect_detectors=postselect,
             batch_size=requested_batch_size,
-            sample_chunk_shots=int(execution.get("options", {}).get("sample_chunk_shots", 0)),
-            threads=1,
+            sample_chunk_shots=chunk,
+            threads=threads,
             cuda=False,
         )
         info = dict(sampler.info)
-        if int(info["threads"]) != 1:
-            raise RuntimeError(f"SymFT planned more than one thread: {info}")
+        if not 1 <= int(info["threads"]) <= threads:
+            raise RuntimeError(f"SymFT exceeded the thread budget: {info}")
         expected_backend = "batch" if batch else "single"
         if str(info["backend"]) != expected_backend:
             raise RuntimeError(
                 f"SymFT backend {info['backend']!r} does not match {expected_backend!r}"
             )
         native_batch_size = int(info["batch_size"])
-        if batch and native_batch_size != requested_batch_size:
+        if batch and not native and native_batch_size != requested_batch_size:
             raise RuntimeError(
                 f"SymFT batch size {info['batch_size']!r} does not match "
                 f"requested {requested_batch_size}"
             )
-        requested_chunk_shots = int(execution.get("options", {}).get("sample_chunk_shots", 0))
-        if int(info["sample_chunk_shots"]) != requested_chunk_shots:
+        requested_chunk_shots = chunk
+        if not native and int(info["sample_chunk_shots"]) != requested_chunk_shots:
             raise RuntimeError(
                 f"SymFT sample chunk {info['sample_chunk_shots']!r} does not match "
                 f"requested {requested_chunk_shots}"
@@ -182,6 +204,7 @@ class SymftAdapter(Adapter):
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
             "batch_enabled": batch,
+            **({"batch_control": "native-auto"} if native else {}),
             "effective_batch_size": native_batch_size if batch else 1,
             "sample_chunk_shots": int(info["sample_chunk_shots"]),
             "num_qubits": int(info["num_qubits"]),

@@ -26,6 +26,7 @@ from clifft_bench.system import (
     collect_runner_metadata,
     collect_workflow_metadata,
     ec2_workflow,
+    physical_core_allocation,
     require_reference_host,
     restricted_environment,
     utc_now,
@@ -42,11 +43,12 @@ class WorkerError(RuntimeError):
 
 
 class WorkerClient:
-    def __init__(self, case: Case, cpu: int | None, *, python_executable: str | None = None,
+    def __init__(self, case: Case, cpu: int | list[int] | None,
+                 *, python_executable: str | None = None,
                  deadline: float | None = None) -> None:
         self.case = case
         self.deadline = deadline
-        environment = restricted_environment()
+        environment = restricted_environment(case.definition["execution"].get("threads"))
         source = str(repository_root() / "src")
         existing = environment.get("PYTHONPATH")
         environment["PYTHONPATH"] = source if not existing else source + os.pathsep + existing
@@ -216,9 +218,12 @@ def _new_case_result(
     execution["batch_enabled"] = execution["batch_size"] != 1
     if execution["batch_size"] == "calibrate":
         execution["tuning_policy"] = CALIBRATION_POLICY
+    elif execution["batch_size"] == "native":
+        execution["tuning_policy"] = "native"
+        execution["batch_enabled"] = None
     execution.update(
         {
-            "threads_requested": 1,
+            "threads_requested": execution.get("threads", 1),
             "memory_limit_bytes": (
                 int(memory_limit_gib * (1 << 30))
                 if memory_limit_gib is not None
@@ -248,8 +253,11 @@ def _new_case_result(
 
 def _effective_batch_size(
     runtime_metadata: dict[str, Any], shots_per_call: int
-) -> int:
-    capacity = int(runtime_metadata["effective_batch_size"])
+) -> int | None:
+    value = runtime_metadata["effective_batch_size"]
+    if value is None:
+        return None
+    capacity = int(value)
     return min(capacity, shots_per_call)
 
 
@@ -261,6 +269,8 @@ def _record_runtime_execution(
     if calibration is not None:
         execution["batch_size"] = int(calibration["selected_batch_size"])
         execution["batch_enabled"] = bool(runtime_metadata["batch_enabled"])
+    if execution["batch_size"] == "native":
+        execution["batch_enabled"] = runtime_metadata["batch_enabled"]
     execution["batch_size_effective"] = _effective_batch_size(
         runtime_metadata, shots_per_call
     )
@@ -291,6 +301,14 @@ def run_suite(
     if suite.run["classification"] == "official" and python_executable is not None:
         raise ValueError("official collection requires isolated implementation environments")
     measurement = dict(suite.run["measurement"])
+    scaling = suite.run.get("scaling")
+    allocation = None
+    if scaling:
+        if cpu is not None or require_ec2:
+            raise ValueError("scaling allocates physical cores without --cpu/--require-ec2")
+        allocation = physical_core_allocation()
+        if memory_limit_gib is None:
+            memory_limit_gib = suite.run["collection"]["memory_limit_gib"]
     if min_sample_seconds is not None:
         measurement["min_sample_seconds"] = min_sample_seconds
     if repetitions is not None:
@@ -313,7 +331,7 @@ def run_suite(
     )
     calibration_seed = seed_range_end
     if any(
-        case.definition["execution"]["batch_size"] == "calibrate"
+        case.definition["execution"]["batch_size"] in ("calibrate", "native")
         for case in cases
     ):
         seed_range_end += BATCH_CALIBRATION_SEED_RESERVE
@@ -327,7 +345,8 @@ def run_suite(
             "request_timeout_seconds must be greater than min_sample_seconds"
         )
 
-    logical_cpu = choose_cpu(cpu if cpu is not None else suite.run["resources"]["logical_cpu"])
+    logical_cpu = (None if scaling else
+                   choose_cpu(cpu if cpu is not None else suite.run["resources"]["logical_cpu"]))
     root = repository_root()
     cloud = None
     if require_ec2:
@@ -365,7 +384,8 @@ def run_suite(
             "measurement": measurement,
             "resources": {"logical_cpu": logical_cpu, "memory_limit_bytes": (
                 int(memory_limit_gib * (1 << 30)) if memory_limit_gib is not None else None
-            )},
+            ), **({"physical_cores": allocation, "smt_policy": "one-logical-cpu-per-core"}
+                  if scaling else {})},
         },
         "run": {
             "id": run_id,
@@ -410,7 +430,17 @@ def run_suite(
                         })
                     break
                 try:
-                    client = WorkerClient(case, logical_cpu, python_executable=python_executable,
+                    worker_cpu = logical_cpu
+                    if scaling:
+                        threads = case.definition["execution"]["threads"]
+                        if threads > len(allocation):
+                            raise WorkerError({
+                                "type": "InsufficientPhysicalCores",
+                                "message": f"requested {threads} cores; "
+                                f"{len(allocation)} available",
+                            })
+                        worker_cpu = [c["logical_cpu"] for c in allocation[:threads]]
+                    client = WorkerClient(case, worker_cpu, python_executable=python_executable,
                                           deadline=deadline)
                     setup = client.prepare(
                         float(measurement["setup_timeout_seconds"]),

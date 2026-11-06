@@ -99,9 +99,10 @@ def _artifact_digest(path: Path) -> str:
 
 def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
     if "cases" in run:
-        return list(run["cases"])
-    definitions = []
-    for variant in _unique_by_id(run["variants"], "variant").values():
+        definitions = deepcopy(run["cases"])
+    else:
+        definitions = []
+    for variant in _unique_by_id(run.get("variants", []), "variant").values():
         for workload in variant["workloads"]:
             definitions.append(
                 {
@@ -113,7 +114,17 @@ def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
                     "execution": dict(variant["execution"]),
                 }
             )
-    return definitions
+    if "scaling" not in run:
+        return definitions
+    expanded = []
+    for definition in definitions:
+        for threads in run["scaling"]["threads"]:
+            case = deepcopy(definition)
+            case["id"] += f"--t{threads}"
+            case["variant_id"] += f"--t{threads}"
+            case["execution"]["threads"] = threads
+            expanded.append(case)
+    return expanded
 
 
 def _resolve_selections(run: dict, workloads: dict, software: dict) -> None:
@@ -235,7 +246,12 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"workload {workload_id!r}"
             )
         execution = definition["execution"]
-        load_adapter(adapter).validate_options(execution["options"])
+        owning_adapter = load_adapter(adapter)
+        owning_adapter.validate_options(execution["options"])
+        if execution["batch_size"] == "native" and not owning_adapter.native_threads:
+            raise ValueError(f"adapter {adapter!r} has no native threading recipe")
+        if execution["batch_size"] == "native":
+            owning_adapter.validate_native_options(execution["options"])
         if execution["batch_size"] == "calibrate":
             if adapter not in {"clifft", "symft", "stim", "xtim", "tsim"}:
                 raise ValueError(
@@ -275,6 +291,19 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                     f"comparison {comparison['id']!r} has unequal shots_per_call "
                     f"for workload {case.workload.id!r}"
                 )
+
+    if "scaling" in run:
+        call_sizes: dict[str, int] = {}
+        points = set()
+        for case in cases:
+            shots = case.definition["shots_per_call"]
+            if call_sizes.setdefault(case.workload.id, shots) != shots:
+                raise ValueError("scaling requires equal shots_per_call for each workload")
+            point = (case.implementation.id, case.workload.id,
+                     case.definition["execution"]["threads"])
+            if point in points:
+                raise ValueError("duplicate scaling point")
+            points.add(point)
 
     if run["classification"] == "official":
         used_implementations = {case.implementation.id: case.implementation for case in cases}
@@ -385,7 +414,7 @@ def _version(document: dict) -> None:
 
 def _validate_execution(execution: dict) -> None:
     _fields(execution, "batch_size", "options options_preset")
-    if execution["batch_size"] != "calibrate":
+    if execution["batch_size"] not in ("calibrate", "native"):
         _number(execution["batch_size"], "batch_size", integer=True)
     if "options_preset" in execution:
         _identifier(execution["options_preset"])
@@ -402,7 +431,7 @@ def _validate_run(run: dict) -> None:
         run,
         "suite_version profile_id classification seed "
         "workloads_file software_file resources measurement",
-        "title hardware_epoch reference_host collection comparisons variants cases",
+        "title hardware_epoch reference_host collection comparisons variants cases scaling",
     )
     _version(run)
     _identifier(run["profile_id"])
@@ -414,11 +443,24 @@ def _validate_run(run: dict) -> None:
         _text(run[key], key)
     if run["classification"] not in ("smoke", "official"):
         raise ValueError("invalid campaign classification")
+    if "scaling" in run:
+        _fields(run["scaling"], "threads")
+        threads = run["scaling"]["threads"]
+        if (not isinstance(threads, list) or not threads
+                or any(type(n) is not int or n < 1 for n in threads)
+                or threads != sorted(set(threads)) or threads[0] != 1):
+            raise ValueError("scaling threads must be increasing positive integers starting at 1")
+        if run["classification"] != "smoke" or run.get("comparisons"):
+            raise ValueError("scaling is a separate pilot without release comparisons")
+        if "collection" not in run:
+            raise ValueError("scaling requires collection memory and deadline settings")
     _number(run["seed"], "seed", integer=True)
     _fields(run["resources"], "", "logical_cpu")
     cpu = run["resources"].setdefault("logical_cpu", None)
     if cpu is not None:
         _number(cpu, "logical_cpu", integer=True, inclusive=True)
+        if "scaling" in run:
+            raise ValueError("scaling allocates physical cores instead of one logical_cpu")
     _fields(
         run["measurement"],
         "setup_timeout_seconds request_timeout_seconds warmup_shots "
@@ -449,6 +491,8 @@ def _validate_run(run: dict) -> None:
                         _number(selection["shots_per_call"], "shots_per_call", integer=True)
         _text(item["implementation_id"], "implementation_id")
         _validate_execution(item["execution"])
+        if (item["execution"]["batch_size"] == "native") != ("scaling" in run):
+            raise ValueError("native configuration is required only in scaling campaigns")
     if "comparisons" in run:
         for comparison in _entries(run, "comparisons"):
             _fields(comparison, "id baseline_variant candidate_variants")

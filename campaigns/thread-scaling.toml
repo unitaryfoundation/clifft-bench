@@ -1,0 +1,57 @@
+suite_version = "0.2.8"
+profile_id = "native-thread-scaling"
+classification = "smoke"
+seed = 20260819
+workloads_file = "../workloads.toml"
+software_file = "../software.toml"
+
+[resources]
+
+[scaling]
+threads = [1, 2, 4, 8]
+
+[collection]
+memory_limit_gib = 12
+run_timeout_minutes = 30
+
+[measurement]
+setup_timeout_seconds = 180
+request_timeout_seconds = 60
+warmup_shots = 256
+correctness_shots = 256
+min_sample_seconds = 1
+repetitions = 3
+
+[[variants]]
+id = "clifft-native"
+implementation_id = "clifft-0.13.0"
+workloads = [
+    {workload_id = "distillation-color-code-85q-p5e-2", shots_per_call = 100000},
+    {workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256},
+    {workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2", shots_per_call = 1},
+]
+[variants.execution]
+batch_size = "native"
+options_preset = "clifft-scheduled"
+
+[[variants]]
+id = "symft-native"
+implementation_id = "symft-2026.10.8"
+workloads = [
+    {workload_id = "distillation-color-code-85q-p5e-2", shots_per_call = 100000},
+    {workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256},
+    {workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2", shots_per_call = 1},
+]
+[variants.execution]
+batch_size = "native"
+
+[[variants]]
+id = "tsim-native"
+implementation_id = "tsim-1.0.0"
+workloads = [
+    {workload_id = "distillation-color-code-85q-p5e-2", shots_per_call = 100000},
+    {workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256},
+    {workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2", shots_per_call = 1},
+]
+[variants.execution]
+batch_size = "native"

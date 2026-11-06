@@ -34,10 +34,45 @@ def utc_now() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
-def restricted_environment() -> dict[str, str]:
+def restricted_environment(threads: int | None = None) -> dict[str, str]:
     environment = os.environ.copy()
     environment.update(THREAD_LIMIT_ENVIRONMENT)
+    if threads is not None:
+        environment.update(native_thread_environment(threads))
     return environment
+
+
+def native_thread_environment(threads: int) -> dict[str, str]:
+    """Budget simulator pools while keeping nested numerical libraries serial."""
+    if type(threads) is not int or threads < 1:
+        raise ValueError("threads must be a positive integer")
+    return {
+        **THREAD_LIMIT_ENVIRONMENT,
+        "OMP_NUM_THREADS": str(threads),
+        "NUMBA_NUM_THREADS": str(threads),
+        "OMP_THREAD_LIMIT": str(threads),
+        "OMP_DYNAMIC": "FALSE",
+        "OMP_PROC_BIND": "FALSE",
+        "OMP_MAX_ACTIVE_LEVELS": "1",
+    }
+
+
+def physical_core_allocation() -> list[dict[str, int]]:
+    """Select one allowed logical CPU per Linux-visible physical core."""
+    allowed = _allowed_cpus()
+    if platform.system() != "Linux" or not allowed:
+        raise ValueError("thread scaling requires Linux CPU affinity and topology")
+    cores = {}
+    for cpu in allowed:
+        topology = Path(f"/sys/devices/system/cpu/cpu{cpu}/topology")
+        package = int((topology / "physical_package_id").read_text())
+        core = int((topology / "core_id").read_text())
+        if package < 0 or core < 0:
+            raise ValueError("thread scaling requires known physical core identities")
+        cores.setdefault((package, core), {
+            "logical_cpu": cpu, "package_id": package, "core_id": core,
+        })
+    return [cores[key] for key in sorted(cores)]
 
 
 def choose_cpu(requested: int | None) -> int | None:
@@ -49,7 +84,7 @@ def choose_cpu(requested: int | None) -> int | None:
     return None
 
 
-def apply_affinity(cpu: int | None) -> dict[str, Any]:
+def apply_affinity(cpu: int | list[int] | None) -> dict[str, Any]:
     result: dict[str, Any] = {
         "requested": cpu is not None,
         "logical_cpu": cpu,
@@ -61,18 +96,25 @@ def apply_affinity(cpu: int | None) -> dict[str, Any]:
     if cpu is None:
         result["reason"] = "no logical CPU requested on this platform"
         return result
+    requested = cpu if isinstance(cpu, list) else [cpu]
+    if isinstance(cpu, list):
+        result.pop("logical_cpu")
+        result["logical_cpus"] = cpu
+    if (not requested or any(type(value) is not int or value < 0 for value in requested)
+            or len(set(requested)) != len(requested)):
+        raise ValueError("affinity requires distinct nonnegative CPU IDs")
     if not hasattr(os, "sched_getaffinity") or not hasattr(os, "sched_setaffinity"):
         result["reason"] = "process affinity is not supported by this operating system"
         return result
     before = sorted(os.sched_getaffinity(0))
     result["available_before"] = before
-    if cpu not in before:
+    if not set(requested).issubset(before):
         result["reason"] = f"logical CPU {cpu} is outside the allowed affinity mask"
         return result
-    os.sched_setaffinity(0, {cpu})
+    os.sched_setaffinity(0, set(requested))
     after = sorted(os.sched_getaffinity(0))
     result["available_after"] = after
-    result["applied"] = after == [cpu]
+    result["applied"] = after == sorted(requested)
     if not result["applied"]:
         result["reason"] = "operating system did not retain the requested affinity mask"
     return result

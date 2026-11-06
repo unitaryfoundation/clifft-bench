@@ -12,7 +12,7 @@ from clifft_bench.adapters.base import Counts
 def test_aggregate_sample_sums_adapter_timings_without_retaining_each_call(
     monkeypatch,
 ) -> None:
-    prepared = SimpleNamespace()
+    prepared = SimpleNamespace(runtime_metadata={})
 
     def timed_sample(_prepared, shots: int, seed: int):
         assert shots == 4
@@ -39,7 +39,7 @@ def test_aggregate_sample_stops_before_reusing_the_next_repetition_seed(monkeypa
     monkeypatch.setattr(worker, "timed_sample", timed_sample)
     with pytest.raises(RuntimeError, match="non-overlapping seed range"):
         worker.aggregate_sample(
-            SimpleNamespace(),
+            SimpleNamespace(runtime_metadata={}),
             shots_per_call=1,
             min_seconds=0.3,
             seed=10,
@@ -57,7 +57,7 @@ def test_aggregate_sample_excludes_stream_setup_and_records_peak_rss(monkeypatch
 
     monkeypatch.setattr(worker, "timed_sample", sample)
     monkeypatch.setattr(worker, "begin_sample", lambda *_: 2.0)
-    prepared = SimpleNamespace()
+    prepared = SimpleNamespace(runtime_metadata={})
     result = worker.aggregate_sample(
         prepared, shots_per_call=10, min_seconds=0.4, seed=1,
         postselect=False, max_api_calls=10,
@@ -185,7 +185,8 @@ def test_batch_calibration_records_unsupported_candidates_and_selects_scalar(
 
 def test_stream_setup_runs_once_outside_accumulated_sampling_time(monkeypatch) -> None:
     events = []
-    prepared = SimpleNamespace(begin_sample=lambda seed: events.append(("setup", seed)))
+    prepared = SimpleNamespace(runtime_metadata={},
+                               begin_sample=lambda seed: events.append(("setup", seed)))
 
     def timed_sample(_prepared, shots, seed):
         events.append(("sample", seed))
@@ -223,6 +224,7 @@ def test_installation_is_verified_before_any_calibration(monkeypatch):
                     "command": "prepare",
                     "workload": {},
                     "adapter": "symft",
+                    "execution": {"batch_size": 1},
                     "timeout_seconds": 1,
                     "expected_commit": "wrong-commit",
                     "source_url": "source-url",

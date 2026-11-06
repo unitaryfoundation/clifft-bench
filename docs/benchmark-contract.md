@@ -1,7 +1,9 @@
 # Benchmark contract
 
 This contract governs the recurring single-core campaigns under
-`campaigns/`. One-off studies under `experiments/` define their own contracts.
+`campaigns/`. The optional native thread scaling pilot is specified separately
+below; it does not change the recurring single-core measurements or calibration.
+One-off studies under `experiments/` define their own contracts.
 
 ## Question and logical work
 
@@ -578,3 +580,67 @@ Archived files retain their original formats and use the
 [pinned legacy tools](../CONTRIBUTING.md#historical-evidence). They are not migrated
 or required by the recurring report. Hardware or workload changes must be labeled
 in any optional long-term analysis.
+
+## Optional native thread scaling pilot
+
+[`campaigns/thread-scaling.toml`](../campaigns/thread-scaling.toml) asks: for this
+workload and public call size, how does throughput change when the simulator is
+given more threads, using its supported automatic configuration or tuning?
+It reuses the existing distillation and coherent surface-code circuits. Its
+100,000-shot distillation calls, 256-shot wide-state calls, and one-shot control
+are fixed across tools and budgets. Circuit bytes, output/selection semantics,
+precision, and the total per-process memory ceiling are also fixed. Short calls
+and native chunking may leave cores idle; this is a measured outcome.
+
+The `scaling.threads` list expands each selected case into independent fresh
+workers. This smoke-classified pilot uses the same worker protocol, identity
+checks, timing boundaries, raw-count correctness checks, deadlines, and raw
+evidence as the recurring harness. It uses no external worker pool. The native
+configuration recipe replaces harness batch calibration only in this campaign:
+
+- Clifft receives the thread budget and automatic layout, runs its native
+  `batch_size="tune"` once during setup with a 0.25-second soft budget, then
+  reuses the reported numeric batch size and resolved worker layout. Setup
+  includes the tuning API's requested sampling call as well as its calibration.
+  The native report retains trials, costs, fallback/stop reason, and whether
+  there were sufficient measurements. It is not the recurring bounded sweep.
+- SymFT uses its batch counts path with `threads=P`, `batch_size=0`, and
+  `sample_chunk_shots=0`. The native heuristic chooses batching and chunking;
+  the report retains its resolved configuration and observed `active_threads`.
+  Unselected-record sampling has no native threading recipe and returns a
+  structured unsupported setup outcome rather than changing output semantics.
+- Tsim uses its CPU active-statevector path with `NUMBA_NUM_THREADS=P` set
+  before import and `batch_size=None`. Trajectory sharing is inherent in the
+  maintained version. The native memory/batching policy remains active during
+  sampling; the public API does not expose its resolved per-call batch size,
+  so that value is null, not an invented fixed capacity.
+
+Stim and xtim's maintained sampling APIs have no internal thread-budget control
+and are not selected by this pilot. Their multiprocessing collection workflows
+are outside its scope. Native heuristics and measured tuning are distinct
+capabilities; these recipes do not promise globally optimal configurations.
+
+Collection requires Linux affinity and physical-core topology. It records one
+allowed logical CPU per Linux-visible physical core, grouped by socket/core ID,
+and uses prefixes of that allocation for increasing budgets. SMT siblings are
+excluded; on a VM this describes the topology exposed by the guest. A budget
+larger than the available allocation produces a structured resource failure.
+Workers must apply the exact CPU allocation and address-space ceiling before
+importing simulators. OpenMP and Numba receive the thread budget; nested BLAS
+and other numerical pools remain capped at one. Setup records that environment,
+the applied affinity, and resolved runtime worker/pool limits.
+
+The separate scaling report uses only the validated execution's raw evidence.
+It shows absolute attempted-shot rates and dispersion, same-tool/same-workload
+speedup against the one-core point on that host, and speedup divided by allocated
+cores. Failed or absent baselines have no ratios, and failures have no plotted
+rate. Process CPU time divided by sampling-loop wall time estimates average
+CPU consumption, including reduction and bookkeeping; it is not an active
+thread count. Setup, compilation, native calibration, and JIT/warmup costs remain
+separate where available. Peak RSS is a cumulative process high-water mark and
+can include tuning. Do not apply the recurring paired 1.1% interpretation or
+reuse official single-core rates as this pilot's baselines.
+
+The [pilot workflow](../CONTRIBUTING.md#native-thread-scaling-pilot) owns collection
+and report commands. One-off evidence stays on evidence branches; it is not
+added to the recurring published figures or merged into mainline.

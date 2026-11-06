@@ -27,7 +27,7 @@ DEFAULT_CAMPAIGN = "smoke"
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="clifft-bench",
-        description="Run reproducible single-CPU near-Clifford simulator benchmarks.",
+        description="Run reproducible CPU near-Clifford simulator benchmarks.",
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
@@ -54,7 +54,7 @@ def _parser() -> argparse.ArgumentParser:
     csv_command.add_argument("--output", type=Path)
 
     report = commands.add_parser(
-        "report", help="report release comparisons and simulator throughput"
+        "report", help="report release comparisons, simulator throughput, or thread scaling"
     )
     report.add_argument("execution_dir", type=Path)
     report.add_argument("--output-dir", type=Path)

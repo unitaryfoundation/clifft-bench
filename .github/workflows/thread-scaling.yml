@@ -1,0 +1,65 @@
+name: Native thread scaling
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'campaigns/thread-scaling.toml'
+      - 'src/clifft_bench/adapters/**'
+      - 'src/clifft_bench/config.py'
+      - 'src/clifft_bench/runner.py'
+      - 'src/clifft_bench/worker.py'
+      - 'src/clifft_bench/system.py'
+      - 'src/clifft_bench/results.py'
+      - 'src/clifft_bench/scaling_report.py'
+      - 'tests/test_thread_scaling.py'
+      - '.github/workflows/thread-scaling.yml'
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "4"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --extra test --extra report --python 3.12
+      - run: uv run clifft-bench bootstrap thread-scaling
+      - name: Verify native sampling in fresh workers
+        run: |
+          for python in .campaign-envs/*/bin/python; do
+            "$python" -m pip install pytest
+            PYTHONPATH=src "$python" -m pytest tests/test_thread_scaling.py -k native_threads_in_fresh_workers
+          done
+      - name: Collect bounded pilot on existing circuits
+        id: collect
+        continue-on-error: true
+        run: uv run clifft-bench run thread-scaling --case='--t(1|2)$' --output-dir=/tmp/thread-scaling
+      - name: Validate evidence and regenerate the report
+        if: always() && steps.collect.outcome != 'skipped'
+        run: |
+          uv run clifft-bench validate /tmp/thread-scaling/raw.json
+          uv run --extra report clifft-bench report /tmp/thread-scaling
+      - name: Require measurements for every native tool
+        if: always() && steps.collect.outcome != 'skipped'
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+          from clifft_bench.results import read_result
+          result = read_result(Path('/tmp/thread-scaling/raw.json'))
+          for adapter in ('clifft', 'symft', 'tsim'):
+              for threads in (1, 2):
+                  assert any(c['status'] == 'success'
+                             and c['simulator']['adapter'] == adapter
+                             and c['execution']['threads_requested'] == threads
+                             for c in result['cases']), (adapter, threads)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-thread-scaling
+          path: /tmp/thread-scaling/
