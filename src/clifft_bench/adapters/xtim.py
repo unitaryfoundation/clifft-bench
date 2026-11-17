@@ -125,8 +125,6 @@ class XtimAdapter(Adapter):
         semantics = workload["semantics"]
         require_all_or_none(semantics, self.name)
         chunk = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
-        if chunk is not None and chunk < 1:
-            raise ValueError("xtim requires a positive batch_size for chunking")
         text = artifact_path.read_text()
         started = time.perf_counter()
         circuit = xtim.Circuit(text)

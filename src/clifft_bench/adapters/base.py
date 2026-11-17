@@ -49,6 +49,9 @@ class Adapter(ABC):
 
     def validate_execution(self, execution: dict[str, Any], workload: dict[str, Any]) -> int:
         self.validate_options(execution.get("options", {}))
+        batch_size = execution["batch_size"]
+        if batch_size != "auto" and (type(batch_size) is not int or batch_size < 1):
+            raise ValueError('batch_size must be "auto" or a positive integer')
         threads = execution.get("threads", 1)
         if type(threads) is not int or threads not in (1, 8):
             raise ValueError("threads must be 1 or 8")

@@ -261,8 +261,7 @@ Use the official pinned Stim 1.16.0 wheel and record the loaded `stim._stim_*`
 native extension. Its x86 Python dispatch selects SSE2, even on AVX2-capable
 hosts: upstream's [Python build](https://github.com/quantumlib/Stim/blob/v1.16.0/setup.py)
 disables AVX2 pending [Stim issue #432](https://github.com/quantumlib/Stim/issues/432).
-Retain upstream's build configuration and select the best measured packed-record
-chunk size on the reference host. These measurements describe the official
+Retain upstream's build configuration. These measurements describe the official
 release wheel; the recorded extension identifies the SIMD implementation used.
 
 ## xtim comparison

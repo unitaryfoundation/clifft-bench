@@ -146,7 +146,7 @@ def test_tsim_rejects_inconsistent_native_rows(damage):
 @pytest.mark.parametrize("threads", [1, 8])
 def test_tsim_requires_explicit_and_effective_thread_budget(tmp_path, monkeypatch, threads):
     monkeypatch.delenv("NUMBA_NUM_THREADS")
-    execution = {"threads": threads}
+    execution = {"threads": threads, "batch_size": 1}
     with pytest.raises(ValueError, match="NUMBA_NUM_THREADS"):
         TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution=execution)
     monkeypatch.setenv("NUMBA_NUM_THREADS", str(threads))

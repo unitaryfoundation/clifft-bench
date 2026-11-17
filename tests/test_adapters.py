@@ -6,9 +6,29 @@ from types import SimpleNamespace
 
 import pytest
 
+from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.clifft import ClifftAdapter, _PreparedClifft
 from clifft_bench.adapters.fixture import FixtureAdapter
 from clifft_bench.adapters.symft import SymftAdapter
+
+
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "tsim", "xtim", "fixture"])
+@pytest.mark.parametrize("batch_size", [0, -1, True, False, 1.5, "1", None])
+def test_direct_prepare_rejects_invalid_batch_size(tmp_path, adapter_name, batch_size):
+    with pytest.raises(ValueError, match="batch_size"):
+        load_adapter(adapter_name).prepare(
+            artifact_path=tmp_path / "unused.stim",
+            workload={"semantics": {"postselect_all_detectors": False}},
+            execution={"batch_size": batch_size},
+        )
+
+
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "tsim", "xtim", "fixture"])
+@pytest.mark.parametrize("batch_size", ["auto", 1, 32])
+def test_execution_accepts_auto_and_positive_batch_sizes(adapter_name, batch_size):
+    assert load_adapter(adapter_name).validate_execution(
+        {"batch_size": batch_size}, {"semantics": {"postselect_all_detectors": False}},
+    ) == 1
 
 
 class _Sampler:

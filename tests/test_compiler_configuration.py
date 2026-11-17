@@ -60,7 +60,7 @@ def test_requested_scheduler_is_rejected_on_older_clifft(tmp_path, monkeypatch):
         ClifftAdapter().prepare(
             artifact_path=tmp_path / "unused.stim",
             workload={"semantics": {}},
-            execution={"options": {"scheduler": _scheduler_options()}},
+            execution={"batch_size": 1, "options": {"scheduler": _scheduler_options()}},
         )
 
 

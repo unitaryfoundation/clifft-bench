@@ -89,7 +89,7 @@ class TsimAdapter(Adapter):
             )
         semantics = workload["semantics"]
         batch = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
-        if batch is not None and not 1 <= batch <= MAX_BATCH_SIZE:
+        if batch is not None and batch > MAX_BATCH_SIZE:
             raise ValueError("Tsim requires batch_size in [1, 65536]")
         text = artifact_path.read_text()
         started = time.perf_counter()

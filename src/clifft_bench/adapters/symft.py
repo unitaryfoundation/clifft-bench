@@ -69,8 +69,6 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
     batch_size = 0 if execution["batch_size"] == "auto" else int(execution["batch_size"])
     batch = batch_size != 1
     chunk = int(execution.get("options", {}).get("sample_chunk_shots", 0))
-    if batch_size < 0 or chunk < 0:
-        raise ValueError("SymFT requires a positive batch size and nonnegative sample chunk")
     started = time.perf_counter()
     sampler = circuit.compile_sampler(
         batch=batch,

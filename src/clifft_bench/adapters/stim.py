@@ -92,8 +92,6 @@ class StimAdapter(Adapter):
         if not 0 <= observable < circuit.num_observables:
             raise ValueError("observable index is outside the circuit")
         chunk = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
-        if chunk is not None and chunk < 1:
-            raise ValueError("Stim requires a positive batch_size for chunking")
         prepared = _PreparedStim(
             circuit,
             chunk=chunk,

@@ -101,10 +101,6 @@ class ClifftAdapter(Adapter):
             scheduler = clifft.ActiveWidthSchedulePass(**scheduler_config)
 
         requested_batch_size = execution["batch_size"]
-        if requested_batch_size != "auto" and (
-            type(requested_batch_size) is not int or requested_batch_size < 1
-        ):
-            raise ValueError("Clifft requires batch_size=auto or a positive integer")
         batch_enabled = None if requested_batch_size == "auto" else requested_batch_size > 1
 
         text = artifact_path.read_text()
