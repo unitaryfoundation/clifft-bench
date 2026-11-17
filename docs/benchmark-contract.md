@@ -100,11 +100,13 @@ themselves. This is the data interface for the
 
 - `panels` and their `rows` preserve the figure's selection and order. Each panel
   has its own logarithmic `x_limits`. Rows identify the workload and baseline
-  variant, display label, circuit digest, and selection/output `semantics`.
+  variant, display label (including multi-core budgets), circuit digest, and
+  selection/output `semantics`.
 - Each row's `values` follows the simulator order in `series`. Values include
   the attempted-shot rate median and median absolute deviation (both in shots/s),
-  sample count, shots per call, effective batch size, and peak active width where
-  recorded. MAD describes sample dispersion, not a confidence interval.
+  sample count, shots per call, effective batch size, `threads_requested`,
+  `threads_effective`, and peak active width where recorded. MAD describes sample
+  dispersion, not a confidence interval.
 - `outcome` is `measured`, a recorded failure status, `unsupported`, or
   `not measured`. Failed and absent cases have null rates and dispersion; missing
   metadata is null rather than zero. Unsupported cases remain in the export for
@@ -167,30 +169,21 @@ collection commands belong in the [maintainer workflow](../CONTRIBUTING.md#refer
 
 Cases execute serially in manifest order. Every case gets a fresh worker
 process using the Python environment recorded for its implementation.
-`execution.threads` is 1 (the default) or 8. Before simulator imports,
-`OMP_NUM_THREADS` and `NUMBA_NUM_THREADS` receive that budget; BLAS, NumExpr,
-Accelerate, and XLA remain serial. Clifft receives the native sampling thread
-budget, Tsim verifies its Numba pool, and SymFT uses its native counts threads
-with `cpu_backend="legacy"`. Stim, the pinned xtim adapter, and SymFT's unselected
-measurement-record path support one thread; other requests produce explicit
-`unsupported` outcomes without throughput.
+`execution.threads` is 1 (default) or 8. Before imports, workers set
+`OMP_NUM_THREADS` and `NUMBA_NUM_THREADS` to that budget; BLAS, NumExpr,
+Accelerate, and XLA remain serial. Clifft, Tsim, and SymFT's legacy counts backend
+support both budgets. Stim, pinned xtim, and SymFT's unselected measurement path
+support only 1; unsupported requests are recorded before resource allocation.
 
-Linux allocation selects one logical CPU per distinct `(socket, core)` identity
-within the process's allowed affinity mask. `--cpu` selects the first CPU;
-the one-core allocation is the first core of the eight-core allocation.
-Missing topology or insufficient cores fails setup instead of silently using
-SMT siblings. `sched_setaffinity` applies the selected mask before simulator
-imports. Multi-core execution requires applied affinity; single-core smoke runs
-on systems without Linux affinity retain an explicit unapplied outcome.
+Before imports, Linux workers pin one logical CPU per distinct `(socket, core)`
+within the allowed mask, starting at `--cpu`. Setup fails if topology is missing
+or too few cores are available. Eight-core runs require applied affinity;
+single-core smoke runs may record unavailable affinity.
 
-`raw/v2` records each worker's requested/effective threads, thread environment,
-CPU mask, physical-core identities, memory ceiling, and sample peak RSS.
-Effective thread counts describe native pool/plan information where available;
-they are null when the simulator does not expose it, including multi-core
-Clifft 0.13.0. They are not inferred from the requested budget or CPU usage.
-Validation rejects mismatched budgets, environments, masks, and sibling cores.
-CSV and report details expose core budgets, and multi-core figure labels include
-the core count. Release/peer ratios require equal core budgets.
+Thread settings are recorded per worker: environment, CPU mask, physical-core
+identities, and requested/effective counts. Effective counts describe the native
+pool or plan, or are null when unreported (including multi-core Clifft 0.13.0).
+Release/peer ratios require equal core budgets.
 
 Official workers receive the campaign's 12 GiB address-space ceiling, leaving
 headroom on the 16 GiB reference host. The requested ceiling is embedded in the
@@ -468,11 +461,9 @@ verification. Dependencies, including Numba/LLVM and zxparam, are locked in
 
 Compilation explicitly requests `strategy="active_statevector"`; trajectory
 sharing is always enabled upstream. This is a complex128 CPU implementation;
-it does not need CUDA. The worker sets `NUMBA_NUM_THREADS` to the case's thread
-budget before imports, and the adapter checks Numba's effective thread count.
-The existing Linux affinity, 12 GiB
-address-space ceiling, and preparation/request deadlines also apply. There is
-no fallback to a different Tsim strategy when preparation or sampling fails.
+it does not need CUDA. The adapter verifies that Numba's pool matches the case's
+thread budget. Resource limits and preparation/request deadlines also apply.
+There is no fallback to a different Tsim strategy when preparation or sampling fails.
 
 Tsim returns raw detector and observable arrays. Both reference-sample flags
 are explicitly false. The adapter passes the workload's detector selection mask,

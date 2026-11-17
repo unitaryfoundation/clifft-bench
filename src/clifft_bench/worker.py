@@ -336,7 +336,7 @@ def main() -> int:
                 if environment != thread_environment(execution["threads"]):
                     raise ValueError("worker thread caps must be set before simulator imports")
                 adapter = load_adapter(request["adapter"])
-                adapter.validate_execution(execution)
+                adapter.validate_execution(execution, workload)
                 affinity = apply_affinity(request.get("logical_cpu"), execution["threads"])
                 if execution["threads"] > 1 and not affinity["applied"]:
                     raise ValueError("multiple threads require applied physical-core affinity")

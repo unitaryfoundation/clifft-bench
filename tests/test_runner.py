@@ -522,20 +522,38 @@ def test_eight_core_worker_records_applied_affinity_and_preimport_caps(tmp_path)
     assert metadata["address_space_limit_bytes"] == 1 << 30
 
 
-def test_unsupported_thread_request_is_recorded_before_simulator_setup(tmp_path):
+@pytest.mark.parametrize("adapter", ["stim", "xtim", "symft"])
+@pytest.mark.parametrize("batch_size", [1, "calibrate"])
+def test_unsupported_threads_survive_export_on_a_restricted_host(tmp_path, adapter, batch_size):
     path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]
-    run["cases"][0]["execution"]["threads"] = 8
-    software["implementations"][0]["adapter"] = "stim"
+    run["cases"][0]["execution"].update(threads=8, batch_size=batch_size)
+    software["implementations"][0]["adapter"] = adapter
     workloads = read_toml(tmp_path / "workloads.toml")
-    workloads["workloads"][0]["compatible_adapters"].append("stim")
+    workload = workloads["workloads"][0]
+    workload["compatible_adapters"].append(adapter)
+    artifact = tmp_path / "tiny.stim"
+    artifact.write_text("M 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    workload["artifact"]["sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+    workload["expected_metadata"]["num_detectors"] = 1
     _write(tmp_path / "workloads.toml", workloads)
     _write(tmp_path / "software.toml", software)
     _write(path, run)
-    result = run_suite(load_suite(path), python_executable=sys.executable,
-                       output_dir=tmp_path / "result")
+    allowed = os.sched_getaffinity(0) if hasattr(os, "sched_getaffinity") else None
+    try:
+        if allowed is not None:
+            os.sched_setaffinity(0, {min(allowed)})
+        result = run_suite(load_suite(path), python_executable=sys.executable,
+                           output_dir=tmp_path / "result")
+    finally:
+        if allowed is not None:
+            os.sched_setaffinity(0, allowed)
     validate_result(result)
     case = result["cases"][0]
     assert case["status"] == "unsupported"
     assert case["setup"] is None and case["samples"] == []
     assert "threads=8" in case["error"]["message"]
+    with (tmp_path / "result/cases.csv").open() as stream:
+        row, = csv.DictReader(stream)
+    assert row["status"] == "unsupported"
+    assert row["median_attempted_shots_per_second"] == ""

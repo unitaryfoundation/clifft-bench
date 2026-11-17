@@ -88,7 +88,7 @@ class ClifftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
-        threads = self.validate_execution(execution)
+        threads = self.validate_execution(execution, workload)
         import clifft
 
         scheduler_config = execution.get("options", {}).get("scheduler")

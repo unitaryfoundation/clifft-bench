@@ -72,7 +72,7 @@ class TsimAdapter(Adapter):
     def prepare(
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
-        requested_threads = self.validate_execution(execution)
+        requested_threads = self.validate_execution(execution, workload)
         # NUMBA_NUM_THREADS must be set before import: limiting BLAS/OpenMP
         # alone does not constrain Numba's independent thread pool.
         if os.environ.get("NUMBA_NUM_THREADS") != str(requested_threads):

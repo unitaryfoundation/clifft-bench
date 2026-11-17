@@ -111,6 +111,14 @@ class SymftAdapter(Adapter):
     name = "symft"
     supported_threads = (1, 8)
 
+    def validate_execution(self, execution: dict[str, Any], workload: dict[str, Any]) -> int:
+        threads = super().validate_execution(execution, workload)
+        require_all_or_none(workload["semantics"], self.name)
+        if (threads != 1 and not workload["semantics"]["postselect_all_detectors"]
+                and workload["expected_metadata"]["num_detectors"]):
+            raise UnsupportedConfiguration("SymFT measurement sampling does not support threads=8")
+        return threads
+
     def validate_options(self, options: dict[str, Any]) -> None:
         if options.keys() - {"sample_chunk_shots"}:
             raise ValueError(f"unknown SymFT options: {sorted(options)}")
@@ -132,16 +140,13 @@ class SymftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
-        threads = self.validate_execution(execution)
-        require_all_or_none(workload["semantics"], self.name)
+        threads = self.validate_execution(execution, workload)
         import symft
 
         circuit = symft.Circuit(path=artifact_path)
         observable = int(workload["semantics"]["observable_index"])
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
         if not postselect and circuit.num_detectors:
-            if threads != 1:
-                raise UnsupportedConfiguration("SymFT measurement sampling is single-threaded")
             return _prepare_unselected_records(circuit, execution, observable, symft)
         requested_batch_size = int(execution["batch_size"])
         batch = requested_batch_size > 1

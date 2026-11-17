@@ -210,7 +210,8 @@ def test_installation_is_verified_before_any_calibration(monkeypatch):
         assert kwargs == {"expected_commit": "wrong-commit", "source_url": "source-url"}
         raise RuntimeError("source identity mismatch")
 
-    adapter = SimpleNamespace(verify_installation=reject, validate_execution=lambda execution: 1)
+    adapter = SimpleNamespace(verify_installation=reject,
+                              validate_execution=lambda execution, workload: 1)
     for key, value in worker.thread_environment(1).items():
         monkeypatch.setenv(key, value)
     monkeypatch.setattr(worker, "apply_affinity", lambda cpu, threads: {"applied": True})
@@ -410,7 +411,7 @@ def test_worker_returns_calibration_failures_with_their_evidence(monkeypatch):
         raise MemoryError("cannot prepare candidate")
 
     adapter = SimpleNamespace(name="clifft", prepare=fail, verify_installation=lambda **kw: {},
-                              validate_execution=lambda execution: 1)
+                              validate_execution=lambda execution, workload: 1)
     for key, value in worker.thread_environment(1).items():
         monkeypatch.setenv(key, value)
     monkeypatch.setattr(worker, "apply_affinity", lambda cpu, threads: {"applied": True})

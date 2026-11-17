@@ -189,7 +189,10 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
 
 
 @pytest.mark.parametrize("threads", [1, 8])
-def test_symft_counts_use_native_threads_and_legacy_backend(tmp_path, monkeypatch, threads):
+@pytest.mark.parametrize("postselect", [False, True])
+def test_symft_counts_use_native_threads_and_legacy_backend(
+    tmp_path, monkeypatch, threads, postselect
+):
     class Circuit(_Circuit):
         def compile_counts_sampler(self, **kwargs):
             assert kwargs["threads"] == threads
@@ -202,7 +205,8 @@ def test_symft_counts_use_native_threads_and_legacy_backend(tmp_path, monkeypatc
     ))
     prepared = SymftAdapter().prepare(
         artifact_path=tmp_path / "unused.stim",
-        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": True}},
+        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect},
+                  "expected_metadata": {"num_detectors": 0}},
         execution={"batch_size": 32, "threads": threads},
     )
     assert prepared.runtime_metadata["threads"] == threads

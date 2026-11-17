@@ -46,7 +46,7 @@ class FixtureAdapter(Adapter):
         seed: int = 0,
     ) -> PreparedAdapter:
         require_all_or_none(workload["semantics"], self.name)
-        threads = self.validate_execution(execution)
+        threads = self.validate_execution(execution, workload)
         parameters = dict(workload["parameters"])
         if parameters.get("write_native_stdout"):
             os.write(1, b"fixture native prepare output\n")

@@ -50,7 +50,7 @@ class Adapter(ABC):
     adapter_version = ADAPTER_API_VERSION
     supported_threads = (1,)
 
-    def validate_execution(self, execution: dict[str, Any]) -> int:
+    def validate_execution(self, execution: dict[str, Any], workload: dict[str, Any]) -> int:
         self.validate_options(execution.get("options", {}))
         threads = execution.get("threads", 1)
         if type(threads) is not int or threads not in (1, 8):

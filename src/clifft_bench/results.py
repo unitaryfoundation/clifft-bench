@@ -574,7 +574,7 @@ def _validate_calibration_record(expected: dict, observed: dict[str, Any]) -> No
     # setup metadata. Preserve that explicit failure without inventing a winner.
     if (
         setup is None
-        and observed["status"] in {"error", "interrupted"}
+        and observed["status"] in {"error", "unsupported", "interrupted"}
         and (observed.get("error") or {}).get("phase") == "setup"
     ):
         return

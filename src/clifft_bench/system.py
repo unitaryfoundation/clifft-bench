@@ -285,10 +285,7 @@ def ec2_workflow(root: Path, cloud: dict[str, str], run_id: str) -> dict[str, An
     }
 
 
-def collect_runner_metadata(
-    root: Path, *, thread_environment: dict[str, str] | None = None,
-    cloud: dict[str, str] | None = None
-) -> dict[str, Any]:
+def collect_runner_metadata(root: Path, *, cloud: dict[str, str] | None = None) -> dict[str, Any]:
     uname = platform.uname()
     try:
         load_average = list(os.getloadavg())
@@ -308,7 +305,6 @@ def collect_runner_metadata(
         "allowed_logical_cpus": _allowed_cpus(),
         "memory_bytes": _memory_bytes(),
         "load_average_at_start": load_average,
-        "thread_environment": (thread_environment or THREAD_LIMIT_ENVIRONMENT).copy(),
         "accelerator": None,
         "cloud": cloud,
         "suite_source": _git_metadata(root),

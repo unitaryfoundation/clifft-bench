@@ -102,7 +102,7 @@ def _add_peer_results(report: dict, peers: dict) -> None:
                 "resources", "seed"):
         if document["campaign"].get(key) != peers["campaign"].get(key):
             raise ValueError(f"incompatible peer collection {key}")
-    for key in ("cpu_model", "os", "os_release", "machine", "python", "thread_environment"):
+    for key in ("cpu_model", "os", "os_release", "machine", "python"):
         if document["runner"].get(key) != peers["runner"].get(key):
             raise ValueError(f"incompatible peer host {key}")
 
