@@ -1,4 +1,4 @@
-suite_version = "0.2.8"
+suite_version = "0.2.9"
 profile_id = "release-clifft"
 title = "Clifft-only single-core release benchmark"
 classification = "official"
@@ -28,7 +28,6 @@ candidate_variants = ["clifft-current"]
 [measurement]
 setup_timeout_seconds = 1800
 request_timeout_seconds = 1800
-warmup_shots = 1
 correctness_shots = 8
 min_sample_seconds = 30
 repetitions = 5
@@ -39,7 +38,7 @@ implementation_id = "clifft-0.12.0rc1"
 workloads = "qec-and-adder"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants]]
@@ -47,7 +46,7 @@ id = "clifft-current"
 implementation_id = "clifft-0.13.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants.workloads]]
@@ -88,7 +87,7 @@ id = "clifft-bulk"
 implementation_id = "clifft-0.13.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants.workloads]]
@@ -105,5 +104,5 @@ implementation_id = "clifft-0.13.0"
 workloads = "coverage"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"

@@ -37,7 +37,6 @@ def _prepare(adapter, tmp_path, text):
     )
     for key, expected in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == expected
-    prepared.begin_sample(42)
     return prepared
 
 

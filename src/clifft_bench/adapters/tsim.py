@@ -38,7 +38,7 @@ class _PreparedTsim(PreparedAdapter):
             raise ValueError("Tsim shots per call must be positive")
         detectors, observables = self._sampler.sample(
             shots=shots,
-            batch_size=min(self._batch, shots),
+            batch_size=min(self._batch, shots) if self._batch is not None else None,
             separate_observables=True,
             bit_packed=False,
             use_detector_reference_sample=False,
@@ -88,11 +88,12 @@ class TsimAdapter(Adapter):
                 f"Tsim requires {requested_threads} effective Numba threads, got {threads}"
             )
         semantics = workload["semantics"]
-        batch = int(execution["batch_size"])
-        if not 1 <= batch <= MAX_BATCH_SIZE:
+        batch = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
+        if batch is not None and not 1 <= batch <= MAX_BATCH_SIZE:
             raise ValueError("Tsim requires batch_size in [1, 65536]")
+        text = artifact_path.read_text()
         started = time.perf_counter()
-        circuit = tsim.Circuit(artifact_path.read_text())
+        circuit = tsim.Circuit(text)
         selection = detector_mask(semantics, circuit.num_detectors)
         observable = int(semantics["observable_index"])
         if not 0 <= observable < circuit.num_observables:
@@ -110,31 +111,20 @@ class TsimAdapter(Adapter):
             "name": "tsim", "version": version("bloqade-tsim"), "threads": threads,
             "precision": "complex-fp64", "reference_convention": "raw-record-parity",
             "sampling_backend": "active_statevector", "trajectory_sharing": True,
-            "batch_enabled": batch > 1, "effective_batch_size": batch,
+            "batch_enabled": None if batch is None else batch > 1, "effective_batch_size": batch,
             "batch_parameter": "statevector-batch-shots",
             "batch_size_applicable": bool(sampler._program.components),
             "seed_policy": "continuous-stream-seeded-at-prepare",
             "initial_seed": seed,
             "record_materialization": "boolean-detectors-and-observables",
-            "parse_seconds": parse_seconds, "compile_seconds": compile_seconds,
+            "parse_seconds": parse_seconds, "compile_seconds": parse_seconds + compile_seconds,
             "peak_active_width": max(widths, default=0),
             "statevector_component_widths": widths,
-            "warmup_full_call": True,
-            "jit_cache_policy": "upstream-numba-disk-cache; warm-before-timing",
+            "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
             **{key: getattr(circuit, key) for key in (
                 "num_qubits", "num_measurements", "num_detectors", "num_observables"
             )},
         }
-        # Ensure the quantum kernels are compiled even if every shot in the
-        # later postselected warmup is rejected by a direct detector. This is
-        # an untimed one-shot execution, not a pure compiler-duration claim.
-        started = time.perf_counter()
-        sampler.sample(
-            shots=1, batch_size=1, separate_observables=True,
-            use_detector_reference_sample=False, use_observable_reference_sample=False,
-        )
-        metadata["kernel_warmup_seconds"] = time.perf_counter() - started
-        metadata["kernel_warmup_shots"] = 1
         return _PreparedTsim(
             sampler, batch=batch, postselect=has_postselection(semantics),
             selection=selection if "postselection_detector_indices" in semantics else None,

@@ -84,9 +84,7 @@ def test_tsim_continuous_seeded_stream_does_not_recompile_or_replay(tmp_path, mo
         raise AssertionError("sampler recompiled after preparation")
 
     monkeypatch.setattr(tsim.Circuit, "compile_detector_sampler", unexpected_compile)
-    a.begin_sample(100)
     first = a.sample(30001, 100)
-    a.begin_sample(200)
     second = a.sample(30001, 200)
     # Audit identifiers do not reset the native stream. A fresh prepared
     # sampler with the same initial seed reproduces the entire sequence.
@@ -164,6 +162,9 @@ def test_tsim_records_requested_numba_pool(tmp_path, monkeypatch, threads):
 
     artifact = tmp_path / "circuit.stim"
     artifact.write_text("M 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    def unexpected_sample(**kwargs):
+        raise AssertionError("preparation sampled the measurement sampler")
+
     class Circuit:
         num_qubits = num_measurements = num_detectors = num_observables = 1
 
@@ -173,7 +174,7 @@ def test_tsim_records_requested_numba_pool(tmp_path, monkeypatch, threads):
         def compile_detector_sampler(self, *, strategy, seed):
             assert strategy == "active_statevector"
             return SimpleNamespace(circuit=self, _program=SimpleNamespace(components=[]),
-                                   sample=lambda **kwargs: None)
+                                   sample=unexpected_sample)
     monkeypatch.setenv("NUMBA_NUM_THREADS", str(threads))
     monkeypatch.setitem(sys.modules, "numba", SimpleNamespace(get_num_threads=lambda: threads))
     monkeypatch.setitem(sys.modules, "tsim", SimpleNamespace(Circuit=Circuit))

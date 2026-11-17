@@ -88,7 +88,7 @@ def test_new_circuits_are_part_of_the_release_campaign():
         assert case.definition["shots_per_call"] == (
             100000 if case.workload.id == "reed-muller-measured" else 2048
         )
-        assert case.definition["execution"]["batch_size"] == "calibrate"
+        assert case.definition["execution"]["batch_size"] == "auto"
     smoke_cases = [case for path in ("smoke.toml", "tsim-smoke.toml")
                    for case in load_suite(ROOT / "campaigns" / path).cases]
     assert NEW_WORKLOADS <= {case.workload.id for case in smoke_cases}
@@ -114,7 +114,6 @@ def test_measured_reed_muller_sampling(adapter, batch_size):
     )
     for key, value in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == value
-    prepared.begin_sample(88)
     _check_counts(prepared.sample(16384, 88), reed_muller_probability())
 
 
@@ -133,5 +132,4 @@ def test_current_clifft_code_switching_sampling(workload_id, width, batch_size):
     for key, value in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == value
     assert prepared.runtime_metadata["peak_active_width"] == width
-    prepared.begin_sample(118)
     _check_counts(prepared.sample(4096, 118), bt_observable_probability())

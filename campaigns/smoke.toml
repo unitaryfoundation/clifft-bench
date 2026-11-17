@@ -1,4 +1,4 @@
-suite_version = "0.2.8"
+suite_version = "0.2.9"
 profile_id = "adapter-smoke"
 classification = "smoke"
 seed = 20260808
@@ -10,7 +10,6 @@ software_file = "../software.toml"
 [measurement]
 setup_timeout_seconds = 300
 request_timeout_seconds = 60
-warmup_shots = 4
 correctness_shots = 16
 min_sample_seconds = 0.05
 repetitions = 2
@@ -23,7 +22,7 @@ implementation_id = "clifft-0.13.0"
 shots_per_call = 10000
 
 [cases.execution]
-batch_size = 1024
+batch_size = "auto"
 
 [cases.execution.options]
 
@@ -35,10 +34,10 @@ implementation_id = "symft-2026.10.8"
 shots_per_call = 10000
 
 [cases.execution]
-batch_size = 1024
+batch_size = "auto"
 
 [cases.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0
 
 [[cases]]
 id = "distillation-15to1-smoke-xtim"
@@ -48,7 +47,7 @@ implementation_id = "xtim-3.2.2-edf0dd0"
 shots_per_call = 10000
 
 [cases.execution]
-batch_size = 1024
+batch_size = "auto"
 
 [cases.execution.options]
 
@@ -60,7 +59,7 @@ implementation_id = "xtim-3.2.2-edf0dd0"
 shots_per_call = 10000
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [cases.execution.options]
 
@@ -72,33 +71,33 @@ implementation_id = "clifft-0.13.0"
 shots_per_call = 2
 
 [cases.execution]
-batch_size = 1
+batch_size = "auto"
 
 [cases.execution.options]
 
 [[cases]]
-id = "msc-d3-smoke-clifft-calibrated"
+id = "msc-d3-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "msc-d3-inject-cultivate-p1e-3"
 implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[cases]]
-id = "msc-d3-smoke-symft-calibrated"
+id = "msc-d3-smoke-symft"
 variant_id = "symft-current"
 workload_id = "msc-d3-inject-cultivate-p1e-3"
 implementation_id = "symft-2026.10.8"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [cases.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0
 
 [[cases]]
 id = "distillation-85q-smoke-clifft"
@@ -108,31 +107,31 @@ implementation_id = "clifft-0.13.0"
 shots_per_call = 8
 
 [cases.execution]
-batch_size = 1
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[cases]]
-id = "distillation-85q-smoke-symft-calibrated"
+id = "distillation-85q-smoke-symft"
 variant_id = "symft-current"
 workload_id = "distillation-color-code-85q-p5e-2"
 implementation_id = "symft-2026.10.8"
 shots_per_call = 8
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [cases.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0
 
 [[cases]]
-id = "surface-d7-smoke-stim-calibrated"
+id = "surface-d7-smoke-stim"
 variant_id = "stim-current"
 workload_id = "surface-code-d7-r7-p1e-3"
 implementation_id = "stim-1.16.0"
 shots_per_call = 4096
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [cases.execution.options]
 
@@ -144,7 +143,7 @@ implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[cases]]
@@ -155,7 +154,7 @@ implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[cases]]
@@ -166,7 +165,7 @@ implementation_id = "clifft-0.13.0"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[cases]]
@@ -177,7 +176,7 @@ implementation_id = "symft-2026.10.8"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [cases.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0

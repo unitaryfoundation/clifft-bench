@@ -21,7 +21,7 @@ class _PreparedClifft(PreparedAdapter):
         program: Any,
         observable_index: int,
         runtime_metadata: dict[str, Any],
-        batch_size: int,
+        batch_size: int | str,
         threads: int = 1,
     ) -> None:
         self._clifft = clifft
@@ -101,9 +101,11 @@ class ClifftAdapter(Adapter):
             scheduler = clifft.ActiveWidthSchedulePass(**scheduler_config)
 
         requested_batch_size = execution["batch_size"]
-        if type(requested_batch_size) is not int or requested_batch_size < 1:
-            raise ValueError("Clifft requires a positive integer batch size")
-        batch_enabled = requested_batch_size > 1
+        if requested_batch_size != "auto" and (
+            type(requested_batch_size) is not int or requested_batch_size < 1
+        ):
+            raise ValueError("Clifft requires batch_size=auto or a positive integer")
+        batch_enabled = None if requested_batch_size == "auto" else requested_batch_size > 1
 
         text = artifact_path.read_text()
         parse_started = time.perf_counter()
@@ -133,8 +135,10 @@ class ClifftAdapter(Adapter):
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
             "batch_enabled": batch_enabled,
-            "effective_batch_size": requested_batch_size,
-            "batch_control": "explicit",
+            "effective_batch_size": (
+                None if requested_batch_size == "auto" else requested_batch_size
+            ),
+            "batch_control": "native-auto" if requested_batch_size == "auto" else "explicit",
             "postselection_before_optimization": early_postselection,
             "num_qubits": int(program.num_qubits),
             "num_measurements": int(program.num_measurements),
@@ -142,7 +146,7 @@ class ClifftAdapter(Adapter):
             "num_observables": int(program.num_observables),
             "peak_active_width": int(program.peak_active_width),
             "parse_seconds": parse_seconds,
-            "compile_seconds": compile_seconds,
+            "compile_seconds": parse_seconds + compile_seconds,
             "cpu_baseline": str(getattr(clifft, "CPU_BASELINE", "unknown")),
             "sampling_backend": "symbolic-coordinate",
         }

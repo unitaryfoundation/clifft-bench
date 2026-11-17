@@ -1,4 +1,4 @@
-"""Exact xtim detector sampling with a fresh plan cache per repetition."""
+"""Exact xtim detector sampling with a worker-local plan cache."""
 
 from __future__ import annotations
 
@@ -29,8 +29,10 @@ def _compile(text: str) -> Any:
     import xtim
 
     sampler = xtim.compile_twirl_sampler(text, selfcheck=0, disk_cache=False)
-    if not hasattr(sampler, "record_report"):
-        raise ValueError("xtim requires the pinned 3.2.2 record API with fixed stream continuation")
+    return sampler
+
+
+def _validate_report(sampler, text):
     report = sampler.record_report()
     declared_observables = {
         int(index) for index in re.findall(r"OBSERVABLE_INCLUDE\s*\(\s*(\d+)\s*\)", text, re.I)
@@ -54,14 +56,13 @@ def _compile(text: str) -> Any:
         raise ValueError(
             f"xtim requires deterministic noiseless detectors and observables: {report}"
         )
-    return sampler
+    return report
 
 
 class _PreparedXtim(PreparedAdapter):
     def __init__(
-        self, text, chunk, observable, postselect, det_ref, obs_ref, detector_mask, metadata
+        self, sampler, chunk, observable, postselect, det_ref, obs_ref, detector_mask, metadata
     ):
-        self._text = text
         self._chunk = chunk
         self._detector_mask = detector_mask
         self._counts = PackedCountsReducer(
@@ -69,22 +70,15 @@ class _PreparedXtim(PreparedAdapter):
             postselect=postselect and detector_mask is None,
         )
         self.runtime_metadata = metadata
-        self._sampler = None
-
-    def begin_sample(self, seed: int) -> None:
-        # Release the previous cache before compiling outside the sampling timer.
-        # Lazy plan construction remains timed as the cache warms within a sample.
-        self._sampler = None
-        self._sampler = _compile(self._text)
+        self._sampler = sampler
 
     def sample(self, shots: int, seed: int) -> Counts:
-        if self._sampler is None:
-            raise RuntimeError("xtim sampler must be initialized before timing")
         if shots < 1:
             raise ValueError("xtim shots per call must be positive")
         attempted = accepted = discarded = errors = 0
-        for offset in range(0, shots, self._chunk):
-            n = min(self._chunk, shots - offset)
+        chunk = self._chunk or shots
+        for offset in range(0, shots, chunk):
+            n = min(chunk, shots - offset)
             # Reseed once per harness call, then continue the stream for chunks.
             chunk_seed = seed if offset == 0 else None
             if self._detector_mask is None:
@@ -130,24 +124,23 @@ class XtimAdapter(Adapter):
 
         semantics = workload["semantics"]
         require_all_or_none(semantics, self.name)
-        chunk = int(execution["batch_size"])
-        if chunk < 1:
+        chunk = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
+        if chunk is not None and chunk < 1:
             raise ValueError("xtim requires a positive batch_size for chunking")
-        started = time.perf_counter()
         text = artifact_path.read_text()
+        started = time.perf_counter()
         circuit = xtim.Circuit(text)
+        parse_seconds = time.perf_counter() - started
         if circuit.num_expectations:
             raise ValueError("PAULI_EXPECTATION is outside the aggregate-count contract")
         layout = _record_layout(text)
         observable = int(semantics["observable_index"])
         if not 0 <= observable < layout.num_observables:
             raise ValueError("observable index is outside the circuit")
-        parse_seconds = time.perf_counter() - started
         started = time.perf_counter()
         sampler = _compile(text)
-        report = sampler.record_report()
-        del sampler
         compile_seconds = time.perf_counter() - started
+        report = _validate_report(sampler, text)
 
         # Certified deterministic channels have a unique noiseless raw parity.
         # Recover it from an exact raw trajectory, then use Stim ONLY to XOR the
@@ -176,7 +169,7 @@ class XtimAdapter(Adapter):
             "threads": 1,
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
-            "batch_enabled": chunk > 1,
+            "batch_enabled": None if chunk is None else chunk > 1,
             "effective_batch_size": chunk,
             "batch_parameter": "public-twirl-sampler-chunk-shots",
             "seed_policy": "per-call-seed-with-continuous-chunks",
@@ -189,7 +182,7 @@ class XtimAdapter(Adapter):
                 "native-twirl-sampler" if detector_mask is not None
                 else "adapter-raw-record-parity" if postselect else "disabled"
             ),
-            "cache_policy": "fresh-per-repetition-with-untimed-compilation",
+            "cache_policy": "worker-local; reused-after-first-call",
             "disk_cache": False,
             "selfcheck": 0,
             "record_report": report,
@@ -205,7 +198,7 @@ class XtimAdapter(Adapter):
             },
         }
         return _PreparedXtim(
-            text,
+            sampler,
             chunk,
             observable,
             postselect,

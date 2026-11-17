@@ -1,4 +1,4 @@
-suite_version = "0.2.8"
+suite_version = "0.2.9"
 profile_id = "tsim-adapter-smoke"
 classification = "smoke"
 seed = 20260808
@@ -10,7 +10,6 @@ software_file = "../software.toml"
 [measurement]
 setup_timeout_seconds = 300
 request_timeout_seconds = 60
-warmup_shots = 4
 correctness_shots = 16
 min_sample_seconds = 0.05
 repetitions = 2
@@ -23,7 +22,7 @@ implementation_id = "tsim-1.0.0"
 shots_per_call = 1024
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [[cases]]
 id = "distillation-smoke-tsim"
@@ -33,7 +32,7 @@ implementation_id = "tsim-1.0.0"
 shots_per_call = 1025
 
 [cases.execution]
-batch_size = 1024
+batch_size = "auto"
 
 [[cases]]
 id = "coherent-smoke-tsim"
@@ -43,7 +42,7 @@ implementation_id = "tsim-1.0.0"
 shots_per_call = 257
 
 [cases.execution]
-batch_size = 256
+batch_size = "auto"
 
 [[cases]]
 id = "reed-muller-measured-smoke-tsim"
@@ -53,4 +52,4 @@ implementation_id = "tsim-1.0.0"
 shots_per_call = 2048
 
 [cases.execution]
-batch_size = "calibrate"
+batch_size = "auto"

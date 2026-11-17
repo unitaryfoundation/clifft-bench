@@ -1,4 +1,4 @@
-suite_version = "0.2.8"
+suite_version = "0.2.9"
 profile_id = "release-v1"
 title = "Recurring single-core Clifft release benchmark"
 classification = "official"
@@ -58,7 +58,6 @@ candidate_variants = ["symft-coverage", "tsim-coverage", "xtim-coverage", "stim-
 [measurement]
 setup_timeout_seconds = 1800
 request_timeout_seconds = 1800
-warmup_shots = 1
 correctness_shots = 8
 min_sample_seconds = 30
 repetitions = 5
@@ -69,7 +68,7 @@ implementation_id = "clifft-0.12.0rc1"
 workloads = "qec-and-adder"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants]]
@@ -77,7 +76,7 @@ id = "clifft-current"
 implementation_id = "clifft-0.13.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants.workloads]]
@@ -118,10 +117,10 @@ id = "symft-current"
 implementation_id = "symft-2026.10.8"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3"
@@ -152,7 +151,7 @@ id = "stim-current"
 implementation_id = "stim-1.16.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
 
@@ -164,7 +163,7 @@ id = "xtim-current"
 implementation_id = "xtim-3.2.2-edf0dd0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
 
@@ -186,14 +185,14 @@ implementation_id = "tsim-1.0.0"
 workloads = "qec-and-adder"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [[variants]]
 id = "clifft-bulk"
 implementation_id = "clifft-0.13.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants.workloads]]
@@ -209,10 +208,10 @@ id = "symft-bulk"
 implementation_id = "symft-2026.10.8"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
@@ -223,7 +222,7 @@ id = "tsim-bulk"
 implementation_id = "tsim-1.0.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [[variants.workloads]]
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
@@ -239,7 +238,7 @@ implementation_id = "clifft-0.13.0"
 workloads = "coverage"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 options_preset = "clifft-scheduled"
 
 [[variants]]
@@ -247,10 +246,10 @@ id = "symft-coverage"
 implementation_id = "symft-2026.10.8"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
-sample_chunk_shots = 2048
+sample_chunk_shots = 0
 
 [[variants.workloads]]
 workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
@@ -276,14 +275,14 @@ implementation_id = "tsim-1.0.0"
 workloads = "coverage"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [[variants]]
 id = "xtim-coverage"
 implementation_id = "xtim-3.2.2-edf0dd0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
 
@@ -298,7 +297,7 @@ id = "stim-coverage"
 implementation_id = "stim-1.16.0"
 
 [variants.execution]
-batch_size = "calibrate"
+batch_size = "auto"
 
 [variants.execution.options]
 

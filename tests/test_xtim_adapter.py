@@ -21,7 +21,7 @@ SEMANTICS = {
 }
 
 
-def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, initialize=True):
+def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
     pytest.importorskip("xtim")
     artifact = tmp_path / "circuit.stim"
     artifact.write_text(text)
@@ -37,8 +37,6 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, initiali
         execution={**EXECUTION, "batch_size": chunk},
     )
 
-    if initialize:
-        prepared.begin_sample(7)
     return prepared
 
 
@@ -158,7 +156,7 @@ def test_refuses_expectation_payload(tmp_path):
         prepare(tmp_path, "M 0\nOBSERVABLE_INCLUDE(0) rec[-1]\nPAULI_EXPECTATION(0) Z0\n")
 
 
-def test_cache_persists_within_repetition_and_compiles_before_timing(tmp_path, monkeypatch):
+def test_sampler_compiles_once_and_reuses_its_cache(tmp_path, monkeypatch):
     compiled = []
     compile_sampler = adapter._compile
 
@@ -173,22 +171,14 @@ def test_cache_persists_within_repetition_and_compiles_before_timing(tmp_path, m
         "X_ERROR(0.3) 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
         postselect=False,
         chunk=65536,
-        initialize=False,
     )
-    assert len(compiled) == 1  # prepare validates once; construction does not compile.
-    assert p._sampler is None
-    with pytest.raises(RuntimeError, match="initialized before timing"):
-        p.sample(1, 7)
-    p.begin_sample(7)
-    assert len(compiled) == 2
+    assert len(compiled) == 1
+    assert p._sampler is compiled[0]
     first = p.sample(1000001, 7)
     assert p.sample(1000001, 7) == first
-    assert len(compiled) == 2
-    assert p._sampler is compiled[1]
-    p.begin_sample(9)
-    assert len(compiled) == 3
-    assert p._sampler is compiled[2]
-    assert p.sample(1000001, 7) == first
+    p.sample(1000001, 9)
+    assert len(compiled) == 1
+    assert p._sampler is compiled[0]
     with pytest.raises(ValueError, match="shots per call"):
         p.sample(0, 7)
 
@@ -296,7 +286,6 @@ def test_release_native_postselection_matches_unmasked_stream(workload_id):
     observable = case.workload.definition["semantics"]["observable_index"]
     logical = (obs[:, observable // 8] >> (observable % 8)) & 1
     passed = int(keep.sum())
-    p.begin_sample(seed)
     assert p.sample(shots, seed) == Counts(
         shots, passed, shots - passed, int(logical[keep].sum())
     )
@@ -323,7 +312,6 @@ def test_release_workload_metadata_and_acceptance_agree_with_clifft(workload_id)
     p = adapter.XtimAdapter().prepare(**args)
     for key, value in case.workload.definition["expected_metadata"].items():
         assert p.runtime_metadata[key] == value
-    p.begin_sample(103)
     a = p.sample(20000, 103)
     b = ClifftAdapter().prepare(**args).sample(20000, 104)
     assert abs(a.accepted_shots - b.accepted_shots) / 20000 < 0.025

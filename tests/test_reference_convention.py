@@ -40,7 +40,6 @@ def _prepare(
         },
         execution=execution,
     )
-    prepared.begin_sample(7)
     return prepared
 
 
@@ -191,35 +190,21 @@ def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect
             assert prepared.runtime_metadata["optimized_t_gates"] == 0
 
 
-
 @pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim", "tsim"])
-def test_bounded_calibration_prepares_a_fixed_usable_sampler(adapter_name, tmp_path, monkeypatch):
+def test_native_auto_preserves_noisy_counts_across_reused_calls(adapter_name, tmp_path):
     pytest.importorskip(adapter_name)
-    from clifft_bench import worker
-    from clifft_bench.calibration import CALIBRATION_POLICY
-
-    path = tmp_path / "calibration.stim"
-    # Deterministic noiseless outputs satisfy every adapter's contract.
-    # Noise flips both measurements, keeping the detector parity zero.
+    path = tmp_path / "native-auto.stim"
     path.write_text(
         "R 0 1\nX_ERROR(0.25) 0\nCX 0 1\nM 0 1\n"
         "DETECTOR rec[-1] rec[-2]\nOBSERVABLE_INCLUDE(0) rec[-2]\n"
     )
-    monkeypatch.setattr(worker, "BATCH_CALIBRATION_SECONDS", 0.01)
-    prepared = worker.calibrate_batch_size(
-        load_adapter(adapter_name), artifact_path=path,
+    prepared = load_adapter(adapter_name).prepare(
+        artifact_path=path,
         workload={"semantics": {"observable_index": 0, "postselect_all_detectors": False}},
-        execution={"batch_size": "calibrate", "options": {}},
-        shots_per_call=32, seed=10, sampling_seed=7,
+        execution={"batch_size": "auto", "options": {}}, seed=7,
     )
-    record = prepared.runtime_metadata["batch_calibration"]
-    selected = record["selected_batch_size"]
-    assert record["policy"] == CALIBRATION_POLICY
-    assert type(selected) is int
-    assert prepared.runtime_metadata["threads"] == 1
-    assert prepared.runtime_metadata["effective_batch_size"] == selected
-    assert any(r["batch_size"] == selected and r["status"] == "success" for r in record["results"])
-    worker.begin_sample(prepared, 8)
-    counts = prepared.sample(16384, 8)
-    assert counts.attempted_shots == counts.accepted_shots == 16384
-    assert counts.logical_errors / 16384 == pytest.approx(0.25, abs=0.025)
+    assert prepared.runtime_metadata["compile_seconds"] >= 0
+    for seed in (7, 8):
+        counts = prepared.sample(16384, seed)
+        assert counts.attempted_shots == counts.accepted_shots == 16384
+        assert counts.logical_errors / 16384 == pytest.approx(0.25, abs=0.025)

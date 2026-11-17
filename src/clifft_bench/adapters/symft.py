@@ -66,10 +66,10 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
     if any(not 0 <= record < circuit.num_measurements for record in occurrences):
         raise ValueError("SymFT observable references a measurement outside the circuit")
     record_indices = sorted(record for record, count in occurrences.items() if count % 2)
-    batch_size = int(execution["batch_size"])
-    batch = batch_size > 1
+    batch_size = 0 if execution["batch_size"] == "auto" else int(execution["batch_size"])
+    batch = batch_size != 1
     chunk = int(execution.get("options", {}).get("sample_chunk_shots", 0))
-    if batch_size < 1 or chunk < 0:
+    if batch_size < 0 or chunk < 0:
         raise ValueError("SymFT requires a positive batch size and nonnegative sample chunk")
     started = time.perf_counter()
     sampler = circuit.compile_sampler(
@@ -85,8 +85,8 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
         "precision": "complex-fp64",
         "reference_convention": "raw-record-parity",
         "batch_enabled": batch,
-        "effective_batch_size": batch_size if batch else 1,
-        "batch_control": "explicit-measurement-api-arguments",
+        "effective_batch_size": batch_size or None,
+        "batch_control": "native-auto" if batch_size == 0 else "explicit-measurement-api-arguments",
         # The pinned batch measurement API does not use sample_chunk_shots.
         "sample_chunk_shots": 0 if batch else chunk,
         "requested_sample_chunk_shots": chunk,
@@ -143,13 +143,21 @@ class SymftAdapter(Adapter):
         threads = self.validate_execution(execution, workload)
         import symft
 
-        circuit = symft.Circuit(path=artifact_path)
+        text = artifact_path.read_text()
+        started = time.perf_counter()
+        circuit = symft.Circuit(text=text)
+        parse_seconds = time.perf_counter() - started
         observable = int(workload["semantics"]["observable_index"])
         postselect = bool(workload["semantics"]["postselect_all_detectors"])
         if not postselect and circuit.num_detectors:
-            return _prepare_unselected_records(circuit, execution, observable, symft)
-        requested_batch_size = int(execution["batch_size"])
-        batch = requested_batch_size > 1
+            prepared = _prepare_unselected_records(circuit, execution, observable, symft)
+            prepared.runtime_metadata["compile_seconds"] += parse_seconds
+            return prepared
+        requested_batch_size = (
+            0 if execution["batch_size"] == "auto" else int(execution["batch_size"])
+        )
+        batch = requested_batch_size != 1
+        started = time.perf_counter()
         sampler = circuit.compile_counts_sampler(
             batch=batch,
             observable=observable,
@@ -160,6 +168,7 @@ class SymftAdapter(Adapter):
             cpu_backend="legacy",
             cuda=False,
         )
+        compile_seconds = parse_seconds + time.perf_counter() - started
         info = dict(sampler.info)
         if not 1 <= int(info["threads"]) <= threads:
             raise RuntimeError(f"SymFT planned outside its {threads}-thread budget: {info}")
@@ -169,7 +178,7 @@ class SymftAdapter(Adapter):
                 f"SymFT backend {info['backend']!r} does not match {expected_backend!r}"
             )
         native_batch_size = int(info["batch_size"])
-        if batch and native_batch_size != requested_batch_size:
+        if batch and requested_batch_size and native_batch_size != requested_batch_size:
             raise RuntimeError(
                 f"SymFT batch size {info['batch_size']!r} does not match "
                 f"requested {requested_batch_size}"
@@ -191,7 +200,8 @@ class SymftAdapter(Adapter):
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
             "batch_enabled": batch,
-            "effective_batch_size": native_batch_size if batch else 1,
+            "effective_batch_size": (native_batch_size or None) if batch else 1,
+            "compile_seconds": compile_seconds,
             "sample_chunk_shots": int(info["sample_chunk_shots"]),
             "num_qubits": int(info["num_qubits"]),
             "num_measurements": int(info["num_measurements"]),

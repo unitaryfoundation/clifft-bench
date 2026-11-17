@@ -37,9 +37,6 @@ class Counts:
 class PreparedAdapter(ABC):
     runtime_metadata: dict[str, Any]
 
-    def begin_sample(self, seed: int) -> None:
-        """Initialize a repetition's random stream outside the sampling timer."""
-
     @abstractmethod
     def sample(self, shots: int, seed: int) -> Counts:
         """Execute declared logical work and return aggregate counts."""

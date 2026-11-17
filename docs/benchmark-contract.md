@@ -7,8 +7,8 @@ This contract governs the recurring CPU campaigns under
 
 For the same versioned circuit and output contract, how many independent
 attempted shots per second can a simulator execute within its declared physical-core budget?
-The default is steady-state sampling. For xtim, report the fixed-duration average
-starting with an empty plan cache, as defined below.
+Report throughput after the first full sampling call, without assuming caches
+have fully settled.
 
 One attempted shot is one complete circuit execution. Each simulator returns
 aggregate counts for attempted shots, detector-postselected discards, accepted
@@ -33,7 +33,7 @@ workloads. For unselected workloads containing detectors, it samples packed
 measurement records and reduces the selected observable's raw parity across all
 shots. SymFT's counts API always excludes detector-fired shots; its
 `postselect_detectors` argument only enables early termination. The raw-record
-path uses explicit scalar/batch settings, records its backend and materialization
+path records its backend and materialization
 in runtime metadata, and includes record allocation and parity reduction in the
 timed call. Its batch API ignores `sample_chunk_shots`; metadata records that
 distinction and the requested value. Stim and xtim's public detector samplers return packed
@@ -83,12 +83,6 @@ includes only measured pairs. New pairs automatically appear in their circuit's
 thematic position when the recorded campaign includes compatible measurements.
 Exact identities and unpaired outcomes remain in the review tables and `cases.csv`.
 
-Use the existing `cases.csv` compilation and throughput columns when reporting
-the adder. For a stated shot count N, `compile_seconds + N / rate` estimates
-compilation plus steady-state sampling, where rate is
-`median_attempted_shots_per_second`. This estimate excludes parsing, calibration,
-and warmup; `setup_seconds` records the full measured setup separately.
-
 ### Throughput widget data
 
 `report/simulator-throughput.json` is a derived presentation of the same validated
@@ -105,8 +99,9 @@ themselves. This is the data interface for the
 - Each row's `values` follows the simulator order in `series`. Values include
   the attempted-shot rate median and median absolute deviation (both in shots/s),
   sample count, shots per call, effective batch size, `threads_requested`,
-  `threads_effective`, and peak active width where recorded. MAD describes sample
-  dispersion, not a confidence interval.
+  `threads_effective`, `compile_seconds`, `first_call_warmup_seconds`, and peak
+  active width where recorded. MAD describes sample dispersion, not a confidence
+  interval.
 - `outcome` is `measured`, a recorded failure status, `unsupported`, or
   `not measured`. Failed and absent cases have null rates and dispersion; missing
   metadata is null rather than zero. Unsupported cases remain in the export for
@@ -121,35 +116,32 @@ themselves. This is the data interface for the
   resource limits. A smoke or partial source remains validation evidence.
   Separate collections are not represented as a fresh paired run.
 
-The timed boundaries below also apply to this export: compilation is excluded,
-and xtim includes lazy planning in a fixed-duration run starting with an empty
-cache. Publication supplies immutable evidence links for each source run; the
-recorded harness revision identifies collection code, not the commit containing
-the result files. The export does not guess evidence URLs from local paths.
+The timing boundaries below also apply to this export. Publication supplies
+immutable evidence links for each source run; the export does not guess evidence URLs.
 
 ## Timed boundaries
 
-| Phase | Timed as execution? |
-|---|---:|
-| Installation and import | No |
-| Parse, plan, compile, and sampler setup | No; recorded separately |
-| Lazy plan construction during sampling | Yes |
-| Warmup | No; recorded separately |
-| Correctness check | No; recorded separately |
-| Repeated sampling calls, transfer and aggregate reduction | Yes |
-| Validation and result writing | No |
+Each case uses one fresh worker and one measurement sampler:
 
-Each sample runs until its accumulated public-call time reaches the manifest's
-minimum interval. The final call may extend the sample beyond that interval.
-Individual samples are retained; median and median absolute deviation are
-derived conveniences.
+1. `compile_seconds`: parse in-memory circuit text and compile the sampler.
+   Imports, file reads, installation checks, and reference-parity validation are
+   excluded; `setup_seconds` retains the full preparation duration.
+2. `first_call_warmup_seconds`: time the first full `shots_per_call` call,
+   including lazy planning, JIT/cache loading, and sampling. No earlier call uses
+   the measurement sampler. Retain this result separately from throughput.
+3. Check correctness, then measure repeated calls using the same sampler.
+   Each repetition accumulates calls until its minimum sampling interval elapses;
+   the final call can overrun it. Retain individual samples and derive median/MAD.
 
-A request deadline prevents a stalled simulator from blocking the campaign.
-Setup, warmup, correctness, and sampling failures are recorded with their phase
-instead of being converted into throughput values. A setup failure before the
-worker returns metadata can be recorded without a selected batch size or
-calibration record. Successful setup still requires complete calibration
-evidence, including when warmup, correctness, or sampling later fails.
+Compilation, first-call time, call size, and subsequent throughput are reported
+separately; do not extrapolate finite-shot turnaround. Allocation and count
+reduction remain inside sampling timers. Correctness checks are untimed for
+throughput. Deadlines apply to every phase; failures retain their phase and
+completed evidence without a throughput value.
+
+The worker keeps in-memory caches across calls. xtim's disk cache is disabled;
+Tsim's upstream Numba disk cache is retained. These are process-fresh measurements,
+not guaranteed cold-disk builds or fully converged steady state.
 
 ## Resources and ordering
 
@@ -199,13 +191,9 @@ repetition counts whose reserved ranges exceed the unsigned 32-bit seed space.
 These non-overlapping ranges keep every phase deterministic for adapters that
 expose per-call streams.
 
-Stim accepts its seed when compiling a sampler. Its adapter starts one continuous
-native stream per phase or repetition and reuses that sampler across all timed
-calls. Stream initialization is excluded and recorded as `stream_setup_seconds`;
-per-call seed fields remain audit identifiers, not independent Stim seeds.
-
-Batch calibration uses the next four million stream identifiers, divided into
-one range for each probe repetition and one for candidate warmup.
+Stim and Tsim are seeded at compilation with `seed - 1` and advance one native
+stream through the first call, correctness, and repetitions. Their per-call seed
+fields are audit identifiers. Other adapters retain their public per-call reseeding.
 
 These fixed streams exist only to make performance runs replayable and
 auditable. They are not a seeding recommendation for scientific simulation or
@@ -214,73 +202,17 @@ system entropy backed by hardware entropy when available.
 
 ## Batching
 
-All cases measure throughput. A case sets `batch_size` to a positive integer
-(`1` selects scalar execution) or `"calibrate"`; batching follows the selected
-size. Calibrated runs use the harness policy `bounded-v3`; configuration does not select a policy.
-The candidate pools are:
+Maintained campaigns set `batch_size="auto"`; there is no harness search.
+Adapters request Clifft's `"auto"`, Tsim's `None`, and SymFT's `batch=True`,
+`batch_size=0`, `sample_chunk_shots=0`. Stim and xtim receive each full public call
+without harness chunking. Positive integer overrides remain available for focused
+checks; they specify internal capacity for Clifft/SymFT/Tsim and output chunks for
+Stim/xtim. SymFT uses `cpu_backend="legacy"` for both core budgets.
 
-- Clifft/SymFT: `1, 32, 64, 256, 1024, 2048`, restricted to `shots_per_call`.
-- Tsim: `1, 32, 256, 1024, 8192, 65536`, capped at `shots_per_call` and deduplicated.
-- Stim/xtim: output chunks `256, 1024, 4096, 16384, 65536`, capped and deduplicated,
-  plus the full public call size.
-
-During setup, the worker prepares and warms each candidate, takes three probes
-of at least one second, and chooses the highest median attempted-shot rate.
-Exact ties choose the smaller batch. It freshly prepares the selected numeric
-setting for final measurement. Calibration time is excluded from throughput.
-Each trial sampler is released before preparing the next trial or the final
-configuration, including after failures, so native state buffers do not overlap.
-
-The search has a 60-second soft budget checked between candidates. At least the
-first candidate is attempted; preparation, warmup, and complete probes may exceed
-that budget. Untried candidates are recorded as `budget-skipped`. Hard worker
-setup/request deadlines and memory limits still apply. Unsupported capacities
-may fail while another candidate succeeds.
-
-Raw calibration evidence records the policy, candidate order, effective settings,
-probes, failures, budget skips, search duration, and process peak RSS (a cumulative
-high-water mark). Completed probes survive a later candidate failure. If every
-candidate or final preparation fails, the setup error retains the search record;
-a hard timeout or worker exit may prevent the worker from returning evidence.
-Successful setup records it in `setup.runtime_metadata.batch_calibration` and
-replaces `"calibrate"` with the selected numeric `batch_size`. Fixed numeric
-settings remain supported. `batch_size_effective` records the capacity available
-to one public call after capping by `shots_per_call`.
-
-This is a declared harness policy, not a claim of native-tuning equivalence or a
-global optimum. It uses no native tuning proposals. Previous and current Clifft
-receive the same policy, with the selected settings frozen before measurement.
-Review choices, failures, and search costs during the normal reference-host run.
-
-For Clifft/SymFT, `batch_size` is the internal number of shots processed together.
-For Stim it is the adapter's chunk size passed to the public detector sampler,
-not a claim about Stim's SIMD width.
-`shots_per_call` is the number requested from one public API call. Both are
-recorded because changing either can change amortization.
-
-The recurring campaign treats `shots_per_call` as a workload measurement
-parameter, chosen to produce meaningful throughput samples and kept identical
-across tools within each comparison. Separately named comparison variants may
-measure different public call sizes. Batch calibration selects an internal
-optimization for that fixed public call. The bulk comparison includes
-100,000-shot adder calls for Clifft and Tsim to reduce call overhead, alongside
-the 2,048-shot short-call cases. The active-width-limited coherent
-d5/r5 workload intentionally retains one shot per call; its calibrated cases
-therefore consider only candidate `1` and record a scalar selection.
-
-Each case row records its tuning policy, effective batch size, and shots per call.
-
-The recurring `current-vs-previous` comparison asks whether Clifft improved
-using the capabilities available in each release. It applies calibration to
-both maintained releases with the same candidate pool and search budget. The
-`alternatives-vs-current` comparison applies the same calibration policy to
-current Clifft and SymFT across the release workloads. The separate
-`stim-anchor-vs-current` comparison pairs current Clifft with Stim on the
-compatible surface-code workload. Keeping the anchor separate preserves the
-existing Clifft/SymFT comparison identity and its downstream consumers. The
-peer comparisons, including `xtim-vs-current` and `tsim-vs-current`,
-reuse the same collected current-Clifft cases. The separately named bulk
-comparison collects its own current-Clifft case.
+`batch_size_effective` records a reported native capacity, capped at the public
+call size, or null if unavailable. Automatic capacity is not inferred from the
+request. Every comparison matches `shots_per_call`; short and bulk calls remain
+separate workloads in the report.
 
 ## Compiler configuration
 
@@ -382,24 +314,13 @@ Native postselection changes the timed work and cache population. Collect new
 throughput measurements for this path and identify it through the metadata above;
 existing results retain the sampling behavior of their recorded harness revision.
 
-Each repetition compiles a fresh sampler before timing, using the same
-`begin_sample` boundary as Stim. No plan cache carries over from warmup,
-correctness checks, calibration, or a previous repetition. Sampling retains the
-cache across calls within the normal 30-second measurement window; lazy plan
-construction is timed, while compilation is recorded as `stream_setup_seconds`.
-These rates describe a fixed-duration run starting with an empty cache, not
-established steady-state throughput. The final call can overrun the window.
+The measurement sampler is compiled once and reused across all calls. Reference
+parities come from a separate noiseless sampler with a private cache during
+untimed validation. Its sampling does not warm the measurement sampler.
 
-The pinned 3.2.2 engine defaults to a 512 MiB plan-payload budget; metadata's
-`record_report.plan_memory` records the effective budget. This is not a process
-memory ceiling: permanent plan headers and other allocations are additional.
-Retain the existing 12 GiB address-space limit and check process peak RSS on the
-reference host. Raw samples record
-`peak_rss_bytes`, the worker's lifetime high-water mark including setup and
-calibration; `cases.csv` exposes its maximum. Resetting each repetition limits
-cache lifetime but does not guarantee a particular memory footprint. Chunk
-calibration uses the normal short probes and Stim's candidate sizes; its cache
-warmup horizon is shorter than the release measurement window.
+The pinned engine's 512 MiB plan-payload budget is not a process memory ceiling;
+plan headers and other allocations are additional. Raw samples record cumulative
+process peak RSS, including preparation; `cases.csv` exposes its maximum.
 
 Pin xtim 3.2.2 to source commit `edf0dd0cff804ac0228d517889e49b0c286cb19a`.
 The previous 3.1.4 pin restarted a per-shot coin counter on each unseeded call,
@@ -422,12 +343,11 @@ observable counts plus these aggregate invariants:
 - logical errors are between zero and accepted shots; and
 - non-postselected workloads discard no shots.
 
-Before calibration, the SymFT adapter verifies the installed package's PEP 610
+Before compilation, the SymFT adapter verifies the installed package's PEP 610
 Git commit and repository URL against the manifest and records both in runtime
 metadata. A PyPI wheel with the same version string is rejected. SymFT uses its
-legacy CPU counts executor, with the harness's explicit batch size and chunk
-settings. Its opt-in compiled CPU executor changes the effective batch capacity
-and is outside this calibrated execution configuration.
+legacy CPU counts executor with native automatic sizing. Its opt-in compiled CPU
+executor changes the effective batch capacity and is outside this configuration.
 
 Each implementation records its exact package version, source commit, optional
 release tag, build settings, actual worker interpreter, and dependency versions.
@@ -479,48 +399,19 @@ and xtim. Any reported postprocessing percentage must come from a separate,
 reproducible profile specifying the workload, shots per call, batch capacity,
 hardware, and software versions; it is not a universal adapter overhead.
 
-The sampler is compiled and seeded once per prepared configuration. Tsim has no
-public per-call reseeding API: one continuous stream advances through its
-kernel warmup, full-call warmup, correctness check, and final repetitions.
-`initial_seed` is the manifest seed minus one for the final configuration;
-per-call and repetition seed fields are audit identifiers for this adapter.
-Calibration uses a separate initial seed from the reserved calibration range,
-shared across candidates for replay, and advances continuously across each
-candidate's probes. The selected configuration is freshly prepared with the
-final initial seed. No private RNG fields are changed and no compilation is
-performed inside timed calls.
-
-Tsim uses the [bounded calibration policy](#batching). The batch capacity bounds
-attempted shots in each thread's execution chunk; rejection and trajectory
-sharing can reduce the statevector work within that chunk. Fully direct
-circuits bypass statevector execution; the recorded capacity is the API setting,
-not a claim that quantum lanes were allocated. Raw metadata and `cases.csv` expose
-`batch_parameter=statevector-batch-shots` and `batch_size_applicable`: false for
-a fully direct compiled program, true when statevector components exist. This
-flag describes the compiled program, not whether any shots survive postselection
-in a particular call. A blank flag in older data means unknown. Raw metadata
-also records component widths, strategy, sharing, precision, seed policy, and
-effective threads. Tsim exposes no adapter options.
-
-Parsing and ZX compilation/planning have separate timers. During preparation,
-a one-shot sample without postselection warms quantum kernels even when all
-later warmup shots could be rejected by direct detectors. Its
-`kernel_warmup_seconds` includes execution and any first-use JIT or cache load;
-it is not a pure JIT compiler measurement. The usual warmup then executes at
-least one full public call with the actual postselection settings. Calibration
-warms separate candidate samplers; it does not warm the freshly prepared final
-sampler. The full-call warmup is therefore retained to exercise its actual call
-shape before timing. Both warmup steps are excluded from final sampling.
-Upstream's Numba disk cache is retained, so these setup measurements must not be described as uniformly cold builds.
+Tsim's automatic batch capacity limits attempted shots per thread; rejection and
+sharing can reduce statevector work. `batch_size_applicable` records whether the
+compiled program has statevector components. Raw metadata also records component
+widths, strategy, precision, seed policy, and threads. No preparation sample is
+performed; first-use kernel compilation/cache loading belongs to the first call.
 
 ### Matched bulk sampling
 
 `bulk-alternatives-vs-current` compares `clifft-bulk`, `symft-bulk`, and
 `tsim-bulk` on the unchanged coherent d5/r5 circuit at 256 attempted shots per
-call. Each tool independently calibrates its internal batching under the same
-resource ceiling. The manifest validator rejects unequal public call sizes
-within a comparison. Failed candidates/cases remain recorded under the normal
-calibration and deadline policies.
+call. Each tool uses native automatic sizing under the same resource ceiling.
+The manifest validator rejects unequal public call sizes
+within a comparison. Failed cases retain their diagnostics.
 
 The short-call comparisons use one shot per call for d5/r5. Keep those rows
 separate from the bulk comparison: sharing work across shots changes the
@@ -530,9 +421,8 @@ question, even on the same circuit and host.
 
 On Clifft versions exposing a writable HIR `postselection_mask`, the adapter
 sets the workload's raw-parity mask before running compiler passes and supplies
-it again to lowering. Earlier versions retain selection at lowering. A scalar
-configuration explicitly passes `batch_size=1`; omitting it would request native
-`auto`. All sampling calls explicitly request one thread. Runtime metadata
+it again to lowering. Earlier versions retain selection at lowering. Sampling
+uses the case's thread budget and batch setting. Runtime metadata
 records batching and the point at which postselection is applied. Development/VCS
 builds also verify the full installed source URL and commit; release wheels retain
 version validation.
@@ -548,7 +438,7 @@ A new execution contains `raw.json` in format `clifft-bench/raw/v2` and one deri
 `cases.csv`. Raw evidence records the resolved selected campaign and comparison
 definitions, effective measurement/resource settings, collection time and source,
 exact software identities, workload digests and semantics, setup/compilation,
-warmup/correctness outcomes, calibration, individual samples, and structured
+first-call/correctness outcomes, individual samples, and structured
 failures. Local selection and overrides are recorded. Results do not depend on
 current configuration files for interpretation. Interrupted or failed workers
 retain completed samples and diagnostics; incomplete nonterminal evidence cannot
@@ -557,7 +447,7 @@ be reported as a completed execution.
 CSV regeneration validates raw evidence and computes each successful case's
 sample median and median absolute deviation. Failed rows retain sample counts and
 error/setup/memory diagnostics while throughput summaries stay blank. Detailed
-adapter options and calibration probes stay in raw JSON. The report regenerates
+adapter options stay in raw JSON. The report regenerates
 this table from raw evidence, so a stale CSV cannot change a performance claim.
 There is no separately stored comparison table, execution index, or release chain.
 

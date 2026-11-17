@@ -1,7 +1,7 @@
 # Supplemental sampling coverage
 
 The `*-coverage` variants in the normal release campaign add 23 current-tool
-cases. They use the release [calibration policy](../docs/benchmark-contract.md#batching).
+cases. They use the release [automatic sizing](../docs/benchmark-contract.md#batching).
 Results appear in `cases.csv` and `coverage-alternatives-vs-current` comparison rows, outside
 short-call and bulk comparison groups. There is no previous-release baseline
 for these coverage comparisons. Tool pins, single-core restrictions, timed boundaries,

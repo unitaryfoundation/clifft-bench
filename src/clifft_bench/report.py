@@ -208,12 +208,20 @@ def review_summary(report: dict) -> str:
             if error
             else (
                 f"{len(case['samples'])} samples; "
-                f"batch {case['execution']['batch_size_effective']}; "
+                f"batch {case['execution']['batch_size_effective'] or 'unknown'}; "
                 f"{case['execution']['threads_requested']} physical cores"
             )
         )
         detail = detail.replace("|", "\\|").replace("\n", " ")
         lines.append(f"| {case['case_id']} | {case['status']} | {detail} |")
+    lines += ["", "## Preparation", "",
+              "| Case | Shots per call | Compile (s) | First call (s) |",
+              "| --- | ---: | ---: | ---: |"]
+    for case in cases:
+        row = report["rows"][case["case_id"]]
+        times = [f"{row[key]:.6g}" if row[key] != "" else "—"
+                 for key in ("compile_seconds", "first_call_warmup_seconds")]
+        lines.append(f"| {case['case_id']} | {row['shots_per_call']} | {' | '.join(times)} |")
     lines += [
         "",
         "## Paired comparisons",
@@ -246,8 +254,11 @@ def review_summary(report: dict) -> str:
     lines += [
         "", "## Figures", "",
         "[Throughput data for the docs widget](simulator-throughput.json)", "",
-        "Rates count attempted shots and exclude compilation; lazy planning during sampling",
-        "is included. The main figures share circuit selection and thematic ordering.",
+        "Rates count attempted shots after the first full call; compilation and that call",
+        "are reported separately. Later lazy planning remains timed. The main figures",
+        "share circuit selection and thematic ordering.",
+        "Each case uses a fresh worker; xtim's disk cache is disabled, while Tsim's",
+        "upstream Numba disk cache is retained.",
         "Throughput panels have independent logarithmic axes; compare horizontal positions",
         "within a panel. Quantum Volume has its own panel.",
         "Selection-off controls, the unverified cultivation proxy, and bulk-call variants",
@@ -494,7 +505,7 @@ def throughput_data(report: dict) -> dict:
                         "median_attempted_shots_per_second", "mad_attempted_shots_per_second",
                         "sample_count", "shots_per_call", "batch_size_effective",
                         "threads_requested", "threads_effective",
-                        "peak_active_width",
+                        "peak_active_width", "compile_seconds", "first_call_warmup_seconds",
                     )},
                 }
                 values.append(value)

@@ -41,10 +41,8 @@ case listing and [`software.toml`](software.toml) identify the active versions
 and source pins; the [contract](docs/benchmark-contract.md) defines measurement
 semantics.
 
-All calibrated cases use the [bounded harness policy](docs/benchmark-contract.md#batching).
-Review its selected settings, failures, and search costs during the normal
-reference-host campaign. Supplemental coverage follows the same policy; see
-[coverage notes](workloads/coverage.md).
+Campaigns use [native automatic sizing](docs/benchmark-contract.md#batching).
+Review first-call costs, throughput, failures, and memory during collection.
 
 For a new Clifft release:
 
@@ -61,7 +59,7 @@ For a new Clifft release:
    the shared `clifft-scheduled` option preset in `software.toml`.
 4. Keep each workload's `shots_per_call` aligned across every variant and
    release within each comparison. Update those workload-level values only when measurement evidence
-   requires it; batch size remains a separately calibrated implementation choice.
+   requires it; internal capacity is chosen by each simulator.
 5. Validate locally, then follow the [EC2 collection procedure](#reference-host-collection).
 
 Choose and record the previous/current configurations for the new campaign.
@@ -77,7 +75,7 @@ evidence retain the exact candidate identity; derived tables expose the display
 version for plots, summaries, and release docs.
 
 One collection produces a raw result containing every selected variant, including
-structured case failures. Persisted-input validation checks coverage and calibration
+structured case failures. Persisted-input validation checks coverage and measurement
 evidence, then writes the derived `cases.csv` beside `raw.json`.
 
 After reviewing results, follow [release reporting](#release-reporting) to
@@ -174,7 +172,7 @@ uv run clifft-bench report results/release-v1/release-benchmark --check
 uv run --extra report clifft-bench report results/release-v1/release-benchmark
 ```
 
-Review selected batches, search failures, correctness, memory evidence, and the
+Review preparation times, correctness, memory evidence, and the
 report summary before committing results or publishing figures. Stop the
 instance promptly after retrieving the evidence.
 
@@ -308,5 +306,5 @@ uv run clifft-bench run tsim-pilot --memory-limit-gib 12 --output-dir /tmp/tsim-
 uv run clifft-bench validate /tmp/tsim-pilot/raw.json
 ```
 
-The pilot records diagnostics under the same bounded calibration policy as the
+The pilot records diagnostics under the same automatic sizing as the
 release campaign. Review reference-host evidence before making performance claims.

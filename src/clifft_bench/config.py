@@ -236,12 +236,6 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
             )
         execution = definition["execution"]
         load_adapter(adapter).validate_options(execution["options"])
-        if execution["batch_size"] == "calibrate":
-            if adapter not in {"clifft", "symft", "stim", "xtim", "tsim"}:
-                raise ValueError(
-                    f"case {identifier!r} requests unsupported batch calibration for "
-                    f"adapter {adapter!r}"
-                )
         cases.append(Case(definition, workload, implementation))
 
     variants = {str(case.definition["variant_id"]) for case in cases}
@@ -394,7 +388,7 @@ def _validate_execution(execution: dict) -> None:
     threads = execution.setdefault("threads", 1)
     if type(threads) is not int or threads not in (1, 8):
         raise ValueError("threads must be 1 or 8")
-    if execution["batch_size"] != "calibrate":
+    if execution["batch_size"] != "auto":
         _number(execution["batch_size"], "batch_size", integer=True)
     if "options_preset" in execution:
         _identifier(execution["options_preset"])
@@ -430,11 +424,11 @@ def _validate_run(run: dict) -> None:
         _number(cpu, "logical_cpu", integer=True, inclusive=True)
     _fields(
         run["measurement"],
-        "setup_timeout_seconds request_timeout_seconds warmup_shots "
+        "setup_timeout_seconds request_timeout_seconds "
         "correctness_shots min_sample_seconds repetitions",
     )
     for key, value in run["measurement"].items():
-        _number(value, key, integer=key in ("warmup_shots", "correctness_shots", "repetitions"))
+        _number(value, key, integer=key in ("correctness_shots", "repetitions"))
     if ("cases" in run) == ("variants" in run):
         raise ValueError("declare exactly one of cases or variants")
     for item in _entries(run, "cases" if "cases" in run else "variants"):

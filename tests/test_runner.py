@@ -19,7 +19,6 @@ from clifft_bench.results import validate_result
 from clifft_bench.runner import (
     SEED_REPETITION_STRIDE,
     _effective_batch_size,
-    _record_runtime_execution,
     _simulator_record,
     run_suite,
 )
@@ -112,7 +111,6 @@ def _write_fixture_suite(
         "measurement": {
             "setup_timeout_seconds": 5,
             "request_timeout_seconds": request_timeout_seconds,
-            "warmup_shots": 1,
             "correctness_shots": 8,
             "min_sample_seconds": 0.0001,
             "repetitions": 2,
@@ -130,25 +128,6 @@ def test_effective_batch_size_is_capped_by_shots_per_call() -> None:
     metadata = {"effective_batch_size": 2048}
     assert _effective_batch_size(metadata, 8) == 8
     assert _effective_batch_size(metadata, 4096) == 2048
-
-
-def test_calibrated_result_records_selected_numeric_batch_size() -> None:
-    execution = {"batch_size": "calibrate"}
-    metadata = {
-        "threads": 1,
-        "batch_enabled": False,
-        "effective_batch_size": 1,
-        "batch_calibration": {"selected_batch_size": 1},
-    }
-
-    _record_runtime_execution(execution, metadata, shots_per_call=8)
-
-    assert execution == {
-        "batch_enabled": False,
-        "batch_size": 1,
-        "threads_effective": 1,
-        "batch_size_effective": 1,
-    }
 
 
 def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
@@ -239,7 +218,7 @@ def test_warmup_failure_records_warmup_phase(tmp_path: Path) -> None:
     )
     validate_result(result)
     assert [case["status"] for case in result["cases"]] == ["error", "error"]
-    assert all(case["error"]["phase"] == "warmup" for case in result["cases"])
+    assert all(case["error"]["phase"] == "first_call_warmup" for case in result["cases"])
 
 
 def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None:
@@ -251,7 +230,7 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
         )
 
 
-def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
+def test_symft_unselected_worker_uses_auto_and_preserves_fired_shots(tmp_path):
     pytest.importorskip("symft")
     run_path, run, software = _write_fixture_suite(tmp_path)
     artifact = tmp_path / "tiny.stim"
@@ -276,7 +255,7 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     run["cases"] = run["cases"][:1]
     run["cases"][0]["shots_per_call"] = 67
     run["cases"][0]["execution"].update(
-        batch_size="calibrate", options={"sample_chunk_shots": 2048},
+        batch_size="auto", options={"sample_chunk_shots": 0},
     )
     run["measurement"]["setup_timeout_seconds"] = 60
     _write(run_path, run)
@@ -295,18 +274,11 @@ def test_symft_unselected_worker_calibrates_and_preserves_fired_shots(tmp_path):
     assert metadata["installed_source_commit"] == implementation["commit_sha"]
     assert metadata["sampling_backend"] == "compile_sampler"
     assert metadata["record_materialization"] == "bit-packed-measurements"
-    calibration = metadata["batch_calibration"]
-    assert calibration["candidates"] == [1, 32, 64]
-    assert all(trial["status"] == "success" for trial in calibration["results"])
-    selected = calibration["selected_batch_size"]
-    assert selected in (1, 32, 64)
-    assert case["execution"]["batch_size"] == selected
-    assert metadata["sample_chunk_shots"] == (2048 if selected == 1 else 0)
+    assert case["execution"]["batch_size"] == "auto"
+    assert case["first_call_warmup"]["attempted_shots"] == case["execution"]["shots_per_call"]
     assert case["correctness"]["status"] == "passed"
-    for counts in [case["warmup"], case["correctness"]["details"], *case["samples"]]:
-        assert counts["attempted_shots"] > 0
-        assert counts["accepted_shots"] == counts["attempted_shots"]
-        assert counts["logical_errors"] == counts["attempted_shots"]
+    for counts in [case["first_call_warmup"], case["correctness"]["details"], *case["samples"]]:
+        assert counts["accepted_shots"] == counts["logical_errors"] == counts["attempted_shots"]
         assert counts["discarded_shots"] == 0
 
 
@@ -337,8 +309,7 @@ def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
     assert metadata["initial_seed"] == run["seed"] - 1
     assert metadata["threads"] == 1
     assert metadata["installed_source_commit"] == implementation["commit_sha"]
-    assert case["warmup"]["attempted_shots"] == 8
-    assert metadata["kernel_warmup_seconds"] >= 0
+    assert case["first_call_warmup"]["attempted_shots"] == 8
     assert metadata["compile_seconds"] >= 0
 
 
@@ -523,7 +494,7 @@ def test_eight_core_worker_records_applied_affinity_and_preimport_caps(tmp_path)
 
 
 @pytest.mark.parametrize("adapter", ["stim", "xtim", "symft"])
-@pytest.mark.parametrize("batch_size", [1, "calibrate"])
+@pytest.mark.parametrize("batch_size", [1, "auto"])
 def test_unsupported_threads_survive_export_on_a_restricted_host(tmp_path, adapter, batch_size):
     path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]

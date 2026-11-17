@@ -6,13 +6,12 @@ import pytest
 import stim
 
 from clifft_bench.adapters.stim import StimAdapter
-from clifft_bench.calibration import calibration_candidates
 from clifft_bench.config import read_toml
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
+def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, seed=42):
     path = tmp_path / "circuit.stim"
     path.write_text(text)
     return StimAdapter().prepare(
@@ -24,6 +23,7 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
             }
         },
         execution={"batch_size": chunk, "options": {}},
+        seed=seed,
     )
 
 
@@ -51,11 +51,9 @@ def test_surface_artifact_matches_paper_generator_and_declared_metadata():
 def test_packed_padding_nonzero_reference_and_observable_beyond_first_byte(tmp_path):
     text = "X 0\nM 0\n" + "DETECTOR rec[-1]\n" * 9 + "OBSERVABLE_INCLUDE(9) rec[-1]\n"
     p = prepare(tmp_path, text, observable=9, postselect=False, chunk=7)
-    p.begin_sample(42)
     counts = p.sample(19, 42)
     assert counts.accepted_shots == counts.logical_errors == 19
     p = prepare(tmp_path, text, observable=9, chunk=7)
-    p.begin_sample(42)
     assert p.sample(19, 42).discarded_shots == 19
 
 
@@ -66,27 +64,19 @@ def test_noise_and_logical_counts_match_analytic_distribution(tmp_path):
         "X_ERROR(0.3) 1\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
         chunk=1024,
     )
-    p.begin_sample(42)
     counts = p.sample(100000, 42)
     assert abs(counts.discarded_shots / 100000 - 0.2) < 0.01
     assert abs(counts.logical_errors / counts.accepted_shots - 0.3) < 0.01
 
 
 def test_stream_is_reproducible_without_recompiling_per_call(tmp_path):
-    p = prepare(tmp_path, "H 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n", postselect=False)
-    with pytest.raises(RuntimeError, match="initialized"):
-        p.sample(1000, 10)
-    p.begin_sample(10)
+    text = "H 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+    p = prepare(tmp_path, text, postselect=False, chunk="auto", seed=10)
     native = p._sampler
     first = [p.sample(1000, i) for i in (10, 11)]
     assert p._sampler is native
-    p.begin_sample(10)
-    assert [p.sample(1000, i) for i in (10, 11)] == first
-
-
-def test_stim_calibration_includes_unchunked_call():
-    assert calibration_candidates("stim", 100000) == [256, 1024, 4096, 16384, 65536, 100000]
-    assert calibration_candidates("stim", 10) == [10]
+    replay = prepare(tmp_path, text, postselect=False, chunk="auto", seed=10)
+    assert [replay.sample(1000, i) for i in (10, 11)] == first
 
 
 def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
@@ -110,7 +100,6 @@ def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
                 "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {},
             },
         )
-        prepared.begin_sample(42)
         observed.append(prepared.sample(shots, 42))
     reference = observed[0]
     for actual in observed[1:]:

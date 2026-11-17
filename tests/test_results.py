@@ -3,11 +3,8 @@ import csv
 
 import pytest
 
-from clifft_bench.calibration import CALIBRATION_POLICY
 from clifft_bench.cli import main
 from clifft_bench.results import (
-    _validate_bounded_calibration,
-    _validate_calibration_record,
     case_rows,
     comparison_pairs,
     export_csv,
@@ -48,6 +45,9 @@ def test_round_trip_and_deterministic_csv_without_configuration(raw_result, tmp_
         "wrong-repetitions",
         "nan",
         "infinite",
+        "no-compile-time",
+        "no-first-call",
+        "first-call-size",
         "negative-duration",
         "bad-counts",
         "wrong-rate",
@@ -80,6 +80,13 @@ def test_invalid_persisted_evidence_is_rejected(raw_result, damage):
         case["samples"][0]["duration_seconds"] = float("nan")
     elif damage == "infinite":
         case["setup"]["runtime_metadata"]["compile_seconds"] = float("inf")
+    elif damage == "no-compile-time":
+        case["setup"]["runtime_metadata"].pop("compile_seconds")
+    elif damage == "no-first-call":
+        case["first_call_warmup"] = None
+    elif damage == "first-call-size":
+        case["first_call_warmup"]["attempted_shots"] += 1
+        case["first_call_warmup"]["accepted_shots"] += 1
     elif damage == "negative-duration":
         case["samples"][0]["duration_seconds"] = -1
     elif damage == "bad-counts":
@@ -104,14 +111,14 @@ def test_invalid_persisted_evidence_is_rejected(raw_result, damage):
         validate_result(raw_result)
 
 
-@pytest.mark.parametrize("phase", ["setup", "warmup", "correctness", "sampling"])
+@pytest.mark.parametrize("phase", ["setup", "first_call_warmup", "correctness", "sampling"])
 def test_failed_cases_keep_evidence_without_exporting_throughput(raw_result, phase):
     case = raw_result["cases"][1]
     case.update(
         status="error", error={"phase": phase, "type": "WorkerTimeout", "message": "timeout"}
     )
     if phase == "setup":
-        case.update(setup=None, warmup=None, correctness=None, samples=[])
+        case.update(setup=None, first_call_warmup=None, correctness=None, samples=[])
         case["execution"].pop("batch_size_effective")
     validate_result(raw_result)
     row = case_rows(raw_result)[1]
@@ -246,167 +253,13 @@ def test_invalid_json_is_reported_without_traceback(tmp_path, capsys):
     assert "invalid JSON" in capsys.readouterr().err
 
 
-def _bounded_calibration():
-    return {
-        "policy": CALIBRATION_POLICY,
-        "budget_seconds": 60.0,
-        "budget_scope": "between-candidates",
-        "probe_seconds": 1.0,
-        "repetitions": 3,
-        "search_seconds": 10.0,
-        "selection_statistic": "median_attempted_shots_per_second",
-        "tie_break": "smaller_batch_size",
-        "selected_batch_size": 64,
-        "duration_seconds": 11.0,
-        "candidates": [1, 32, 64],
-        "results": [
-            {
-                "batch_size": batch,
-                "status": "success",
-                "effective_batch_size": batch,
-                "median_attempted_shots_per_second": rate,
-                "duration_seconds": 3.0,
-                "error": None,
-                "samples": [
-                    {"throughput_attempted_shots_per_second": rate, "peak_rss_bytes": 1024}
-                    for _ in range(3)
-                ],
-            }
-            for batch, rate in ((1, 10.0), (32, 50.0), (64, 100.0))
-        ],
-    }
-
-
-@pytest.mark.parametrize(
-    "damage",
-    [
-        "policy",
-        "missing-candidate",
-        "failed-selection",
-        "partial-probe",
-        "missing-memory",
-        "wrong-budget",
-        "skipped-probe",
-        "nonfinite-rate",
-        "invalid-duration",
-    ],
-)
-def test_raw_validation_rejects_incomplete_or_mismatched_tuning_evidence(damage):
-    expected = {"id": "candidate", "shots_per_call": 64, "execution": {"batch_size": "calibrate"}}
-    calibration = _bounded_calibration()
-    observed = {
-        "status": "success",
-        "simulator": {"adapter": "clifft"},
-        "execution": {
-            "batch_size": 64,
-            "tuning_policy": CALIBRATION_POLICY,
-        },
-        "setup": {"runtime_metadata": {"batch_calibration": calibration}},
-    }
-    if damage == "policy":
-        calibration["policy"] = "different-policy"
-    elif damage == "missing-candidate":
-        calibration["results"].pop()
-    elif damage == "failed-selection":
-        calibration["results"][-1].update(status="error", samples=[], error={"type": "MemoryError"})
-    elif damage == "partial-probe":
-        calibration["results"][0]["samples"].pop()
-    elif damage == "missing-memory":
-        calibration["results"][0]["samples"][0].pop("peak_rss_bytes")
-    elif damage == "wrong-budget":
-        calibration["budget_seconds"] = 3600
-    elif damage == "nonfinite-rate":
-        sample = calibration["results"][0]["samples"][0]
-        sample["throughput_attempted_shots_per_second"] = float("nan")
-    elif damage == "invalid-duration":
-        calibration["results"][0]["duration_seconds"] = -1
-    else:
-        calibration["results"][0]["status"] = "budget-skipped"
-    with pytest.raises(ValueError):
-        _validate_calibration_record(expected, observed)
-
-
-@pytest.mark.parametrize(
-    "skip_index, later_status",
-    [
-        (0, "success"),
-        (1, "success"),
-        (1, "error"),
-    ],
-)
-def test_raw_validation_rejects_attempted_candidates_after_budget_skip(skip_index, later_status):
-    calibration = _bounded_calibration()
-    calibration["selected_batch_size"] = 64 if skip_index == 0 else 1
-    calibration["results"][skip_index].update(
-        status="budget-skipped",
-        samples=[],
-        duration_seconds=0.0,
-        effective_batch_size=None,
-        median_attempted_shots_per_second=None,
-    )
-    if later_status == "error":
-        calibration["results"][skip_index + 1].update(
-            status="error",
-            samples=[],
-            error={"type": "MemoryError"},
-            effective_batch_size=None,
-            median_attempted_shots_per_second=None,
-        )
-    with pytest.raises(ValueError, match="candidate attempted after budget skip"):
-        _validate_bounded_calibration(calibration, "candidate")
-
-
-def test_raw_validation_accepts_budget_skipped_suffix():
-    calibration = _bounded_calibration()
-    calibration["selected_batch_size"] = 1
-    for row in calibration["results"][1:]:
-        row.update(
-            status="budget-skipped",
-            samples=[],
-            duration_seconds=0.0,
-            effective_batch_size=None,
-            median_attempted_shots_per_second=None,
-        )
-    _validate_bounded_calibration(calibration, "candidate")
-
-
-@pytest.mark.parametrize("selected", [1, 32, 64])
-def test_selected_calibration_state_exports_and_reports(raw_result, tmp_path, selected):
-    from clifft_bench.report import report_execution
-
-    for case, contract in zip(raw_result["cases"], raw_result["campaign"]["cases"], strict=True):
-        contract["shots_per_call"] = case["execution"]["shots_per_call"] = 64
-        for sample in case["samples"]:
-            for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"):
-                sample[key] *= 8
-            sample["duration_seconds"] *= 8
-    case, contract = raw_result["cases"][1], raw_result["campaign"]["cases"][1]
-    contract["execution"]["batch_size"] = "calibrate"
-    case["execution"].update(batch_size=selected, batch_enabled=selected > 1,
-                             batch_size_effective=selected, tuning_policy=CALIBRATION_POLICY)
-    calibration = _bounded_calibration()
-    calibration["selected_batch_size"] = selected
-    case["setup"]["runtime_metadata"].update(
-        batch_calibration=calibration, batch_enabled=selected > 1, effective_batch_size=selected,
-    )
-    write_json(tmp_path / "raw.json", raw_result)
-    export_csv(raw_result, tmp_path / "cases.csv")
-    assert "1.25×" in report_execution(tmp_path, check=True)
-    case["execution"]["batch_enabled"] = selected == 1
-    with pytest.raises(ValueError, match="batching differs"):
-        validate_result(raw_result)
-
-
-@pytest.mark.parametrize("status", ["error", "interrupted"])
-def test_calibration_without_setup_keeps_requested_state(raw_result, status):
-    case, contract = raw_result["cases"][1], raw_result["campaign"]["cases"][1]
-    contract["execution"]["batch_size"] = "calibrate"
-    case["execution"].update(batch_size="calibrate", batch_enabled=True,
-                             tuning_policy=CALIBRATION_POLICY)
-    case.update(status=status, setup=None, warmup=None, correctness=None, samples=[],
-                error={"phase": "setup", "type": "WorkerTimeout", "message": "timeout"})
+def test_failed_first_call_keeps_diagnostics_without_throughput(raw_result, tmp_path):
+    case = raw_result["cases"][0]
+    case["first_call_warmup"]["accepted_shots"] += 1
+    case["first_call_warmup"]["contract_errors"] = ["inconsistent shot counts"]
+    case.update(status="error", samples=[], correctness=None,
+                error={"phase": "first_call_warmup", "type": "RuntimeError",
+                       "message": "inconsistent shot counts"})
     validate_result(raw_result)
-    assert case_rows(raw_result)[1]["median_attempted_shots_per_second"] == ""
-    case["execution"].update(batch_size=1, batch_enabled=False)
-    with pytest.raises(ValueError, match="mismatched requested batch size"):
-        validate_result(raw_result)
+    export_csv(raw_result, tmp_path / "cases.csv")
+    assert case_rows(raw_result)[0]["median_attempted_shots_per_second"] == ""
