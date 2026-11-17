@@ -80,7 +80,7 @@ class StimAdapter(Adapter):
         self, *, artifact_path: Path, workload: dict[str, Any], execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
-        self.validate_options(execution.get("options", {}))
+        self.validate_execution(execution, workload)
         import stim
 
         require_all_or_none(workload["semantics"], self.name)

@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter, UnsupportedConfiguration
 from clifft_bench.selection import require_all_or_none
 
 
@@ -109,6 +109,15 @@ def _prepare_unselected_records(circuit, execution, observable, symft):
 
 class SymftAdapter(Adapter):
     name = "symft"
+    supported_threads = (1, 8)
+
+    def validate_execution(self, execution: dict[str, Any], workload: dict[str, Any]) -> int:
+        threads = super().validate_execution(execution, workload)
+        require_all_or_none(workload["semantics"], self.name)
+        if (threads != 1 and not workload["semantics"]["postselect_all_detectors"]
+                and workload["expected_metadata"]["num_detectors"]):
+            raise UnsupportedConfiguration("SymFT measurement sampling does not support threads=8")
+        return threads
 
     def validate_options(self, options: dict[str, Any]) -> None:
         if options.keys() - {"sample_chunk_shots"}:
@@ -131,8 +140,7 @@ class SymftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
-        self.validate_options(execution.get("options", {}))
-        require_all_or_none(workload["semantics"], self.name)
+        threads = self.validate_execution(execution, workload)
         import symft
 
         circuit = symft.Circuit(path=artifact_path)
@@ -148,12 +156,13 @@ class SymftAdapter(Adapter):
             postselect_detectors=postselect,
             batch_size=requested_batch_size,
             sample_chunk_shots=int(execution.get("options", {}).get("sample_chunk_shots", 0)),
-            threads=1,
+            threads=threads,
+            cpu_backend="legacy",
             cuda=False,
         )
         info = dict(sampler.info)
-        if int(info["threads"]) != 1:
-            raise RuntimeError(f"SymFT planned more than one thread: {info}")
+        if not 1 <= int(info["threads"]) <= threads:
+            raise RuntimeError(f"SymFT planned outside its {threads}-thread budget: {info}")
         expected_backend = "batch" if batch else "single"
         if str(info["backend"]) != expected_backend:
             raise RuntimeError(

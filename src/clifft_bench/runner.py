@@ -46,7 +46,7 @@ class WorkerClient:
                  deadline: float | None = None) -> None:
         self.case = case
         self.deadline = deadline
-        environment = restricted_environment()
+        environment = restricted_environment(case.definition["execution"]["threads"])
         source = str(repository_root() / "src")
         existing = environment.get("PYTHONPATH")
         environment["PYTHONPATH"] = source if not existing else source + os.pathsep + existing
@@ -218,7 +218,7 @@ def _new_case_result(
         execution["tuning_policy"] = CALIBRATION_POLICY
     execution.update(
         {
-            "threads_requested": 1,
+            "threads_requested": execution["threads"],
             "memory_limit_bytes": (
                 int(memory_limit_gib * (1 << 30))
                 if memory_limit_gib is not None
@@ -256,7 +256,7 @@ def _effective_batch_size(
 def _record_runtime_execution(
     execution: dict[str, Any], runtime_metadata: dict[str, Any], shots_per_call: int
 ) -> None:
-    execution["threads_effective"] = int(runtime_metadata["threads"])
+    execution["threads_effective"] = runtime_metadata["threads"]
     calibration = runtime_metadata.get("batch_calibration")
     if calibration is not None:
         execution["batch_size"] = int(calibration["selected_batch_size"])
@@ -346,7 +346,8 @@ def run_suite(
         if output_path.resolve().is_relative_to(root):
             raise ValueError("EC2 raw evidence must be written outside the source checkout")
         cloud = require_reference_host(
-            root, suite.run["reference_host"], memory_limit_gib, logical_cpu
+            root, suite.run["reference_host"], memory_limit_gib, logical_cpu,
+            max(case.definition["execution"]["threads"] for case in cases),
         )
         for implementation in selected_implementations(suite):
             verify_environment(implementation)
@@ -431,8 +432,11 @@ def run_suite(
                     )
                     result["simulator"]["dependencies"] = setup["dependencies"]
                 except Exception as error:  # noqa: BLE001
-                    result["status"] = "error"
                     result["error"] = _error_record(error, "setup")
+                    result["status"] = (
+                        "unsupported" if result["error"]["type"] == "UnsupportedConfiguration"
+                        else "error"
+                    )
 
                 if result["status"] == "running":
                     try:

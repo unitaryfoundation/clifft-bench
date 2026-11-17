@@ -65,6 +65,10 @@ def reference(monkeypatch):
     )
     monkeypatch.setattr(system, "_memory_bytes", lambda: 16 << 30)
     monkeypatch.setattr(system, "_allowed_cpus", lambda: [0, 1])
+    monkeypatch.setattr(system.os, "sched_getaffinity", lambda pid: {0, 1}, raising=False)
+    monkeypatch.setattr(system, "cpu_topology", lambda cpus: [
+        {"logical_cpu": cpu, "socket": 0, "core": cpu} for cpu in cpus
+    ])
     monkeypatch.setattr(
         system, "discover_ec2", lambda: {"instance_type": "m7a.xlarge", "lifecycle": "on-demand"}
     )
@@ -127,3 +131,77 @@ def test_ec2_workflow_sanitizes_remote_credentials(reference, monkeypatch):
 def test_restricted_environment_overrides_numba_thread_budget(monkeypatch):
     monkeypatch.setenv("NUMBA_NUM_THREADS", "8")
     assert system.restricted_environment()["NUMBA_NUM_THREADS"] == "1"
+
+
+@pytest.mark.parametrize("threads", [1, 8])
+def test_worker_caps_keep_blas_and_xla_serial(monkeypatch, threads):
+    for name in ("OMP_NUM_THREADS", "NUMBA_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                 "MKL_NUM_THREADS", "BLIS_NUM_THREADS"):
+        monkeypatch.setenv(name, "99")
+    environment = system.restricted_environment(threads)
+    assert environment["OMP_NUM_THREADS"] == environment["NUMBA_NUM_THREADS"] == str(threads)
+    assert all(environment[name] == "1" for name in
+               ("OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "BLIS_NUM_THREADS"))
+    assert "intra_op_parallelism_threads=1" in environment["XLA_FLAGS"]
+
+
+def test_cpu_topology_reads_socket_and_core_ids(monkeypatch):
+    values = {
+        "/sys/devices/system/cpu/cpu4/topology/physical_package_id": "1\n",
+        "/sys/devices/system/cpu/cpu4/topology/core_id": "2\n",
+    }
+    monkeypatch.setattr(Path, "read_text", lambda path: values[str(path)])
+    assert system.cpu_topology([4]) == [{"logical_cpu": 4, "socket": 1, "core": 2}]
+
+
+def test_missing_topology_is_not_treated_as_distinct_cores(monkeypatch):
+    def missing(path):
+        raise FileNotFoundError(path)
+    monkeypatch.setattr(Path, "read_text", missing)
+    with pytest.raises(ValueError, match="cannot discover physical core"):
+        system.cpu_topology([4])
+
+
+def test_affinity_uses_distinct_physical_cores_within_allowed_mask(monkeypatch):
+    # Two sockets reuse core IDs. CPUs 0..7 and 8..15 are SMT siblings.
+    allowed = set(range(16)) - {0, 3}
+    monkeypatch.setattr(system.os, "sched_getaffinity", lambda pid: set(allowed), raising=False)
+    monkeypatch.setattr(system, "cpu_topology", lambda cpus: [
+        {"logical_cpu": cpu, "socket": (cpu % 8) // 4, "core": cpu % 4}
+        for cpu in cpus
+    ])
+    def set_affinity(pid, cpus):
+        allowed.intersection_update(cpus)
+    monkeypatch.setattr(system.os, "sched_setaffinity", set_affinity, raising=False)
+    result = system.apply_affinity(9, 8)
+    assert result["applied"]
+    assert result["logical_cpus"][0] == 9
+    assert len(allowed) == 8
+    assert not ({0, 3} & allowed)
+    assert len({(c["socket"], c["core"]) for c in result["physical_cores"]}) == 8
+    assert result["available_after"] == sorted(allowed)
+
+
+def test_single_core_is_subset_of_eight_core_allocation(monkeypatch):
+    monkeypatch.setattr(system.os, "sched_getaffinity", lambda pid: set(range(16)), raising=False)
+    monkeypatch.setattr(system, "cpu_topology", lambda cpus: [
+        {"logical_cpu": cpu, "socket": 0, "core": cpu % 8} for cpu in cpus
+    ])
+    assert system.choose_cpus(12, 1) == system.choose_cpus(12, 8)[:1]
+
+
+@pytest.mark.parametrize("anchor,match", [(99, "outside"), (0, "only 4")])
+def test_cpu_allocation_rejects_unavailable_resources(monkeypatch, anchor, match):
+    monkeypatch.setattr(system.os, "sched_getaffinity", lambda pid: set(range(8)), raising=False)
+    monkeypatch.setattr(system, "cpu_topology", lambda cpus: [
+        {"logical_cpu": cpu, "socket": 0, "core": cpu % 4} for cpu in cpus
+    ])
+    with pytest.raises(ValueError, match=match):
+        system.choose_cpus(anchor, 8)
+
+
+def test_unsupported_affinity_does_not_silently_run_eight_threads(monkeypatch):
+    monkeypatch.delattr(system.os, "sched_getaffinity", raising=False)
+    assert system.apply_affinity(None)["applied"] is False
+    with pytest.raises(ValueError, match="requires Linux"):
+        system.apply_affinity(None, 8)

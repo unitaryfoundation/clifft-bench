@@ -22,17 +22,19 @@ class _PreparedClifft(PreparedAdapter):
         observable_index: int,
         runtime_metadata: dict[str, Any],
         batch_size: int,
+        threads: int = 1,
     ) -> None:
         self._clifft = clifft
         self._program = program
         self._observable_index = observable_index
         self._batch_size = batch_size
+        self._threads = threads
         self.runtime_metadata = runtime_metadata
 
     def sample(self, shots: int, seed: int) -> Counts:
         result = self._clifft.sample_survivors(
             self._program, shots, seed=seed, keep_records=False,
-            threads=1, batch_size=self._batch_size,
+            threads=self._threads, batch_size=self._batch_size,
         )
         return Counts(
             attempted_shots=int(result.total_shots),
@@ -44,6 +46,7 @@ class _PreparedClifft(PreparedAdapter):
 
 class ClifftAdapter(Adapter):
     name = "clifft"
+    supported_threads = (1, 8)
 
     def validate_options(self, options: dict[str, Any]) -> None:
         if options.keys() - {"scheduler"}:
@@ -85,7 +88,7 @@ class ClifftAdapter(Adapter):
         execution: dict[str, Any],
         seed: int = 0,
     ) -> PreparedAdapter:
-        self.validate_options(execution.get("options", {}))
+        threads = self.validate_execution(execution, workload)
         import clifft
 
         scheduler_config = execution.get("options", {}).get("scheduler")
@@ -125,7 +128,8 @@ class ClifftAdapter(Adapter):
         metadata = {
             "name": "clifft",
             "version": str(clifft.version()),
-            "threads": 1,
+            # These releases accept a worker budget but do not expose resolved workers.
+            "threads": 1 if threads == 1 else None,
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
             "batch_enabled": batch_enabled,
@@ -163,4 +167,5 @@ class ClifftAdapter(Adapter):
             int(workload["semantics"]["observable_index"]),
             metadata,
             requested_batch_size,
+            threads,
         )

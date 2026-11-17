@@ -1,12 +1,12 @@
 # Benchmark contract
 
-This contract governs the recurring single-core campaigns under
+This contract governs the recurring CPU campaigns under
 `campaigns/`. One-off studies under `experiments/` define their own contracts.
 
 ## Question and logical work
 
 For the same versioned circuit and output contract, how many independent
-attempted shots per second can a simulator execute on one pinned logical CPU?
+attempted shots per second can a simulator execute within its declared physical-core budget?
 The default is steady-state sampling. For xtim, report the fixed-duration average
 starting with an empty plan cache, as defined below.
 
@@ -100,11 +100,13 @@ themselves. This is the data interface for the
 
 - `panels` and their `rows` preserve the figure's selection and order. Each panel
   has its own logarithmic `x_limits`. Rows identify the workload and baseline
-  variant, display label, circuit digest, and selection/output `semantics`.
+  variant, display label (including multi-core budgets), circuit digest, and
+  selection/output `semantics`.
 - Each row's `values` follows the simulator order in `series`. Values include
   the attempted-shot rate median and median absolute deviation (both in shots/s),
-  sample count, shots per call, effective batch size, and peak active width where
-  recorded. MAD describes sample dispersion, not a confidence interval.
+  sample count, shots per call, effective batch size, `threads_requested`,
+  `threads_effective`, and peak active width where recorded. MAD describes sample
+  dispersion, not a confidence interval.
 - `outcome` is `measured`, a recorded failure status, `unsupported`, or
   `not measured`. Failed and absent cases have null rates and dispersion; missing
   metadata is null rather than zero. Unsupported cases remain in the export for
@@ -166,13 +168,23 @@ exploratory evidence, not the official throughput series. Host setup and
 collection commands belong in the [maintainer workflow](../CONTRIBUTING.md#reference-host-collection).
 
 Cases execute serially in manifest order. Every case gets a fresh worker
-process using the Python environment recorded for its implementation. The
-worker requests one logical CPU and receives a single-thread environment:
-`OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`,
-`NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, `BLIS_NUM_THREADS`, and
-`NUMBA_NUM_THREADS` are 1.
+process using the Python environment recorded for its implementation.
+`execution.threads` is 1 (default) or 8. Before imports, workers set
+`OMP_NUM_THREADS` and `NUMBA_NUM_THREADS` to that budget; BLAS, NumExpr,
+Accelerate, and XLA remain serial. Clifft, Tsim, and SymFT's legacy counts backend
+support both budgets. Stim, pinned xtim, and SymFT's unselected measurement path
+support only 1; unsupported requests are recorded before resource allocation.
 
-Linux affinity is applied with `sched_setaffinity` and the outcome is recorded.
+Before imports, Linux workers pin one logical CPU per distinct `(socket, core)`
+within the allowed mask, starting at `--cpu`. Setup fails if topology is missing
+or too few cores are available. Eight-core runs require applied affinity;
+single-core smoke runs may record unavailable affinity.
+
+Thread settings are recorded per worker: environment, CPU mask, physical-core
+identities, and requested/effective counts. Effective counts describe the native
+pool or plan, or are null when unreported (including multi-core Clifft 0.13.0).
+Release/peer ratios require equal core budgets.
+
 Official workers receive the campaign's 12 GiB address-space ceiling, leaving
 headroom on the 16 GiB reference host. The requested ceiling is embedded in the
 raw result, the applied `RLIMIT_AS` is recorded after setup, and input validation
@@ -413,7 +425,7 @@ observable counts plus these aggregate invariants:
 Before calibration, the SymFT adapter verifies the installed package's PEP 610
 Git commit and repository URL against the manifest and records both in runtime
 metadata. A PyPI wheel with the same version string is rejected. SymFT uses its
-default CPU counts executor, with the harness's explicit batch size and chunk
+legacy CPU counts executor, with the harness's explicit batch size and chunk
 settings. Its opt-in compiled CPU executor changes the effective batch capacity
 and is outside this calibrated execution configuration.
 
@@ -449,10 +461,9 @@ verification. Dependencies, including Numba/LLVM and zxparam, are locked in
 
 Compilation explicitly requests `strategy="active_statevector"`; trajectory
 sharing is always enabled upstream. This is a complex128 CPU implementation;
-it does not need CUDA. The worker sets `NUMBA_NUM_THREADS=1` before imports, and the adapter
-checks Numba's effective thread count. The existing Linux affinity, 12 GiB
-address-space ceiling, and preparation/request deadlines also apply. There is
-no fallback to a different Tsim strategy when preparation or sampling fails.
+it does not need CUDA. The adapter verifies that Numba's pool matches the case's
+thread budget. Resource limits and preparation/request deadlines also apply.
+There is no fallback to a different Tsim strategy when preparation or sampling fails.
 
 Tsim returns raw detector and observable arrays. Both reference-sample flags
 are explicitly false. The adapter passes the workload's detector selection mask,
@@ -533,7 +544,7 @@ and, when available, `optimized_t_gates`.
 
 ## Result evidence and comparisons
 
-A new execution contains `raw.json` in format `clifft-bench/raw/v1` and one derived
+A new execution contains `raw.json` in format `clifft-bench/raw/v2` and one derived
 `cases.csv`. Raw evidence records the resolved selected campaign and comparison
 definitions, effective measurement/resource settings, collection time and source,
 exact software identities, workload digests and semantics, setup/compilation,
