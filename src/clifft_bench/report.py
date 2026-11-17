@@ -207,7 +207,9 @@ def review_summary(report: dict) -> str:
             f"{error['phase']}: {error['type']}: {error['message']}"
             if error
             else (
-                f"{len(case['samples'])} samples; batch {case['execution']['batch_size_effective']}"
+                f"{len(case['samples'])} samples; "
+                f"batch {case['execution']['batch_size_effective']}; "
+                f"{case['execution']['threads_requested']} physical cores"
             )
         )
         detail = detail.replace("|", "\\|").replace("\n", " ")
@@ -269,6 +271,12 @@ def review_summary(report: dict) -> str:
 
 def _label(case: dict) -> str:
     """Use recorded workload fields; reporting never needs the current manifest."""
+    label = _workload_label(case)
+    threads = case["execution"]["threads_requested"]
+    return label if threads == 1 else f"{label} · {threads} cores"
+
+
+def _workload_label(case: dict) -> str:
     workload = case["workload"]
     family, parameters = workload["family"], workload["parameters"]
     if family == "magic-state-cultivation":
@@ -485,6 +493,7 @@ def throughput_data(report: dict) -> dict:
                     **{key: None if row.get(key, "") == "" else row[key] for key in (
                         "median_attempted_shots_per_second", "mad_attempted_shots_per_second",
                         "sample_count", "shots_per_call", "batch_size_effective",
+                        "threads_requested", "threads_effective",
                         "peak_active_width",
                     )},
                 }

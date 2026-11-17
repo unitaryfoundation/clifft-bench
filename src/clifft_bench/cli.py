@@ -27,7 +27,7 @@ DEFAULT_CAMPAIGN = "smoke"
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="clifft-bench",
-        description="Run reproducible single-CPU near-Clifford simulator benchmarks.",
+        description="Run reproducible CPU near-Clifford simulator benchmarks.",
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
@@ -44,7 +44,7 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--require-ec2", action="store_true")
     run.add_argument("--output-dir", required=True, type=Path)
     run.add_argument("--case", help="regular expression matched against case IDs")
-    run.add_argument("--cpu", type=int, help="logical CPU to request on affinity-capable systems")
+    run.add_argument("--cpu", type=int, help="first logical CPU in the physical-core allocation")
     run.add_argument("--memory-limit-gib", type=float)
     run.add_argument("--min-sample-seconds", type=float)
     run.add_argument("--repetitions", type=int)

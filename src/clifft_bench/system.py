@@ -34,9 +34,16 @@ def utc_now() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
-def restricted_environment() -> dict[str, str]:
+def thread_environment(threads: int = 1) -> dict[str, str]:
+    if type(threads) is not int or threads not in (1, 8):
+        raise ValueError("threads must be 1 or 8")
+    return {**THREAD_LIMIT_ENVIRONMENT, "OMP_NUM_THREADS": str(threads),
+            "NUMBA_NUM_THREADS": str(threads)}
+
+
+def restricted_environment(threads: int = 1) -> dict[str, str]:
     environment = os.environ.copy()
-    environment.update(THREAD_LIMIT_ENVIRONMENT)
+    environment.update(thread_environment(threads))
     return environment
 
 
@@ -49,16 +56,58 @@ def choose_cpu(requested: int | None) -> int | None:
     return None
 
 
-def apply_affinity(cpu: int | None) -> dict[str, Any]:
+def cpu_topology(cpus: list[int]) -> list[dict[str, int]]:
+    """Read Linux socket/core identities, restricted to allowed logical CPUs."""
+    topology = []
+    for cpu in cpus:
+        path = Path(f"/sys/devices/system/cpu/cpu{cpu}/topology")
+        try:
+            socket = int((path / "physical_package_id").read_text())
+            core = int((path / "core_id").read_text())
+            if socket < 0 or core < 0:
+                raise ValueError("unknown socket/core identity")
+        except (OSError, ValueError) as error:
+            raise ValueError(f"cannot discover physical core for logical CPU {cpu}") from error
+        topology.append({"logical_cpu": cpu, "socket": socket, "core": core})
+    return topology
+
+
+def choose_cpus(cpu: int | None, threads: int = 1) -> list[int] | None:
+    """Choose one hardware thread per core, starting with the requested CPU."""
+    thread_environment(threads)
+    if not hasattr(os, "sched_getaffinity"):
+        if threads != 1 or cpu is not None:
+            raise ValueError("physical-core allocation requires Linux CPU affinity")
+        return None
+    available = sorted(os.sched_getaffinity(0))
+    if cpu is not None:
+        if cpu not in available:
+            raise ValueError(f"logical CPU {cpu} is outside the allowed affinity mask")
+        available.remove(cpu)
+        available.insert(0, cpu)
+    selected, cores = [], set()
+    for item in cpu_topology(available):
+        identity = item["socket"], item["core"]
+        if identity not in cores:
+            selected.append(item["logical_cpu"])
+            cores.add(identity)
+            if len(selected) == threads:
+                return selected
+    raise ValueError(f"requested {threads} physical cores; only {len(selected)} are available")
+
+
+def apply_affinity(cpu: int | None, threads: int = 1) -> dict[str, Any]:
+    cpus = choose_cpus(cpu, threads)
     result: dict[str, Any] = {
-        "requested": cpu is not None,
-        "logical_cpu": cpu,
+        "requested": cpus is not None,
+        "logical_cpus": cpus,
+        "physical_cores": cpu_topology(cpus) if cpus is not None else None,
         "applied": False,
         "available_before": None,
         "available_after": None,
         "reason": None,
     }
-    if cpu is None:
+    if cpus is None:
         result["reason"] = "no logical CPU requested on this platform"
         return result
     if not hasattr(os, "sched_getaffinity") or not hasattr(os, "sched_setaffinity"):
@@ -66,15 +115,12 @@ def apply_affinity(cpu: int | None) -> dict[str, Any]:
         return result
     before = sorted(os.sched_getaffinity(0))
     result["available_before"] = before
-    if cpu not in before:
-        result["reason"] = f"logical CPU {cpu} is outside the allowed affinity mask"
-        return result
-    os.sched_setaffinity(0, {cpu})
+    os.sched_setaffinity(0, set(cpus))
     after = sorted(os.sched_getaffinity(0))
     result["available_after"] = after
-    result["applied"] = after == [cpu]
+    result["applied"] = after == sorted(cpus)
     if not result["applied"]:
-        result["reason"] = "operating system did not retain the requested affinity mask"
+        raise RuntimeError("operating system did not retain the requested affinity mask")
     return result
 
 
@@ -196,7 +242,7 @@ def discover_ec2() -> dict[str, str]:
 
 
 def require_reference_host(root: Path, reference: dict, memory_limit_gib: float,
-                           cpu: int | None) -> dict[str, str]:
+                           cpu: int | None, threads: int = 1) -> dict[str, str]:
     require_clean_checkout(root)
     if platform.system() != "Linux" or platform.machine() != reference["architecture"]:
         raise ValueError("reference host requires Linux with the declared architecture")
@@ -213,6 +259,7 @@ def require_reference_host(root: Path, reference: dict, memory_limit_gib: float,
     allowed = _allowed_cpus()
     if allowed is None or cpu not in allowed:
         raise ValueError("reference host requires an available logical CPU")
+    choose_cpus(cpu, threads)
     cloud = discover_ec2()
     if cloud["instance_type"] != reference["instance_type"]:
         raise ValueError("reference host instance type does not match the campaign")

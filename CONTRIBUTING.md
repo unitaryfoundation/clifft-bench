@@ -101,6 +101,12 @@ no merging or inheritance between presets. The owning adapter validates the
 resolved options without importing the simulator. Unknown keys, invalid values,
 and references are rejected before workers start.
 
+Set `execution.threads = 1` or `8` on a case or variant to select its physical-core
+budget; omitted values default to 1. Use `--cpu` to choose the first logical CPU
+of the allocation. A local eight-core smoke run needs eight distinct physical
+cores in its allowed affinity mask; see the [resource contract](docs/benchmark-contract.md#resources-and-ordering)
+for adapter support and recorded evidence.
+
 `bootstrap`, `list`, and `run` default to `smoke`. Select the release campaign
 explicitly:
 
@@ -209,7 +215,7 @@ belong to the benchmark contract. Regenerate it with the same explicit peer
 input as the figures; the primary `cases.csv` alone does not contain retained peers.
 Regenerating removes superseded Clifft-only figures and numbered pages.
 
-Current adapters may reject retired options in older executions. Validate those
+Current readers and adapters may reject retired formats or options in older executions. Validate those
 executions using the collection harness revision recorded in `raw.json` under
 `runner.suite_source.commit`; regenerate published reports using the compatible
 renderer revision documented alongside the results.

@@ -17,14 +17,19 @@ from pathlib import Path
 from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.adapters.base import Counts, validate_counts
+from clifft_bench.adapters.base import Counts, UnsupportedConfiguration, validate_counts
 from clifft_bench.calibration import (
     CALIBRATION_POLICY,
     TUNING_BUDGET_SECONDS,
     calibration_candidates,
 )
 from clifft_bench.selection import has_postselection
-from clifft_bench.system import apply_address_space_limit, apply_affinity, utc_now
+from clifft_bench.system import (
+    apply_address_space_limit,
+    apply_affinity,
+    thread_environment,
+    utc_now,
+)
 
 BATCH_CALIBRATION_REPETITIONS = 3
 BATCH_CALIBRATION_SECONDS = 1.0
@@ -252,7 +257,7 @@ def calibrate_batch_size(
                 }
             )
             successful.append((median_rate, candidate))
-        except WorkerTimeout:
+        except (WorkerTimeout, UnsupportedConfiguration):
             raise
         except Exception as error:  # noqa: BLE001
             results.append(
@@ -298,7 +303,7 @@ def calibrate_batch_size(
             execution=_candidate_execution(execution, selected_batch_size),
             seed=sampling_seed,
         )
-    except WorkerTimeout:
+    except (WorkerTimeout, UnsupportedConfiguration):
         raise
     except Exception as error:
         record["duration_seconds"] = time.perf_counter() - calibration_started
@@ -325,11 +330,19 @@ def main() -> int:
             command = request["command"]
             if command == "prepare":
                 workload = request["workload"]
-                affinity = apply_affinity(request.get("logical_cpu"))
+                execution = request["execution"]
+                environment = {key: os.environ.get(key)
+                               for key in thread_environment(execution["threads"])}
+                if environment != thread_environment(execution["threads"]):
+                    raise ValueError("worker thread caps must be set before simulator imports")
+                adapter = load_adapter(request["adapter"])
+                adapter.validate_execution(execution)
+                affinity = apply_affinity(request.get("logical_cpu"), execution["threads"])
+                if execution["threads"] > 1 and not affinity["applied"]:
+                    raise ValueError("multiple threads require applied physical-core affinity")
                 address_space_limit = apply_address_space_limit(
                     request.get("memory_limit_gib")
                 )
-                adapter = load_adapter(request["adapter"])
                 started = time.perf_counter()
                 with deadline(float(request["timeout_seconds"])):
                     with redirect_stdout(sys.stderr):
@@ -338,7 +351,6 @@ def main() -> int:
                             source_url=request["source_url"],
                         )
                         artifact_path = Path(request["artifact_path"])
-                        execution = request["execution"]
                         if execution["batch_size"] == "calibrate":
                             prepared = calibrate_batch_size(
                                 adapter,
@@ -368,6 +380,7 @@ def main() -> int:
                     **prepared.runtime_metadata,
                     **installation,
                     "address_space_limit_bytes": address_space_limit,
+                    "thread_environment": environment,
                 }
                 emit(
                     {

@@ -287,7 +287,8 @@ def test_comparisons_require_distinct_existing_variants(tmp_path, change, messag
         load_suite(path)
 
 
-def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
+@pytest.mark.parametrize("field", ["shots_per_call", "threads"])
+def test_comparison_rejects_unequal_call_sizes_and_thread_budgets(tmp_path, field):
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     run = copy.deepcopy(suite.run)
     comparison = run["comparisons"][0]
@@ -295,12 +296,25 @@ def test_comparison_rejects_unequal_public_call_sizes(tmp_path):
     baseline = next(v for v in run["variants"] if v["id"] == comparison["baseline_variant"])
     baseline_workloads = {w["workload_id"] for w in baseline["workloads"]}
     workload = next(w for w in variant["workloads"] if w["workload_id"] in baseline_workloads)
-    workload["shots_per_call"] += 1
+    if field == "threads":
+        variant["execution"]["threads"] = 8
+    else:
+        workload["shots_per_call"] += 1
     run["workloads_file"] = str(suite.workloads_path)
     run["software_file"] = str(suite.software_path)
     path = tmp_path / "mismatch.toml"
     write_toml(path, run)
-    with pytest.raises(ValueError, match="unequal shots_per_call"):
+    with pytest.raises(ValueError, match=f"unequal {field}"):
+        load_suite(path)
+
+
+@pytest.mark.parametrize("threads", [True, 0, 2, 8.0, "8"])
+def test_thread_budgets_reject_invalid_values(tmp_path, threads):
+    _, _, _, run = _suite_with_local_workloads(tmp_path)
+    run["cases"][0]["execution"]["threads"] = threads
+    path = tmp_path / "run.toml"
+    write_toml(path, run)
+    with pytest.raises(ValueError, match="threads must be 1 or 8"):
         load_suite(path)
 
 

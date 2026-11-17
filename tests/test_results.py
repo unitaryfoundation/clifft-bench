@@ -122,7 +122,7 @@ def test_failed_cases_keep_evidence_without_exporting_throughput(raw_result, pha
     assert comparison_pairs(raw_result)[0]["ratio"] is None
 
 
-@pytest.mark.parametrize("field", ["digest", "selection", "calls", "memory"])
+@pytest.mark.parametrize("field", ["digest", "selection", "calls", "memory", "threads"])
 def test_comparisons_reject_incompatible_inputs(raw_result, field):
     case = raw_result["cases"][1]
     if field == "digest":
@@ -131,10 +131,57 @@ def test_comparisons_reject_incompatible_inputs(raw_result, field):
         case["workload"]["semantics"]["observable_index"] += 1
     elif field == "calls":
         case["execution"]["shots_per_call"] += 1
+    elif field == "threads":
+        case["execution"]["threads_requested"] = 8
     else:
         case["execution"]["memory_limit_bytes"] = 1 << 30
     with pytest.raises(ValueError, match="incompatible comparison"):
         comparison_pairs(raw_result)
+
+
+@pytest.mark.parametrize("damage", ["budget", "environment", "affinity", "topology", "effective"])
+def test_eight_core_resource_evidence_must_match_the_contract(raw_result, damage):
+    from clifft_bench.report import build_report, throughput_data
+    from clifft_bench.system import thread_environment
+
+    raw_result["campaign"]["resources"]["logical_cpu"] = 0
+    for case, contract in zip(raw_result["cases"], raw_result["campaign"]["cases"], strict=True):
+        contract["execution"]["threads"] = 8
+        case["execution"].update(threads=8, threads_requested=8, threads_effective=8)
+        case["setup"]["runtime_metadata"].update(
+            threads=8, thread_environment=thread_environment(8)
+        )
+        case["setup"]["affinity"].update(
+            applied=True, logical_cpus=list(range(8)), available_before=list(range(16)),
+            available_after=list(range(8)), physical_cores=[
+                {"logical_cpu": cpu, "socket": 0, "core": cpu} for cpu in range(8)
+            ],
+        )
+    validate_result(raw_result)
+    # An unavailable native worker count stays unknown in the exported view.
+    current = raw_result["cases"][1]
+    current["execution"]["threads_effective"] = None
+    current["setup"]["runtime_metadata"]["threads"] = None
+    validate_result(raw_result)
+    data = throughput_data(build_report(raw_result))
+    row = data["panels"][0]["rows"][0]
+    assert "8 cores" in row["label"]
+    assert row["values"][0]["threads_requested"] == 8
+    assert row["values"][0]["threads_effective"] is None
+    case = raw_result["cases"][0]
+    if damage == "budget":
+        case["execution"]["threads_requested"] = 1
+    elif damage == "environment":
+        case["setup"]["runtime_metadata"]["thread_environment"]["OPENBLAS_NUM_THREADS"] = "8"
+    elif damage == "affinity":
+        case["setup"]["affinity"]["available_after"] = [0]
+    elif damage == "topology":
+        case["setup"]["affinity"]["physical_cores"][1]["core"] = 0
+    else:
+        case["execution"]["threads_effective"] = 9
+        case["setup"]["runtime_metadata"]["threads"] = 9
+    with pytest.raises(ValueError):
+        validate_result(raw_result)
 
 
 def test_ratios_use_each_side_sample_median(raw_result):

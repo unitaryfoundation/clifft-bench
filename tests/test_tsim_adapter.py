@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -144,16 +145,44 @@ def test_tsim_rejects_inconsistent_native_rows(damage):
         p.sample(7, 9)
 
 
-def test_tsim_requires_explicit_and_effective_single_thread(tmp_path, monkeypatch):
+@pytest.mark.parametrize("threads", [1, 8])
+def test_tsim_requires_explicit_and_effective_thread_budget(tmp_path, monkeypatch, threads):
     monkeypatch.delenv("NUMBA_NUM_THREADS")
+    execution = {"threads": threads}
     with pytest.raises(ValueError, match="NUMBA_NUM_THREADS"):
-        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution={})
-    monkeypatch.setenv("NUMBA_NUM_THREADS", "1")
-    numba = pytest.importorskip("numba")
-    pytest.importorskip("tsim")
-    monkeypatch.setattr(numba, "get_num_threads", lambda: 2)
+        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution=execution)
+    monkeypatch.setenv("NUMBA_NUM_THREADS", str(threads))
+    monkeypatch.setitem(sys.modules, "numba", SimpleNamespace(get_num_threads=lambda: threads + 1))
+    monkeypatch.setitem(sys.modules, "tsim", SimpleNamespace())
     with pytest.raises(RuntimeError, match="effective Numba thread"):
-        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution={})
+        TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution=execution)
+
+
+@pytest.mark.parametrize("threads", [1, 8])
+def test_tsim_records_requested_numba_pool(tmp_path, monkeypatch, threads):
+    from clifft_bench.adapters import tsim as adapter_module
+
+    artifact = tmp_path / "circuit.stim"
+    artifact.write_text("M 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    class Circuit:
+        num_qubits = num_measurements = num_detectors = num_observables = 1
+
+        def __init__(self, text):
+            assert text == artifact.read_text()
+
+        def compile_detector_sampler(self, *, strategy, seed):
+            assert strategy == "active_statevector"
+            return SimpleNamespace(circuit=self, _program=SimpleNamespace(components=[]),
+                                   sample=lambda **kwargs: None)
+    monkeypatch.setenv("NUMBA_NUM_THREADS", str(threads))
+    monkeypatch.setitem(sys.modules, "numba", SimpleNamespace(get_num_threads=lambda: threads))
+    monkeypatch.setitem(sys.modules, "tsim", SimpleNamespace(Circuit=Circuit))
+    monkeypatch.setattr(adapter_module, "version", lambda name: "test")
+    prepared = TsimAdapter().prepare(
+        artifact_path=artifact, workload={"semantics": SEMANTICS},
+        execution={"threads": threads, "batch_size": 32},
+    )
+    assert prepared.runtime_metadata["threads"] == threads
 
 
 @pytest.mark.parametrize("mismatch", ["wheel", "commit", "repository", None])

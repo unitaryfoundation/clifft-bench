@@ -124,7 +124,7 @@ class XtimAdapter(Adapter):
     def prepare(
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
-        self.validate_options(execution.get("options", {}))
+        self.validate_execution(execution)
         import numpy as np
         import xtim
 

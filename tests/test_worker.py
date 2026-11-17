@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from clifft_bench import worker
-from clifft_bench.adapters.base import Counts
+from clifft_bench.adapters.base import Counts, UnsupportedConfiguration
 
 
 def test_aggregate_sample_sums_adapter_timings_without_retaining_each_call(
@@ -210,7 +210,10 @@ def test_installation_is_verified_before_any_calibration(monkeypatch):
         assert kwargs == {"expected_commit": "wrong-commit", "source_url": "source-url"}
         raise RuntimeError("source identity mismatch")
 
-    adapter = SimpleNamespace(verify_installation=reject)
+    adapter = SimpleNamespace(verify_installation=reject, validate_execution=lambda execution: 1)
+    for key, value in worker.thread_environment(1).items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(worker, "apply_affinity", lambda cpu, threads: {"applied": True})
     monkeypatch.setattr(worker, "isolate_protocol_stream", lambda: None)
     monkeypatch.setattr(worker, "emit", emitted.append)
     monkeypatch.setattr(worker, "load_adapter", lambda _: adapter)
@@ -223,6 +226,7 @@ def test_installation_is_verified_before_any_calibration(monkeypatch):
                     "command": "prepare",
                     "workload": {},
                     "adapter": "symft",
+                    "execution": {"batch_size": "calibrate", "threads": 1},
                     "timeout_seconds": 1,
                     "expected_commit": "wrong-commit",
                     "source_url": "source-url",
@@ -379,6 +383,24 @@ def test_calibration_failure_keeps_search_evidence(monkeypatch, final_prepare_fa
         assert all(r["error"]["type"] == "MemoryError" for r in record["results"])
 
 
+def test_calibration_propagates_unsupported_execution_without_retrying():
+    calls = []
+
+    class Adapter(_CalibrationAdapter):
+        def prepare(self, **kwargs):
+            calls.append(kwargs)
+            raise UnsupportedConfiguration("measurement sampling is single-threaded")
+
+    with pytest.raises(UnsupportedConfiguration, match="single-threaded"):
+        worker.calibrate_batch_size(
+            Adapter(), artifact_path=None,
+            workload={"semantics": {"postselect_all_detectors": False}},
+            execution={"batch_size": "calibrate", "threads": 8},
+            shots_per_call=32, seed=10,
+        )
+    assert len(calls) == 1
+
+
 
 def test_worker_returns_calibration_failures_with_their_evidence(monkeypatch):
     import io
@@ -387,7 +409,11 @@ def test_worker_returns_calibration_failures_with_their_evidence(monkeypatch):
     def fail(**kwargs):
         raise MemoryError("cannot prepare candidate")
 
-    adapter = SimpleNamespace(name="clifft", prepare=fail, verify_installation=lambda **kw: {})
+    adapter = SimpleNamespace(name="clifft", prepare=fail, verify_installation=lambda **kw: {},
+                              validate_execution=lambda execution: 1)
+    for key, value in worker.thread_environment(1).items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(worker, "apply_affinity", lambda cpu, threads: {"applied": True})
     emitted = []
     monkeypatch.setattr(worker, "isolate_protocol_stream", lambda: None)
     monkeypatch.setattr(worker, "emit", emitted.append)
@@ -395,7 +421,7 @@ def test_worker_returns_calibration_failures_with_their_evidence(monkeypatch):
     monkeypatch.setattr(worker.sys, "stdin", io.StringIO(json.dumps({
         "command": "prepare", "adapter": "clifft", "artifact_path": "unused.stim",
         "workload": {"semantics": {"postselect_all_detectors": False}},
-        "execution": {"batch_size": "calibrate"},
+        "execution": {"batch_size": "calibrate", "threads": 1},
         "shots_per_call": 32, "seed": 10, "sampling_seed": 7, "timeout_seconds": 5,
         "expected_commit": "test", "source_url": "test",
     }) + "\n"))

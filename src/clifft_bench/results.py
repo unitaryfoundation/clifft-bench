@@ -19,8 +19,9 @@ from clifft_bench.calibration import (
     calibration_candidates,
 )
 from clifft_bench.selection import detector_mask, has_postselection
+from clifft_bench.system import thread_environment
 
-FORMAT = "clifft-bench/raw/v1"
+FORMAT = "clifft-bench/raw/v2"
 CONTRACT_KEYS = (
     "postselect_all_detectors",
     "postselection_detector_indices",
@@ -41,6 +42,8 @@ CASE_FIELDS = (
     "error_type",
     "error_message",
     "shots_per_call",
+    "threads_requested",
+    "threads_effective",
     "batch_size_effective",
     "tuning_policy",
     "batch_parameter",
@@ -239,12 +242,19 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         execution["memory_limit_bytes"] == campaign["resources"]["memory_limit_bytes"],
         "mismatched memory limit",
     )
-    _require(
-        execution["threads_requested"] == 1
-        and execution["postselection"] is has_postselection(semantics),
-        "invalid thread or selection contract",
-    )
-    _require(case["status"] in {"success", "error", "interrupted"}, "no terminal case outcome")
+    threads = contract["execution"]["threads"]
+    environment = thread_environment(threads)
+    _require(execution["threads"] == execution["threads_requested"] == threads,
+             "mismatched thread budget")
+    _require(execution["postselection"] is has_postselection(semantics),
+             "invalid selection contract")
+    _require(case["status"] in {"success", "error", "unsupported", "interrupted"},
+             "no terminal case outcome")
+    if case["status"] == "unsupported":
+        _require(case["setup"] is None and not case["samples"]
+                 and case["error"]["phase"] == "setup"
+                 and case["error"]["type"] == "UnsupportedConfiguration",
+                 "unsupported case must retain its setup rejection")
     if case["status"] == "success":
         _require(case["error"] is None, "successful case has an error")
         _require(
@@ -272,7 +282,8 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     if setup is None:
         _require(
             case["status"] == "interrupted"
-            or (case["status"] == "error" and case["error"]["phase"] == "setup"),
+            or (case["status"] in {"error", "unsupported"}
+                and case["error"]["phase"] == "setup"),
             "missing setup evidence",
         )
     else:
@@ -283,10 +294,34 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
                 all(metadata[k] == v for k, v in expected_metadata.items()),
                 "runtime circuit metadata mismatch",
             )
-        _require(
-            metadata["threads"] == execution["threads_effective"] == 1,
-            "worker did not use one thread",
-        )
+        effective = execution["threads_effective"]
+        _require(metadata["threads"] == effective, "effective thread count mismatch")
+        if effective is not None:
+            _number(effective, "effective threads", integer=True, positive=True)
+            _require(effective <= threads, "worker exceeded its thread budget")
+        _require(metadata["thread_environment"] == environment,
+                 "worker thread environment differs from its budget")
+        affinity = setup["affinity"]
+        if affinity["applied"]:
+            cpus, cores = affinity["logical_cpus"], affinity["physical_cores"]
+            _require(isinstance(cpus, list) and len(cpus) == len(set(cpus)) == threads,
+                     "affinity does not allocate the requested number of cores")
+            for cpu in cpus:
+                _number(cpu, "affinity CPU", integer=True)
+            _require(affinity["available_after"] == sorted(cpus)
+                     and set(cpus) <= set(affinity["available_before"]),
+                     "worker affinity mask differs from its allocation")
+            anchor = campaign["resources"]["logical_cpu"]
+            _require(anchor is None or cpus[0] == anchor, "worker changed its anchor CPU")
+            _require([core["logical_cpu"] for core in cores] == cpus,
+                     "physical topology does not match affinity")
+            for core in cores:
+                for key in ("socket", "core"):
+                    _number(core[key], key, integer=True)
+            _require(len({(core["socket"], core["core"]) for core in cores}) == threads,
+                     "worker allocated sibling threads of the same physical core")
+        else:
+            _require(threads == 1, "multiple threads require applied physical-core affinity")
         _require(metadata["version"] == simulator["version"], "runtime version mismatch")
         _require(
             metadata["batch_enabled"] is execution["batch_enabled"],
@@ -380,8 +415,7 @@ def _validate_official(document: dict) -> None:
             )
             affinity = case["setup"]["affinity"]
             _require(
-                affinity["applied"] is True
-                and affinity["available_after"] == [campaign["resources"]["logical_cpu"]],
+                affinity["applied"] is True,
                 "worker CPU affinity was not applied",
             )
 
@@ -485,6 +519,11 @@ def case_rows(document: dict) -> list[dict]:
                 "error_type": error.get("type", ""),
                 "error_message": error.get("message", ""),
                 "shots_per_call": execution["shots_per_call"],
+                "threads_requested": execution["threads_requested"],
+                "threads_effective": (
+                    execution.get("threads_effective")
+                    if execution.get("threads_effective") is not None else ""
+                ),
                 "batch_size_effective": execution.get("batch_size_effective", ""),
                 "tuning_policy": execution.get("tuning_policy", "fixed"),
                 "batch_parameter": metadata.get("batch_parameter", ""),

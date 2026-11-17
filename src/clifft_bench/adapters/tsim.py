@@ -62,6 +62,7 @@ class _PreparedTsim(PreparedAdapter):
 
 class TsimAdapter(Adapter):
     name = "tsim"
+    supported_threads = (1, 8)
 
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
@@ -71,17 +72,21 @@ class TsimAdapter(Adapter):
     def prepare(
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
-        self.validate_options(execution.get("options", {}))
+        requested_threads = self.validate_execution(execution)
         # NUMBA_NUM_THREADS must be set before import: limiting BLAS/OpenMP
         # alone does not constrain Numba's independent thread pool.
-        if os.environ.get("NUMBA_NUM_THREADS") != "1":
-            raise ValueError("Tsim requires NUMBA_NUM_THREADS=1 before importing numba")
+        if os.environ.get("NUMBA_NUM_THREADS") != str(requested_threads):
+            raise ValueError(
+                f"Tsim requires NUMBA_NUM_THREADS={requested_threads} before importing numba"
+            )
         import numba
         import tsim
 
         threads = numba.get_num_threads()
-        if threads != 1:
-            raise RuntimeError(f"Tsim requires one effective Numba thread, got {threads}")
+        if threads != requested_threads:
+            raise RuntimeError(
+                f"Tsim requires {requested_threads} effective Numba threads, got {threads}"
+            )
         semantics = workload["semantics"]
         batch = int(execution["batch_size"])
         if not 1 <= batch <= MAX_BATCH_SIZE:

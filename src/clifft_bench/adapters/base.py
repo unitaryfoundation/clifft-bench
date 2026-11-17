@@ -10,6 +10,10 @@ from typing import Any
 ADAPTER_API_VERSION = "1"
 
 
+class UnsupportedConfiguration(ValueError):
+    """The adapter has no native implementation of the requested execution."""
+
+
 @dataclass(frozen=True)
 class Counts:
     attempted_shots: int
@@ -44,6 +48,16 @@ class PreparedAdapter(ABC):
 class Adapter(ABC):
     name: str
     adapter_version = ADAPTER_API_VERSION
+    supported_threads = (1,)
+
+    def validate_execution(self, execution: dict[str, Any]) -> int:
+        self.validate_options(execution.get("options", {}))
+        threads = execution.get("threads", 1)
+        if type(threads) is not int or threads not in (1, 8):
+            raise ValueError("threads must be 1 or 8")
+        if threads not in self.supported_threads:
+            raise UnsupportedConfiguration(f"{self.name} does not support threads={threads}")
+        return threads
 
     def validate_options(self, options: dict[str, Any]) -> None:
         if options:

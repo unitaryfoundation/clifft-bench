@@ -120,7 +120,10 @@ def test_clifft_counts_the_selected_observable() -> None:
     assert counts.logical_errors == 7
 
 
-def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeypatch) -> None:
+@pytest.mark.parametrize("requested_threads", [1, 8])
+def test_clifft_explicit_batch_is_forwarded_and_recorded(
+    tmp_path: Path, monkeypatch, requested_threads
+) -> None:
     artifact = tmp_path / "circuit.stim"
     artifact.write_text("M 0\n")
     hir = SimpleNamespace(
@@ -138,7 +141,7 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
     )
 
     def sample_survivors(actual_program, shots, *, seed, keep_records, threads, batch_size):
-        assert threads == 1
+        assert threads == requested_threads
         assert (actual_program, shots, seed, keep_records, batch_size) == (
             program,
             10,
@@ -174,13 +177,35 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(tmp_path: Path, monkeyp
         },
         execution={
             "batch_size": 256,
+            "threads": requested_threads,
             "options": {},
         },
     )
 
     assert prepared.runtime_metadata["batch_enabled"] is True
     assert prepared.runtime_metadata["effective_batch_size"] == 256
+    assert prepared.runtime_metadata["threads"] == (1 if requested_threads == 1 else None)
     assert prepared.sample(10, 7).attempted_shots == 10
+
+
+@pytest.mark.parametrize("threads", [1, 8])
+def test_symft_counts_use_native_threads_and_legacy_backend(tmp_path, monkeypatch, threads):
+    class Circuit(_Circuit):
+        def compile_counts_sampler(self, **kwargs):
+            assert kwargs["threads"] == threads
+            assert kwargs["cpu_backend"] == "legacy"
+            sampler = super().compile_counts_sampler(**kwargs)
+            sampler.info["threads"] = threads
+            return sampler
+    monkeypatch.setitem(sys.modules, "symft", SimpleNamespace(
+        Circuit=Circuit, __version__="test", simd_backend=lambda: "test",
+    ))
+    prepared = SymftAdapter().prepare(
+        artifact_path=tmp_path / "unused.stim",
+        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": True}},
+        execution={"batch_size": 32, "threads": threads},
+    )
+    assert prepared.runtime_metadata["threads"] == threads
 
 
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(

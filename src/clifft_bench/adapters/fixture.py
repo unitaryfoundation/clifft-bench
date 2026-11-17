@@ -35,6 +35,7 @@ class _PreparedFixture(PreparedAdapter):
 
 class FixtureAdapter(Adapter):
     name = "fixture"
+    supported_threads = (1, 8)
 
     def prepare(
         self,
@@ -45,13 +46,14 @@ class FixtureAdapter(Adapter):
         seed: int = 0,
     ) -> PreparedAdapter:
         require_all_or_none(workload["semantics"], self.name)
+        threads = self.validate_execution(execution)
         parameters = dict(workload["parameters"])
         if parameters.get("write_native_stdout"):
             os.write(1, b"fixture native prepare output\n")
         metadata = {
             "name": "fixture",
             "version": "1.0.0",
-            "threads": 1,
+            "threads": threads,
             "precision": "integer",
             "batch_enabled": int(execution["batch_size"]) > 1,
             "effective_batch_size": int(execution["batch_size"]),

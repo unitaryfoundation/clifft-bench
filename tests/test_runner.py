@@ -494,3 +494,48 @@ runner.run_suite(load_suite(Path(sys.argv[1])), output_dir=Path(sys.argv[2]),
         rows = list(csv.DictReader(stream))
     assert all(r["median_attempted_shots_per_second"] == "" for r in rows)
     assert "interrupted" in report_execution(output, check=True)
+
+
+def test_eight_core_worker_records_applied_affinity_and_preimport_caps(tmp_path):
+    from clifft_bench.system import choose_cpus
+
+    try:
+        cpus = choose_cpus(None, 8)
+    except ValueError:
+        pytest.skip("requires eight available physical cores")
+    path, run, _ = _write_fixture_suite(tmp_path)
+    run["cases"] = run["cases"][:1]
+    run["cases"][0]["execution"]["threads"] = 8
+    _write(path, run)
+    result = run_suite(load_suite(path), python_executable=sys.executable,
+                       output_dir=tmp_path / "result", memory_limit_gib=1)
+    validate_result(result)
+    case = result["cases"][0]
+    assert case["status"] == "success", case["error"]
+    assert case["execution"]["threads_requested"] == case["execution"]["threads_effective"] == 8
+    affinity = case["setup"]["affinity"]
+    assert affinity["applied"] and affinity["logical_cpus"] == cpus
+    metadata = case["setup"]["runtime_metadata"]
+    assert metadata["thread_environment"]["NUMBA_NUM_THREADS"] == "8"
+    assert metadata["thread_environment"]["OMP_NUM_THREADS"] == "8"
+    assert metadata["thread_environment"]["OPENBLAS_NUM_THREADS"] == "1"
+    assert metadata["address_space_limit_bytes"] == 1 << 30
+
+
+def test_unsupported_thread_request_is_recorded_before_simulator_setup(tmp_path):
+    path, run, software = _write_fixture_suite(tmp_path)
+    run["cases"] = run["cases"][:1]
+    run["cases"][0]["execution"]["threads"] = 8
+    software["implementations"][0]["adapter"] = "stim"
+    workloads = read_toml(tmp_path / "workloads.toml")
+    workloads["workloads"][0]["compatible_adapters"].append("stim")
+    _write(tmp_path / "workloads.toml", workloads)
+    _write(tmp_path / "software.toml", software)
+    _write(path, run)
+    result = run_suite(load_suite(path), python_executable=sys.executable,
+                       output_dir=tmp_path / "result")
+    validate_result(result)
+    case = result["cases"][0]
+    assert case["status"] == "unsupported"
+    assert case["setup"] is None and case["samples"] == []
+    assert "threads=8" in case["error"]["message"]

@@ -1,12 +1,12 @@
 # Benchmark contract
 
-This contract governs the recurring single-core campaigns under
+This contract governs the recurring CPU campaigns under
 `campaigns/`. One-off studies under `experiments/` define their own contracts.
 
 ## Question and logical work
 
 For the same versioned circuit and output contract, how many independent
-attempted shots per second can a simulator execute on one pinned logical CPU?
+attempted shots per second can a simulator execute within its declared physical-core budget?
 The default is steady-state sampling. For xtim, report the fixed-duration average
 starting with an empty plan cache, as defined below.
 
@@ -166,13 +166,32 @@ exploratory evidence, not the official throughput series. Host setup and
 collection commands belong in the [maintainer workflow](../CONTRIBUTING.md#reference-host-collection).
 
 Cases execute serially in manifest order. Every case gets a fresh worker
-process using the Python environment recorded for its implementation. The
-worker requests one logical CPU and receives a single-thread environment:
-`OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`,
-`NUMEXPR_NUM_THREADS`, `VECLIB_MAXIMUM_THREADS`, `BLIS_NUM_THREADS`, and
-`NUMBA_NUM_THREADS` are 1.
+process using the Python environment recorded for its implementation.
+`execution.threads` is 1 (the default) or 8. Before simulator imports,
+`OMP_NUM_THREADS` and `NUMBA_NUM_THREADS` receive that budget; BLAS, NumExpr,
+Accelerate, and XLA remain serial. Clifft receives the native sampling thread
+budget, Tsim verifies its Numba pool, and SymFT uses its native counts threads
+with `cpu_backend="legacy"`. Stim, the pinned xtim adapter, and SymFT's unselected
+measurement-record path support one thread; other requests produce explicit
+`unsupported` outcomes without throughput.
 
-Linux affinity is applied with `sched_setaffinity` and the outcome is recorded.
+Linux allocation selects one logical CPU per distinct `(socket, core)` identity
+within the process's allowed affinity mask. `--cpu` selects the first CPU;
+the one-core allocation is the first core of the eight-core allocation.
+Missing topology or insufficient cores fails setup instead of silently using
+SMT siblings. `sched_setaffinity` applies the selected mask before simulator
+imports. Multi-core execution requires applied affinity; single-core smoke runs
+on systems without Linux affinity retain an explicit unapplied outcome.
+
+`raw/v2` records each worker's requested/effective threads, thread environment,
+CPU mask, physical-core identities, memory ceiling, and sample peak RSS.
+Effective thread counts describe native pool/plan information where available;
+they are null when the simulator does not expose it, including multi-core
+Clifft 0.13.0. They are not inferred from the requested budget or CPU usage.
+Validation rejects mismatched budgets, environments, masks, and sibling cores.
+CSV and report details expose core budgets, and multi-core figure labels include
+the core count. Release/peer ratios require equal core budgets.
+
 Official workers receive the campaign's 12 GiB address-space ceiling, leaving
 headroom on the 16 GiB reference host. The requested ceiling is embedded in the
 raw result, the applied `RLIMIT_AS` is recorded after setup, and input validation
@@ -413,7 +432,7 @@ observable counts plus these aggregate invariants:
 Before calibration, the SymFT adapter verifies the installed package's PEP 610
 Git commit and repository URL against the manifest and records both in runtime
 metadata. A PyPI wheel with the same version string is rejected. SymFT uses its
-default CPU counts executor, with the harness's explicit batch size and chunk
+legacy CPU counts executor, with the harness's explicit batch size and chunk
 settings. Its opt-in compiled CPU executor changes the effective batch capacity
 and is outside this calibrated execution configuration.
 
@@ -449,8 +468,9 @@ verification. Dependencies, including Numba/LLVM and zxparam, are locked in
 
 Compilation explicitly requests `strategy="active_statevector"`; trajectory
 sharing is always enabled upstream. This is a complex128 CPU implementation;
-it does not need CUDA. The worker sets `NUMBA_NUM_THREADS=1` before imports, and the adapter
-checks Numba's effective thread count. The existing Linux affinity, 12 GiB
+it does not need CUDA. The worker sets `NUMBA_NUM_THREADS` to the case's thread
+budget before imports, and the adapter checks Numba's effective thread count.
+The existing Linux affinity, 12 GiB
 address-space ceiling, and preparation/request deadlines also apply. There is
 no fallback to a different Tsim strategy when preparation or sampling fails.
 
@@ -533,7 +553,7 @@ and, when available, `optimized_t_gates`.
 
 ## Result evidence and comparisons
 
-A new execution contains `raw.json` in format `clifft-bench/raw/v1` and one derived
+A new execution contains `raw.json` in format `clifft-bench/raw/v2` and one derived
 `cases.csv`. Raw evidence records the resolved selected campaign and comparison
 definitions, effective measurement/resource settings, collection time and source,
 exact software identities, workload digests and semantics, setup/compilation,

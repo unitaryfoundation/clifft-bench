@@ -261,7 +261,7 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
 
     for comparison in run.get("comparisons", []):
         baseline = {
-            c.workload.id: c.definition["shots_per_call"]
+            c.workload.id: c.definition
             for c in cases
             if c.definition["variant_id"] == comparison["baseline_variant"]
         }
@@ -269,12 +269,18 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
             if (
                 case.definition["variant_id"] in comparison["candidate_variants"]
                 and case.workload.id in baseline
-                and case.definition["shots_per_call"] != baseline[case.workload.id]
             ):
-                raise ValueError(
-                    f"comparison {comparison['id']!r} has unequal shots_per_call "
-                    f"for workload {case.workload.id!r}"
-                )
+                other = baseline[case.workload.id]
+                for field, left, right in (
+                    ("shots_per_call", case.definition["shots_per_call"], other["shots_per_call"]),
+                    ("threads", case.definition["execution"]["threads"],
+                     other["execution"]["threads"]),
+                ):
+                    if left != right:
+                        raise ValueError(
+                            f"comparison {comparison['id']!r} has unequal {field} "
+                            f"for workload {case.workload.id!r}"
+                        )
 
     if run["classification"] == "official":
         used_implementations = {case.implementation.id: case.implementation for case in cases}
@@ -384,7 +390,10 @@ def _version(document: dict) -> None:
 
 
 def _validate_execution(execution: dict) -> None:
-    _fields(execution, "batch_size", "options options_preset")
+    _fields(execution, "batch_size", "options options_preset threads")
+    threads = execution.setdefault("threads", 1)
+    if type(threads) is not int or threads not in (1, 8):
+        raise ValueError("threads must be 1 or 8")
     if execution["batch_size"] != "calibrate":
         _number(execution["batch_size"], "batch_size", integer=True)
     if "options_preset" in execution:
