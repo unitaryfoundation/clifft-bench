@@ -184,7 +184,7 @@ class SymftAdapter(Adapter):
                 f"requested {requested_batch_size}"
             )
         requested_chunk_shots = int(execution.get("options", {}).get("sample_chunk_shots", 0))
-        if int(info["sample_chunk_shots"]) != requested_chunk_shots:
+        if requested_chunk_shots and int(info["sample_chunk_shots"]) != requested_chunk_shots:
             raise RuntimeError(
                 f"SymFT sample chunk {info['sample_chunk_shots']!r} does not match "
                 f"requested {requested_chunk_shots}"

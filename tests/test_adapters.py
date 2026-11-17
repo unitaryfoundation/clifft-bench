@@ -197,14 +197,17 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
 
 @pytest.mark.parametrize("threads", [1, 8])
 @pytest.mark.parametrize("postselect", [False, True])
+@pytest.mark.parametrize("batch_size", [32, "auto"])
 def test_symft_counts_use_native_threads_and_legacy_backend(
-    tmp_path, monkeypatch, threads, postselect
+    tmp_path, monkeypatch, threads, postselect, batch_size
 ):
     class Circuit(_Circuit):
         def compile_counts_sampler(self, **kwargs):
             assert kwargs["threads"] == threads
             assert kwargs["cpu_backend"] == "legacy"
             sampler = super().compile_counts_sampler(**kwargs)
+            sampler.info["batch_size"] = kwargs["batch_size"] or 64
+            sampler.info["sample_chunk_shots"] = kwargs["sample_chunk_shots"] or 2048
             sampler.info["threads"] = threads
             return sampler
     monkeypatch.setitem(sys.modules, "symft", SimpleNamespace(
@@ -215,9 +218,11 @@ def test_symft_counts_use_native_threads_and_legacy_backend(
         artifact_path=tmp_path / "unused.stim",
         workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect},
                   "expected_metadata": {"num_detectors": 0}},
-        execution={"batch_size": 32, "threads": threads},
+        execution={"batch_size": batch_size, "threads": threads},
     )
     assert prepared.runtime_metadata["threads"] == threads
+    assert prepared.runtime_metadata["effective_batch_size"] == (64 if batch_size == "auto" else 32)
+    assert prepared.runtime_metadata["sample_chunk_shots"] == 2048
 
 
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(
