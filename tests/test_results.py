@@ -257,7 +257,7 @@ def test_invalid_json_is_reported_without_traceback(tmp_path, capsys):
     assert "invalid JSON" in capsys.readouterr().err
 
 
-def test_failed_first_call_keeps_diagnostics_without_throughput(raw_result, tmp_path):
+def test_first_call_failure_has_no_throughput(raw_result, tmp_path):
     case = raw_result["cases"][0]
     case["first_call_warmup"] = None
     case.update(status="error", samples=[], correctness=None,

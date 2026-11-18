@@ -95,15 +95,7 @@ repetitions = 5
 [[variants]]
 id = "clifft-previous"
 implementation_id = "clifft-0.12.0rc1"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-]
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
@@ -113,15 +105,7 @@ postselect = "on"
 [[variants]]
 id = "clifft-current"
 implementation_id = "clifft-0.13.0"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-]
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
@@ -153,15 +137,7 @@ postselect = "off"
 [[variants]]
 id = "symft-current"
 implementation_id = "symft-2026.10.8"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-]
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
@@ -244,15 +220,7 @@ postselect = "off"
 [[variants]]
 id = "tsim-current"
 implementation_id = "tsim-1.0.0"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-]
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
