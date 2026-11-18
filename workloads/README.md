@@ -7,6 +7,7 @@ digests, semantic contracts, compatible adapters, and source commits live in
 The benchmark corpus contains:
 
 - distance-3 and distance-5 magic-state cultivation,
+- distance-3 and distance-5 fold-transversal CCZ cultivation,
 - 85-qubit color-code magic-state distillation,
 - 15-to-1 Reed-Muller magic-state distillation with ideal output verification,
 - coherent-noise surface-code circuits at `(d, rounds) = (3, 1), (3, 3),
@@ -81,29 +82,14 @@ The fold-transversal d3/d5 inputs use Wan and Zapirain's
 of Sahay et al.'s protocol, under [Apache-2.0](circuits/LICENSE-exact-ler).
 The d3 model is a terminated core without the noisy pre-escape round; d5 is an
 explicit reconstruction, not an author-supplied noisy T circuit. Both retain
-noiseless terminal code projection and omit escape/decoding. Native correctness
-checks cover Clifft and Tsim; release campaigns do not yet include these inputs.
+noiseless terminal code projection and omit escape/decoding. Native tests cover
+Clifft and Tsim; SymFT and xtim are not yet validated for these workloads.
+Release campaigns do not yet include these inputs.
 
 [The converter](generate_fold_transversal.py) verifies the source model hashes,
-densely renumbers qubits, and preserves native gate/noise placement. Source
-`CSX` means controlled `S·X`; its decomposition preserves the controlled phase.
-Three-qubit depolarisation of total probability `p` becomes 63 independent
-nonidentity Pauli errors, each with `q = (1 - (1 - 64p/63)^(1/32))/2`.
-Every nontrivial Pauli character then has eigenvalue `(1-2q)^32 = 1-64p/63`,
-preserving the full joint error distribution, not just its marginals.
-
-Observable 0 measures the logical `H_XY = (X+Y)/sqrt(2)` via ideal logical T†
-and X readout. At d3 this acts on the source's decoded qubit 32. At d5, logical
-Z is `Z0 Z2 Z4 Z6 Z8` and logical X is `X0 X10 X20 X30 X40` in source numbering;
-CNOT parity accumulation implements logical T†. The appended measurement's bit
-is the logical error. All declared detectors select raw zero; without noise,
-every shot is accepted and observable 0 is zero.
-
-Reproduce from the pinned `exact_ler_for_msc` checkout with Python's standard
-library; repeat with `--distance 5` and the corresponding output filename.
-`--noise 0` generates the noiseless validation input.
-
-```bash
-python workloads/generate_fold_transversal.py --source /path/to/exact_ler_for_msc \
-  --distance 3 --output workloads/circuits/fold_d3_p1e-3.stim
-```
+densely renumbers qubits, and preserves native gate/noise placement. Its
+three-qubit depolarisation preserves the full joint distribution: identity
+with probability `1-p`, each nonidentity Pauli with `p/63`. Observable 0 measures
+logical `H_XY = (X+Y)/sqrt(2)` via ideal logical T† and X readout; its bit is the
+logical error. All declared detectors select raw zero. Without noise, every
+shot is accepted and observable 0 is zero.

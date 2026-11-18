@@ -17,7 +17,11 @@ MODEL_SHA256 = {
 
 
 def depolarizing_pauli_probability(probability: float) -> float:
-    """Independent probability for each of the 63 nonidentity three-qubit Paulis."""
+    """Independent probability q for each of the 63 nonidentity three-qubit Paulis.
+
+    Each nontrivial Pauli character has eigenvalue (1-2q)^32 = 1-64p/63,
+    preserving the joint distribution: identity 1-p, each nonidentity p/63.
+    """
     if not 0 <= probability <= 63 / 64:
         raise ValueError("independent-Pauli decomposition requires p in [0, 63/64]")
     with localcontext() as context:

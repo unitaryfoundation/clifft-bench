@@ -9,6 +9,7 @@ import pytest
 import stim
 
 from clifft_bench.adapters import load_adapter
+from clifft_bench.adapters.base import validate_counts
 from clifft_bench.config import load_suite
 from workloads.generate_fold_transversal import circuit_text, controlled_sx
 
@@ -99,6 +100,22 @@ def test_fold_metadata_and_logical_readout_match_the_manifest(distance):
     assert str(layout[-1]) == "OBSERVABLE_INCLUDE(0) rec[-1]"
     assert layout[-2].name == "MPP"
     assert workload["semantics"]["postselect_all_detectors"]
+
+
+@pytest.mark.parametrize("adapter", ["clifft", "tsim"])
+@pytest.mark.parametrize("distance", [3, 5])
+def test_fold_noisy_artifact_with_auto_batch(adapter, distance):
+    pytest.importorskip(adapter)
+    workload = _workload(distance)
+    prepared = load_adapter(adapter).prepare(
+        artifact_path=ROOT / workload["artifact"]["path"], workload=workload,
+        execution={"batch_size": "auto"}, seed=91,
+    )
+    for key, value in workload["expected_metadata"].items():
+        assert prepared.runtime_metadata[key] == value
+    counts = prepared.sample(16, 91)
+    assert counts.attempted_shots == 16
+    assert not validate_counts(counts, postselect=True)
 
 
 @pytest.mark.parametrize("adapter", ["clifft", "tsim"])
