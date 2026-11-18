@@ -384,13 +384,13 @@ it does not need CUDA. The adapter verifies that Numba's pool matches the case's
 thread budget. Resource limits and preparation/request deadlines also apply.
 There is no fallback to a different Tsim strategy when preparation or sampling fails.
 
-Tsim returns raw detector and observable arrays. Both reference-sample flags
-are explicitly false. The adapter passes the workload's detector selection mask,
-allowing native early rejection. With a mask, only surviving rows are returned;
-without one, every attempted row is returned. The adapter validates matching
-boolean array shapes and counts the selected observable on returned rows.
+Tsim returns raw detector and observable arrays in little-endian `b8` packing.
+Both reference-sample flags are explicitly false. The adapter passes the workload's
+detector selection mask, allowing native early rejection. With a mask, only
+surviving rows are returned; without one, every attempted row is returned. The adapter
+validates matching `uint8` array shapes and counts the selected observable bit.
 Accepted shots equal the row count, while attempted shots remain the requested
-count, including when every shot is rejected. Dense boolean array materialization
+count, including when every shot is rejected. Packed array materialization
 and NumPy aggregate counting are inside execution time. Clifft returns native
 aggregate counts, so the tools can spend different fractions of their call time producing
 the shared aggregate endpoint. This is the same timing boundary used for Stim
