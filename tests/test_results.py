@@ -129,6 +129,28 @@ def test_failed_cases_keep_evidence_without_exporting_throughput(raw_result, pha
     assert comparison_pairs(raw_result)[0]["ratio"] is None
 
 
+@pytest.mark.parametrize("width", [None, 0, 7])
+def test_optional_active_width_preserves_unknown_and_zero(raw_result, width):
+    metadata = raw_result["cases"][0]["setup"]["runtime_metadata"]
+    metadata.pop("peak_active_width", None)
+    validate_result(raw_result)
+    metadata["peak_active_width"] = width
+    validate_result(raw_result)
+    assert case_rows(raw_result)[0]["peak_active_width"] == width
+
+
+@pytest.mark.parametrize("width", [-1, 1.5, True, "7"])
+@pytest.mark.parametrize("failed", [False, True])
+def test_invalid_active_width_is_rejected(raw_result, width, failed):
+    case = raw_result["cases"][0]
+    case["setup"]["runtime_metadata"]["peak_active_width"] = width
+    if failed:
+        case.update(status="error", error={"phase": "sampling", "type": "WorkerTimeout",
+                                          "message": "timeout"})
+    with pytest.raises(ValueError, match="peak_active_width"):
+        validate_result(raw_result)
+
+
 @pytest.mark.parametrize("field", ["digest", "selection", "calls", "memory", "threads"])
 def test_comparisons_reject_incompatible_inputs(raw_result, field):
     case = raw_result["cases"][1]

@@ -287,6 +287,8 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         _number(setup["duration_seconds"], "setup duration")
         metadata = setup["runtime_metadata"]
         _number(metadata["compile_seconds"], "compile duration")
+        if metadata.get("peak_active_width") is not None:
+            _number(metadata["peak_active_width"], "peak_active_width", integer=True)
         if case["status"] == "success":
             _require(
                 all(metadata[k] == v for k, v in expected_metadata.items()),
