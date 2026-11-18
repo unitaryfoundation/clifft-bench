@@ -72,6 +72,7 @@ def build_report(document: dict, *, peer_document: dict | None = None) -> dict[s
         variants.setdefault(case["variant_id"], case["simulator"])
     report = {
         "document": document,
+        "sources": {"primary": {"document": document, "cases": document["cases"]}},
         "rows": rows,
         "pairs": pairs,
         "current": current,
@@ -145,8 +146,8 @@ def _add_peer_results(report: dict, peers: dict) -> None:
                 "cases": {variant: case, **dict.fromkeys(sorted(variants[variant]))},
             }
     report["tools"] = list(groups.values())
-    report["peer_document"], report["peer_cases"] = peers, peer_cases
-    report["rows"].update({r["case_id"]: r for r in case_rows(peers) if r["case_id"] in used})
+    report["sources"]["peers"] = {"document": peers, "cases": peer_cases}
+    report["rows"].update({key: row for key, row in source["rows"].items() if key in used})
     report["variants"].update({c["variant_id"]: c["simulator"] for c in peer_cases})
 
 
@@ -176,8 +177,9 @@ def review_summary(report: dict) -> str:
             f"Selection: `{run['selection']}`. Overrides: `{run['overrides']}`.",
             "",
         ]
-    peer_document = report.get("peer_document")
-    if peer_document is not None:
+    peer_source = report["sources"].get("peers")
+    if peer_source is not None:
+        peer_document = peer_source["document"]
         peer_run = peer_document["run"]
         lines += [
             "## Collection sources", "",
@@ -190,7 +192,7 @@ def review_summary(report: dict) -> str:
             "The peer versions below retain their source measurements; peers were not rerun.",
             "",
         ]
-    cases = [*document["cases"], *report.get("peer_cases", [])]
+    cases = [case for source in report["sources"].values() for case in source["cases"]]
     lines += [
         "## Measured implementations",
         "",
@@ -247,7 +249,7 @@ def review_summary(report: dict) -> str:
         )
     if not report["pairs"]:
         lines.append("\nNo paired comparisons were selected.")
-    if peer_document is not None:
+    if peer_source is not None:
         lines += ["", "The paired table uses only the primary execution. Peer cases in the",
                   "outcomes and throughput figures belong to the peer source above.",
                   "Each source raw/CSV retains its own call sizes, selection, and samples."]
@@ -460,12 +462,10 @@ def _throughput_limits(rates: list[float]) -> tuple[float, float]:
 
 def throughput_data(report: dict) -> dict:
     """Project the plotted view; raw executions remain the authoritative evidence."""
-    documents = {"primary": report["document"]}
-    if "peer_document" in report:
-        documents["peers"] = report["peer_document"]
     sources = {}
     case_sources = {}
-    for role, document in documents.items():
+    for role, source in report["sources"].items():
+        document = source["document"]
         sources[role] = {
             "run": {key: document["run"][key] for key in (
                 "id", "profile_id", "classification", "started_at", "finished_at",
@@ -479,8 +479,7 @@ def throughput_data(report: dict) -> dict:
             "measurement": document["campaign"]["measurement"],
             "resources": document["campaign"]["resources"],
         }
-        cases = document["cases"] if role == "primary" else report["peer_cases"]
-        case_sources.update({case["case_id"]: role for case in cases})
+        case_sources.update({case["case_id"]: role for case in source["cases"]})
     entries = _throughput_entries(report)
     series = _throughput_series(report, entries)
     variants = [item["variant_id"] for item in series]
