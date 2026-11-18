@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+from clifft_bench.adapters import load_adapter
 from clifft_bench.bootstrap import bootstrap
 from clifft_bench.config import (
     campaign_path,
@@ -138,11 +139,19 @@ def _run(args: argparse.Namespace) -> int:
     )
     successes = sum(case["status"] == "success" for case in document["cases"])
     unsupported = sum(case["status"] == "unsupported" for case in document["cases"])
+    expected_unsupported = 0
     for case in document["cases"]:
         if case["status"] == "success":
             continue
         error = case.get("error") or {}
-        outcome = "Unsupported" if case["status"] == "unsupported" else "Failed"
+        outcome = "Failed"
+        if case["status"] == "unsupported":
+            adapter = load_adapter(case["simulator"]["adapter"])
+            execution = case["execution"]
+            expected = (execution["postselect"] not in adapter.supported_postselect
+                        or execution["threads"] not in adapter.supported_threads)
+            expected_unsupported += expected
+            outcome = "Unsupported" if expected else "Unexpected unsupported"
         print(
             f"{outcome} {case['case_id']} during {error.get('phase', 'unknown')}: "
             f"{error.get('type', 'Error')}: {error.get('message', 'no details')}",
@@ -150,7 +159,7 @@ def _run(args: argparse.Namespace) -> int:
         )
     print(f"Result: {output.resolve()} ({successes}/{len(document['cases'])} successful; "
           f"{unsupported} unsupported)")
-    return 0 if successes + unsupported == len(document["cases"]) else 1
+    return 0 if successes + expected_unsupported == len(document["cases"]) else 1
 
 
 def main(argv: Sequence[str] | None = None) -> int:

@@ -231,22 +231,36 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
         )
 
 
-def test_symft_off_worker_records_unsupported(tmp_path):
+@pytest.mark.parametrize("adapter,exit_code,message", [
+    ("symft", 0, "postselect=off"),
+    ("stim", 1, "reference-relative output"),
+])
+def test_cli_preserves_expected_and_unexpected_unsupported_evidence(
+    tmp_path, adapter, exit_code, message
+):
+    from clifft_bench.cli import main
+
     path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]
-    run["cases"][0]["execution"]["postselect"] = "off"
-    software["implementations"][0]["adapter"] = "symft"
+    run["cases"][0]["execution"].update(postselect="off", batch_size="auto")
+    software["implementations"][0]["adapter"] = adapter
     workloads = read_toml(tmp_path / "workloads.toml")
-    workloads["workloads"][0]["compatible_adapters"] = ["symft"]
+    workload = workloads["workloads"][0]
+    workload["compatible_adapters"] = [adapter]
+    artifact = tmp_path / "tiny.stim"
+    artifact.write_text("M !0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    workload["artifact"]["sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
     _write(tmp_path / "workloads.toml", workloads)
     _write(tmp_path / "software.toml", software)
     _write(path, run)
-    result = run_suite(load_suite(path), python_executable=sys.executable,
-                       output_dir=tmp_path / "result")
+    output = tmp_path / "result"
+    assert main(["run", str(path), "--python", sys.executable,
+                 "--output-dir", str(output)]) == exit_code
+    result = json.loads((output / "raw.json").read_text())
     validate_result(result)
     case = result["cases"][0]
     assert case["status"] == "unsupported"
-    assert "postselect=off" in case["error"]["message"]
+    assert message in case["error"]["message"]
     assert case["setup"] is None and not case["samples"]
 
 

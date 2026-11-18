@@ -21,7 +21,7 @@ SEMANTICS = {
 }
 
 
-def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
+def prepare(tmp_path, text, *, observable=0, chunk=32):
     pytest.importorskip("xtim")
     artifact = tmp_path / "circuit.stim"
     artifact.write_text(text)
@@ -31,10 +31,9 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32):
             "semantics": {
                 **SEMANTICS,
                 "observable_index": observable,
-                "postselect_all_detectors": postselect,
             }
         },
-        execution={**EXECUTION, "postselect": "on" if postselect else "off", "batch_size": chunk},
+        execution={**EXECUTION, "batch_size": chunk},
     )
 
     return prepared
@@ -51,27 +50,23 @@ def test_pinned_xtim_packed_endpoint_is_unsupported():
         adapter.XtimAdapter().validate_execution({**EXECUTION, "postselect": "off"}, {})
 
 
-@pytest.mark.parametrize("raw_reference", [0])
 @pytest.mark.parametrize("probability", [0, 0.25, 1])
 @pytest.mark.parametrize("chunk", [1, 7, 64])
 def test_postselection_matches_unmasked_raw_parity_filter(
-    tmp_path, raw_reference, probability, chunk
+    tmp_path, probability, chunk
 ):
     np = pytest.importorskip("numpy")
     text = (
-        ("X 0\n" if raw_reference else "")
-        + f"X_ERROR({probability}) 0\nM 0\n"
+        f"X_ERROR({probability}) 0\nM 0\n"
         + "DETECTOR rec[-1]\n" * 9
         + "X_ERROR(1) 1\nM 1\nOBSERVABLE_INCLUDE(9) rec[-1]\n"
     )
     p = prepare(tmp_path, text, observable=9, chunk=chunk)
-    assert p.runtime_metadata["postselection_backend"] == (
-        "adapter-raw-record-parity" if raw_reference else "native-twirl-sampler"
-    )
+    assert p.runtime_metadata["postselection_backend"] == "native-twirl-sampler"
     # Independent unmasked sample and unpacked raw-parity reduction. Includes
     # empty/all accepted batches, a partial tail, padding and a nonzero O9 offset.
     dets, obs = adapter._compile(text).sample(67, seed=74)
-    raw_dets = np.unpackbits(dets, axis=1, bitorder="little")[:, :9] ^ raw_reference
+    raw_dets = np.unpackbits(dets, axis=1, bitorder="little")[:, :9]
     raw_obs = np.unpackbits(obs, axis=1, bitorder="little")[:, 9]
     keep = ~raw_dets.any(axis=1)
     passed = int(keep.sum())
@@ -170,7 +165,6 @@ def test_sampler_compiles_once_and_reuses_its_cache(tmp_path, monkeypatch):
     p = prepare(
         tmp_path,
         "X_ERROR(0.3) 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
-        postselect=True,
         chunk=65536,
     )
     assert len(compiled) == 1
@@ -212,8 +206,26 @@ def test_verifies_source_identity(monkeypatch, mismatch):
 
 
 @pytest.mark.parametrize("seed", [1, 42, 74])
-@pytest.mark.parametrize("postselect", [True])
-def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed, postselect):
+def test_continuation_keeps_independent_coins_across_chunks(tmp_path, seed):
+    # The certain q1 fault makes O a fair coin. Select an independent zero detector
+    # so all coins survive; replaying a per-shot counter would produce 0 or 4096 ones.
+    text = (
+        "H 0\nX_ERROR(1) 1\nT 0\nCX 1 0\nT_DAG 0\nCX 1 0\n"
+        "M 2\nDETECTOR rec[-1]\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+    )
+    results = []
+    for chunk in [1, 32, 4096]:
+        p = prepare(tmp_path, text, chunk=chunk)
+        counts = p.sample(4096, seed)
+        assert counts.attempted_shots == counts.accepted_shots == 4096
+        assert counts.discarded_shots == 0
+        assert abs(counts.logical_errors - 2048) <= 6 * math.sqrt(1024)
+        results.append(counts)
+    assert results[0] == results[1] == results[2]
+
+
+@pytest.mark.parametrize("seed", [1, 42, 74])
+def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed):
     text = (
         "H 0\nDEPOLARIZE1(0.05) 0 1\nT 0\nCX 1 0\nT_DAG 0\nCX 1 0\n"
         "M 1\nDETECTOR rec[-1]\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
@@ -221,18 +233,16 @@ def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed, postselect):
     shots = 131072
     results = []
     for chunk in [1, 32, 2048, shots]:
-        p = prepare(tmp_path, text, postselect=postselect, chunk=chunk)
+        p = prepare(tmp_path, text, chunk=chunk)
         counts = p.sample(shots, seed)
         for observed, probability in [
-            (counts.accepted_shots, 29 / 30 if postselect else 1),
-            (counts.logical_errors, 29 / 900 if postselect else 11 / 225),
+            (counts.accepted_shots, 29 / 30),
+            (counts.logical_errors, 29 / 900),
         ]:
             assert abs(observed - shots * probability) <= (
                 6 * math.sqrt(shots * probability * (1 - probability)) + 1
             )
         assert counts.accepted_shots + counts.discarded_shots == shots
-        if not postselect:
-            assert counts.discarded_shots == 0
         results.append(counts)
     assert all(counts == results[0] for counts in results)
 

@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
+from clifft_bench.adapters.base import Counts
 from clifft_bench.config import load_suite
 from clifft_bench.selection import detector_mask, has_postselection
 
@@ -138,7 +139,18 @@ def qv_observable_probability(path: Path, qubits: int, observable: int) -> float
     return float(np.sum(np.abs(state[(indices >> measurements[observable]) & 1 == 1])**2))
 
 
-@pytest.mark.parametrize("adapter", ["tsim"])
+def _observable_ones(result, shots, observable):
+    # Clifft's detector-free counts still provide a physics check before packed support lands.
+    if isinstance(result, Counts):
+        assert result.attempted_shots == result.accepted_shots == shots
+        assert result.discarded_shots == 0
+        return result.logical_errors
+    detectors, observables = result
+    assert detectors.shape == (shots, 0)
+    return int(((observables[:, observable // 8] >> (observable % 8)) & 1).sum())
+
+
+@pytest.mark.parametrize("adapter", ["clifft", "tsim"])
 @pytest.mark.parametrize("batch", [1, 32])
 @pytest.mark.parametrize("observable", [0, 9])
 def test_repeated_qv10_matches_independent_statevector(adapter, batch, observable):
@@ -148,9 +160,10 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch, observabl
                 if c.workload.id == "quantum-volume-q10-seed42-all-observables")
     probability = qv_observable_probability(case.workload.artifact_path, 10, observable)
     execution = copy.deepcopy(case.definition["execution"])
-    execution.update(batch_size=batch,
-                     options={"sample_chunk_shots": 2048} if adapter == "symft" else {})
-    if adapter != "clifft":
+    execution["batch_size"] = batch
+    if adapter == "clifft":
+        execution["postselect"] = "on"
+    else:
         execution["options"].pop("scheduler", None)
     workload = copy.deepcopy(case.workload.definition)
     workload["semantics"]["observable_index"] = observable
@@ -159,15 +172,13 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch, observabl
         execution=execution, seed=1742,
     )
     for seed in (1743, 1744):
-        detectors, observables = prepared.sample(4096, seed)
-        assert detectors.shape == (4096, 0)
-        ones = int(((observables[:, observable // 8] >> (observable % 8)) & 1).sum())
+        ones = _observable_ones(prepared.sample(4096, seed), 4096, observable)
         assert abs(ones - 4096 * probability) <= (
             6 * math.sqrt(4096 * probability * (1-probability)) + 1
         )
 
 
-@pytest.mark.parametrize("adapter", ["tsim"])
+@pytest.mark.parametrize("adapter", ["clifft", "tsim"])
 @pytest.mark.parametrize("batch", [1, 32])
 @pytest.mark.parametrize("observable", [1, 16, 17, 32])
 def test_adder_readout_matches_basis_sum(adapter, batch, observable):
@@ -185,13 +196,13 @@ def test_adder_readout_matches_basis_sum(adapter, batch, observable):
     expected = ((output_a, output_b)[register] >> bit) & 1
     execution = copy.deepcopy(case.definition["execution"])
     execution["batch_size"] = batch
-    if adapter != "clifft":
+    if adapter == "clifft":
+        execution["postselect"] = "on"
+    else:
         execution["options"] = {}
     prepared = load_adapter(adapter).prepare(
         artifact_path=case.workload.artifact_path, workload=workload,
         execution=execution, seed=1742,
     )
     assert prepared.runtime_metadata["num_observables"] == 2 * bits + 1
-    detectors, observables = prepared.sample(65, 1743)
-    assert detectors.shape == (65, 0)
-    assert (((observables[:, observable // 8] >> (observable % 8)) & 1) == expected).all()
+    assert _observable_ones(prepared.sample(65, 1743), 65, observable) == expected * 65

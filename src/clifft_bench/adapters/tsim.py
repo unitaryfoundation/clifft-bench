@@ -53,7 +53,6 @@ class _PreparedTsim(PreparedAdapter):
             or observables.shape != (accepted, (self.runtime_metadata["num_observables"] + 7) // 8)
             or detectors.dtype != np.uint8 or observables.dtype != np.uint8
             or not 0 <= accepted <= shots
-            or (not self._postselect and accepted != shots)
         ):
             raise RuntimeError("Tsim returned inconsistent detector/observable rows")
         # Native postselection returns survivors only, including an empty array

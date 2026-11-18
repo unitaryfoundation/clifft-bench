@@ -30,6 +30,9 @@ postselection cost. Counts on supports Clifft, SymFT, Tsim, and pinned xtim;
 only Clifft and Tsim support detector subsets. Packed off supports Tsim and
 Stim; the current Clifft, SymFT, and xtim pins report `unsupported`. Stim also
 rejects nonzero raw references because its native output is reference-relative.
+Only unsupported modes or thread budgets declared by an adapter permit a zero
+exit code. Other setup rejections retain their `unsupported` evidence but fail
+the command, so unexpected coverage loss is visible in CI.
 
 ## Release workload selection
 
@@ -76,7 +79,7 @@ Exact identities and unpaired outcomes remain in the review tables and `cases.cs
 
 `report/simulator-throughput.json` is a derived presentation of the same validated
 throughput view as the PNGs, including explicitly selected retained peers. Its
-`format` is `clifft-bench/throughput/v1`. It is regenerated from raw evidence;
+`format` is `clifft-bench/throughput/v2`. It is regenerated from raw evidence;
 consumers must not treat it as a second authoritative result or join campaigns
 themselves. This is the data interface for the
 [Clifft docs widget](https://github.com/unitaryfoundation/clifft/issues/659).
@@ -244,7 +247,8 @@ The compiled detector sampler returns reference-relative flips. Setup converts
 its noiseless measurement reference to raw detector/observable parities. Any
 nonzero parity makes the case unsupported. With zero references, return the
 native packed tuple directly, using one persistent sampler and one full call.
-Stim has no native postselection endpoint, so on is unsupported.
+Stim has no native postselection endpoint, so on is unsupported. It requires
+`batch_size="auto"`; explicit capacities are rejected rather than ignored.
 
 Use the official pinned Stim 1.16.0 wheel and record the loaded `stim._stim_*`
 native extension. Its x86 Python dispatch selects SSE2, even on AVX2-capable

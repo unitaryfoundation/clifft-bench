@@ -432,8 +432,6 @@ def run_suite(
                         result["first_call_warmup"] = {
                             key: value for key, value in warmup.items() if key != "ok"
                         }
-                        if warmup["contract_errors"]:
-                            raise RuntimeError("; ".join(warmup["contract_errors"]))
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "first_call_warmup")

@@ -66,7 +66,7 @@ def test_tsim_joint_quantum_noise_and_postselection_law(tmp_path, postselect):
     counts = p.sample(shots, 99)
     q = math.sin(math.pi / 8)**2
     if postselect:
-        assert validate_counts(counts, postselect=True) == []
+        assert validate_counts(counts) == []
         assert counts.accepted_shots / shots == pytest.approx(.8 * (1-q), abs=.015)
         assert counts.logical_errors == 0  # Same quantum bit as the rejected detector.
     else:
@@ -251,9 +251,7 @@ def test_tsim_release_circuit_metadata_and_counts(workload_id):
     assert all(p.runtime_metadata[k] == v
                for k, v in case.workload.definition["expected_metadata"].items())
     counts = p.sample(17, 42)
-    assert not validate_counts(
-        counts, postselect=case.workload.definition["semantics"]["postselect_all_detectors"]
-    )
+    assert not validate_counts(counts)
     if workload_id in {"surface-code-d7-r7-p1e-3", "draper-adder-m16-basis-all-observables"}:
         assert p.runtime_metadata["batch_size_applicable"] is False
     if workload_id == "draper-adder-m16-basis-all-observables":

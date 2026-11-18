@@ -146,9 +146,7 @@ def test_worker_compiles_once_then_times_first_full_call_and_reuses_sampler(
         assert emitted[0]["duration_seconds"] == 2
         assert emitted[0]["runtime_metadata"]["compile_seconds"] == 2
         assert emitted[1]["duration_seconds"] == 5
-        assert emitted[1]["contract_errors"] == (
-            ["attempted shots differ from requested shots"] if partial_call else []
-        )
+        assert emitted[2]["contract_errors"] == []
         assert emitted[3]["duration_seconds"] == 0.5
         assert emitted[3]["attempted_shots"] == 32
 

@@ -352,7 +352,7 @@ def test_groups_preserve_order_and_propagate_defaults_with_explicit_overrides(tm
     for workload in workloads["workloads"]:
         if workload["id"] in members:
             workload["shots_per_call"] = call_size
-    workloads["groups"]["test-group"] = members
+    workloads["groups"] = {"test-group": members}
     execution = clifft[0]["execution"]
     implementation = clifft[0]["implementation_id"]
     run.pop("cases")
@@ -399,7 +399,7 @@ def test_workload_groups_and_defaults_fail_at_input_boundary(tmp_path, damage, m
     case = run.pop("cases")[0]
     workload = next(w for w in workloads["workloads"] if w["id"] == case["workload_id"])
     members = [workload["id"]]
-    workloads["groups"]["test-group"] = members
+    workloads["groups"] = {"test-group": members}
     run["variants"] = [{"id": "test-variant", "implementation_id": case["implementation_id"],
                         "execution": case["execution"], "workloads": "test-group"}]
     if damage == "unknown-group":

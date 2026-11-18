@@ -220,7 +220,7 @@ def main() -> int:
                         "ok": True,
                         "duration_seconds": duration,
                         **evidence,
-                        "contract_errors": errors,
+                        **({"contract_errors": errors} if command == "correctness" else {}),
                     }
                 )
             elif command == "sample":

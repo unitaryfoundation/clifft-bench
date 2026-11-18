@@ -13,7 +13,7 @@ from clifft_bench.config import read_toml
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def prepare(tmp_path, text, *, observable=0, postselect=False, chunk="auto", seed=42):
+def prepare(tmp_path, text, *, observable=0, postselect=False, seed=42):
     path = tmp_path / "circuit.stim"
     path.write_text(text)
     return StimAdapter().prepare(
@@ -24,7 +24,8 @@ def prepare(tmp_path, text, *, observable=0, postselect=False, chunk="auto", see
                 "postselect_all_detectors": postselect,
             }
         },
-        execution={"postselect": "on" if postselect else "off", "batch_size": chunk, "options": {}},
+        execution={"postselect": "on" if postselect else "off",
+                   "batch_size": "auto", "options": {}},
         seed=seed,
     )
 
@@ -81,11 +82,11 @@ def test_noise_and_logical_samples_match_analytic_distribution(tmp_path):
 
 def test_stream_is_reproducible_without_recompiling_per_call(tmp_path):
     text = "H 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
-    p = prepare(tmp_path, text, postselect=False, chunk="auto", seed=10)
+    p = prepare(tmp_path, text, seed=10)
     native = p._sampler
     first = [p.sample(1000, i) for i in (10, 11)]
     assert p._sampler is native
-    replay = prepare(tmp_path, text, postselect=False, chunk="auto", seed=10)
+    replay = prepare(tmp_path, text, seed=10)
     for actual, expected in zip([replay.sample(1000, i) for i in (10, 11)], first, strict=True):
         for a, b in zip(actual, expected, strict=True):
             np.testing.assert_array_equal(a, b)
@@ -108,7 +109,8 @@ def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
             artifact_path=artifact,
             workload=workload,
             execution={
-                "postselect": "off" if adapter == "stim" else "on", "batch_size": 1024,
+                "postselect": "off" if adapter == "stim" else "on",
+                "batch_size": "auto" if adapter == "stim" else 1024,
                 "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {},
             },
         )

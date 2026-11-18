@@ -27,6 +27,12 @@ def test_direct_prepare_rejects_invalid_batch_size(tmp_path, adapter_name, batch
 @pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "tsim", "xtim", "fixture"])
 @pytest.mark.parametrize("batch_size", ["auto", 1, 32])
 def test_execution_accepts_auto_and_positive_batch_sizes(adapter_name, batch_size):
+    if adapter_name == "stim" and batch_size != "auto":
+        with pytest.raises(ValueError, match='Stim requires batch_size="auto"'):
+            load_adapter(adapter_name).validate_execution(
+                {"postselect": "off", "batch_size": batch_size}, {},
+            )
+        return
     assert load_adapter(adapter_name).validate_execution(
         {"postselect": "off" if adapter_name == "stim" else "on",
                        "batch_size": batch_size},

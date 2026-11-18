@@ -15,8 +15,7 @@ class _PreparedStim(PreparedAdapter):
         import numpy as np
         import stim
 
-        # Stim returns flips relative to its reference trajectory. Convert that
-        # reference to *raw* parity once, including nonzero deterministic bits.
+        # Check raw reference parity before using native reference-relative bits unchanged.
         reference = circuit.reference_sample()
         det_ref, obs_ref = circuit.compile_m2d_converter(skip_reference_sample=True).convert(
             measurements=reference[None, :], separate_observables=True
@@ -59,6 +58,13 @@ class _PreparedStim(PreparedAdapter):
 class StimAdapter(Adapter):
     name = "stim"
     supported_postselect = ("off",)
+
+    def validate_execution(self, execution: dict[str, Any], workload: dict[str, Any]) -> int:
+        threads = super().validate_execution(execution, workload)
+        if execution["batch_size"] != "auto":
+            raise ValueError('Stim requires batch_size="auto"; '
+                             'its sampler has no batch-size control')
+        return threads
 
     def prepare(
         self, *, artifact_path: Path, workload: dict[str, Any], execution: dict[str, Any],

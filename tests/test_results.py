@@ -259,8 +259,7 @@ def test_invalid_json_is_reported_without_traceback(tmp_path, capsys):
 
 def test_failed_first_call_keeps_diagnostics_without_throughput(raw_result, tmp_path):
     case = raw_result["cases"][0]
-    case["first_call_warmup"]["accepted_shots"] += 1
-    case["first_call_warmup"]["contract_errors"] = ["inconsistent shot counts"]
+    case["first_call_warmup"] = None
     case.update(status="error", samples=[], correctness=None,
                 error={"phase": "first_call_warmup", "type": "RuntimeError",
                        "message": "inconsistent shot counts"})
@@ -269,18 +268,29 @@ def test_failed_first_call_keeps_diagnostics_without_throughput(raw_result, tmp_
     assert case_rows(raw_result)[0]["median_attempted_shots_per_second"] == ""
 
 
-@pytest.mark.parametrize("status,exit_code", [
-    ("unsupported", 0), ("error", 1), ("interrupted", 1),
+@pytest.mark.parametrize("adapter,postselect,threads,status,exit_code", [
+    ("clifft", "off", 1, "unsupported", 0),
+    ("stim", "off", 8, "unsupported", 0),
+    ("stim", "on", 1, "unsupported", 0),
+    ("stim", "off", 1, "unsupported", 1),
+    ("xtim", "on", 1, "unsupported", 1),
+    ("symft", "on", 1, "unsupported", 1),
+    ("clifft", "off", 1, "error", 1),
+    ("clifft", "on", 1, "interrupted", 1),
 ])
-def test_run_cli_distinguishes_unsupported_from_failed_cases(
-    monkeypatch, tmp_path, status, exit_code
+def test_run_cli_only_accepts_declared_unsupported_capabilities(
+    monkeypatch, tmp_path, capsys, adapter, postselect, threads, status, exit_code
 ):
     from clifft_bench import cli
 
     monkeypatch.setattr(cli, "run_suite", lambda *args, **kwargs: {"cases": [
         {"case_id": "measured", "status": "success"},
-        {"case_id": "other", "status": status, "error": {
-            "phase": "setup", "type": "UnsupportedConfiguration", "message": "endpoint unavailable"
-        }},
+        {"case_id": "other", "status": status,
+         "simulator": {"adapter": adapter},
+         "execution": {"postselect": postselect, "threads": threads},
+         "error": {"phase": "setup", "type": "UnsupportedConfiguration",
+                   "message": "endpoint unavailable"}},
     ]})
     assert main(["run", "--output-dir", str(tmp_path / "result")]) == exit_code
+    if status == "unsupported" and exit_code:
+        assert "Unexpected unsupported" in capsys.readouterr().err

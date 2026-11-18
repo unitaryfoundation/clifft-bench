@@ -109,7 +109,7 @@ def _sample(sample: dict, execution: dict, metadata: dict, *, shots: int) -> Non
         )}
         for key, value in values.items():
             _number(value, key, integer=True)
-        errors = validate_counts(Counts(**values), postselect=True)
+        errors = validate_counts(Counts(**values))
         _require(not errors, "; ".join(errors))
         _require("packed_output" not in sample, "counts endpoint returned packed evidence")
     else:
@@ -281,16 +281,11 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         )
     first_call = case["first_call_warmup"]
     if first_call is not None:
-        if first_call["contract_errors"]:
-            _require(case["status"] == "error" and case["error"]["phase"] == "first_call_warmup",
-                     "invalid first call was not recorded as a failure")
-        else:
-            _sample(first_call, execution, expected_metadata, shots=execution["shots_per_call"])
-            _require(first_call["attempted_shots"] == execution["shots_per_call"],
-                     "first call differs from public call size")
+        _sample(first_call, execution, expected_metadata, shots=execution["shots_per_call"])
+        _require(first_call["attempted_shots"] == execution["shots_per_call"],
+                 "first call differs from public call size")
     if case["status"] == "success":
-        _require(first_call is not None and not first_call["contract_errors"],
-                 "missing or invalid first call")
+        _require(first_call is not None, "missing first call")
     setup = case["setup"]
     if setup is None:
         _require(

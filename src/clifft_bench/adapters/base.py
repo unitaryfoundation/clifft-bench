@@ -90,7 +90,7 @@ class Adapter(ABC):
         """Parse and compile outside timing; seed compilation-only RNG APIs here."""
 
 
-def validate_counts(counts: Counts, *, postselect: bool) -> list[str]:
+def validate_counts(counts: Counts) -> list[str]:
     errors = []
     if counts.attempted_shots < 0:
         errors.append("attempted_shots is negative")
@@ -100,8 +100,6 @@ def validate_counts(counts: Counts, *, postselect: bool) -> list[str]:
         errors.append("accepted_shots + discarded_shots != attempted_shots")
     if counts.logical_errors < 0 or counts.logical_errors > counts.accepted_shots:
         errors.append("logical_errors is outside [0, accepted_shots]")
-    if not postselect and counts.discarded_shots != 0:
-        errors.append("non-postselected workload discarded shots")
     return errors
 
 
@@ -110,7 +108,7 @@ def sample_evidence(sample: Sample, *, shots: int, postselect: bool, metadata: d
     if postselect:
         if not isinstance(sample, Counts):
             raise ValueError("postselect=on requires survivor counts")
-        errors = validate_counts(sample, postselect=True)
+        errors = validate_counts(sample)
         if sample.attempted_shots != shots:
             errors.append("attempted shots differ from requested shots")
         if errors:

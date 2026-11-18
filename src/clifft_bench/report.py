@@ -524,7 +524,7 @@ def throughput_data(report: dict) -> dict:
             })
         panels.append({"title": title, "x_limits": _throughput_limits(rates), "rows": rows})
     return {
-        "format": "clifft-bench/throughput/v1",
+        "format": "clifft-bench/throughput/v2",
         "sources": sources,
         "themes": {theme: {"background": background, "foreground": foreground, "grid": grid}
                    for theme, (background, foreground, grid, _) in THEMES.items()},
