@@ -17,7 +17,6 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.calibration import CALIBRATION_POLICY
 from clifft_bench.config import Case, Suite, repository_root
 from clifft_bench.results import FORMAT, export_csv, write_json
 from clifft_bench.selection import has_postselection
@@ -33,7 +32,6 @@ from clifft_bench.system import (
 
 SEED_REPETITION_STRIDE = 100_000_000
 SEED_MAX_EXCLUSIVE = 2**32
-BATCH_CALIBRATION_SEED_RESERVE = 4_000_000
 
 class WorkerError(RuntimeError):
     def __init__(self, error: dict[str, Any]) -> None:
@@ -122,7 +120,6 @@ class WorkerClient:
         memory_limit_gib: float | None = None,
         *,
         seed: int,
-        sampling_seed: int = 0,
     ) -> dict[str, Any]:
         definition = self.case.implementation.definition
         return self.request(
@@ -132,9 +129,7 @@ class WorkerClient:
                 "artifact_path": str(self.case.workload.artifact_path),
                 "workload": self.case.workload.definition,
                 "execution": self.case.definition["execution"],
-                "shots_per_call": self.case.definition["shots_per_call"],
                 "seed": seed,
-                "sampling_seed": sampling_seed,
                 "expected_version": definition["version"],
                 "expected_commit": definition["commit_sha"],
                 "source_url": definition["source_url"],
@@ -213,9 +208,6 @@ def _new_case_result(
     python_executable: str | None = None,
 ) -> dict[str, Any]:
     execution = dict(case.definition["execution"])
-    execution["batch_enabled"] = execution["batch_size"] != 1
-    if execution["batch_size"] == "calibrate":
-        execution["tuning_policy"] = CALIBRATION_POLICY
     execution.update(
         {
             "threads_requested": execution["threads"],
@@ -239,7 +231,7 @@ def _new_case_result(
         "simulator": _simulator_record(case, python_executable),
         "execution": execution,
         "setup": None,
-        "warmup": None,
+        "first_call_warmup": None,
         "correctness": None,
         "samples": [],
         "error": None,
@@ -248,19 +240,16 @@ def _new_case_result(
 
 def _effective_batch_size(
     runtime_metadata: dict[str, Any], shots_per_call: int
-) -> int:
-    capacity = int(runtime_metadata["effective_batch_size"])
-    return min(capacity, shots_per_call)
+) -> int | None:
+    capacity = runtime_metadata["effective_batch_size"]
+    return min(capacity, shots_per_call) if capacity is not None else None
 
 
 def _record_runtime_execution(
     execution: dict[str, Any], runtime_metadata: dict[str, Any], shots_per_call: int
 ) -> None:
     execution["threads_effective"] = runtime_metadata["threads"]
-    calibration = runtime_metadata.get("batch_calibration")
-    if calibration is not None:
-        execution["batch_size"] = int(calibration["selected_batch_size"])
-        execution["batch_enabled"] = bool(runtime_metadata["batch_enabled"])
+    execution["batch_enabled"] = runtime_metadata["batch_enabled"]
     execution["batch_size_effective"] = _effective_batch_size(
         runtime_metadata, shots_per_call
     )
@@ -311,12 +300,6 @@ def run_suite(
         + 10_000
         + int(measurement["repetitions"]) * SEED_REPETITION_STRIDE
     )
-    calibration_seed = seed_range_end
-    if any(
-        case.definition["execution"]["batch_size"] == "calibrate"
-        for case in cases
-    ):
-        seed_range_end += BATCH_CALIBRATION_SEED_RESERVE
     if seed_range_end > SEED_MAX_EXCLUSIVE:
         raise ValueError(
             "declared repetitions exceed the unsigned 32-bit benchmark seed space"
@@ -416,8 +399,7 @@ def run_suite(
                     setup = client.prepare(
                         float(measurement["setup_timeout_seconds"]),
                         memory_limit_gib,
-                        seed=calibration_seed,
-                        sampling_seed=suite.run["seed"] - 1,
+                        seed=suite.run["seed"] - 1,
                     )
                     result["setup"] = {
                         "duration_seconds": setup["duration_seconds"],
@@ -440,23 +422,22 @@ def run_suite(
 
                 if result["status"] == "running":
                     try:
-                        warmup_shots = int(measurement["warmup_shots"])
-                        if setup["runtime_metadata"].get("warmup_full_call"):
-                            warmup_shots = max(warmup_shots, case.definition["shots_per_call"])
                         warmup = client.request(
                             {
-                                "command": "warmup",
-                                "shots": warmup_shots,
+                                "command": "first_call_warmup",
+                                "shots": case.definition["shots_per_call"],
                                 "seed": suite.run["seed"] - 1,
                             },
                             timeout_seconds=request_timeout,
                         )
-                        result["warmup"] = {
+                        result["first_call_warmup"] = {
                             key: value for key, value in warmup.items() if key != "ok"
                         }
+                        if warmup["contract_errors"]:
+                            raise RuntimeError("; ".join(warmup["contract_errors"]))
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
-                        result["error"] = _error_record(error, "warmup")
+                        result["error"] = _error_record(error, "first_call_warmup")
 
                 if result["status"] == "running":
                     try:
@@ -531,7 +512,7 @@ def run_suite(
             if result["status"] == "running":
                 result["status"] = "interrupted"
                 result["error"] = {
-                    "phase": next((phase for phase in ("setup", "warmup", "correctness")
+                    "phase": next((phase for phase in ("setup", "first_call_warmup", "correctness")
                                    if result[phase] is None), "sampling"),
                     "type": type(error).__name__,
                     "message": str(error) or "benchmark interrupted",

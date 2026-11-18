@@ -13,11 +13,6 @@ from typing import Any
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
-from clifft_bench.calibration import (
-    CALIBRATION_POLICY,
-    TUNING_BUDGET_SECONDS,
-    calibration_candidates,
-)
 from clifft_bench.selection import detector_mask, has_postselection
 from clifft_bench.system import thread_environment
 
@@ -45,7 +40,6 @@ CASE_FIELDS = (
     "threads_requested",
     "threads_effective",
     "batch_size_effective",
-    "tuning_policy",
     "batch_parameter",
     "batch_size_applicable",
     "sample_count",
@@ -54,8 +48,7 @@ CASE_FIELDS = (
     "setup_seconds",
     "compile_seconds",
     "peak_active_width",
-    "kernel_warmup_seconds",
-    "warmup_seconds",
+    "first_call_warmup_seconds",
     "peak_rss_bytes",
 )
 
@@ -120,7 +113,7 @@ def _counts(sample: dict, postselect: bool) -> None:
 
 
 def validate_result(document: dict[str, Any]) -> None:
-    """Check completed evidence without loading a checkout or replaying calibration."""
+    """Check completed evidence without loading a checkout."""
     try:
         _validate_result(document)
     except (KeyError, TypeError, AttributeError, IndexError) as error:
@@ -151,7 +144,7 @@ def _validate_result(document: dict[str, Any]) -> None:
     for key in ("cpu_model", "os", "machine"):
         _require(isinstance(runner[key], str) and bool(runner[key]), f"missing host {key}")
     measurement = campaign["measurement"]
-    for key in ("repetitions", "warmup_shots", "correctness_shots"):
+    for key in ("repetitions", "correctness_shots"):
         _number(measurement[key], key, integer=True, positive=True)
     for key in ("setup_timeout_seconds", "request_timeout_seconds", "min_sample_seconds"):
         _number(measurement[key], key, positive=True)
@@ -224,16 +217,9 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     load_adapter(simulator["adapter"]).validate_options(execution["options"])
     _require(execution["options"] == contract["execution"]["options"], "mismatched options")
     requested_batch = contract["execution"]["batch_size"]
-    if requested_batch != "calibrate":
+    if requested_batch != "auto":
         _number(requested_batch, "requested batch size", integer=True, positive=True)
-    if requested_batch != "calibrate" or case["setup"] is None:
-        _require(execution["batch_size"] == requested_batch, "mismatched requested batch size")
-    if execution["batch_size"] != "calibrate":
-        _number(execution["batch_size"], "batch size", integer=True, positive=True)
-    _require(
-        execution["batch_enabled"] is (execution["batch_size"] != 1),
-        "batching differs from batch size",
-    )
+    _require(execution["batch_size"] == requested_batch, "mismatched requested batch size")
     _number(execution["shots_per_call"], "shots_per_call", integer=True, positive=True)
     _require(execution["shots_per_call"] == contract["shots_per_call"], "mismatched call size")
     for key in ("min_sample_seconds", "request_timeout_seconds", "repetitions"):
@@ -263,7 +249,6 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
             and case["correctness"]["timed_region"] is False,
             "correctness did not pass",
         )
-        _counts(case["warmup"], execution["postselection"])
         _counts(case["correctness"]["details"], execution["postselection"])
         _require(
             bool(case["samples"]) and len(case["samples"]) == execution["repetitions"],
@@ -272,12 +257,24 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     else:
         error = case["error"]
         _require(
-            error["phase"] in {"setup", "warmup", "correctness", "sampling"}
+            error["phase"] in {"setup", "first_call_warmup", "correctness", "sampling"}
             and isinstance(error["type"], str)
             and bool(error["type"])
             and isinstance(error["message"], str),
             "failure lacks structured error",
         )
+    first_call = case["first_call_warmup"]
+    if first_call is not None:
+        if first_call["contract_errors"]:
+            _require(case["status"] == "error" and case["error"]["phase"] == "first_call_warmup",
+                     "invalid first call was not recorded as a failure")
+        else:
+            _counts(first_call, execution["postselection"])
+            _require(first_call["attempted_shots"] == execution["shots_per_call"],
+                     "first call differs from public call size")
+    if case["status"] == "success":
+        _require(first_call is not None and not first_call["contract_errors"],
+                 "missing or invalid first call")
     setup = case["setup"]
     if setup is None:
         _require(
@@ -289,6 +286,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     else:
         _number(setup["duration_seconds"], "setup duration")
         metadata = setup["runtime_metadata"]
+        _number(metadata["compile_seconds"], "compile duration")
         if case["status"] == "success":
             _require(
                 all(metadata[k] == v for k, v in expected_metadata.items()),
@@ -323,15 +321,15 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         else:
             _require(threads == 1, "multiple threads require applied physical-core affinity")
         _require(metadata["version"] == simulator["version"], "runtime version mismatch")
-        _require(
-            metadata["batch_enabled"] is execution["batch_enabled"],
-            "runtime batching mismatch",
-        )
-        _number(execution["batch_size_effective"], "effective batch", integer=True, positive=True)
-        _require(
-            execution["batch_size_effective"] <= execution["shots_per_call"],
-            "effective batch exceeds public call size",
-        )
+        _require(metadata["batch_enabled"] is execution["batch_enabled"]
+                 and (metadata["batch_enabled"] is None
+                      or type(metadata["batch_enabled"]) is bool), "runtime batching mismatch")
+        capacity = metadata["effective_batch_size"]
+        if capacity is not None:
+            _number(capacity, "native batch capacity", integer=True, positive=True)
+        _require(execution["batch_size_effective"] == (
+            min(capacity, execution["shots_per_call"]) if capacity is not None else None
+        ), "effective batch differs from native capacity")
         if "scheduler" in execution["options"] and case["status"] == "success":
             _require(
                 type(metadata["scheduler_statistics"]["applied"]) is bool,
@@ -344,11 +342,6 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
                 and metadata["trajectory_sharing"] is True,
                 "invalid Tsim runtime provenance",
             )
-            _require(
-                case["warmup"]["attempted_shots"] >= execution["shots_per_call"],
-                "Tsim requires a full-call warmup",
-            )
-    _validate_calibration_record(contract, case)
     for repetition, sample in enumerate(case["samples"]):
         _counts(sample, execution["postselection"])
         _number(sample["api_calls"], "api_calls", integer=True, positive=True)
@@ -524,8 +517,7 @@ def case_rows(document: dict) -> list[dict]:
                     execution.get("threads_effective")
                     if execution.get("threads_effective") is not None else ""
                 ),
-                "batch_size_effective": execution.get("batch_size_effective", ""),
-                "tuning_policy": execution.get("tuning_policy", "fixed"),
+                "batch_size_effective": execution.get("batch_size_effective") or "",
                 "batch_parameter": metadata.get("batch_parameter", ""),
                 "batch_size_applicable": (
                     str(metadata["batch_size_applicable"]).lower()
@@ -542,9 +534,11 @@ def case_rows(document: dict) -> list[dict]:
                 "setup_seconds": setup.get("duration_seconds", ""),
                 **{
                     k: metadata.get(k, "")
-                    for k in ("compile_seconds", "peak_active_width", "kernel_warmup_seconds")
+                    for k in ("compile_seconds", "peak_active_width")
                 },
-                "warmup_seconds": (case["warmup"] or {}).get("duration_seconds", ""),
+                "first_call_warmup_seconds": (case["first_call_warmup"] or {}).get(
+                    "duration_seconds", ""
+                ),
                 "peak_rss_bytes": max((s["peak_rss_bytes"] for s in case["samples"]), default=""),
             }
         )
@@ -560,134 +554,3 @@ def export_csv(document: dict, path: Path) -> None:
         writer.writeheader()
         writer.writerows(case_rows(document))
     temporary.replace(path)
-
-
-def _validate_calibration_record(expected: dict, observed: dict[str, Any]) -> None:
-    if expected["execution"]["batch_size"] != "calibrate":
-        return
-
-    case_id = expected["id"]
-    if observed["execution"].get("tuning_policy") != CALIBRATION_POLICY:
-        raise ValueError(f"raw case {case_id!r} has mismatched tuning policy")
-    setup = observed.get("setup")
-    # A worker can fail during calibration or preparation before returning any
-    # setup metadata. Preserve that explicit failure without inventing a winner.
-    if (
-        setup is None
-        and observed["status"] in {"error", "unsupported", "interrupted"}
-        and (observed.get("error") or {}).get("phase") == "setup"
-    ):
-        return
-    calibration = (
-        setup.get("runtime_metadata", {}).get("batch_calibration")
-        if isinstance(setup, dict)
-        else None
-    )
-    if not isinstance(calibration, dict):
-        raise ValueError(f"calibrated raw case {case_id!r} has no batch_calibration metadata")
-
-    selected = calibration.get("selected_batch_size")
-    if type(selected) is not int or selected < 1:
-        raise ValueError(
-            f"calibrated raw case {case_id!r} has invalid selected_batch_size {selected!r}"
-        )
-    shots_per_call = int(expected["shots_per_call"])
-    if calibration.get("policy") != CALIBRATION_POLICY:
-        raise ValueError(f"calibrated raw case {case_id!r} has mismatched tuning policy")
-    expected_candidates = calibration_candidates(
-        observed["simulator"]["adapter"],
-        shots_per_call,
-    )
-    if calibration.get("candidates") != expected_candidates:
-        raise ValueError(f"calibrated raw case {case_id!r} candidates do not match the contract")
-    if selected not in expected_candidates:
-        raise ValueError(f"calibrated raw case {case_id!r} selected an unsupported batch_size")
-    if observed["execution"].get("batch_size") != selected:
-        raise ValueError(
-            f"calibrated raw case {case_id!r} does not record selected numeric batch_size"
-        )
-    _validate_bounded_calibration(calibration, case_id)
-
-
-def _validate_bounded_calibration(calibration: dict[str, Any], case_id: str) -> None:
-    def require(condition: bool, detail: str) -> None:
-        if not condition:
-            raise ValueError(f"calibrated raw case {case_id!r}: {detail}")
-
-    require(
-        calibration.get("budget_seconds") == TUNING_BUDGET_SECONDS
-        and calibration.get("budget_scope") == "between-candidates",
-        "invalid tuning budget",
-    )
-    require(
-        calibration.get("probe_seconds") == 1.0 and calibration.get("repetitions") == 3,
-        "invalid tuning probe settings",
-    )
-    require(
-        calibration.get("selection_statistic") == "median_attempted_shots_per_second"
-        and calibration.get("tie_break") == "smaller_batch_size",
-        "invalid tuning selection rule",
-    )
-    search_seconds = calibration.get("search_seconds")
-    require(
-        type(search_seconds) in (int, float)
-        and math.isfinite(search_seconds)
-        and search_seconds >= 0,
-        "missing tuning duration",
-    )
-    rows = calibration.get("results")
-    require(
-        isinstance(rows, list) and len(rows) == len(calibration["candidates"]),
-        "missing candidate outcomes",
-    )
-    successful = set()
-    seen_skip = False
-    for batch, row in zip(calibration["candidates"], rows, strict=True):
-        require(
-            isinstance(row, dict) and row.get("batch_size") == batch, "mismatched candidate order"
-        )
-        status = row.get("status")
-        require(status in {"success", "error", "budget-skipped"}, "invalid candidate status")
-        require(
-            not seen_skip or status == "budget-skipped", "candidate attempted after budget skip"
-        )
-        duration = row.get("duration_seconds")
-        require(
-            type(duration) in (int, float) and math.isfinite(duration) and duration >= 0,
-            "invalid candidate duration",
-        )
-        samples = row.get("samples")
-        require(isinstance(samples, list), "missing candidate probes")
-        if status == "budget-skipped":
-            seen_skip = True
-            require(not samples, "skipped candidate has timed samples")
-        elif status == "error":
-            require(isinstance(row.get("error"), dict), "candidate failure lacks an error")
-        else:
-            require(len(samples) == calibration["repetitions"], "incomplete candidate probes")
-            effective = row.get("effective_batch_size")
-            require(
-                type(effective) is int and 1 <= effective <= batch, "invalid effective batch size"
-            )
-            rate = row.get("median_attempted_shots_per_second")
-            require(
-                type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
-                "invalid candidate median",
-            )
-            successful.add(batch)
-        for sample in samples:
-            require(isinstance(sample, dict), "invalid candidate probe")
-            rate = sample.get("throughput_attempted_shots_per_second")
-            require(
-                type(rate) in (float, int) and math.isfinite(rate) and rate > 0,
-                "invalid candidate throughput",
-            )
-            require(
-                type(sample.get("peak_rss_bytes")) is int and sample["peak_rss_bytes"] > 0,
-                "missing tuning memory measurement",
-            )
-    # Validate complete evidence and a usable selection, without replaying the
-    # recorded medians, winner selection, or elapsed-budget decisions.
-    require(
-        calibration["selected_batch_size"] in successful, "selected batch has no successful probes"
-    )

@@ -5,7 +5,6 @@ from pathlib import Path
 import pytest
 from toml_helpers import write_toml
 
-from clifft_bench.calibration import BATCH_CALIBRATION_CANDIDATES
 from clifft_bench.cli import main
 from clifft_bench.config import load_suite, read_toml, repository_root
 
@@ -129,23 +128,6 @@ def test_smoke_and_pilot_implementations_match_the_release(path: Path) -> None:
         assert variant_id in variants, f"{path.name}: {variant_id} is absent from the release"
         variant = variants[variant_id]
         assert case.implementation.id == variant["implementation_id"]
-
-
-@pytest.mark.parametrize("adapter", ["clifft", "symft"])
-def test_smoke_suite_exercises_full_batch_calibration_sweep(adapter: str) -> None:
-    smoke = load_suite(ROOT / "campaigns/smoke.toml")
-    calibrated = [
-        case
-        for case in smoke.cases
-        if case.implementation.definition["adapter"] == adapter
-        and case.definition["execution"]["batch_size"] == "calibrate"
-    ]
-
-    assert calibrated
-    assert any(
-        case.definition["shots_per_call"] >= max(BATCH_CALIBRATION_CANDIDATES)
-        for case in calibrated
-    )
 
 
 def test_official_implementations_require_environment_locks(tmp_path):
@@ -457,7 +439,6 @@ def test_seed_zero_is_rejected(tmp_path) -> None:
     path = tmp_path / "zero.toml"
     write_toml(path, document)
     assert main(["validate", str(path)]) == 2
-
 
 
 def test_validate_deep_checks_run_manifest_regardless_of_filename(tmp_path) -> None:

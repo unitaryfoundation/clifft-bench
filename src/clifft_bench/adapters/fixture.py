@@ -50,13 +50,15 @@ class FixtureAdapter(Adapter):
         parameters = dict(workload["parameters"])
         if parameters.get("write_native_stdout"):
             os.write(1, b"fixture native prepare output\n")
+        batch = execution["batch_size"]
         metadata = {
             "name": "fixture",
             "version": "1.0.0",
             "threads": threads,
             "precision": "integer",
-            "batch_enabled": int(execution["batch_size"]) > 1,
-            "effective_batch_size": int(execution["batch_size"]),
+            "batch_enabled": None if batch == "auto" else batch > 1,
+            "effective_batch_size": None if batch == "auto" else batch,
+            "compile_seconds": 0.0,
             **workload["expected_metadata"],
         }
         return _PreparedFixture(

@@ -99,7 +99,6 @@ def test_partial_selection_counts_only_selected_raw_detector(adapter, batch, sel
         execution={"batch_size": batch,
                    "options": {}}, seed=918,
     )
-    prepared.begin_sample(919)
     counts = prepared.sample(16384, 919)
     probability = 0.75 if selected == 0 else 0
     assert counts.attempted_shots == counts.accepted_shots + counts.discarded_shots == 16384
@@ -169,7 +168,6 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch, observabl
         execution=execution, seed=1742,
     )
     for seed in (1743, 1744):
-        prepared.begin_sample(seed)
         counts = prepared.sample(4096, seed)
         assert counts.accepted_shots == counts.attempted_shots == 4096
         assert counts.discarded_shots == 0

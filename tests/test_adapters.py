@@ -6,9 +6,29 @@ from types import SimpleNamespace
 
 import pytest
 
+from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.clifft import ClifftAdapter, _PreparedClifft
 from clifft_bench.adapters.fixture import FixtureAdapter
 from clifft_bench.adapters.symft import SymftAdapter
+
+
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "tsim", "xtim", "fixture"])
+@pytest.mark.parametrize("batch_size", [0, -1, True, False, 1.5, "1", None])
+def test_direct_prepare_rejects_invalid_batch_size(tmp_path, adapter_name, batch_size):
+    with pytest.raises(ValueError, match="batch_size"):
+        load_adapter(adapter_name).prepare(
+            artifact_path=tmp_path / "unused.stim",
+            workload={"semantics": {"postselect_all_detectors": False}},
+            execution={"batch_size": batch_size},
+        )
+
+
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "tsim", "xtim", "fixture"])
+@pytest.mark.parametrize("batch_size", ["auto", 1, 32])
+def test_execution_accepts_auto_and_positive_batch_sizes(adapter_name, batch_size):
+    assert load_adapter(adapter_name).validate_execution(
+        {"batch_size": batch_size}, {"semantics": {"postselect_all_detectors": False}},
+    ) == 1
 
 
 class _Sampler:
@@ -47,8 +67,8 @@ class _Circuit:
     num_observables = 1
     num_detectors = 0
 
-    def __init__(self, *, path: Path) -> None:
-        self.path = path
+    def __init__(self, *, text: str) -> None:
+        self.text = text
 
     def compile_counts_sampler(self, **kwargs):
         self.compile_kwargs = kwargs
@@ -84,6 +104,7 @@ def test_symft_rejects_effective_batching_mismatch(
     chunk_delta: int,
     message: str,
 ) -> None:
+    (tmp_path / "unused.stim").write_text("M 0\n")
     _install_fake_symft(monkeypatch, batch_delta=batch_delta, chunk_delta=chunk_delta)
     with pytest.raises(RuntimeError, match=message):
         SymftAdapter().prepare(
@@ -121,8 +142,9 @@ def test_clifft_counts_the_selected_observable() -> None:
 
 
 @pytest.mark.parametrize("requested_threads", [1, 8])
+@pytest.mark.parametrize("batch_size", [256, "auto"])
 def test_clifft_explicit_batch_is_forwarded_and_recorded(
-    tmp_path: Path, monkeypatch, requested_threads
+    tmp_path: Path, monkeypatch, requested_threads, batch_size
 ) -> None:
     artifact = tmp_path / "circuit.stim"
     artifact.write_text("M 0\n")
@@ -140,14 +162,17 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
         peak_active_width=3,
     )
 
+    expected_batch = batch_size
+
     def sample_survivors(actual_program, shots, *, seed, keep_records, threads, batch_size):
+        assert batch_size == expected_batch
         assert threads == requested_threads
         assert (actual_program, shots, seed, keep_records, batch_size) == (
             program,
             10,
             7,
             False,
-            256,
+            batch_size,
         )
         return SimpleNamespace(
             total_shots=10,
@@ -176,40 +201,48 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
             }
         },
         execution={
-            "batch_size": 256,
+            "batch_size": batch_size,
             "threads": requested_threads,
             "options": {},
         },
     )
 
-    assert prepared.runtime_metadata["batch_enabled"] is True
-    assert prepared.runtime_metadata["effective_batch_size"] == 256
+    assert prepared.runtime_metadata["batch_enabled"] is (None if batch_size == "auto" else True)
+    assert prepared.runtime_metadata["effective_batch_size"] == (
+        None if batch_size == "auto" else batch_size
+    )
     assert prepared.runtime_metadata["threads"] == (1 if requested_threads == 1 else None)
     assert prepared.sample(10, 7).attempted_shots == 10
 
 
 @pytest.mark.parametrize("threads", [1, 8])
 @pytest.mark.parametrize("postselect", [False, True])
+@pytest.mark.parametrize("batch_size", [32, "auto"])
 def test_symft_counts_use_native_threads_and_legacy_backend(
-    tmp_path, monkeypatch, threads, postselect
+    tmp_path, monkeypatch, threads, postselect, batch_size
 ):
     class Circuit(_Circuit):
         def compile_counts_sampler(self, **kwargs):
             assert kwargs["threads"] == threads
             assert kwargs["cpu_backend"] == "legacy"
             sampler = super().compile_counts_sampler(**kwargs)
+            sampler.info["batch_size"] = kwargs["batch_size"] or 64
+            sampler.info["sample_chunk_shots"] = kwargs["sample_chunk_shots"] or 2048
             sampler.info["threads"] = threads
             return sampler
     monkeypatch.setitem(sys.modules, "symft", SimpleNamespace(
         Circuit=Circuit, __version__="test", simd_backend=lambda: "test",
     ))
+    (tmp_path / "unused.stim").write_text("M 0\n")
     prepared = SymftAdapter().prepare(
         artifact_path=tmp_path / "unused.stim",
         workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect},
                   "expected_metadata": {"num_detectors": 0}},
-        execution={"batch_size": 32, "threads": threads},
+        execution={"batch_size": batch_size, "threads": threads},
     )
     assert prepared.runtime_metadata["threads"] == threads
+    assert prepared.runtime_metadata["effective_batch_size"] == (64 if batch_size == "auto" else 32)
+    assert prepared.runtime_metadata["sample_chunk_shots"] == 2048
 
 
 def test_symft_single_backend_normalizes_disabled_batch_sentinel(
@@ -232,6 +265,7 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
             simd_backend=lambda: "test",
         ),
     )
+    (tmp_path / "unused.stim").write_text("M 0\n")
     prepared = SymftAdapter().prepare(
         artifact_path=tmp_path / "unused.stim",
         workload={

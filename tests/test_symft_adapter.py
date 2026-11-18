@@ -34,7 +34,7 @@ def prepare(tmp_path, text, *, batch=1, observable=0, postselect=False):
         },
         execution={
             "batch_size": batch,
-            "options": {"sample_chunk_shots": 2048},
+            "options": {"sample_chunk_shots": 0 if batch == "auto" else 2048},
         },
     )
 
@@ -69,7 +69,7 @@ def test_unselected_fired_detector_preserves_observable_parity(
     assert p.runtime_metadata["sample_chunk_shots"] == (2048 if batch == 1 else 0)
 
 
-@pytest.mark.parametrize("batch", [1, 32])
+@pytest.mark.parametrize("batch", [1, 32, "auto"])
 @pytest.mark.parametrize("postselect", [False, True])
 @pytest.mark.parametrize("seed", [1, 42, 74])
 def test_noisy_selected_and_unselected_counts_match_exact_law(

@@ -1,7 +1,7 @@
 # Supplemental sampling coverage
 
 The `*-coverage` variants in the normal release campaign add 23 current-tool
-cases. They use the release [calibration policy](../docs/benchmark-contract.md#batching).
+cases. They use the release [automatic sizing](../docs/benchmark-contract.md#batching).
 Results appear in `cases.csv` and `coverage-alternatives-vs-current` comparison rows, outside
 short-call and bulk comparison groups. There is no previous-release baseline
 for these coverage comparisons. Tool pins, single-core restrictions, timed boundaries,
@@ -112,9 +112,7 @@ counts into fidelity or decoded logical errors.
 
 xtim excludes the d7 proxy because its records are nondeterministic without
 noise, and excludes the coherent control because of its `R_Z` syntax. QV20's
-32-shot public call bounds its cost; Clifft's packed candidate can hit its
-state-size guard while scalar sampling succeeds. Calibration records failed
-candidates and selects a successful configuration on the reference host.
+32-shot public call bounds its cost.
 
 The smoke profile uses small fixed calls and runs every declared combination,
 including full d5 and QV20:

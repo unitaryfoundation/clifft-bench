@@ -80,7 +80,7 @@ def test_bulk_and_short_calls_are_separate_report_groups(raw_result):
         case.update(case_id=variant, variant_id=variant)
         expected.update(id=variant, variant_id=variant, shots_per_call=16)
         case["execution"]["shots_per_call"] = 16
-        for sample in case["samples"]:
+        for sample in [case["first_call_warmup"], *case["samples"]]:
             for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"):
                 sample[key] *= 2
             sample["duration_seconds"] *= 2
@@ -564,6 +564,10 @@ def test_throughput_data_preserves_statistics_identities_and_sources(raw_result,
     row = data["panels"][0]["rows"][0]
     current, peer = row["values"]
     assert current["median_attempted_shots_per_second"] == 125
+    assert current["compile_seconds"] == report["rows"]["current"]["compile_seconds"]
+    assert current["first_call_warmup_seconds"] == (
+        report["rows"]["current"]["first_call_warmup_seconds"]
+    )
     assert current["source"] == "primary" and peer["source"] == "peers"
     assert current["case_id"] == raw_result["cases"][1]["case_id"]
     rates = [s["throughput_attempted_shots_per_second"]
