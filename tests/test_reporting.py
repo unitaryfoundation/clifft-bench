@@ -362,6 +362,36 @@ def test_peer_reuse_keeps_current_rates_release_pairs_and_sources(raw_result, pe
     assert f"| {identity['implementation_id']} | {identity['version']} |" in summary
 
 
+def test_review_measurements_preserve_zero_missing_and_failed_values(raw_result, peer_result):
+    previous, current = raw_result["cases"]
+    peer = peer_result["cases"][-1]
+    for case, width, compile_s, first_s in (
+        (previous, 0, 0, 0.5), (current, None, 1.25, 2.5), (peer, 7, 3.25, 4.5),
+    ):
+        case["setup"]["runtime_metadata"].update(
+            peak_active_width=width, compile_seconds=compile_s,
+        )
+        case["first_call_warmup"]["duration_seconds"] = first_s
+    # Retained samples from a failed case must not become a published rate.
+    peer.update(status="error", error={"phase": "sampling", "type": "WorkerTimeout",
+                                      "message": "timed out"})
+    validate_result(raw_result)
+    validate_result(peer_result)
+    summary = review_summary(build_report(raw_result, peer_document=peer_result))
+    rows = {}
+    for line in summary.splitlines():
+        if line.startswith("|"):
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if len(cells) == 6:
+                rows[cells[0]] = cells[1:]
+    for case, expected in (
+        (previous, ["0", "0.5", "0", "100"]),
+        (current, ["1.25", "2.5", "—", "125"]),
+        (peer, ["3.25", "4.5", "7", "—"]),
+    ):
+        assert rows[case["case_id"]] == [str(case["execution"]["shots_per_call"]), *expected]
+
+
 @pytest.mark.parametrize("section,key,value", [
     ("campaign", "classification", "official"),
     ("campaign", "hardware_epoch", "other-hardware"),

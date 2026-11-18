@@ -216,14 +216,17 @@ def review_summary(report: dict) -> str:
         )
         detail = detail.replace("|", "\\|").replace("\n", " ")
         lines.append(f"| {case['case_id']} | {case['status']} | {detail} |")
-    lines += ["", "## Preparation", "",
-              "| Case | Shots per call | Compile (s) | First call (s) |",
-              "| --- | ---: | ---: | ---: |"]
+    lines += ["", "## Measurements", "",
+              "| Case | Shots per call | Compile (s) | First call (s) | "
+              "Peak active width | Attempted shots/s (median) |",
+              "| --- | ---: | ---: | ---: | ---: | ---: |"]
     for case in cases:
         row = report["rows"][case["case_id"]]
-        times = [f"{row[key]:.6g}" if row[key] != "" else "—"
-                 for key in ("compile_seconds", "first_call_warmup_seconds")]
-        lines.append(f"| {case['case_id']} | {row['shots_per_call']} | {' | '.join(times)} |")
+        values = [f"{row[key]:.6g}" if row[key] not in ("", None) else "—" for key in (
+            "compile_seconds", "first_call_warmup_seconds", "peak_active_width",
+            "median_attempted_shots_per_second",
+        )]
+        lines.append(f"| {case['case_id']} | {row['shots_per_call']} | {' | '.join(values)} |")
     lines += [
         "",
         "## Paired comparisons",
