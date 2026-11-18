@@ -40,23 +40,25 @@ class _PreparedTsim(PreparedAdapter):
             shots=shots,
             batch_size=min(self._batch, shots) if self._batch is not None else None,
             separate_observables=True,
-            bit_packed=False,
+            bit_packed=True,
             use_detector_reference_sample=False,
             use_observable_reference_sample=False,
             postselection_mask=self._mask,
         )
         accepted = len(observables)
         if (
-            detectors.shape != (accepted, self.runtime_metadata["num_detectors"])
-            or observables.shape != (accepted, self.runtime_metadata["num_observables"])
-            or detectors.dtype != np.bool_ or observables.dtype != np.bool_
+            detectors.shape != (accepted, (self.runtime_metadata["num_detectors"] + 7) // 8)
+            or observables.shape != (accepted, (self.runtime_metadata["num_observables"] + 7) // 8)
+            or detectors.dtype != np.uint8 or observables.dtype != np.uint8
             or not 0 <= accepted <= shots
             or (not self._postselect and accepted != shots)
         ):
             raise RuntimeError("Tsim returned inconsistent detector/observable rows")
         # Native postselection returns survivors only, including an empty array
         # when every attempted shot is rejected. The denominator remains shots.
-        errors = int(np.count_nonzero(observables[:, self._observable]))
+        errors = int(np.count_nonzero(
+            observables[:, self._observable // 8] & (1 << (self._observable % 8))
+        ))
         return Counts(shots, accepted, shots - accepted, errors)
 
 
@@ -116,7 +118,7 @@ class TsimAdapter(Adapter):
             "batch_size_applicable": bool(sampler._program.components),
             "seed_policy": "continuous-stream-seeded-at-prepare",
             "initial_seed": seed,
-            "record_materialization": "boolean-detectors-and-observables",
+            "record_materialization": "bit-packed-detectors-and-observables",
             "parse_seconds": parse_seconds, "compile_seconds": parse_seconds + compile_seconds,
             "peak_active_width": max(widths, default=0),
             "statevector_component_widths": widths,

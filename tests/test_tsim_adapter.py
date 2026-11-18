@@ -113,12 +113,28 @@ def test_tsim_survivor_rows_keep_attempted_shot_denominator(rows):
     sampler = SimpleNamespace(
         circuit=SimpleNamespace(num_detectors=1),
         sample=lambda **kwargs: (
-            np.zeros((rows, 1), dtype=bool), np.ones((rows, 1), dtype=bool),
+            np.zeros((rows, 1), dtype=np.uint8), np.ones((rows, 1), dtype=np.uint8),
         ),
     )
     p = _PreparedTsim(sampler, batch=4, postselect=True, observable=0,
                       metadata={"num_detectors": 1, "num_observables": 1})
     assert p.sample(7, 9) == Counts(7, rows, 7 - rows, rows)
+
+
+@pytest.mark.parametrize("observable", [0, 7, 8, 9, 15, 16])
+def test_tsim_counts_only_selected_packed_bit_in_strided_rows(observable):
+    np = pytest.importorskip("numpy")
+    width = (observable + 8) // 8
+    # Other observable bits and padding are set, including in the selected byte.
+    obs = np.full((3, 2 * width), 255, dtype=np.uint8)[:, ::2]
+    obs[[0, 2], observable // 8] ^= 1 << (observable % 8)
+    sampler = SimpleNamespace(
+        circuit=SimpleNamespace(num_detectors=0),
+        sample=lambda **kwargs: (np.zeros((3, 0), dtype=np.uint8), obs),
+    )
+    p = _PreparedTsim(sampler, batch=None, postselect=False, observable=observable,
+                      metadata={"num_detectors": 0, "num_observables": observable + 1})
+    assert p.sample(3, 9) == Counts(3, 3, 0, 1)
 
 
 @pytest.mark.parametrize("damage", [
@@ -127,14 +143,14 @@ def test_tsim_survivor_rows_keep_attempted_shot_denominator(rows):
 def test_tsim_rejects_inconsistent_native_rows(damage):
     np = pytest.importorskip("numpy")
     rows = 8 if damage == "extra" else 3
-    dets = np.zeros((rows, 1), dtype=bool)
-    obs = np.zeros((rows, 1), dtype=bool)
+    dets = np.zeros((rows, 1), dtype=np.uint8)
+    obs = np.zeros((rows, 1), dtype=np.uint8)
     if damage == "unequal_rows":
         dets = dets[:2]
     if damage == "width":
-        obs = np.zeros((rows, 2), dtype=bool)
+        obs = np.zeros((rows, 2), dtype=np.uint8)
     if damage == "dtype":
-        dets = dets.astype(np.uint8)
+        dets = dets.astype(bool)
     sampler = SimpleNamespace(circuit=SimpleNamespace(num_detectors=1),
                               sample=lambda **kwargs: (dets, obs))
     p = _PreparedTsim(sampler, batch=4, postselect=damage != "unselected_missing",
