@@ -137,17 +137,20 @@ def _run(args: argparse.Namespace) -> int:
         require_ec2=args.require_ec2,
     )
     successes = sum(case["status"] == "success" for case in document["cases"])
+    unsupported = sum(case["status"] == "unsupported" for case in document["cases"])
     for case in document["cases"]:
         if case["status"] == "success":
             continue
         error = case.get("error") or {}
+        outcome = "Unsupported" if case["status"] == "unsupported" else "Failed"
         print(
-            f"Failed {case['case_id']} during {error.get('phase', 'unknown')}: "
+            f"{outcome} {case['case_id']} during {error.get('phase', 'unknown')}: "
             f"{error.get('type', 'Error')}: {error.get('message', 'no details')}",
             file=sys.stderr,
         )
-    print(f"Result: {output.resolve()} ({successes}/{len(document['cases'])} successful)")
-    return 0 if successes == len(document["cases"]) else 1
+    print(f"Result: {output.resolve()} ({successes}/{len(document['cases'])} successful; "
+          f"{unsupported} unsupported)")
+    return 0 if successes + unsupported == len(document["cases"]) else 1
 
 
 def main(argv: Sequence[str] | None = None) -> int:

@@ -80,7 +80,8 @@ def test_circuit_checks_match_hamming_matrix_and_cubic_error_floor():
 def test_exact_fault_patterns_verify_postselection_and_logical_readout(
     adapter, faults, accepted, logical, tmp_path,
 ):
-    replacement = "Z " + " ".join(map(str, faults)) if faults else ""
+    # Certain faults keep the noiseless reference unchanged while fixing the fault pattern.
+    replacement = "Z_ERROR(1) " + " ".join(map(str, faults)) if faults else ""
     p = _prepare(adapter, tmp_path, ARTIFACT.read_text().replace(NOISE, replacement))
     result = p.sample(32, 42)
     assert result.accepted_shots == (32 if accepted else 0)

@@ -267,3 +267,20 @@ def test_failed_first_call_keeps_diagnostics_without_throughput(raw_result, tmp_
     validate_result(raw_result)
     export_csv(raw_result, tmp_path / "cases.csv")
     assert case_rows(raw_result)[0]["median_attempted_shots_per_second"] == ""
+
+
+@pytest.mark.parametrize("status,exit_code", [
+    ("unsupported", 0), ("error", 1), ("interrupted", 1),
+])
+def test_run_cli_distinguishes_unsupported_from_failed_cases(
+    monkeypatch, tmp_path, status, exit_code
+):
+    from clifft_bench import cli
+
+    monkeypatch.setattr(cli, "run_suite", lambda *args, **kwargs: {"cases": [
+        {"case_id": "measured", "status": "success"},
+        {"case_id": "other", "status": status, "error": {
+            "phase": "setup", "type": "UnsupportedConfiguration", "message": "endpoint unavailable"
+        }},
+    ]})
+    assert main(["run", "--output-dir", str(tmp_path / "result")]) == exit_code
