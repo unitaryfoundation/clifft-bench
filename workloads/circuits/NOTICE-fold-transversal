@@ -1,0 +1,12 @@
+Fold-transversal d3/d5 native-T model conversion
+
+Source: Kwok Ho Wan and Ainhoa Zapirain, Exact logical error rates for magic
+state cultivation, arXiv:2609.18922, based on Sahay et al., arXiv:2509.05212.
+https://github.com/kh428/exact_ler_for_msc
+Commit: 332bc0481843ebc9718e152e92f5ee10f8f0b148
+Inputs: data/alternatives/inputs/fold-d{3,5}/model.json
+License: Apache-2.0 (LICENSE-exact-ler).
+
+Converted to sampling circuits by clifft-bench: dense qubit numbering,
+controlled-gate and three-qubit noise decompositions, measured projectors,
+and ideal logical T†/X readout. See workloads/README.md for semantics.

@@ -7,6 +7,7 @@ digests, semantic contracts, compatible adapters, and source commits live in
 The benchmark corpus contains:
 
 - distance-3 and distance-5 magic-state cultivation,
+- distance-3 and distance-5 fold-transversal CCZ cultivation,
 - 85-qubit color-code magic-state distillation,
 - 15-to-1 Reed-Muller magic-state distillation with ideal output verification,
 - coherent-noise surface-code circuits at `(d, rounds) = (3, 1), (3, 3),
@@ -75,3 +76,20 @@ The regular release campaign runs BT27/BT81 on current Clifft, and Reed-Muller
 on both Clifft versions, SymFT, and Tsim. BT requires the post-0.12 compiler;
 peer tools are omitted where the smoke checks did not establish a usable run.
 Results appear in the case table and their declared comparison groups.
+
+The fold-transversal d3/d5 inputs use Wan and Zapirain's
+[frozen native-T models](https://github.com/kh428/exact_ler_for_msc/tree/332bc0481843ebc9718e152e92f5ee10f8f0b148/data/alternatives/inputs)
+of Sahay et al.'s protocol, under [Apache-2.0](circuits/LICENSE-exact-ler).
+The d3 model is a terminated core without the noisy pre-escape round; d5 is an
+explicit reconstruction, not an author-supplied noisy T circuit. Both retain
+noiseless terminal code projection and omit escape/decoding. Native tests cover
+Clifft and Tsim; SymFT and xtim are not yet validated for these workloads.
+Release campaigns do not yet include these inputs.
+
+[The converter](generate_fold_transversal.py) verifies the source model hashes,
+densely renumbers qubits, and preserves native gate/noise placement. Its
+three-qubit depolarisation preserves the full joint distribution: identity
+with probability `1-p`, each nonidentity Pauli with `p/63`. Observable 0 measures
+logical `H_XY = (X+Y)/sqrt(2)` via ideal logical T† and X readout; its bit is the
+logical error. All declared detectors select raw zero. Without noise, every
+shot is accepted and observable 0 is zero.
