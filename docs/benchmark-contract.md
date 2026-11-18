@@ -127,8 +127,8 @@ Each case uses one fresh worker and one measurement sampler:
    Imports, file reads, installation checks, and reference-parity validation are
    excluded; `setup_seconds` retains the full preparation duration.
 2. `first_call_warmup_seconds`: time the first full `shots_per_call` call,
-   including lazy planning, JIT/cache loading, and sampling. No earlier call uses
-   the measurement sampler. Retain this result separately from throughput.
+   including lazy planning, JIT/cache loading, and sampling. No earlier sampling
+   call uses the measurement sampler. Retain this result separately from throughput.
 3. Check correctness, then measure repeated calls using the same sampler.
    Each repetition accumulates calls until its minimum sampling interval elapses;
    the final call can overrun it. Retain individual samples and derive median/MAD.
