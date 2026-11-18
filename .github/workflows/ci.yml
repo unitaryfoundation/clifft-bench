@@ -108,7 +108,7 @@ jobs:
       - run: python -m pip install --no-deps -r environments/tsim-1.0.0.txt
       - run: python -m pip install -e '.[test]'
       - run: python -m pip check
-      - run: python -m pytest tests/test_tsim_adapter.py tests/test_reference_convention.py tests/test_distillation_15to1.py tests/test_runner.py tests/test_code_switching.py tests/test_workload_coverage.py -k 'tsim or hamming'
+      - run: python -m pytest tests/test_tsim_adapter.py tests/test_reference_convention.py tests/test_distillation_15to1.py tests/test_runner.py tests/test_code_switching.py tests/test_workload_coverage.py tests/test_fold_transversal.py -k 'tsim or hamming'
       - run: clifft-bench run --python "$(command -v python)" campaigns/tsim-smoke.toml --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output-dir /tmp/tsim-smoke
       - run: clifft-bench validate /tmp/tsim-smoke/raw.json
       - run: clifft-bench run --python "$(command -v python)" campaigns/coverage-smoke.toml --case 'tsim' --memory-limit-gib 12 --output-dir /tmp/coverage-tsim
@@ -141,7 +141,7 @@ jobs:
       - name: Check current adapter and circuit correctness
         run: |
           ulimit -v 12582912
-          python -m pytest tests/test_adapters.py tests/test_reference_convention.py tests/test_code_switching.py tests/test_workload_coverage.py
+          python -m pytest tests/test_adapters.py tests/test_reference_convention.py tests/test_code_switching.py tests/test_workload_coverage.py tests/test_fold_transversal.py
       - name: Run current Clifft smoke cases
         run: clifft-bench run --python "$(command -v python)" --case clifft --min-sample-seconds 0.01 --repetitions 1 --memory-limit-gib 12 --output-dir /tmp/clifft-smoke
       - run: clifft-bench validate /tmp/clifft-smoke/raw.json
