@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
-from clifft_bench.selection import detector_mask, has_postselection
+from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter, Sample
+from clifft_bench.selection import detector_mask
 
 MAX_BATCH_SIZE = 65536
 
@@ -24,11 +24,11 @@ class _PreparedTsim(PreparedAdapter):
         self._observable = observable
         self._postselect = postselect
         self._mask = np.ones(sampler.circuit.num_detectors, dtype=bool) if postselect else None
-        if selection is not None:
+        if postselect and selection is not None:
             self._mask = np.asarray(selection, dtype=bool)
         self.runtime_metadata = metadata
 
-    def sample(self, shots: int, seed: int) -> Counts:
+    def sample(self, shots: int, seed: int) -> Sample:
         # Tsim exposes a seed at compilation, not per call. Never replay or
         # recompile the sampler inside a repetition; the call seed is an audit ID.
         del seed
@@ -45,6 +45,8 @@ class _PreparedTsim(PreparedAdapter):
             use_observable_reference_sample=False,
             postselection_mask=self._mask,
         )
+        if not self._postselect:
+            return detectors, observables
         accepted = len(observables)
         if (
             detectors.shape != (accepted, (self.runtime_metadata["num_detectors"] + 7) // 8)
@@ -65,6 +67,7 @@ class _PreparedTsim(PreparedAdapter):
 class TsimAdapter(Adapter):
     name = "tsim"
     supported_threads = (1, 8)
+    supported_postselect = ("on", "off")
 
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
@@ -128,7 +131,7 @@ class TsimAdapter(Adapter):
             )},
         }
         return _PreparedTsim(
-            sampler, batch=batch, postselect=has_postselection(semantics),
+            sampler, batch=batch, postselect=execution["postselect"] == "on",
             selection=selection if "postselection_detector_indices" in semantics else None,
             observable=observable, metadata=metadata,
         )

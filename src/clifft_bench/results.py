@@ -13,7 +13,7 @@ from typing import Any
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import Counts, validate_counts
-from clifft_bench.selection import detector_mask, has_postselection
+from clifft_bench.selection import detector_mask
 from clifft_bench.system import thread_environment
 
 FORMAT = "clifft-bench/raw/v2"
@@ -36,6 +36,7 @@ CASE_FIELDS = (
     "error_phase",
     "error_type",
     "error_message",
+    "postselect",
     "shots_per_call",
     "threads_requested",
     "threads_effective",
@@ -100,15 +101,24 @@ def _timestamp(value: Any) -> datetime:
     return result
 
 
-def _counts(sample: dict, postselect: bool) -> None:
-    values = {
-        key: sample[key]
-        for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors")
-    }
-    for key, value in values.items():
-        _number(value, key, integer=True)
-    errors = validate_counts(Counts(**values), postselect=postselect)
-    _require(not errors, "; ".join(errors))
+def _sample(sample: dict, execution: dict, metadata: dict, *, shots: int) -> None:
+    _number(sample["attempted_shots"], "attempted_shots", integer=True, positive=True)
+    if execution["postselect"] == "on":
+        values = {key: sample[key] for key in (
+            "attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"
+        )}
+        for key, value in values.items():
+            _number(value, key, integer=True)
+        errors = validate_counts(Counts(**values), postselect=True)
+        _require(not errors, "; ".join(errors))
+        _require("packed_output" not in sample, "counts endpoint returned packed evidence")
+    else:
+        _require(not {"accepted_shots", "discarded_shots", "logical_errors"} & sample.keys(),
+                 "packed endpoint must not report reduced counts")
+        _require(sample["packed_output"] == {
+            name: [shots, (metadata[f"num_{name}"] + 7) // 8]
+            for name in ("detectors", "observables")
+        }, "invalid packed output dimensions")
     _number(sample["duration_seconds"], "duration_seconds", positive=True)
 
 
@@ -232,7 +242,9 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     environment = thread_environment(threads)
     _require(execution["threads"] == execution["threads_requested"] == threads,
              "mismatched thread budget")
-    _require(execution["postselection"] is has_postselection(semantics),
+    _require(execution["postselect"] in workload["postselect_modes"]
+             and execution["postselect"] in {"on", "off"}
+             and execution["postselect"] == contract["execution"]["postselect"],
              "invalid selection contract")
     _require(case["status"] in {"success", "error", "unsupported", "interrupted"},
              "no terminal case outcome")
@@ -249,7 +261,11 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
             and case["correctness"]["timed_region"] is False,
             "correctness did not pass",
         )
-        _counts(case["correctness"]["details"], execution["postselection"])
+        _sample(case["correctness"]["details"], execution, expected_metadata,
+                shots=campaign["measurement"]["correctness_shots"])
+        _require(case["correctness"]["details"]["attempted_shots"]
+                 == campaign["measurement"]["correctness_shots"],
+                 "correctness call differs from requested shots")
         _require(
             bool(case["samples"]) and len(case["samples"]) == execution["repetitions"],
             "incomplete timed samples",
@@ -269,7 +285,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
             _require(case["status"] == "error" and case["error"]["phase"] == "first_call_warmup",
                      "invalid first call was not recorded as a failure")
         else:
-            _counts(first_call, execution["postselection"])
+            _sample(first_call, execution, expected_metadata, shots=execution["shots_per_call"])
             _require(first_call["attempted_shots"] == execution["shots_per_call"],
                      "first call differs from public call size")
     if case["status"] == "success":
@@ -343,7 +359,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
                 "invalid Tsim runtime provenance",
             )
     for repetition, sample in enumerate(case["samples"]):
-        _counts(sample, execution["postselection"])
+        _sample(sample, execution, expected_metadata, shots=execution["shots_per_call"])
         _number(sample["api_calls"], "api_calls", integer=True, positive=True)
         _number(sample["peak_rss_bytes"], "peak RSS", integer=True, positive=True)
         _number(sample["throughput_attempted_shots_per_second"], "throughput", positive=True)
@@ -471,6 +487,7 @@ def _compatible(left: dict, right: dict) -> None:
         "incompatible comparison workload/selection semantics",
     )
     for key in (
+        "postselect",
         "shots_per_call",
         "memory_limit_bytes",
         "threads_requested",
@@ -511,6 +528,7 @@ def case_rows(document: dict) -> list[dict]:
                 "error_phase": error.get("phase", ""),
                 "error_type": error.get("type", ""),
                 "error_message": error.get("message", ""),
+                "postselect": execution["postselect"],
                 "shots_per_call": execution["shots_per_call"],
                 "threads_requested": execution["threads_requested"],
                 "threads_effective": (

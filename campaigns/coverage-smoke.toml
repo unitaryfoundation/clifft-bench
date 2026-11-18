@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 profile_id = "coverage-smoke"
 classification = "smoke"
 seed = 20261029
@@ -15,61 +15,6 @@ min_sample_seconds = 0.01
 repetitions = 1
 
 [[cases]]
-id = "msc-d3-inject-cultivate-p1e-3-unselected--clifft-coverage"
-variant_id = "clifft-coverage"
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-
-[[cases]]
-id = "surface-code-d7-r7-p1e-3-unselected--clifft-coverage"
-variant_id = "clifft-coverage"
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-
-[[cases]]
-id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--clifft-coverage"
-variant_id = "clifft-coverage"
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-
-[[cases]]
-id = "quantum-volume-q10-seed42-all-observables--clifft-coverage"
-variant_id = "clifft-coverage"
-workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-
-[[cases]]
-id = "quantum-volume-q20-seed42-all-observables--clifft-coverage"
-variant_id = "clifft-coverage"
-workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 1
-
-[cases.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-
-[[cases]]
 id = "msc-d7-proxy-unverified-p1e-3--clifft-coverage"
 variant_id = "clifft-coverage"
 workload_id = "msc-d7-proxy-unverified-p1e-3"
@@ -78,7 +23,9 @@ shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-options_preset = "clifft-scheduled"
+postselect = "on"
+threads = 1
+options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
 id = "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage"
@@ -89,72 +36,61 @@ shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-options_preset = "clifft-scheduled"
+postselect = "on"
+threads = 1
+options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
-id = "msc-d3-inject-cultivate-p1e-3-unselected--symft-coverage"
-variant_id = "symft-coverage"
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "symft-2026.10.8"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
-
-[[cases]]
-id = "surface-code-d7-r7-p1e-3-unselected--symft-coverage"
-variant_id = "symft-coverage"
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "symft-2026.10.8"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
-
-[[cases]]
-id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--symft-coverage"
-variant_id = "symft-coverage"
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "symft-2026.10.8"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
-
-[[cases]]
-id = "quantum-volume-q10-seed42-all-observables--symft-coverage"
-variant_id = "symft-coverage"
+id = "quantum-volume-q10-seed42-all-observables--clifft-coverage-off"
+variant_id = "clifft-coverage-off"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "symft-2026.10.8"
+implementation_id = "clifft-0.13.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+postselect = "off"
+threads = 1
+options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
-id = "quantum-volume-q20-seed42-all-observables--symft-coverage"
-variant_id = "symft-coverage"
+id = "quantum-volume-q20-seed42-all-observables--clifft-coverage-off"
+variant_id = "clifft-coverage-off"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "symft-2026.10.8"
-shots_per_call = 1
+implementation_id = "clifft-0.13.0"
+shots_per_call = 32
 
 [cases.execution]
 batch_size = "auto"
+postselect = "off"
+threads = 1
+options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
-[cases.execution.options]
-sample_chunk_shots = 0
+[[cases]]
+id = "msc-d7-proxy-unverified-p1e-3--clifft-coverage-off"
+variant_id = "clifft-coverage-off"
+workload_id = "msc-d7-proxy-unverified-p1e-3"
+implementation_id = "clifft-0.13.0"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+threads = 1
+options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
+
+[[cases]]
+id = "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage-off"
+variant_id = "clifft-coverage-off"
+workload_id = "msc-full-d5-cultivation-selected-p1e-3"
+implementation_id = "clifft-0.13.0"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+threads = 1
+options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
 id = "msc-d7-proxy-unverified-p1e-3--symft-coverage"
@@ -165,59 +101,48 @@ shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
-
-[[cases]]
-id = "msc-d3-inject-cultivate-p1e-3-unselected--tsim-coverage"
-variant_id = "tsim-coverage"
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "tsim-1.0.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "on"
+threads = 1
 
 [[cases]]
-id = "surface-code-d7-r7-p1e-3-unselected--tsim-coverage"
-variant_id = "tsim-coverage"
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "tsim-1.0.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-
-[[cases]]
-id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected--tsim-coverage"
-variant_id = "tsim-coverage"
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-implementation_id = "tsim-1.0.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-
-[[cases]]
-id = "quantum-volume-q10-seed42-all-observables--tsim-coverage"
-variant_id = "tsim-coverage"
+id = "quantum-volume-q10-seed42-all-observables--symft-coverage-off"
+variant_id = "symft-coverage-off"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "tsim-1.0.0"
+implementation_id = "symft-2026.10.8"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"
+threads = 1
 
 [[cases]]
-id = "quantum-volume-q20-seed42-all-observables--tsim-coverage"
-variant_id = "tsim-coverage"
+id = "quantum-volume-q20-seed42-all-observables--symft-coverage-off"
+variant_id = "symft-coverage-off"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "tsim-1.0.0"
-shots_per_call = 1
+implementation_id = "symft-2026.10.8"
+shots_per_call = 32
 
 [cases.execution]
 batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"
+threads = 1
+
+[[cases]]
+id = "msc-d7-proxy-unverified-p1e-3--symft-coverage-off"
+variant_id = "symft-coverage-off"
+workload_id = "msc-d7-proxy-unverified-p1e-3"
+implementation_id = "symft-2026.10.8"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"
+threads = 1
 
 [[cases]]
 id = "msc-d7-proxy-unverified-p1e-3--tsim-coverage"
@@ -228,6 +153,9 @@ shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
+threads = 1
+options = {  }
 
 [[cases]]
 id = "msc-full-d5-cultivation-selected-p1e-3--tsim-coverage"
@@ -238,39 +166,58 @@ shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
+threads = 1
+options = {  }
 
 [[cases]]
-id = "msc-d3-inject-cultivate-p1e-3-unselected--xtim-coverage"
-variant_id = "xtim-coverage"
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-implementation_id = "xtim-3.2.2-edf0dd0"
+id = "quantum-volume-q10-seed42-all-observables--tsim-coverage-off"
+variant_id = "tsim-coverage-off"
+workload_id = "quantum-volume-q10-seed42-all-observables"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+postselect = "off"
+threads = 1
+options = {  }
 
 [[cases]]
-id = "surface-code-d7-r7-p1e-3-unselected--xtim-coverage"
-variant_id = "xtim-coverage"
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "xtim-3.2.2-edf0dd0"
+id = "quantum-volume-q20-seed42-all-observables--tsim-coverage-off"
+variant_id = "tsim-coverage-off"
+workload_id = "quantum-volume-q20-seed42-all-observables"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 32
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+threads = 1
+options = {  }
+
+[[cases]]
+id = "msc-d7-proxy-unverified-p1e-3--tsim-coverage-off"
+variant_id = "tsim-coverage-off"
+workload_id = "msc-d7-proxy-unverified-p1e-3"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+postselect = "off"
+threads = 1
+options = {  }
 
 [[cases]]
-id = "surface-code-d7-r7-p1e-3-unselected--stim-coverage"
-variant_id = "stim-coverage"
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-implementation_id = "stim-1.16.0"
+id = "msc-full-d5-cultivation-selected-p1e-3--tsim-coverage-off"
+variant_id = "tsim-coverage-off"
+workload_id = "msc-full-d5-cultivation-selected-p1e-3"
+implementation_id = "tsim-1.0.0"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+postselect = "off"
+threads = 1
+options = {  }

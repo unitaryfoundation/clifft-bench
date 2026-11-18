@@ -227,7 +227,7 @@ def test_out_of_range_observable_is_rejected_before_execution(tmp_path: Path) ->
         load_suite(run_path)
 
 
-@pytest.mark.parametrize("change", ["range", "order", "all", "adapter"])
+@pytest.mark.parametrize("change", ["range", "order", "all"])
 def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
     workload = next(w for w in workloads["workloads"]
@@ -241,8 +241,6 @@ def test_invalid_detector_subset_is_rejected_before_execution(tmp_path, change):
         semantics["postselection_detector_indices"] = [1, 0]
     elif change == "all":
         semantics["postselect_all_detectors"] = True
-    else:
-        workload["compatible_adapters"].append("symft")
     write_toml(workloads_path, workloads)
     run_path = tmp_path / "run.toml"
     write_toml(run_path, run)
@@ -269,8 +267,8 @@ def test_comparisons_require_distinct_existing_variants(tmp_path, change, messag
         load_suite(path)
 
 
-@pytest.mark.parametrize("field", ["shots_per_call", "threads"])
-def test_comparison_rejects_unequal_call_sizes_and_thread_budgets(tmp_path, field):
+@pytest.mark.parametrize("field", ["shots_per_call", "threads", "postselect"])
+def test_comparison_rejects_unequal_execution_contracts(tmp_path, field):
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     run = copy.deepcopy(suite.run)
     comparison = run["comparisons"][0]
@@ -280,6 +278,8 @@ def test_comparison_rejects_unequal_call_sizes_and_thread_budgets(tmp_path, fiel
     workload = next(w for w in variant["workloads"] if w["workload_id"] in baseline_workloads)
     if field == "threads":
         variant["execution"]["threads"] = 8
+    elif field == "postselect":
+        variant["execution"]["postselect"] = "off"
     else:
         workload["shots_per_call"] += 1
     run["workloads_file"] = str(suite.workloads_path)
@@ -346,7 +346,8 @@ def test_listing_does_not_import_simulator_packages():
 @pytest.mark.parametrize("call_size", [17, 31])
 def test_groups_preserve_order_and_propagate_defaults_with_explicit_overrides(tmp_path, call_size):
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
-    clifft = [c for c in run["cases"] if c["variant_id"] == "clifft-current"]
+    clifft = [c for c in run["cases"] if c["variant_id"] == "clifft-current"
+              and c["execution"]["postselect"] == "on"]
     members = list(dict.fromkeys(c["workload_id"] for c in clifft))[:2][::-1]
     for workload in workloads["workloads"]:
         if workload["id"] in members:

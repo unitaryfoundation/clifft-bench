@@ -129,7 +129,9 @@ def test_failed_cases_keep_evidence_without_exporting_throughput(raw_result, pha
     assert comparison_pairs(raw_result)[0]["ratio"] is None
 
 
-@pytest.mark.parametrize("field", ["digest", "selection", "calls", "memory", "threads"])
+@pytest.mark.parametrize(
+    "field", ["digest", "selection", "calls", "memory", "threads", "postselect"]
+)
 def test_comparisons_reject_incompatible_inputs(raw_result, field):
     case = raw_result["cases"][1]
     if field == "digest":
@@ -140,6 +142,8 @@ def test_comparisons_reject_incompatible_inputs(raw_result, field):
         case["execution"]["shots_per_call"] += 1
     elif field == "threads":
         case["execution"]["threads_requested"] = 8
+    elif field == "postselect":
+        case["execution"]["postselect"] = "off"
     else:
         case["execution"]["memory_limit_bytes"] = 1 << 30
     with pytest.raises(ValueError, match="incompatible comparison"):

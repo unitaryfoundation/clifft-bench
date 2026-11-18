@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter, Sample
 from clifft_bench.selection import require_all_or_none
 
 
@@ -22,11 +22,16 @@ class _PreparedFixture(PreparedAdapter):
         self._parameters = parameters
         self.runtime_metadata = runtime_metadata
 
-    def sample(self, shots: int, seed: int) -> Counts:
+    def sample(self, shots: int, seed: int) -> Sample:
         if self._parameters.get("write_native_stdout"):
             os.write(1, b"fixture native sample output\n")
         if seed == self._parameters.get("sleep_on_seed"):
             time.sleep(float(self._parameters.get("sleep_seconds", 0)))
+        if not self._postselect:
+            import numpy as np
+
+            return tuple(np.zeros((shots, (self.runtime_metadata[f"num_{name}"] + 7) // 8),
+                                  dtype=np.uint8) for name in ("detectors", "observables"))
         discarded = shots // 10 if self._postselect else 0
         accepted = shots - discarded
         errors = min(accepted, (shots + seed % 3) // 20)
@@ -36,6 +41,7 @@ class _PreparedFixture(PreparedAdapter):
 class FixtureAdapter(Adapter):
     name = "fixture"
     supported_threads = (1, 8)
+    supported_postselect = ("on", "off")
 
     def prepare(
         self,
@@ -62,7 +68,7 @@ class FixtureAdapter(Adapter):
             **workload["expected_metadata"],
         }
         return _PreparedFixture(
-            bool(workload["semantics"]["postselect_all_detectors"]),
+            execution["postselect"] == "on",
             metadata,
             parameters,
         )

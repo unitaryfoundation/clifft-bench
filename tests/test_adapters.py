@@ -19,7 +19,8 @@ def test_direct_prepare_rejects_invalid_batch_size(tmp_path, adapter_name, batch
         load_adapter(adapter_name).prepare(
             artifact_path=tmp_path / "unused.stim",
             workload={"semantics": {"postselect_all_detectors": False}},
-            execution={"batch_size": batch_size},
+            execution={"postselect": "off" if adapter_name == "stim" else "on",
+                       "batch_size": batch_size},
         )
 
 
@@ -27,7 +28,9 @@ def test_direct_prepare_rejects_invalid_batch_size(tmp_path, adapter_name, batch
 @pytest.mark.parametrize("batch_size", ["auto", 1, 32])
 def test_execution_accepts_auto_and_positive_batch_sizes(adapter_name, batch_size):
     assert load_adapter(adapter_name).validate_execution(
-        {"batch_size": batch_size}, {"semantics": {"postselect_all_detectors": False}},
+        {"postselect": "off" if adapter_name == "stim" else "on",
+                       "batch_size": batch_size},
+        {"semantics": {"postselect_all_detectors": False}},
     ) == 1
 
 
@@ -116,7 +119,7 @@ def test_symft_rejects_effective_batching_mismatch(
                 }
             },
             execution={
-                "batch_size": 32,
+                "postselect": "on", "batch_size": 32,
                 "options": {"sample_chunk_shots": 2048},
             },
         )
@@ -201,7 +204,7 @@ def test_clifft_explicit_batch_is_forwarded_and_recorded(
             }
         },
         execution={
-            "batch_size": batch_size,
+            "postselect": "on", "batch_size": batch_size,
             "threads": requested_threads,
             "options": {},
         },
@@ -238,7 +241,7 @@ def test_symft_counts_use_native_threads_and_legacy_backend(
         artifact_path=tmp_path / "unused.stim",
         workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect},
                   "expected_metadata": {"num_detectors": 0}},
-        execution={"batch_size": batch_size, "threads": threads},
+        execution={"postselect": "on", "batch_size": batch_size, "threads": threads},
     )
     assert prepared.runtime_metadata["threads"] == threads
     assert prepared.runtime_metadata["effective_batch_size"] == (64 if batch_size == "auto" else 32)
@@ -275,7 +278,7 @@ def test_symft_single_backend_normalizes_disabled_batch_sentinel(
             }
         },
         execution={
-            "batch_size": 1,
+            "postselect": "on", "batch_size": 1,
             "options": {"sample_chunk_shots": 2048},
         },
     )
@@ -357,7 +360,7 @@ def test_clifft_scalar_and_postselection_follow_available_api(
         artifact_path=artifact,
         workload={"semantics": {"observable_index": 0, "postselect_all_detectors": postselect,
                                 }},
-        execution={"batch_size": 1},
+        execution={"postselect": "on", "batch_size": 1},
     )
     assert prepared.sample(128, 7).attempted_shots == 128
     assert prepared.runtime_metadata["postselection_before_optimization"] is early_postselection

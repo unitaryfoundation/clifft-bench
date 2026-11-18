@@ -46,7 +46,8 @@ def test_invalid_scheduler_options_are_rejected_before_launch(tmp_path, options)
 
 def test_scheduler_options_cannot_be_silently_ignored_by_another_adapter(tmp_path):
     path, document = _release_copy(tmp_path)
-    document["variants"][2]["execution"]["options"]["scheduler"] = _scheduler_options()
+    variant = next(v for v in document["variants"] if v["id"] == "symft-current")
+    variant["execution"]["options"]["scheduler"] = _scheduler_options()
     write_toml(path, document)
     with pytest.raises(ValueError, match="unknown SymFT options"):
         load_suite(path)
@@ -60,7 +61,8 @@ def test_requested_scheduler_is_rejected_on_older_clifft(tmp_path, monkeypatch):
         ClifftAdapter().prepare(
             artifact_path=tmp_path / "unused.stim",
             workload={"semantics": {}},
-            execution={"batch_size": 1, "options": {"scheduler": _scheduler_options()}},
+            execution={"postselect": "on", "batch_size": 1,
+                       "options": {"scheduler": _scheduler_options()}},
         )
 
 

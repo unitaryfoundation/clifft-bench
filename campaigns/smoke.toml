@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 profile_id = "adapter-smoke"
 classification = "smoke"
 seed = 20260808
@@ -23,8 +23,8 @@ shots_per_call = 10000
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+options = {  }
+postselect = "on"
 
 [[cases]]
 id = "distillation-15to1-smoke-symft"
@@ -35,9 +35,8 @@ shots_per_call = 10000
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
 [[cases]]
 id = "distillation-15to1-smoke-xtim"
@@ -48,8 +47,8 @@ shots_per_call = 10000
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+options = {  }
+postselect = "on"
 
 [[cases]]
 id = "msc-d3-smoke-xtim"
@@ -60,8 +59,8 @@ shots_per_call = 10000
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+options = {  }
+postselect = "on"
 
 [[cases]]
 id = "draper-adder-smoke-clifft"
@@ -72,8 +71,8 @@ shots_per_call = 2
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+options = {  }
+postselect = "off"
 
 [[cases]]
 id = "msc-d3-smoke-clifft"
@@ -85,6 +84,7 @@ shots_per_call = 2048
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
 [[cases]]
 id = "msc-d3-smoke-symft"
@@ -95,9 +95,8 @@ shots_per_call = 2048
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
 [[cases]]
 id = "distillation-85q-smoke-clifft"
@@ -109,6 +108,7 @@ shots_per_call = 8
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
 [[cases]]
 id = "distillation-85q-smoke-symft"
@@ -119,9 +119,8 @@ shots_per_call = 8
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
 [[cases]]
 id = "surface-d7-smoke-stim"
@@ -132,8 +131,8 @@ shots_per_call = 4096
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
+options = {  }
+postselect = "off"
 
 [[cases]]
 id = "bt27-direct-x-smoke-clifft"
@@ -145,6 +144,7 @@ shots_per_call = 2048
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[cases]]
 id = "bt81-direct-x-smoke-clifft"
@@ -156,6 +156,7 @@ shots_per_call = 2048
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[cases]]
 id = "reed-muller-measured-smoke-clifft"
@@ -167,6 +168,7 @@ shots_per_call = 2048
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[cases]]
 id = "reed-muller-measured-smoke-symft"
@@ -177,6 +179,5 @@ shots_per_call = 2048
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+options = { sample_chunk_shots = 0 }
+postselect = "off"

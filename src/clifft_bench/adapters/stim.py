@@ -1,4 +1,4 @@
-"""Stim's compiled circuit detector sampler, reduced to the aggregate contract."""
+"""Stim's compiled circuit detector sampler, returning native packed records."""
 
 from __future__ import annotations
 
@@ -7,29 +7,24 @@ import time
 from pathlib import Path
 from typing import Any
 
-from clifft_bench.adapters._shared import PackedCountsReducer
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
-from clifft_bench.selection import require_all_or_none
+from clifft_bench.adapters.base import Adapter, PreparedAdapter, Sample, UnsupportedConfiguration
 
 
 class _PreparedStim(PreparedAdapter):
-    def __init__(self, circuit: Any, *, chunk: int | None, postselect: bool, observable: int,
-                 seed: int):
+    def __init__(self, circuit: Any, *, seed: int):
         import numpy as np
         import stim
 
-        self._chunk = chunk
         # Stim returns flips relative to its reference trajectory. Convert that
         # reference to *raw* parity once, including nonzero deterministic bits.
         reference = circuit.reference_sample()
         det_ref, obs_ref = circuit.compile_m2d_converter(skip_reference_sample=True).convert(
             measurements=reference[None, :], separate_observables=True
         )
-        self._counts = PackedCountsReducer(
-            np.packbits(det_ref, axis=1, bitorder="little"),
-            np.packbits(obs_ref, axis=1, bitorder="little"),
-            observable=observable, postselect=postselect,
-        )
+        if np.any(det_ref) or np.any(obs_ref):
+            raise UnsupportedConfiguration(
+                "Stim's reference-relative output differs from raw detector/observable parity"
+            )
         started = time.perf_counter()
         self._sampler = circuit.compile_detector_sampler(seed=seed)
         compile_seconds = time.perf_counter() - started
@@ -39,9 +34,9 @@ class _PreparedStim(PreparedAdapter):
             "threads": 1,
             "precision": "binary-stabilizer",
             "reference_convention": "raw-record-parity",
-            "batch_enabled": None if chunk is None else chunk > 1,
-            "effective_batch_size": chunk,
-            "batch_parameter": "public-detector-sampler-chunk-shots",
+            "batch_enabled": None,
+            "effective_batch_size": None,
+            "batch_parameter": "native-detector-sampler",
             "seed_policy": "continuous-stream-seeded-at-prepare",
             "initial_seed": seed,
             "compile_seconds": compile_seconds,
@@ -56,25 +51,14 @@ class _PreparedStim(PreparedAdapter):
             "raw_reference_observable_ones": int(obs_ref.sum()),
         }
 
-    def sample(self, shots: int, seed: int) -> Counts:
-        # The worker supplies seed+call as an audit identifier; Stim consumes a
-        # persistent native RNG stream. Never recompile inside the timed call.
-        del seed
-        accepted = errors = 0
-        chunk = self._chunk or shots
-        for offset in range(0, shots, chunk):
-            n = min(chunk, shots - offset)
-            detectors, observables = self._sampler.sample(
-                n, separate_observables=True, bit_packed=True
-            )
-            kept, logical_errors = self._counts.count(detectors, observables)
-            accepted += kept
-            errors += logical_errors
-        return Counts(shots, accepted, shots - accepted, errors)
+    def sample(self, shots: int, seed: int) -> Sample:
+        del seed  # The persistent sampler owns the RNG stream.
+        return self._sampler.sample(shots, separate_observables=True, bit_packed=True)
 
 
 class StimAdapter(Adapter):
     name = "stim"
+    supported_postselect = ("off",)
 
     def prepare(
         self, *, artifact_path: Path, workload: dict[str, Any], execution: dict[str, Any],
@@ -83,7 +67,6 @@ class StimAdapter(Adapter):
         self.validate_execution(execution, workload)
         import stim
 
-        require_all_or_none(workload["semantics"], self.name)
         text = artifact_path.read_text()
         started = time.perf_counter()
         circuit = stim.Circuit(text)
@@ -91,13 +74,6 @@ class StimAdapter(Adapter):
         observable = int(workload["semantics"]["observable_index"])
         if not 0 <= observable < circuit.num_observables:
             raise ValueError("observable index is outside the circuit")
-        chunk = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
-        prepared = _PreparedStim(
-            circuit,
-            chunk=chunk,
-            observable=observable,
-            postselect=bool(workload["semantics"]["postselect_all_detectors"]),
-            seed=seed,
-        )
+        prepared = _PreparedStim(circuit, seed=seed)
         prepared.runtime_metadata["compile_seconds"] += parse_seconds
         return prepared

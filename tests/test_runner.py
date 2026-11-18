@@ -44,12 +44,13 @@ def _write_fixture_suite(
             {
                 "id": "tiny-fixture",
                 "family": "test",
+                "postselect_modes": ["on", "off"],
                 "description": "Deterministic harness fixture.",
                 "artifact": {"path": "tiny.stim", "sha256": digest},
                 "parameters": parameters or {},
                 "semantics": {
                     "observable_index": 0,
-                    "postselect_all_detectors": False,
+                    "postselect_all_detectors": True,
                 },
                 "expected_metadata": {
                     "num_qubits": 1,
@@ -94,7 +95,7 @@ def _write_fixture_suite(
             "implementation_id": identifier,
             "shots_per_call": 8,
             "execution": {
-                "batch_size": 1,
+                "postselect": "on", "batch_size": 1,
                 "options": {},
             },
         }
@@ -230,56 +231,23 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
         )
 
 
-def test_symft_unselected_worker_uses_auto_and_preserves_fired_shots(tmp_path):
-    pytest.importorskip("symft")
-    run_path, run, software = _write_fixture_suite(tmp_path)
-    artifact = tmp_path / "tiny.stim"
-    # Both raw parities are one. Native aggregate counts would discard every
-    # shot even with early postselection disabled; the record path must keep all.
-    artifact.write_text(
-        "X 0 1\nT 1\nM 0\nDETECTOR rec[-1]\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
-    )
-    workloads = read_toml(tmp_path / "workloads.toml")
-    workload = workloads["workloads"][0]
-    workload["artifact"]["sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
-    workload["compatible_adapters"] = ["symft"]
-    workload["expected_metadata"].update(num_qubits=2, num_measurements=2, num_detectors=1)
-    _write(tmp_path / "workloads.toml", workloads)
-    implementation = software["implementations"][0]
-    pinned = next(
-        item for item in read_toml(repository_root() / "software.toml")["implementations"]
-        if item["adapter"] == "symft"
-    )
-    implementation.update({k: v for k, v in pinned.items() if k != "id"})
-    _write(tmp_path / "software.toml", software)
+def test_symft_off_worker_records_unsupported(tmp_path):
+    path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]
-    run["cases"][0]["shots_per_call"] = 67
-    run["cases"][0]["execution"].update(
-        batch_size="auto", options={"sample_chunk_shots": 0},
-    )
-    run["measurement"]["setup_timeout_seconds"] = 60
-    _write(run_path, run)
-
-    output = tmp_path / "result"
-    result = run_suite(
-        load_suite(run_path),
-        python_executable=sys.executable,
-        output_dir=output,
-        memory_limit_gib=1,
-    )
-    validate_result(json.loads((output / "raw.json").read_text()))
+    run["cases"][0]["execution"]["postselect"] = "off"
+    software["implementations"][0]["adapter"] = "symft"
+    workloads = read_toml(tmp_path / "workloads.toml")
+    workloads["workloads"][0]["compatible_adapters"] = ["symft"]
+    _write(tmp_path / "workloads.toml", workloads)
+    _write(tmp_path / "software.toml", software)
+    _write(path, run)
+    result = run_suite(load_suite(path), python_executable=sys.executable,
+                       output_dir=tmp_path / "result")
+    validate_result(result)
     case = result["cases"][0]
-    assert case["status"] == "success", case["error"]
-    metadata = case["setup"]["runtime_metadata"]
-    assert metadata["installed_source_commit"] == implementation["commit_sha"]
-    assert metadata["sampling_backend"] == "compile_sampler"
-    assert metadata["record_materialization"] == "bit-packed-measurements"
-    assert case["execution"]["batch_size"] == "auto"
-    assert case["first_call_warmup"]["attempted_shots"] == case["execution"]["shots_per_call"]
-    assert case["correctness"]["status"] == "passed"
-    for counts in [case["first_call_warmup"], case["correctness"]["details"], *case["samples"]]:
-        assert counts["accepted_shots"] == counts["logical_errors"] == counts["attempted_shots"]
-        assert counts["discarded_shots"] == 0
+    assert case["status"] == "unsupported"
+    assert "postselect=off" in case["error"]["message"]
+    assert case["setup"] is None and not case["samples"]
 
 
 def test_tsim_worker_records_full_call_warmup_and_manifest_seed(tmp_path):
@@ -493,12 +461,13 @@ def test_eight_core_worker_records_applied_affinity_and_preimport_caps(tmp_path)
     assert metadata["address_space_limit_bytes"] == 1 << 30
 
 
-@pytest.mark.parametrize("adapter", ["stim", "xtim", "symft"])
+@pytest.mark.parametrize("adapter", ["stim", "xtim"])
 @pytest.mark.parametrize("batch_size", [1, "auto"])
 def test_unsupported_threads_survive_export_on_a_restricted_host(tmp_path, adapter, batch_size):
     path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]
-    run["cases"][0]["execution"].update(threads=8, batch_size=batch_size)
+    run["cases"][0]["execution"].update(
+        threads=8, batch_size=batch_size, postselect="off" if adapter == "stim" else "on")
     software["implementations"][0]["adapter"] = adapter
     workloads = read_toml(tmp_path / "workloads.toml")
     workload = workloads["workloads"][0]
@@ -528,3 +497,25 @@ def test_unsupported_threads_survive_export_on_a_restricted_host(tmp_path, adapt
         row, = csv.DictReader(stream)
     assert row["status"] == "unsupported"
     assert row["median_attempted_shots_per_second"] == ""
+
+
+def test_packed_worker_evidence_round_trips_without_counts(tmp_path):
+    from clifft_bench.results import case_rows
+
+    path, run, _ = _write_fixture_suite(tmp_path)
+    for case in run["cases"]:
+        case["execution"]["postselect"] = "off"
+    _write(path, run)
+    result = run_suite(load_suite(path), python_executable=sys.executable,
+                       output_dir=tmp_path / "result")
+    persisted = json.loads((tmp_path / "result/raw.json").read_text())
+    validate_result(persisted)
+    assert {row["postselect"] for row in case_rows(persisted)} == {"off"}
+    for case in result["cases"]:
+        assert case["status"] == "success", case["error"]
+        for sample in [case["first_call_warmup"], case["correctness"]["details"], *case["samples"]]:
+            assert sample["packed_output"] == {"detectors": [8, 0], "observables": [8, 1]}
+            assert not {"accepted_shots", "discarded_shots", "logical_errors"} & sample.keys()
+    persisted["cases"][0]["samples"][0]["packed_output"]["observables"][1] = 0
+    with pytest.raises(ValueError, match="packed output dimensions"):
+        validate_result(persisted)

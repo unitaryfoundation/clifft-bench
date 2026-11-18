@@ -1,4 +1,4 @@
-"""Source verification and packed-record reduction shared by adapters."""
+"""Source verification shared by adapters."""
 
 from __future__ import annotations
 
@@ -25,30 +25,3 @@ def verify_source_installation(
             "install the manifest's pinned Git requirement, not a same-version PyPI wheel"
         )
     return {"installed_source_commit": vcs["commit_id"], "installed_direct_url": direct_url}
-
-
-class PackedCountsReducer:
-    """Convert little-endian packed flips to raw-parity aggregate counts."""
-
-    def __init__(self, det_ref: Any, obs_ref: Any, *, observable: int, postselect: bool):
-        import numpy as np
-
-        self._np = np
-        self._det_ref = det_ref if np.any(det_ref) else None
-        self._obs_ref = obs_ref if np.any(obs_ref) else None
-        self._observable = observable
-        self._postselect = postselect
-
-    def count(self, detectors: Any, observables: Any) -> tuple[int, int]:
-        """Return accepted shots and logical errors; modify supplied records in place."""
-        np = self._np
-        if self._det_ref is not None:
-            detectors ^= self._det_ref
-        if self._obs_ref is not None:
-            observables ^= self._obs_ref
-        keep = (
-            ~np.any(detectors, axis=1)
-            if self._postselect else np.ones(len(detectors), dtype=bool)
-        )
-        logical = (observables[:, self._observable // 8] >> (self._observable % 8)) & 1
-        return int(np.count_nonzero(keep)), int(np.count_nonzero(logical[keep]))

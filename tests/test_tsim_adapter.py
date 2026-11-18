@@ -33,7 +33,7 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, batch=256, seed=42
         workload={"semantics": {
             **SEMANTICS, "observable_index": observable, "postselect_all_detectors": postselect,
         }},
-        execution={"batch_size": batch, "options": {}},
+        execution={"postselect": "on" if postselect else "off", "batch_size": batch, "options": {}},
         seed=seed,
     )
 
@@ -41,8 +41,11 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, batch=256, seed=42
 def test_tsim_raw_nonzero_parity_and_observable_index_beyond_first_byte(tmp_path):
     text = "X 0\nM 0\n" + "DETECTOR rec[-1]\n" * 9 + "OBSERVABLE_INCLUDE(9) rec[-1]\n"
     p = prepare(tmp_path, text, observable=9, postselect=False, batch=7)
-    c = p.sample(19, 7)
-    assert c.accepted_shots == c.logical_errors == 19
+    dets, obs = p.sample(19, 7)
+    assert dets.shape == obs.shape == (19, 2)
+    assert (dets[:, 0] == 255).all()
+    assert (dets[:, 1] & 1 == 1).all()
+    assert (obs[:, 1] & 2 == 2).all()
     p = prepare(tmp_path, text, observable=9, batch=7)
     c = p.sample(19, 7)
     assert c.discarded_shots == 19
@@ -62,13 +65,14 @@ def test_tsim_joint_quantum_noise_and_postselection_law(tmp_path, postselect):
     shots = 30001  # Exercise a partial final batch.
     counts = p.sample(shots, 99)
     q = math.sin(math.pi / 8)**2
-    assert validate_counts(counts, postselect=postselect) == []
     if postselect:
+        assert validate_counts(counts, postselect=True) == []
         assert counts.accepted_shots / shots == pytest.approx(.8 * (1-q), abs=.015)
         assert counts.logical_errors == 0  # Same quantum bit as the rejected detector.
     else:
-        assert counts.accepted_shots == shots
-        assert counts.logical_errors / shots == pytest.approx(q, abs=.015)
+        dets, obs = counts
+        assert dets.shape == obs.shape == (shots, 1)
+        assert (obs[:, 0] & 1).mean() == pytest.approx(q, abs=.015)
     assert p.runtime_metadata["trajectory_sharing"] is True
     assert p.runtime_metadata["precision"] == "complex-fp64"
     assert p.runtime_metadata["batch_size_applicable"] is True
@@ -88,9 +92,12 @@ def test_tsim_continuous_seeded_stream_does_not_recompile_or_replay(tmp_path, mo
     second = a.sample(30001, 200)
     # Audit identifiers do not reset the native stream. A fresh prepared
     # sampler with the same initial seed reproduces the entire sequence.
-    assert first == b.sample(30001, 999)
-    assert second == b.sample(30001, 999)
-    assert first != second
+    import numpy as np
+
+    for actual, replay in ((first, b.sample(30001, 999)), (second, b.sample(30001, 999))):
+        for a_bits, b_bits in zip(actual, replay, strict=True):
+            np.testing.assert_array_equal(a_bits, b_bits)
+    assert not np.array_equal(first[1], second[1])
     assert a.runtime_metadata["initial_seed"] == 123
 
 
@@ -104,7 +111,13 @@ def test_tsim_seeded_counts_do_not_depend_on_batch_capacity(tmp_path, postselect
         prepare(tmp_path, text, batch=batch, postselect=postselect).sample(1031, 7)
         for batch in [1, 7, 256]
     ]
-    assert counts[0] == counts[1] == counts[2]
+    if postselect:
+        assert counts[0] == counts[1] == counts[2]
+    else:
+        import numpy as np
+        for result in counts[1:]:
+            for a, b in zip(counts[0], result, strict=True):
+                np.testing.assert_array_equal(a, b)
 
 
 @pytest.mark.parametrize("rows", [0, 3, 7])
@@ -132,13 +145,13 @@ def test_tsim_counts_only_selected_packed_bit_in_strided_rows(observable):
         circuit=SimpleNamespace(num_detectors=0),
         sample=lambda **kwargs: (np.zeros((3, 0), dtype=np.uint8), obs),
     )
-    p = _PreparedTsim(sampler, batch=None, postselect=False, observable=observable,
+    p = _PreparedTsim(sampler, batch=None, postselect=True, observable=observable,
                       metadata={"num_detectors": 0, "num_observables": observable + 1})
     assert p.sample(3, 9) == Counts(3, 3, 0, 1)
 
 
 @pytest.mark.parametrize("damage", [
-    "unselected_missing", "extra", "unequal_rows", "width", "dtype",
+    "extra", "unequal_rows", "width", "dtype",
 ])
 def test_tsim_rejects_inconsistent_native_rows(damage):
     np = pytest.importorskip("numpy")
@@ -153,7 +166,7 @@ def test_tsim_rejects_inconsistent_native_rows(damage):
         dets = dets.astype(bool)
     sampler = SimpleNamespace(circuit=SimpleNamespace(num_detectors=1),
                               sample=lambda **kwargs: (dets, obs))
-    p = _PreparedTsim(sampler, batch=4, postselect=damage != "unselected_missing",
+    p = _PreparedTsim(sampler, batch=4, postselect=True,
                       observable=0, metadata={"num_detectors": 1, "num_observables": 1})
     with pytest.raises(RuntimeError, match="inconsistent detector/observable rows"):
         p.sample(7, 9)
@@ -162,7 +175,7 @@ def test_tsim_rejects_inconsistent_native_rows(damage):
 @pytest.mark.parametrize("threads", [1, 8])
 def test_tsim_requires_explicit_and_effective_thread_budget(tmp_path, monkeypatch, threads):
     monkeypatch.delenv("NUMBA_NUM_THREADS")
-    execution = {"threads": threads, "batch_size": 1}
+    execution = {"threads": threads, "postselect": "on", "batch_size": 1}
     with pytest.raises(ValueError, match="NUMBA_NUM_THREADS"):
         TsimAdapter().prepare(artifact_path=tmp_path, workload={}, execution=execution)
     monkeypatch.setenv("NUMBA_NUM_THREADS", str(threads))
@@ -197,7 +210,7 @@ def test_tsim_records_requested_numba_pool(tmp_path, monkeypatch, threads):
     monkeypatch.setattr(adapter_module, "version", lambda name: "test")
     prepared = TsimAdapter().prepare(
         artifact_path=artifact, workload={"semantics": SEMANTICS},
-        execution={"threads": threads, "batch_size": 32},
+        execution={"threads": threads, "postselect": "on", "batch_size": 32},
     )
     assert prepared.runtime_metadata["threads"] == threads
 
@@ -233,7 +246,7 @@ def test_tsim_release_circuit_metadata_and_counts(workload_id):
     case = next(c for c in suite.cases if c.workload.id == workload_id)
     p = TsimAdapter().prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
-        execution={"batch_size": 16, "options": {}}, seed=42,
+        execution={"postselect": "on", "batch_size": 16, "options": {}}, seed=42,
     )
     assert all(p.runtime_metadata[k] == v
                for k, v in case.workload.definition["expected_metadata"].items())
@@ -245,3 +258,24 @@ def test_tsim_release_circuit_metadata_and_counts(workload_id):
         assert p.runtime_metadata["batch_size_applicable"] is False
     if workload_id == "draper-adder-m16-basis-all-observables":
         assert counts.accepted_shots == 17 and counts.logical_errors == 0
+
+
+def test_tsim_off_returns_native_arrays_and_ignores_workload_mask():
+    import numpy as np
+
+    arrays = np.ones((3, 2), dtype=np.uint8), np.ones((3, 3), dtype=np.uint8)
+    calls = []
+
+    def sample(**kwargs):
+        calls.append(kwargs)
+        return arrays
+
+    p = _PreparedTsim(SimpleNamespace(circuit=SimpleNamespace(num_detectors=9), sample=sample),
+                      batch=None, postselect=False, observable=0, selection=[True] * 9,
+                      metadata={"num_detectors": 9, "num_observables": 17})
+    actual = p.sample(3, 8)
+    assert all(a is b for a, b in zip(actual, arrays, strict=True))
+    assert calls[0]["postselection_mask"] is None
+    assert calls[0]["bit_packed"] is True
+    assert calls[0]["use_detector_reference_sample"] is False
+    assert calls[0]["use_observable_reference_sample"] is False

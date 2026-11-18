@@ -14,27 +14,18 @@ from clifft_bench.selection import detector_mask, has_postselection
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_selection_pairs_reuse_exact_circuits_and_public_call_sizes():
+def test_modes_reuse_canonical_workload_and_call_size():
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
-    workloads = {w["id"]: w for w in suite.workloads_document["workloads"]}
-    pairs = [w for w in workloads.values() if "postselection_pair" in w["parameters"]]
-    assert pairs
-    for unselected in pairs:
-        selected_id = unselected["parameters"]["postselection_pair"]
-        selected = workloads[selected_id]
-        assert selected["artifact"] == unselected["artifact"]
-        assert selected["expected_metadata"] == unselected["expected_metadata"]
-        assert selected["compatible_adapters"] == unselected["compatible_adapters"]
-        assert has_postselection(selected["semantics"])
-        assert not has_postselection(unselected["semantics"])
-        for case in suite.cases:
-            if case.workload.id != unselected["id"]:
-                continue
-            peer = next(c for c in suite.cases if c.workload.id == selected_id
-                        and c.definition["variant_id"] ==
-                        case.definition["variant_id"].replace("-coverage", "-current"))
-            assert case.definition["shots_per_call"] == peer.definition["shots_per_call"]
-            assert case.definition["execution"] == peer.definition["execution"]
+    cases = {(c.definition["variant_id"], c.workload.id): c for c in suite.cases}
+    matched = 0
+    for (variant, workload), off in cases.items():
+        on = cases.get((variant.removesuffix("-off"), workload))
+        if off.definition["execution"]["postselect"] != "off" or on is off or on is None:
+            continue
+        matched += 1
+        assert on.workload is off.workload
+        assert on.definition["shots_per_call"] == off.definition["shots_per_call"]
+    assert matched
 
 
 def test_full_cultivation_mask_follows_pinned_coordinate_rule():
@@ -60,7 +51,7 @@ def test_coverage_smoke_exercises_every_declared_release_combination():
     release = load_suite(ROOT / "campaigns/release-v1.toml")
     smoke = load_suite(ROOT / "campaigns/coverage-smoke.toml")
     expected = {c.id: c for c in release.cases
-                if c.definition["variant_id"].endswith("-coverage")}
+                if "-coverage" in c.definition["variant_id"]}
     assert expected
     assert set(expected) == {c.id for c in smoke.cases}
     for case in smoke.cases:
@@ -96,7 +87,7 @@ def test_partial_selection_counts_only_selected_raw_detector(adapter, batch, sel
                  "postselect_all_detectors": False, "postselection_detector_indices": [selected]}
     prepared = load_adapter(adapter).prepare(
         artifact_path=circuit, workload={"semantics": semantics},
-        execution={"batch_size": batch,
+        execution={"postselect": "on", "batch_size": batch,
                    "options": {}}, seed=918,
     )
     counts = prepared.sample(16384, 919)
@@ -147,7 +138,7 @@ def qv_observable_probability(path: Path, qubits: int, observable: int) -> float
     return float(np.sum(np.abs(state[(indices >> measurements[observable]) & 1 == 1])**2))
 
 
-@pytest.mark.parametrize("adapter", ["clifft", "symft", "tsim"])
+@pytest.mark.parametrize("adapter", ["tsim"])
 @pytest.mark.parametrize("batch", [1, 32])
 @pytest.mark.parametrize("observable", [0, 9])
 def test_repeated_qv10_matches_independent_statevector(adapter, batch, observable):
@@ -168,15 +159,15 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch, observabl
         execution=execution, seed=1742,
     )
     for seed in (1743, 1744):
-        counts = prepared.sample(4096, seed)
-        assert counts.accepted_shots == counts.attempted_shots == 4096
-        assert counts.discarded_shots == 0
-        assert abs(counts.logical_errors - 4096 * probability) <= (
+        detectors, observables = prepared.sample(4096, seed)
+        assert detectors.shape == (4096, 0)
+        ones = int(((observables[:, observable // 8] >> (observable % 8)) & 1).sum())
+        assert abs(ones - 4096 * probability) <= (
             6 * math.sqrt(4096 * probability * (1-probability)) + 1
         )
 
 
-@pytest.mark.parametrize("adapter", ["clifft", "tsim"])
+@pytest.mark.parametrize("adapter", ["tsim"])
 @pytest.mark.parametrize("batch", [1, 32])
 @pytest.mark.parametrize("observable", [1, 16, 17, 32])
 def test_adder_readout_matches_basis_sum(adapter, batch, observable):
@@ -201,7 +192,6 @@ def test_adder_readout_matches_basis_sum(adapter, batch, observable):
         execution=execution, seed=1742,
     )
     assert prepared.runtime_metadata["num_observables"] == 2 * bits + 1
-    counts = prepared.sample(65, 1743)
-    assert counts.attempted_shots == counts.accepted_shots == 65
-    assert counts.discarded_shots == 0
-    assert counts.logical_errors == expected * 65
+    detectors, observables = prepared.sample(65, 1743)
+    assert detectors.shape == (65, 0)
+    assert (((observables[:, observable // 8] >> (observable % 8)) & 1) == expected).all()

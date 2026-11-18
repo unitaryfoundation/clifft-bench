@@ -217,16 +217,17 @@ def review_summary(report: dict) -> str:
         detail = detail.replace("|", "\\|").replace("\n", " ")
         lines.append(f"| {case['case_id']} | {case['status']} | {detail} |")
     lines += ["", "## Measurements", "",
-              "| Case | Shots per call | Compile (s) | First call (s) | "
+              "| Case | Postselection | Shots per call | Compile (s) | First call (s) | "
               "Peak active width | Attempted shots/s (median) |",
-              "| --- | ---: | ---: | ---: | ---: | ---: |"]
+              "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
     for case in cases:
         row = report["rows"][case["case_id"]]
         values = [f"{row[key]:.6g}" if row[key] not in ("", None) else "—" for key in (
             "compile_seconds", "first_call_warmup_seconds", "peak_active_width",
             "median_attempted_shots_per_second",
         )]
-        lines.append(f"| {case['case_id']} | {row['shots_per_call']} | {' | '.join(values)} |")
+        lines.append(f"| {case['case_id']} | {row['postselect']} | "
+                     f"{row['shots_per_call']} | {' | '.join(values)} |")
     lines += [
         "",
         "## Paired comparisons",
@@ -266,7 +267,7 @@ def review_summary(report: dict) -> str:
         "upstream Numba disk cache is retained.",
         "Throughput panels have independent logarithmic axes; compare horizontal positions",
         "within a panel. Quantum Volume has its own panel.",
-        "Selection-off controls, the unverified cultivation proxy, and bulk-call variants",
+        "The unverified cultivation proxy and bulk-call variants",
         "remain in the detailed results above. Colors and marker shapes identify simulators.",
         "Unsupported pairings have",
         "no marker; unmeasured and failed cases are labeled. Exact identities and outcomes",
@@ -327,8 +328,7 @@ def _main_workload(case: dict, variant: str) -> bool:
     """Keep diagnostic configurations in the tables, independent of their rates."""
     workload = case["workload"]
     return (
-        variant != "clifft-bulk"
-        and not workload["parameters"].get("postselection_pair")
+        not variant.startswith("clifft-bulk")
         and workload["family"] != "msc-performance-proxy"
     )
 
@@ -453,7 +453,10 @@ def _throughput_panels(entries: list[dict]) -> dict[str, list[dict]]:
             heading = "Quantum Volume"
         elif family in {"prepared-basis-arithmetic", "code-switching"}:
             heading = "Arithmetic & code switching"
-        panels.setdefault(heading, []).append(entry)
+        endpoint = ("Postselection on — survivor counts"
+                    if case["execution"]["postselect"] == "on"
+                    else "Postselection off — packed detector and observable samples")
+        panels.setdefault(f"{endpoint} · {heading}", []).append(entry)
     return panels or {"Other workloads": []}
 
 
@@ -516,7 +519,8 @@ def throughput_data(report: dict) -> dict:
             rows.append({
                 "workload_id": workload["id"], "baseline_variant": entry["variant"],
                 "label": _label(representative), "artifact_sha256": workload["artifact"]["sha256"],
-                "semantics": workload["semantics"], "values": values,
+                "semantics": workload["semantics"],
+                "postselect": representative["execution"]["postselect"], "values": values,
             })
         panels.append({"title": title, "x_limits": _throughput_limits(rates), "rows": rows})
     return {
