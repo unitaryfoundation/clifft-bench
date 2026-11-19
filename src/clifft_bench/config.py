@@ -515,11 +515,15 @@ def validate_workloads(document: dict) -> None:
         _strings(w["compatible_adapters"], "compatible_adapters")
         for name in w["compatible_adapters"]:
             load_adapter(name)
-        _fields(w["provenance"], "source_url source_commit source_path license", "notes")
-        for key, value in w["provenance"].items():
+        provenance = w["provenance"]
+        _fields(provenance, "source_url source_path license", "source_commit source_sha256 notes")
+        for key, value in provenance.items():
             _text(value, key)
-        if not re.fullmatch(r"[0-9a-f]{40}", w["provenance"]["source_commit"]):
-            raise ValueError("invalid source commit")
+        if not {"source_commit", "source_sha256"} & provenance.keys():
+            raise ValueError("provenance requires a source commit or SHA-256")
+        for key, length in (("source_commit", 40), ("source_sha256", 64)):
+            if key in provenance and not re.fullmatch(rf"[0-9a-f]{{{length}}}", provenance[key]):
+                raise ValueError(f"invalid {key}")
 
     groups = document.get("groups", {})
     if not isinstance(groups, dict):
