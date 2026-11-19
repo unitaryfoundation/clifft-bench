@@ -199,7 +199,7 @@ Adapters request Clifft's `"auto"`, Tsim's `None`, and SymFT's `batch=True`,
 `batch_size=0`, `sample_chunk_shots=0`. Stim and xtim receive each full public call
 without harness chunking. Positive integer overrides remain available for focused
 checks; they specify internal capacity for Clifft/SymFT/Tsim and output chunks for
-Stim/xtim. SymFT uses `cpu_backend="legacy"` for both core budgets.
+xtim. SymFT uses `cpu_backend="legacy"` for both core budgets.
 
 `batch_size_effective` records a reported native capacity, capped at the public
 call size, or null if unavailable. Automatic capacity is not inferred from the

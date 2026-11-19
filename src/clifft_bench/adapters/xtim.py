@@ -165,7 +165,7 @@ class XtimAdapter(Adapter):
             "selfcheck": 0,
             "record_report": report,
             "parse_seconds": parse_seconds,
-            "compile_seconds": parse_seconds + compile_seconds,
+            "compile_seconds": compile_seconds,
             "reference_setup_seconds": time.perf_counter() - started,
             "raw_reference_detector_ones": int(det_ref.sum()),
             "raw_reference_observable_ones": int(obs_ref.sum()),
