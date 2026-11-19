@@ -1,0 +1,16 @@
+Cain d5/d9 T-state sampling circuits are adapted from:
+
+Madelyn Cain, Dolev Bluvstein, Chen Zhao, Shouzhen Gu, Nishad Maskara,
+Marcin Kalinowski, Alexandra Geim, Aleksander Kubica, Mikhail Lukin,
+and Hengyun Zhou, Data for "Fast correlated decoding of transversal
+logical algorithms" (2025), https://doi.org/10.5281/zenodo.15702016.
+
+Source: distillation.zip, distillation/distillation_5 and distillation_9.
+Licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Modifications: replace the 15 factory-input S gates and the ideal readout
+ancilla's S gate with T; append observable 0 for the existing terminal
+logical-X measurement. Retain all other gates, noise and detectors.
+No decoder, feedforward or postselection is added. The raw readout bit
+is not a decoded logical error. See workloads/generate_cain_distillation.py.

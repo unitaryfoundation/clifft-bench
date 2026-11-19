@@ -6,7 +6,7 @@ import pytest
 from toml_helpers import write_toml
 
 from clifft_bench.cli import main
-from clifft_bench.config import load_suite, read_toml, repository_root
+from clifft_bench.config import load_suite, read_toml, repository_root, validate_workloads
 
 ROOT = repository_root()
 
@@ -201,6 +201,17 @@ def test_artifact_digest_mismatch_is_rejected(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="SHA-256 mismatch"):
         load_suite(run_path)
+
+
+@pytest.mark.parametrize("identity", [{}, {"source_sha256": "short"},
+                                      {"source_commit": "not-a-commit"}])
+def test_source_provenance_requires_an_immutable_identity(identity):
+    workloads = read_toml(ROOT / "workloads.toml")
+    provenance = workloads["workloads"][0]["provenance"]
+    provenance.pop("source_commit")
+    provenance.update(identity)
+    with pytest.raises(ValueError, match="provenance requires|invalid source_"):
+        validate_workloads(workloads)
 
 
 def test_incompatible_case_is_rejected_before_execution(tmp_path: Path) -> None:

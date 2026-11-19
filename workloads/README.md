@@ -1,7 +1,7 @@
 # benchmark workload corpus
 
 The checked-in `.stim` files are immutable benchmark inputs. Their SHA-256
-digests, semantic contracts, compatible adapters, and source commits live in
+digests, semantic contracts, compatible adapters, and source identities live in
 [`workloads.toml`](../workloads.toml).
 
 The benchmark corpus contains:
@@ -10,6 +10,7 @@ The benchmark corpus contains:
 - distance-3 and distance-5 fold-transversal CCZ cultivation,
 - 85-qubit color-code magic-state distillation,
 - 15-to-1 Reed-Muller magic-state distillation with ideal output verification,
+- Cain 15-to-1 distillation at surface-code distances 5 and 9,
 - coherent-noise surface-code circuits at `(d, rounds) = (3, 1), (3, 3),
   (5, 1), (5, 5)`,
 - a distance-7, seven-round pure-Clifford surface-code memory circuit,
@@ -93,3 +94,25 @@ with probability `1-p`, each nonidentity Pauli with `p/63`. Observable 0 measure
 logical `H_XY = (X+Y)/sqrt(2)` via ideal logical T† and X readout; its bit is the
 logical error. All declared detectors select raw zero. Without noise, every
 shot is accepted and observable 0 is zero.
+
+The Cain inputs adapt the [published distillation archive](https://doi.org/10.5281/zenodo.15702016)
+under [CC-BY-4.0](circuits/NOTICE-Cain). [The converter](generate_cain_distillation.py)
+replaces the 15 factory-input S gates and the ideal readout ancilla's S with T,
+preserving every other instruction. These are fixed circuits without decoded
+feedforward, as in the archive; they are sampled with postselection off.
+Observable 0 repeats the existing final logical-X readout on patch 0: Z parity
+along its `x=d-1/2` data boundary after terminal H gates. Its unconditioned ideal bit
+is 50/50, not a logical error flag. All source detectors, including the 32 raw
+logical readouts, are retained. Release integration follows the Clifft endpoint
+upgrade; the registered 16,384-shot call sizes await the host pilot.
+
+To reproduce either input, download `distillation.zip` from that record and run
+(use `9` for d9):
+
+```bash
+python workloads/generate_cain_distillation.py --source distillation.zip \
+  --distance 5 --output workloads/circuits/cain_15to1_d5_p1e-3.stim
+```
+
+The converter checks the archive member's SHA-256; the manifest records both
+source and output hashes.
