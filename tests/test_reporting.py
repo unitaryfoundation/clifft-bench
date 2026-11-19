@@ -5,8 +5,21 @@ import statistics
 import pytest
 
 from clifft_bench.cli import main
-from clifft_bench.report import build_report, report_execution, review_summary, throughput_data
+from clifft_bench.config import read_toml, repository_root
+from clifft_bench.report import (
+    _workload_label,
+    build_report,
+    report_execution,
+    review_summary,
+    throughput_data,
+)
 from clifft_bench.results import validate_result, write_json
+
+
+def test_every_registered_workload_has_a_report_label():
+    workloads = read_toml(repository_root() / "workloads.toml")["workloads"]
+    for workload in workloads:
+        assert _workload_label({"workload": workload}).strip(), workload["id"]
 
 
 def test_release_reporting_needs_only_one_execution(raw_result, tmp_path, monkeypatch):

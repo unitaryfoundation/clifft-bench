@@ -125,7 +125,7 @@ def _sample(adapter, distance, text, shots, tmp_path):
 
 
 @pytest.mark.parametrize("adapter,distance,noisy", [
-    ("clifft", 5, False),
+    ("clifft", 5, False), ("clifft", 5, True),
     ("tsim", 5, False), ("tsim", 9, False),
     ("tsim", 5, True), ("tsim", 9, True),
 ])
@@ -170,7 +170,7 @@ def test_t_state_readout_correlations_match_the_logical_encoding(adapter, tmp_pa
     supports = [
         [q for q, axis in enumerate(pauli) if axis]
         for pauli in _encoded_logical_state(5).canonical_stabilizers()
-        if not pauli[0] and set(pauli) <= {0, 1}
+        if set(pauli) <= {0, 1}
     ]
     assert supports
     for support in supports:
@@ -178,8 +178,8 @@ def test_t_state_readout_correlations_match_the_logical_encoding(adapter, tmp_pa
         # Thus an encoded X stabilizer of weight w has mean 2**(-w/2).
         # The S proxy instead gives zero: these correlations exercise the T gates.
         probability = (1 - 2 ** (-len(support) / 2)) / 2
-        # Readouts 0..14 measure injection ancillas, 15..29 the factory's X's.
-        indices = [logical_readouts[14 + q] for q in support]
+        # Readouts 15..29 measure factory X's; 31 measures the output patch.
+        indices = [logical_readouts[31 if q == 0 else 14 + q] for q in support]
         parity = np.bitwise_xor.reduce(detectors[:, indices], axis=1)
         tolerance = 6 * math.sqrt(shots * probability * (1 - probability))
         assert abs(int(parity.sum()) - shots * probability) < tolerance

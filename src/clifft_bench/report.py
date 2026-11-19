@@ -302,6 +302,8 @@ def _workload_label(case: dict) -> str:
         name = "Surface code" if family == "surface-code-memory" else "Coherent"
         return f"{name} d{parameters['distance']}, r{parameters['rounds']}"
     if family == "magic-state-distillation":
+        if workload["id"].startswith("cain-15to1-"):
+            return f"Cain 15-to-1 d{parameters['distance']}"
         if parameters["code"].startswith("[[15,1,3]]"):
             return "15-to-1 distillation"
         return f"{workload['expected_metadata']['num_qubits']}q distillation"
