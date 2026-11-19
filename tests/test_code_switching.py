@@ -61,7 +61,7 @@ def reed_muller_probability() -> float:
 def _case(workload_id):
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     return next(c for c in suite.cases if c.workload.id == workload_id
-                and c.definition["variant_id"] == "clifft-current")
+                and c.definition["variant_id"] == "clifft-current-off")
 
 
 def _check_counts(counts, probability):
@@ -75,14 +75,8 @@ def _check_counts(counts, probability):
 def test_new_circuits_are_part_of_the_release_campaign():
     release = load_suite(ROOT / "campaigns/release-v1.toml")
     cases = [case for case in release.cases if case.workload.id in NEW_WORKLOADS]
-    assert {(c.workload.id, c.definition["variant_id"]) for c in cases} == {
-        ("bt27-direct-x", "clifft-current"),
-        ("bt81-direct-x", "clifft-current"),
-        ("reed-muller-measured", "clifft-current"),
-        ("reed-muller-measured", "clifft-previous"),
-        ("reed-muller-measured", "symft-current"),
-        ("reed-muller-measured", "tsim-current"),
-    }
+    assert {c.workload.id for c in cases} == NEW_WORKLOADS
+    assert all(c.definition["execution"]["postselect"] == "off" for c in cases)
     for case in cases:
         assert not case.workload.definition["semantics"]["postselect_all_detectors"]
         assert case.definition["shots_per_call"] == (
@@ -104,7 +98,7 @@ def test_logical_reference_probabilities():
 def test_measured_reed_muller_sampling(adapter, batch_size):
     pytest.importorskip(adapter)
     case = _case("reed-muller-measured")
-    execution = {"batch_size": batch_size,
+    execution = {"postselect": "on", "batch_size": batch_size,
                  "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {}}
     if adapter == "clifft":
         execution["options"]["scheduler"] = case.definition["execution"]["options"]["scheduler"]
@@ -124,7 +118,7 @@ def test_current_clifft_code_switching_sampling(workload_id, width, batch_size):
     if not hasattr(clifft.HirModule, "postselection_mask"):
         pytest.skip("requires the post-0.12 code-switching compiler")
     case = _case(workload_id)
-    execution = dict(case.definition["execution"], batch_size=batch_size)
+    execution = dict(case.definition["execution"], batch_size=batch_size, postselect="on")
     prepared = load_adapter("clifft").prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
         execution=execution, seed=117,

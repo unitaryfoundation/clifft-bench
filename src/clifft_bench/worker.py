@@ -16,8 +16,7 @@ from pathlib import Path
 from typing import Any, Iterator, TextIO
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.adapters.base import Counts, validate_counts
-from clifft_bench.selection import has_postselection
+from clifft_bench.adapters.base import Sample, sample_evidence
 from clifft_bench.system import (
     apply_address_space_limit,
     apply_affinity,
@@ -71,7 +70,7 @@ def isolate_protocol_stream() -> None:
     os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
 
 
-def timed_sample(prepared: Any, shots: int, seed: int) -> tuple[Counts, float]:
+def timed_sample(prepared: Any, shots: int, seed: int) -> tuple[Sample, float]:
     started = time.perf_counter()
     with redirect_stdout(sys.stderr):
         counts = prepared.sample(shots, seed)
@@ -87,7 +86,10 @@ def aggregate_sample(
     postselect: bool,
     max_api_calls: int,
 ) -> dict[str, Any]:
-    total = Counts(0, 0, 0, 0)
+    total = {"attempted_shots": 0}
+    if postselect:
+        total.update(accepted_shots=0, discarded_shots=0, logical_errors=0)
+    packed_output = None
     calls = 0
     elapsed = 0.0
     adapter_timing_totals: dict[str, float] = defaultdict(float)
@@ -97,29 +99,24 @@ def aggregate_sample(
             raise RuntimeError(
                 f"sample exceeded its non-overlapping seed range of {max_api_calls} calls"
             )
-        counts, duration = timed_sample(prepared, shots_per_call, seed + calls)
-        errors = validate_counts(counts, postselect=postselect)
-        if counts.attempted_shots != shots_per_call:
-            errors.append("attempted shots differ from requested shots")
-        if errors:
-            raise RuntimeError("adapter returned invalid counts: " + "; ".join(errors))
-        total = Counts(
-            total.attempted_shots + counts.attempted_shots,
-            total.accepted_shots + counts.accepted_shots,
-            total.discarded_shots + counts.discarded_shots,
-            total.logical_errors + counts.logical_errors,
-        )
-        if counts.adapter_timing:
-            for key, value in counts.adapter_timing.items():
-                adapter_timing_totals[key] += float(value)
+        sample, duration = timed_sample(prepared, shots_per_call, seed + calls)
+        evidence = sample_evidence(sample, shots=shots_per_call, postselect=postselect,
+                                   metadata=prepared.runtime_metadata)
+        del sample  # Release output outside the next timed native call.
+        for key in total:
+            total[key] += evidence[key]
+        packed_output = evidence.get("packed_output")
+        for key, value in evidence.get("adapter_timing", {}).items():
+            adapter_timing_totals[key] += float(value)
         elapsed += duration
         calls += 1
     return {
         "started_at": started_at,
         "duration_seconds": elapsed,
         "api_calls": calls,
-        **total.as_dict(),
-        "throughput_attempted_shots_per_second": total.attempted_shots / elapsed,
+        **total,
+        **({"packed_output": packed_output} if packed_output is not None else {}),
+        "throughput_attempted_shots_per_second": total["attempted_shots"] / elapsed,
         "seed_first": seed,
         "seed_last": seed + calls - 1,
         "adapter_timing_totals": dict(sorted(adapter_timing_totals.items())),
@@ -202,15 +199,16 @@ def main() -> int:
             elif command in {"first_call_warmup", "correctness"}:
                 if prepared is None or workload is None:
                     raise RuntimeError("worker has not been prepared")
-                counts, duration = timed_sample(
+                sample, duration = timed_sample(
                     prepared, int(request["shots"]), int(request["seed"])
                 )
-                errors = validate_counts(
-                    counts,
-                    postselect=has_postselection(workload["semantics"]),
+                evidence = sample_evidence(
+                    sample, shots=int(request["shots"]),
+                    postselect=execution["postselect"] == "on",
+                    metadata=prepared.runtime_metadata,
                 )
-                if counts.attempted_shots != int(request["shots"]):
-                    errors.append("attempted shots differ from requested shots")
+                del sample
+                errors = []
                 if command == "correctness":
                     expected = workload["expected_metadata"]
                     for key, value in expected.items():
@@ -221,8 +219,8 @@ def main() -> int:
                     {
                         "ok": True,
                         "duration_seconds": duration,
-                        **counts.as_dict(),
-                        "contract_errors": errors,
+                        **evidence,
+                        **({"contract_errors": errors} if command == "correctness" else {}),
                     }
                 )
             elif command == "sample":
@@ -236,7 +234,7 @@ def main() -> int:
                             shots_per_call=int(request["shots_per_call"]),
                             min_seconds=float(request["min_seconds"]),
                             seed=int(request["seed"]),
-                            postselect=has_postselection(workload["semantics"]),
+                            postselect=execution["postselect"] == "on",
                             max_api_calls=int(request["max_api_calls"]),
                         ),
                     }

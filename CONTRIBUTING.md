@@ -263,6 +263,9 @@ recurring release workflow.
 
 ## Adding a workload
 
+Declare `postselect_modes = ["on", "off"]` or `["off"]` on the canonical workload;
+set `execution.postselect` on each case/variant. Reuse the circuit across modes.
+
 1. Add the immutable circuit under [`workloads/circuits/`](workloads/circuits/)
    with its license.
 2. Record its digest, provenance, expected metadata, compatible adapters,

@@ -61,7 +61,7 @@ Missing markers mean no measurement in this campaign. xtim covers cultivation
 d3/d5, surface code, and 15-to-1; Stim supplies the Clifford surface-code anchor.
 For xtim, each timed sample starts with an empty plan cache and includes lazy
 plan construction. See the [benchmark contract](docs/benchmark-contract.md) for
-timing, aggregate-count endpoints, and build settings. The
+timing, postselection endpoints, and build settings. The
 [Tsim GPU study](experiments/tsim-gpu/README.md) uses its own hardware and contract.
 
 ## Reproduce or contribute

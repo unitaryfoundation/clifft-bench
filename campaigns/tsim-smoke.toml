@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 profile_id = "tsim-adapter-smoke"
 classification = "smoke"
 seed = 20260808
@@ -23,6 +23,18 @@ shots_per_call = 1024
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "cultivation-smoke-tsim-off"
+variant_id = "tsim-current-off"
+workload_id = "msc-d3-inject-cultivate-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 1024
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
 
 [[cases]]
 id = "distillation-smoke-tsim"
@@ -33,6 +45,18 @@ shots_per_call = 1025
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "distillation-smoke-tsim-off"
+variant_id = "tsim-current-off"
+workload_id = "distillation-15to1-rm15-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 1025
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
 
 [[cases]]
 id = "coherent-smoke-tsim"
@@ -43,6 +67,18 @@ shots_per_call = 257
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "coherent-smoke-tsim-off"
+variant_id = "tsim-current-off"
+workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 257
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
 
 [[cases]]
 id = "reed-muller-measured-smoke-tsim"
@@ -53,3 +89,4 @@ shots_per_call = 2048
 
 [cases.execution]
 batch_size = "auto"
+postselect = "off"

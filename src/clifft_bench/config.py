@@ -13,7 +13,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.selection import detector_mask
+from clifft_bench.selection import detector_mask, has_postselection
 
 
 def repository_root() -> Path:
@@ -183,12 +183,6 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
             detector_mask(definition["semantics"], definition["expected_metadata"]["num_detectors"])
         except ValueError as error:
             raise ValueError(f"workload {identifier!r}: {error}") from error
-        if "postselection_detector_indices" in definition["semantics"] and set(
-            definition["compatible_adapters"]
-        ) - {"clifft", "tsim"}:
-            raise ValueError(
-                f"workload {identifier!r} declares an adapter without detector-subset support"
-            )
         observable_index = int(definition["semantics"]["observable_index"])
         num_observables = int(definition["expected_metadata"]["num_observables"])
         if observable_index >= num_observables:
@@ -227,6 +221,8 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"case {identifier!r} references unknown implementation {implementation_id!r}"
             )
         workload = workloads[workload_id]
+        if definition["execution"]["postselect"] not in workload.definition["postselect_modes"]:
+            raise ValueError(f"case {identifier!r}: postselect mode is not declared by workload")
         implementation = implementations[implementation_id]
         adapter = str(implementation.definition["adapter"])
         if adapter not in workload.definition["compatible_adapters"]:
@@ -267,6 +263,8 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 other = baseline[case.workload.id]
                 for field, left, right in (
                     ("shots_per_call", case.definition["shots_per_call"], other["shots_per_call"]),
+                    ("postselect", case.definition["execution"]["postselect"],
+                     other["execution"]["postselect"]),
                     ("threads", case.definition["execution"]["threads"],
                      other["execution"]["threads"]),
                 ):
@@ -384,7 +382,9 @@ def _version(document: dict) -> None:
 
 
 def _validate_execution(execution: dict) -> None:
-    _fields(execution, "batch_size", "options options_preset threads")
+    _fields(execution, "batch_size postselect", "options options_preset threads")
+    if execution["postselect"] not in ("on", "off"):
+        raise ValueError("postselect must be on or off")
     threads = execution.setdefault("threads", 1)
     if type(threads) is not int or threads not in (1, 8):
         raise ValueError("threads must be 1 or 8")
@@ -481,7 +481,7 @@ def validate_workloads(document: dict) -> None:
         _fields(
             w,
             "id family description artifact parameters semantics "
-            "expected_metadata compatible_adapters provenance",
+            "expected_metadata compatible_adapters provenance postselect_modes",
             "shots_per_call",
         )
         if "shots_per_call" in w:
@@ -506,6 +506,12 @@ def validate_workloads(document: dict) -> None:
         _number(sem["observable_index"], "observable_index", integer=True, inclusive=True)
         if type(sem["postselect_all_detectors"]) is not bool:
             raise ValueError("postselect_all_detectors must be boolean")
+        modes = w["postselect_modes"]
+        _strings(modes, "postselect_modes")
+        if set(modes) - {"on", "off"} or len(set(modes)) != len(modes):
+            raise ValueError("postselect_modes must contain unique on/off values")
+        if "on" in modes and not has_postselection(sem):
+            raise ValueError("postselect=on requires a detector selection")
         _strings(w["compatible_adapters"], "compatible_adapters")
         for name in w["compatible_adapters"]:
             load_adapter(name)

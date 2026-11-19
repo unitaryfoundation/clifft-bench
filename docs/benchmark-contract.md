@@ -10,36 +10,29 @@ attempted shots per second can a simulator execute within its declared physical-
 Report throughput after the first full sampling call, without assuming caches
 have fully settled.
 
-One attempted shot is one complete circuit execution. Each simulator returns
-aggregate counts for attempted shots, detector-postselected discards, accepted
-shots, and observable-0 logical errors among accepted shots. Throughput always
-uses attempted shots as the numerator.
+One attempted shot is one complete circuit execution. Throughput always uses
+attempted shots as the numerator. Each canonical workload declares
+`postselect_modes`; each case chooses `execution.postselect`:
 
-`postselect_all_detectors=true` requires every raw detector parity to be zero.
-With that flag false, optional `postselection_detector_indices` selects a
-nonempty, sorted, unique list of zero-based detectors; only those parities must
-be zero. Without a subset, false disables rejection. Subsets and the all-detector
-flag are mutually exclusive. The raw result retains the exact indices and records
-`execution.postselection=true` for either selection mode. Input and report
-validation check the selection fields and execution flag. Clifft and Tsim
-implement subsets; other adapters explicitly reject them. Tsim's subset-column materialization
-and count reduction are included in the sampling time.
+- **Postselection on — survivor counts:** return attempted, accepted, discarded,
+  and selected-observable logical-error counts. `postselect_all_detectors=true`
+  selects every detector; otherwise `postselection_detector_indices` selects a
+  nonempty sorted unique subset. Selected raw detector parities must be zero.
+- **Postselection off — packed detector and observable samples:** return the native
+  `(detectors, observables)` tuple of little-endian `b8` arrays, with `uint8` dtype,
+  one row per attempted shot, and `ceil(num_columns / 8)` bytes per row. Ignore
+  the workload's selection mask. No Python parity correction, filtering, or
+  count reduction occurs in the timed call. Validate shapes/dtypes afterward.
 
-All supported workloads use raw-record parity; this is a fixed harness contract.
-Detector events and logical errors are the XOR parity of their declared
-measurement records without a noiseless-reference correction. Clifft returns
-native aggregate counts. SymFT uses native counts for selected or detector-free
-workloads. For unselected workloads containing detectors, it samples packed
-measurement records and reduces the selected observable's raw parity across all
-shots. SymFT's counts API always excludes detector-fired shots; its
-`postselect_detectors` argument only enables early termination. The raw-record
-path records its backend and materialization
-in runtime metadata, and includes record allocation and parity reduction in the
-timed call. Its batch API ignores `sample_chunk_shots`; metadata records that
-distinction and the requested value. Stim and xtim's public detector samplers return packed
-records, which the adapter reduces to the same counts; both materialization and
-reduction are included in its sampling time. This is a comparison of available
-aggregate endpoints, not identical internal work or a decoder benchmark.
+Both endpoints use raw measurement-record parity, without reference correction.
+They compare complete available workflows; their difference does not isolate
+postselection cost. Counts on supports Clifft, SymFT, Tsim, and pinned xtim;
+only Clifft and Tsim support detector subsets. Packed off supports Tsim and
+Stim; the current Clifft, SymFT, and xtim pins report `unsupported`. Stim also
+rejects nonzero raw references because its native output is reference-relative.
+Only unsupported modes or thread budgets declared by an adapter permit a zero
+exit code. Other setup rejections retain their `unsupported` evidence but fail
+the command, so unexpected coverage loss is visible in CI.
 
 ## Release workload selection
 
@@ -52,7 +45,6 @@ The representative suite may change between campaigns.
 The [corpus notes](../workloads/README.md) own circuit provenance and validation;
 [coverage notes](../workloads/coverage.md) describe repeated QV sampling,
 selection-off controls, the unverified d7 proxy, and full d5 detector subsets.
-Observable-0 counts on unselected circuits are raw ones, not logical errors.
 Neither cultivation stress input estimates decoded logical error or fidelity.
 Repeated QV sampling measures a different question from the optional
 [setup-plus-one-shot QV study](../experiments/qv/README.md).
@@ -67,11 +59,11 @@ with its own throughput ticks. Horizontal positions are comparable within a pane
 absolute labels remain comparable across panels. Within each theme, circuits follow a stable
 family and size order, independent of measured speed. Each rate is directly
 labeled; short circuit names and consistent simulator colors and shapes aid
-comparison. Selection-off controls, the unverified cultivation proxy, and
-bulk-call variants stay in the detailed tables rather than the main figures.
+comparison. Postselection modes occupy separate labeled panels. The unverified
+cultivation proxy and bulk-call variants stay in the detailed tables rather than the main figures.
 Unsupported pairings have no marker; failed and unmeasured cases are labeled.
 Every selected case and declared comparison remains in the review tables.
-Call sizes are in `cases.csv`; postselection settings remain in `raw.json`.
+Call sizes and postselection modes are in `cases.csv`; exact masks remain in `raw.json`.
 
 Release figures show changes within ±50% on a linear percentage axis and larger
 changes on an adjacent logarithmic ratio axis sharing the same rows. This display
@@ -87,7 +79,7 @@ Exact identities and unpaired outcomes remain in the review tables and `cases.cs
 
 `report/simulator-throughput.json` is a derived presentation of the same validated
 throughput view as the PNGs, including explicitly selected retained peers. Its
-`format` is `clifft-bench/throughput/v1`. It is regenerated from raw evidence;
+`format` is `clifft-bench/throughput/v2`. It is regenerated from raw evidence;
 consumers must not treat it as a second authoritative result or join campaigns
 themselves. This is the data interface for the
 [Clifft docs widget](https://github.com/unitaryfoundation/clifft/issues/659).
@@ -95,7 +87,7 @@ themselves. This is the data interface for the
 - `panels` and their `rows` preserve the figure's selection and order. Each panel
   has its own logarithmic `x_limits`. Rows identify the workload and baseline
   variant, display label (including multi-core budgets), circuit digest, and
-  selection/output `semantics`.
+  selection `semantics` and explicit `postselect` endpoint.
 - Each row's `values` follows the simulator order in `series`. Values include
   the attempted-shot rate median and median absolute deviation (both in shots/s),
   sample count, shots per call, effective batch size, `threads_requested`,
@@ -134,8 +126,8 @@ Each case uses one fresh worker and one measurement sampler:
    the final call can overrun it. Retain individual samples and derive median/MAD.
 
 Compilation, first-call time, call size, and subsequent throughput are reported
-separately; do not extrapolate finite-shot turnaround. Allocation and count
-reduction remain inside sampling timers. Correctness checks are untimed for
+separately; do not extrapolate finite-shot turnaround. Native output allocation
+and the on endpoint's count reduction remain inside sampling timers. Correctness checks are untimed for
 throughput. Deadlines apply to every phase; failures retain their phase and
 completed evidence without a throughput value.
 
@@ -164,7 +156,7 @@ process using the Python environment recorded for its implementation.
 `execution.threads` is 1 (default) or 8. Before imports, workers set
 `OMP_NUM_THREADS` and `NUMBA_NUM_THREADS` to that budget; BLAS, NumExpr,
 Accelerate, and XLA remain serial. Clifft, Tsim, and SymFT's legacy counts backend
-support both budgets. Stim, pinned xtim, and SymFT's unselected measurement path
+support both budgets. Stim and pinned xtim
 support only 1; unsupported requests are recorded before resource allocation.
 
 Before imports, Linux workers pin one logical CPU per distinct `(socket, core)`
@@ -207,7 +199,7 @@ Adapters request Clifft's `"auto"`, Tsim's `None`, and SymFT's `batch=True`,
 `batch_size=0`, `sample_chunk_shots=0`. Stim and xtim receive each full public call
 without harness chunking. Positive integer overrides remain available for focused
 checks; they specify internal capacity for Clifft/SymFT/Tsim and output chunks for
-Stim/xtim. SymFT uses `cpu_backend="legacy"` for both core budgets.
+xtim. SymFT uses `cpu_backend="legacy"` for both core budgets.
 
 `batch_size_effective` records a reported native capacity, capped at the public
 call size, or null if unavailable. Automatic capacity is not inferred from the
@@ -251,11 +243,12 @@ file directly to `stim.Circuit`: no twirling, gate removal, detector error model
 conversion, or replacement circuit. Unsupported pairings are rejected by the
 workload manifest before collection.
 
-The compiled circuit detector sampler returns reference-relative flips. During
-setup we convert its noiseless measurement reference to raw detector/observable
-parities, then XOR these packed offsets into each sample before postselection.
-Tests cover nonzero offsets, noise, observable indices beyond the first byte,
-and chunk tails. The official circuit has deterministic detectors.
+The compiled detector sampler returns reference-relative flips. Setup converts
+its noiseless measurement reference to raw detector/observable parities. Any
+nonzero parity makes the case unsupported. With zero references, return the
+native packed tuple directly, using one persistent sampler and one full call.
+Stim has no native postselection endpoint, so on is unsupported. It requires
+`batch_size="auto"`; explicit capacities are rejected rather than ignored.
 
 Use the official pinned Stim 1.16.0 wheel and record the loaded `stim._stim_*`
 native extension. Its x86 Python dispatch selects SSE2, even on AVX2-capable
@@ -266,81 +259,30 @@ release wheel; the recorded extension identifies the SIMD implementation used.
 
 ## xtim comparison
 
-`xtim-vs-current` reuses the current Clifft cases on cultivation d3/d5,
-Clifford surface code d7/r7, and 15-to-1 distillation. Unsupported rotations remain
-outside xtim's domain.
-Separate comparison identities preserve the paired ratios in the result tables.
-The existing plots remain unchanged; presentation of the new results is deferred
-until collection and review.
+Pinned xtim 3.2.2 supports the on endpoint for deterministic noiseless detectors
+and observables. Compile `TwirlSampler` once with `selfcheck=0, disk_cache=False`;
+reseed once per harness call and continue internal chunks with `seed=None`.
+Reference validation uses `record_report()` plus a separate noiseless raw sampler
+and Stim's layout-only record converter. Reject nonzero selected-detector or
+counted-observable reference parity; do not correct samples in Python.
 
-Use `compile_twirl_sampler(text, selfcheck=0, disk_cache=False)` and reseed
-in place once per harness call. Internal chunks continue that call's stream
-with `seed=None`. Do not use `Circuit.compile_detector_sampler()` for repeated
-calls: the pinned version replays its compile seed. Use the 3.2.2 `record_report()`
-API and require every detector and declared observable to be classified
-deterministic in the noiseless circuit. The newer engine can serve additional
-record classes, but those are outside this comparison's eligibility contract.
-`PAULI_EXPECTATION` is outside this suite's aggregate-count contract.
+Pass an all-true native mask and validate `attempts`, `passed`, `discarded`, and
+`early`. Reduce only the counted observable over returned survivors. Subset masks,
+packed off, and `PAULI_EXPECTATION` are unsupported by this adapter. Plan caches
+persist within each worker; the 512 MiB plan-payload budget is not a process
+memory ceiling. Raw evidence records process peak RSS.
 
-The sampler returns reference-relative bits. Setup obtains an exact noiseless
-raw measurement trajectory from xtim and converts the declared record parities
-using Stim's record converter. The converter sees a layout-only copy with the
-extended unitary gates replaced by identities; all simulated physics comes from
-the original immutable circuit in xtim. The packed offsets restore raw parities.
-Metadata counts source qubits, with xtim's internal
-ancilla-expanded count recorded separately as `native_num_qubits`.
-
-For postselected workloads with all-zero raw detector references, pass an all-true
-boolean detector mask to `TwirlSampler.sample(..., postselect=mask)`. This enables
-native early rejection before plan work when possible; the returned packed rows
-contain only accepted shots. Read and validate the returned `attempts`, `passed`,
-`discarded`, and `early` counters for each chunk. Throughput still counts every
-attempted shot, including early rejects. Apply observable reference offsets and
-reduce observable ones over accepted rows inside the sampling timer.
-
-If any raw detector reference is one, retain unmasked sampling followed by raw
-parity conversion and detector filtering in the adapter: the native mask selects
-zero reference-relative bits and cannot express that raw-zero condition.
-Unselected workloads also use unmasked sampling. Metadata records the actual
-`postselection_backend` (`native-twirl-sampler`, `adapter-raw-record-parity`, or
-`disabled`) and whether packed records contain only accepted shots. The four
-enabled xtim workloads have zero raw detector references and use native filtering.
-Regressions compare their counts with same-seed unmasked samples filtered afterward.
-Do not use `record_report().used` as attempts or accepted shots; native early
-rejection and later filtering give that counter different semantics.
-
-Native postselection changes the timed work and cache population. Collect new
-throughput measurements for this path and identify it through the metadata above;
-existing results retain the sampling behavior of their recorded harness revision.
-
-The measurement sampler is compiled once and reused across all calls. Reference
-parities come from a separate noiseless sampler with a private cache during
-untimed validation. Its sampling does not warm the measurement sampler.
-
-The pinned engine's 512 MiB plan-payload budget is not a process memory ceiling;
-plan headers and other allocations are additional. Raw samples record cumulative
-process peak RSS, including preparation; `cases.csv` exposes its maximum.
-
-Pin xtim 3.2.2 to source commit `edf0dd0cff804ac0228d517889e49b0c286cb19a`.
-The previous 3.1.4 pin restarted a per-shot coin counter on each unseeded call,
-so chunked sampling could repeat random outcomes (#82). Regressions require
-chunk-invariant counts and the correct noisy selected/unselected law. Historical
-3.1.4 identities and measurements remain preserved; new collections use 3.2.2.
-Use `QECCORE_PORTABLE=1` (`-O3 -funroll-loops`, without `-march=native`) to
-retain the portable build policy of Clifft's release wheels. Record
-`CXXFLAGS=-include cstdint`, retained from the earlier pin's missing-header
-workaround on GCC. Whether 3.2.2 still needs this flag has not been tested;
-the recorded build keeps it for continuity.
-The adapter verifies the installed PEP 610 repository and commit before setup.
+The source pin and portable build settings live in `software.toml` and its
+locked environment. Verify the installed PEP 610 repository and commit before
+setup.
 
 ## Correctness and identity
 
-Before timing, the worker checks circuit qubit, measurement, detector, and
-observable counts plus these aggregate invariants:
-
-- attempted = accepted + discarded;
-- logical errors are between zero and accepted shots; and
-- non-postselected workloads discard no shots.
+The worker checks circuit metadata and validates each returned result outside
+the sampling timer. Counts require attempted = accepted + discarded and logical
+errors between zero and accepted. Packed output requires the declared byte
+widths, uint8 dtype, and every attempted row; raw evidence retains per-call
+shapes instead of invented counts.
 
 Before compilation, the SymFT adapter verifies the installed package's PEP 610
 Git commit and repository URL against the manifest and records both in runtime
@@ -384,19 +326,10 @@ it does not need CUDA. The adapter verifies that Numba's pool matches the case's
 thread budget. Resource limits and preparation/request deadlines also apply.
 There is no fallback to a different Tsim strategy when preparation or sampling fails.
 
-Tsim returns raw detector and observable arrays in little-endian `b8` packing.
-Both reference-sample flags are explicitly false. The adapter passes the workload's
-detector selection mask, allowing native early rejection. With a mask, only
-surviving rows are returned; without one, every attempted row is returned. The adapter
-validates matching `uint8` array shapes and counts the selected observable bit.
-Accepted shots equal the row count, while attempted shots remain the requested
-count, including when every shot is rejected. Packed array materialization
-and NumPy aggregate counting are inside execution time. Clifft returns native
-aggregate counts, so the tools can spend different fractions of their call time producing
-the shared aggregate endpoint. This is the same timing boundary used for Stim
-and xtim. Any reported postprocessing percentage must come from a separate,
-reproducible profile specifying the workload, shots per call, batch capacity,
-hardware, and software versions; it is not a universal adapter overhead.
+Tsim requests little-endian packed output with both reference-sample flags false.
+On passes the workload's native detector mask, then counts the selected observable
+bit over survivors inside the timer. Off passes no mask and returns the native
+tuple directly. Both paths retain the requested attempted-shot denominator.
 
 Tsim's automatic batch capacity limits attempted shots per thread; rejection and
 sharing can reduce statevector work. `batch_size_applicable` records whether the
@@ -425,8 +358,6 @@ uses the case's thread budget and batch setting. Runtime metadata
 records batching and the point at which postselection is applied. Development/VCS
 builds also verify the full installed source URL and commit; release wheels retain
 version validation.
-The mask is part of compilation: an unselected variant must compile with an
-empty mask, rather than reuse a program optimized assuming detector selection.
 Runtime metadata records `postselection_before_optimization`, `batch_control`
 and, when available, `optimized_t_gates`.
 
@@ -466,8 +397,9 @@ not a fresh paired comparison and do not acquire the paired 1.1% interpretation.
 
 Paired ratios use candidate median divided by baseline median. Pairing requires
 matching workload digest and selection semantics, call size, measurement settings,
-and resource limits. The raw format fixes aggregate counts, raw-record parity,
-and attempted-shot throughput for every case. Internal batches may differ. Declared
+and resource limits. The endpoint (`postselect`) must also match, including for
+explicit peer reuse. The raw format fixes raw-record parity and attempted-shot
+throughput for every case. Internal batches may differ. Declared
 comparison groups keep short calls, bulk calls, and supplemental coverage separate.
 Only successful compatible pairs receive ratios. Missing expected case records
 are errors; recorded failures, unsupported adapters, and intentionally unmeasured

@@ -2,16 +2,18 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pytest
 import stim
 
+from clifft_bench.adapters.base import Counts, UnsupportedConfiguration
 from clifft_bench.adapters.stim import StimAdapter
 from clifft_bench.config import read_toml
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, seed=42):
+def prepare(tmp_path, text, *, observable=0, postselect=False, seed=42):
     path = tmp_path / "circuit.stim"
     path.write_text(text)
     return StimAdapter().prepare(
@@ -22,7 +24,8 @@ def prepare(tmp_path, text, *, observable=0, postselect=True, chunk=32, seed=42)
                 "postselect_all_detectors": postselect,
             }
         },
-        execution={"batch_size": chunk, "options": {}},
+        execution={"postselect": "on" if postselect else "off",
+                   "batch_size": "auto", "options": {}},
         seed=seed,
     )
 
@@ -41,42 +44,52 @@ def test_surface_artifact_matches_paper_generator_and_declared_metadata():
     assert circuit == generated
     workloads = read_toml(ROOT / "workloads.toml")["workloads"]
     compatible = [w for w in workloads if "stim" in w["compatible_adapters"]]
-    assert [w["id"] for w in compatible] == [
-        "surface-code-d7-r7-p1e-3", "surface-code-d7-r7-p1e-3-unselected",
-    ]
+    assert compatible
+    assert all("off" in w["postselect_modes"] for w in compatible)
     assert all(getattr(circuit, k) == v for w in compatible
                for k, v in w["expected_metadata"].items())
 
 
-def test_packed_padding_nonzero_reference_and_observable_beyond_first_byte(tmp_path):
-    text = "X 0\nM 0\n" + "DETECTOR rec[-1]\n" * 9 + "OBSERVABLE_INCLUDE(9) rec[-1]\n"
-    p = prepare(tmp_path, text, observable=9, postselect=False, chunk=7)
-    counts = p.sample(19, 42)
-    assert counts.accepted_shots == counts.logical_errors == 19
-    p = prepare(tmp_path, text, observable=9, chunk=7)
-    assert p.sample(19, 42).discarded_shots == 19
+@pytest.mark.parametrize("prefix", ["X 0\nM 0", "M !0"])
+def test_nonzero_raw_reference_is_unsupported(tmp_path, prefix):
+    with pytest.raises(UnsupportedConfiguration, match="raw detector/observable parity"):
+        prepare(tmp_path, prefix + "\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
 
 
-def test_noise_and_logical_counts_match_analytic_distribution(tmp_path):
-    p = prepare(
-        tmp_path,
+def test_postselection_requires_a_native_endpoint(tmp_path):
+    with pytest.raises(UnsupportedConfiguration, match="postselect=on"):
+        prepare(tmp_path, "M 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n", postselect=True)
+
+
+def test_packed_outputs_preserve_all_rows_and_byte_order(tmp_path):
+    p = prepare(tmp_path, "X_ERROR(1) 0\nM 0\n" + "DETECTOR rec[-1]\n" * 9
+                + "OBSERVABLE_INCLUDE(9) rec[-1]\n", observable=9)
+    dets, obs = p.sample(19, 42)
+    assert dets.shape == obs.shape == (19, 2)
+    assert dets.dtype == obs.dtype == np.uint8
+    assert (dets[:, 0] == 255).all() and (dets[:, 1] & 1 == 1).all()
+    assert (obs[:, 0] == 0).all() and (obs[:, 1] & 2 == 2).all()
+
+
+def test_noise_and_logical_samples_match_analytic_distribution(tmp_path):
+    p = prepare(tmp_path,
         "X_ERROR(0.2) 0\nM 0\nDETECTOR rec[-1]\n"
-        "X_ERROR(0.3) 1\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
-        chunk=1024,
-    )
-    counts = p.sample(100000, 42)
-    assert abs(counts.discarded_shots / 100000 - 0.2) < 0.01
-    assert abs(counts.logical_errors / counts.accepted_shots - 0.3) < 0.01
+        "X_ERROR(0.3) 1\nM 1\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    dets, obs = p.sample(100000, 42)
+    assert abs((dets[:, 0] & 1).mean() - 0.2) < 0.01
+    assert abs((obs[:, 0] & 1).mean() - 0.3) < 0.01
 
 
 def test_stream_is_reproducible_without_recompiling_per_call(tmp_path):
     text = "H 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
-    p = prepare(tmp_path, text, postselect=False, chunk="auto", seed=10)
+    p = prepare(tmp_path, text, seed=10)
     native = p._sampler
     first = [p.sample(1000, i) for i in (10, 11)]
     assert p._sampler is native
-    replay = prepare(tmp_path, text, postselect=False, chunk="auto", seed=10)
-    assert [replay.sample(1000, i) for i in (10, 11)] == first
+    replay = prepare(tmp_path, text, seed=10)
+    for actual, expected in zip([replay.sample(1000, i) for i in (10, 11)], first, strict=True):
+        for a, b in zip(actual, expected, strict=True):
+            np.testing.assert_array_equal(a, b)
 
 
 def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
@@ -96,11 +109,18 @@ def test_surface_aggregate_distribution_agrees_with_clifft_and_current_symft():
             artifact_path=artifact,
             workload=workload,
             execution={
-                "batch_size": 1024,
+                "postselect": "off" if adapter == "stim" else "on",
+                "batch_size": "auto" if adapter == "stim" else 1024,
                 "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {},
             },
         )
-        observed.append(prepared.sample(shots, 42))
+        result = prepared.sample(shots, 42)
+        if adapter == "stim":
+            dets, obs = result
+            keep = ~np.any(dets, axis=1)
+            accepted = int(keep.sum())
+            result = Counts(shots, accepted, shots-accepted, int((obs[keep, 0] & 1).sum()))
+        observed.append(result)
     reference = observed[0]
     for actual in observed[1:]:
         # Compare unconditional event probabilities. Accepted logical errors can

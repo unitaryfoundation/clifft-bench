@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 profile_id = "release-clifft"
 title = "Clifft-only single-core release benchmark"
 classification = "official"
@@ -35,74 +35,94 @@ repetitions = 5
 [[variants]]
 id = "clifft-previous"
 implementation_id = "clifft-0.12.0rc1"
-workloads = "qec-and-adder"
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
 [[variants]]
 id = "clifft-current"
 implementation_id = "clifft-0.13.0"
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3"
+[[variants]]
+id = "clifft-current-off"
+implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
+  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
+  { workload_id = "distillation-color-code-85q-p5e-2" },
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
+  { workload_id = "draper-adder-m16-basis-all-observables" },
+  { workload_id = "distillation-15to1-rm15-p1e-3" },
+  { workload_id = "bt27-direct-x" },
+  { workload_id = "bt81-direct-x" },
+  { workload_id = "reed-muller-measured" },
+]
 
-[[variants.workloads]]
-workload_id = "msc-d5-inject-cultivate-p1e-3"
-
-[[variants.workloads]]
-workload_id = "distillation-color-code-85q-p5e-2"
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis-all-observables"
-
-[[variants.workloads]]
-workload_id = "distillation-15to1-rm15-p1e-3"
-
-[[variants.workloads]]
-workload_id = "bt27-direct-x"
-
-[[variants.workloads]]
-workload_id = "bt81-direct-x"
-
-[[variants.workloads]]
-workload_id = "reed-muller-measured"
+[variants.execution]
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[variants]]
 id = "clifft-bulk"
 implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+]
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 256
+[[variants]]
+id = "clifft-bulk-off"
+implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+  { workload_id = "draper-adder-m16-basis-all-observables", shots_per_call = 100000 },
+]
 
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis-all-observables"
-shots_per_call = 100000
+[variants.execution]
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[variants]]
 id = "clifft-coverage"
 implementation_id = "clifft-0.13.0"
-workloads = "coverage"
+workloads = [
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
+
+[[variants]]
+id = "clifft-coverage-off"
+implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "quantum-volume-q10-seed42-all-observables" },
+  { workload_id = "quantum-volume-q20-seed42-all-observables" },
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
+]
+
+[variants.execution]
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+postselect = "off"

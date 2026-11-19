@@ -216,8 +216,6 @@ def test_main_figures_share_selection_without_dropping_detailed_outcomes(raw_res
     original = report["current"][0]
     for variant, shots, family, parameters in (
         ("clifft-bulk", 256, "coherent-noise-surface-code", {"distance": 5, "rounds": 5}),
-        ("clifft-coverage", 8, "magic-state-cultivation",
-         {"distance": 3, "postselection_pair": "selected"}),
         ("clifft-coverage", 8, "msc-performance-proxy", {"distance": 7}),
     ):
         case = copy.deepcopy(original)
@@ -382,14 +380,15 @@ def test_review_measurements_preserve_zero_missing_and_failed_values(raw_result,
     for line in summary.splitlines():
         if line.startswith("|"):
             cells = [cell.strip() for cell in line.strip("|").split("|")]
-            if len(cells) == 6:
+            if len(cells) == 7:
                 rows[cells[0]] = cells[1:]
     for case, expected in (
         (previous, ["0", "0.5", "0", "100"]),
         (current, ["1.25", "2.5", "—", "125"]),
         (peer, ["3.25", "4.5", "7", "—"]),
     ):
-        assert rows[case["case_id"]] == [str(case["execution"]["shots_per_call"]), *expected]
+        assert rows[case["case_id"]] == [case["execution"]["postselect"],
+                                           str(case["execution"]["shots_per_call"]), *expected]
 
 
 @pytest.mark.parametrize("section,key,value", [
@@ -408,7 +407,7 @@ def test_peer_reuse_rejects_incompatible_collection(raw_result, peer_result, sec
         build_report(raw_result, peer_document=peer_result)
 
 
-@pytest.mark.parametrize("field", ["digest", "selection", "shots_per_call"])
+@pytest.mark.parametrize("field", ["digest", "selection", "shots_per_call", "postselect"])
 def test_peer_reuse_checks_cross_collection_workload_contract(raw_result, peer_result, field):
     # Change every source case consistently so its internal pairs still agree.
     for case in peer_result["cases"]:
@@ -418,6 +417,8 @@ def test_peer_reuse_checks_cross_collection_workload_contract(raw_result, peer_r
             case["workload"]["semantics"]["postselect_all_detectors"] = (
                 not case["workload"]["semantics"]["postselect_all_detectors"]
             )
+        elif field == "postselect":
+            case["execution"][field] = "off"
         else:
             case["execution"][field] *= 2
     with pytest.raises(ValueError, match="incompatible comparison"):
@@ -690,3 +691,39 @@ def test_throughput_export_matches_plot_labels_order_and_styles(raw_result, peer
             assert all(row["label"] in labels for row in panel["rows"])
     finally:
         plt.close(figure)
+
+
+def test_both_endpoints_render_separate_panels_from_one_canonical_workload(tmp_path):
+    import sys
+
+    from test_runner import _write_fixture_suite
+    from toml_helpers import write_toml
+
+    from clifft_bench.config import load_suite
+    from clifft_bench.runner import run_suite
+
+    path, run, _ = _write_fixture_suite(tmp_path)
+    originals = copy.deepcopy(run["cases"])
+    for case in originals:
+        case["id"] += "-off"
+        case["variant_id"] += "-off"
+        case["execution"]["postselect"] = "off"
+        run["cases"].append(case)
+    run["comparisons"] = [
+        {"id": f"tools{suffix}", "baseline_variant": f"fixture-a{suffix}",
+         "candidate_variants": [f"fixture-b{suffix}"]} for suffix in ("", "-off")
+    ]
+    write_toml(path, run)
+    output = tmp_path / "result"
+    run_suite(load_suite(path), python_executable=sys.executable, output_dir=output)
+    report_execution(output)
+    data = json.loads((output / "report/simulator-throughput.json").read_text())
+    assert len(data["panels"]) == 2
+    assert {row["workload_id"] for panel in data["panels"] for row in panel["rows"]} == {
+        "tiny-fixture"
+    }
+    for panel in data["panels"]:
+        modes = {row["postselect"] for row in panel["rows"]}
+        assert len(modes) == 1
+        assert f"Postselection {next(iter(modes))}" in panel["title"]
+        assert all(v["outcome"] == "measured" for row in panel["rows"] for v in row["values"])

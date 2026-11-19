@@ -109,13 +109,13 @@ def test_fold_noisy_artifact_with_auto_batch(adapter, distance):
     workload = _workload(distance)
     prepared = load_adapter(adapter).prepare(
         artifact_path=ROOT / workload["artifact"]["path"], workload=workload,
-        execution={"batch_size": "auto"}, seed=91,
+        execution={"postselect": "on", "batch_size": "auto"}, seed=91,
     )
     for key, value in workload["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == value
     counts = prepared.sample(16, 91)
     assert counts.attempted_shots == 16
-    assert not validate_counts(counts, postselect=True)
+    assert not validate_counts(counts)
 
 
 @pytest.mark.parametrize("adapter", ["clifft", "tsim"])
@@ -135,7 +135,8 @@ def test_fold_ideal_acceptance_and_logical_error(adapter, distance, logical_flip
     artifact = tmp_path / "fold.stim"
     artifact.write_text(text)
     prepared = load_adapter(adapter).prepare(
-        artifact_path=artifact, workload=workload, execution={"batch_size": 1}, seed=91,
+        artifact_path=artifact, workload=workload,
+        execution={"postselect": "on", "batch_size": 1}, seed=91,
     )
     counts = prepared.sample(1, 91)
     assert counts.accepted_shots == counts.attempted_shots == 1

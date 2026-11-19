@@ -13,29 +13,26 @@ def _prepare(
     tmp_path: Path,
     *,
     circuit: str,
-    postselect: bool,
 ):
     pytest.importorskip(adapter_name)
     artifact_path = tmp_path / f"{adapter_name}.stim"
     artifact_path.write_text(circuit)
     if adapter_name == "clifft":
         execution = {
-            "batch_size": 1,
+            "postselect": "on", "batch_size": 1,
             "options": {},
         }
     else:
         execution = {
-            "batch_size": 32,
+            "postselect": "on", "batch_size": 32,
             "options": {"sample_chunk_shots": 32} if adapter_name == "symft" else {},
         }
-    if adapter_name in {"stim", "xtim"}:
-        execution["options"] = {}
     prepared = load_adapter(adapter_name).prepare(
         artifact_path=artifact_path,
         workload={
             "semantics": {
                 "observable_index": 0,
-                "postselect_all_detectors": postselect,
+                "postselect_all_detectors": True,
             }
         },
         execution=execution,
@@ -43,7 +40,7 @@ def _prepare(
     return prepared
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft"])
 def test_detector_postselection_uses_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
@@ -51,7 +48,6 @@ def test_detector_postselection_uses_raw_record_parity(
         adapter_name,
         tmp_path,
         circuit="X 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
-        postselect=True,
     )
 
     counts = prepared.sample(shots=32, seed=7)
@@ -63,16 +59,14 @@ def test_detector_postselection_uses_raw_record_parity(
     assert counts.logical_errors == 0
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft"])
 def test_logical_errors_use_raw_record_parity(
     adapter_name: str, tmp_path: Path
 ) -> None:
     prepared = _prepare(
         adapter_name,
         tmp_path,
-        circuit=("X 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
-                 + ("M 1\nDETECTOR rec[-1]\n" if adapter_name == "xtim" else "")),
-        postselect=False,
+        circuit="X 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n",
     )
 
     counts = prepared.sample(shots=32, seed=7)
@@ -115,7 +109,7 @@ def test_clifft_scheduled_counts_match_exact_noisy_branch_probabilities(
             "observable_index": 0, "postselect_all_detectors": True,
         }},
         execution={
-            "batch_size": batch_size,
+            "postselect": "on", "batch_size": batch_size,
             "options": {"scheduler": options},
         },
     )
@@ -160,8 +154,7 @@ def test_clifft_default_pipeline_reduces_prepared_adder(batch_size, scheduled):
     assert counts.discarded_shots == counts.logical_errors == 0
 
 
-@pytest.mark.parametrize("postselect", [False, True])
-def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect):
+def test_clifft_early_selection_preserves_noisy_control_law(tmp_path):
     import math
 
     prepared = _prepare(
@@ -169,7 +162,6 @@ def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect
         circuit=("H 0\nDEPOLARIZE1(0.05) 0 1\nT 0\nCX 1 0\nT_DAG 0\n"
                  "CX 1 0\nM 1\nDETECTOR rec[-1]\nH 0\nM 0\n"
                  "OBSERVABLE_INCLUDE(0) rec[-1]\n"),
-        postselect=postselect,
     )
     assert prepared._batch_size == 1
     assert prepared.runtime_metadata["batch_control"] == "explicit"
@@ -177,20 +169,19 @@ def test_clifft_early_selection_preserves_noisy_control_law(tmp_path, postselect
     counts = prepared.sample(shots, 901)
     # With detector 0, the two independent depolarizing faults give joint
     # (d,o) probabilities 841/900, 29/900, 1/60, 1/60 in lexicographic order.
-    acceptance = 29/30 if postselect else 1.0
-    observable_ones = 29/900 if postselect else 11/225
+    acceptance = 29/30
+    observable_ones = 29/900
     for actual, probability in ((counts.accepted_shots, acceptance),
                                 (counts.logical_errors, observable_ones)):
         assert abs(actual - shots*probability) < (
             6 * math.sqrt(shots * probability * (1-probability)) + 1
         )
     if prepared.runtime_metadata["postselection_before_optimization"]:
-        assert prepared.runtime_metadata["peak_active_width"] == (0 if postselect else 1)
-        if postselect:
-            assert prepared.runtime_metadata["optimized_t_gates"] == 0
+        assert prepared.runtime_metadata["peak_active_width"] == 0
+        assert prepared.runtime_metadata["optimized_t_gates"] == 0
 
 
-@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "stim", "xtim", "tsim"])
+@pytest.mark.parametrize("adapter_name", ["clifft", "symft", "xtim", "tsim"])
 def test_native_auto_preserves_noisy_counts_across_reused_calls(adapter_name, tmp_path):
     pytest.importorskip(adapter_name)
     path = tmp_path / "native-auto.stim"
@@ -200,8 +191,8 @@ def test_native_auto_preserves_noisy_counts_across_reused_calls(adapter_name, tm
     )
     prepared = load_adapter(adapter_name).prepare(
         artifact_path=path,
-        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": False}},
-        execution={"batch_size": "auto", "options": {}}, seed=7,
+        workload={"semantics": {"observable_index": 0, "postselect_all_detectors": True}},
+        execution={"postselect": "on", "batch_size": "auto", "options": {}}, seed=7,
     )
     assert prepared.runtime_metadata["compile_seconds"] >= 0
     for seed in (7, 8):

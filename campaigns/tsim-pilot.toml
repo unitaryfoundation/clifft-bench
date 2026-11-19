@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 seed = 20260819
 profile_id = "tsim-bulk-pilot"
 classification = "smoke"
@@ -23,6 +23,7 @@ implementation_id = "clifft-0.13.0"
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
 [[cases]]
 id = "distillation-color-code-85q-p5e-2--symft-current"
@@ -32,9 +33,8 @@ implementation_id = "symft-2026.10.8"
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
 [[cases]]
 id = "distillation-color-code-85q-p5e-2--tsim-current"
@@ -44,6 +44,7 @@ implementation_id = "tsim-1.0.0"
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
 
 [[cases]]
 id = "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-bulk"
@@ -55,6 +56,7 @@ shots_per_call = 256
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
 [[cases]]
 id = "coherent-surface-d5-r5-p1e-3-rz2e-2--symft-bulk"
@@ -65,9 +67,8 @@ shots_per_call = 256
 
 [cases.execution]
 batch_size = "auto"
-
-[cases.execution.options]
-sample_chunk_shots = 0
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
 [[cases]]
 id = "coherent-surface-d5-r5-p1e-3-rz2e-2--tsim-bulk"
@@ -78,10 +79,11 @@ shots_per_call = 256
 
 [cases.execution]
 batch_size = "auto"
+postselect = "on"
 
 [[cases]]
-id = "draper-adder-m16-basis-all-observables--clifft-bulk"
-variant_id = "clifft-bulk"
+id = "draper-adder-m16-basis-all-observables--clifft-bulk-off"
+variant_id = "clifft-bulk-off"
 workload_id = "draper-adder-m16-basis-all-observables"
 implementation_id = "clifft-0.13.0"
 shots_per_call = 100000
@@ -89,13 +91,15 @@ shots_per_call = 100000
 [cases.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[cases]]
-id = "draper-adder-m16-basis-all-observables--tsim-bulk"
-variant_id = "tsim-bulk"
+id = "draper-adder-m16-basis-all-observables--tsim-bulk-off"
+variant_id = "tsim-bulk-off"
 workload_id = "draper-adder-m16-basis-all-observables"
 implementation_id = "tsim-1.0.0"
 shots_per_call = 100000
 
 [cases.execution]
 batch_size = "auto"
+postselect = "off"

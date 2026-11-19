@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 
 [[implementations]]
 id = "clifft-0.12.0rc1"

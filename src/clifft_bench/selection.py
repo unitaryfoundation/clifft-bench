@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from clifft_bench.adapters.base import UnsupportedConfiguration
+
 
 def has_postselection(semantics: dict[str, Any]) -> bool:
     return bool(semantics["postselect_all_detectors"]
@@ -28,4 +30,4 @@ def detector_mask(semantics: dict[str, Any], num_detectors: int) -> list[int]:
 
 def require_all_or_none(semantics: dict[str, Any], adapter: str) -> None:
     if "postselection_detector_indices" in semantics:
-        raise ValueError(f"{adapter} does not support explicit detector subsets")
+        raise UnsupportedConfiguration(f"{adapter} does not support explicit detector subsets")

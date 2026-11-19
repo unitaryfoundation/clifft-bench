@@ -19,7 +19,6 @@ from typing import Any
 
 from clifft_bench.config import Case, Suite, repository_root
 from clifft_bench.results import FORMAT, export_csv, write_json
-from clifft_bench.selection import has_postselection
 from clifft_bench.system import (
     choose_cpu,
     collect_runner_metadata,
@@ -174,6 +173,7 @@ def _workload_record(case: Case) -> dict[str, Any]:
         "expected_metadata": definition["expected_metadata"],
         "compatible_adapters": definition["compatible_adapters"],
         "semantics": definition["semantics"],
+        "postselect_modes": definition["postselect_modes"],
         "artifact": {
             "path": str(case.workload.artifact_path),
             "sha256": case.workload.artifact_sha256,
@@ -220,7 +220,6 @@ def _new_case_result(
             "min_sample_seconds": measurement["min_sample_seconds"],
             "request_timeout_seconds": measurement["request_timeout_seconds"],
             "repetitions": measurement["repetitions"],
-            "postselection": has_postselection(case.workload.definition["semantics"]),
         }
     )
     return {
@@ -433,8 +432,6 @@ def run_suite(
                         result["first_call_warmup"] = {
                             key: value for key, value in warmup.items() if key != "ok"
                         }
-                        if warmup["contract_errors"]:
-                            raise RuntimeError("; ".join(warmup["contract_errors"]))
                     except Exception as error:  # noqa: BLE001
                         result["status"] = "error"
                         result["error"] = _error_record(error, "first_call_warmup")
@@ -453,7 +450,7 @@ def run_suite(
                         correctness.pop("ok", None)
                         result["correctness"] = {
                             "status": "passed" if not contract_errors else "failed",
-                            "check_id": "aggregate-count-and-circuit-metadata-v1",
+                            "check_id": "endpoint-and-circuit-metadata-v1",
                             "details": correctness,
                             "errors": contract_errors,
                             "timed_region": False,

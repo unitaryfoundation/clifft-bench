@@ -1,4 +1,4 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 profile_id = "release-v1"
 title = "Recurring single-core Clifft release benchmark"
 classification = "official"
@@ -51,7 +51,37 @@ candidate_variants = ["symft-bulk", "tsim-bulk"]
 [[comparisons]]
 id = "coverage-alternatives-vs-current"
 baseline_variant = "clifft-coverage"
-candidate_variants = ["symft-coverage", "tsim-coverage", "xtim-coverage", "stim-coverage"]
+candidate_variants = ["symft-coverage", "tsim-coverage"]
+
+[[comparisons]]
+id = "xtim-vs-current-off"
+baseline_variant = "clifft-current-off"
+candidate_variants = ["xtim-current-off"]
+
+[[comparisons]]
+id = "alternatives-vs-current-off"
+baseline_variant = "clifft-current-off"
+candidate_variants = ["symft-current-off"]
+
+[[comparisons]]
+id = "stim-anchor-vs-current-off"
+baseline_variant = "clifft-current-off"
+candidate_variants = ["stim-current-off"]
+
+[[comparisons]]
+id = "tsim-vs-current-off"
+baseline_variant = "clifft-current-off"
+candidate_variants = ["tsim-current-off"]
+
+[[comparisons]]
+id = "bulk-alternatives-vs-current-off"
+baseline_variant = "clifft-bulk-off"
+candidate_variants = ["symft-bulk-off", "tsim-bulk-off"]
+
+[[comparisons]]
+id = "coverage-alternatives-vs-current-off"
+baseline_variant = "clifft-coverage-off"
+candidate_variants = ["symft-coverage-off", "tsim-coverage-off"]
 
 [resources]
 
@@ -65,241 +95,304 @@ repetitions = 5
 [[variants]]
 id = "clifft-previous"
 implementation_id = "clifft-0.12.0rc1"
-workloads = "qec-and-adder"
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
 [[variants]]
 id = "clifft-current"
 implementation_id = "clifft-0.13.0"
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3"
+[[variants]]
+id = "clifft-current-off"
+implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
+  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
+  { workload_id = "distillation-color-code-85q-p5e-2" },
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
+  { workload_id = "draper-adder-m16-basis-all-observables" },
+  { workload_id = "distillation-15to1-rm15-p1e-3" },
+  { workload_id = "bt27-direct-x" },
+  { workload_id = "bt81-direct-x" },
+  { workload_id = "reed-muller-measured" },
+]
 
-[[variants.workloads]]
-workload_id = "msc-d5-inject-cultivate-p1e-3"
-
-[[variants.workloads]]
-workload_id = "distillation-color-code-85q-p5e-2"
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis-all-observables"
-
-[[variants.workloads]]
-workload_id = "distillation-15to1-rm15-p1e-3"
-
-[[variants.workloads]]
-workload_id = "bt27-direct-x"
-
-[[variants.workloads]]
-workload_id = "bt81-direct-x"
-
-[[variants.workloads]]
-workload_id = "reed-muller-measured"
+[variants.execution]
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[variants]]
 id = "symft-current"
 implementation_id = "symft-2026.10.8"
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
-[variants.execution.options]
-sample_chunk_shots = 0
+[[variants]]
+id = "symft-current-off"
+implementation_id = "symft-2026.10.8"
+workloads = [
+  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
+  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
+  { workload_id = "distillation-color-code-85q-p5e-2" },
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
+  { workload_id = "distillation-15to1-rm15-p1e-3" },
+  { workload_id = "reed-muller-measured" },
+]
 
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3"
-
-[[variants.workloads]]
-workload_id = "msc-d5-inject-cultivate-p1e-3"
-
-[[variants.workloads]]
-workload_id = "distillation-color-code-85q-p5e-2"
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-
-[[variants.workloads]]
-workload_id = "distillation-15to1-rm15-p1e-3"
-
-[[variants.workloads]]
-workload_id = "reed-muller-measured"
+[variants.execution]
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"
 
 [[variants]]
 id = "stim-current"
 implementation_id = "stim-1.16.0"
+workloads = [
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
+options = {  }
+postselect = "on"
 
-[variants.execution.options]
+[[variants]]
+id = "stim-current-off"
+implementation_id = "stim-1.16.0"
+workloads = [
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+]
 
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
+[variants.execution]
+batch_size = "auto"
+options = {  }
+postselect = "off"
 
 [[variants]]
 id = "xtim-current"
 implementation_id = "xtim-3.2.2-edf0dd0"
+workloads = [
+  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
+  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+  { workload_id = "distillation-15to1-rm15-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
+options = {  }
+postselect = "on"
 
-[variants.execution.options]
+[[variants]]
+id = "xtim-current-off"
+implementation_id = "xtim-3.2.2-edf0dd0"
+workloads = [
+  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
+  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+  { workload_id = "distillation-15to1-rm15-p1e-3" },
+]
 
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3"
-
-[[variants.workloads]]
-workload_id = "msc-d5-inject-cultivate-p1e-3"
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3"
-
-[[variants.workloads]]
-workload_id = "distillation-15to1-rm15-p1e-3"
+[variants.execution]
+batch_size = "auto"
+options = {  }
+postselect = "off"
 
 [[variants]]
 id = "tsim-current"
 implementation_id = "tsim-1.0.0"
-workloads = "qec-and-adder"
+workloads = "release-survivors"
 
 [variants.execution]
 batch_size = "auto"
+postselect = "on"
+
+[[variants]]
+id = "tsim-current-off"
+implementation_id = "tsim-1.0.0"
+workloads = [
+  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
+  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
+  { workload_id = "distillation-color-code-85q-p5e-2" },
+  { workload_id = "surface-code-d7-r7-p1e-3" },
+  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
+  { workload_id = "draper-adder-m16-basis-all-observables" },
+  { workload_id = "distillation-15to1-rm15-p1e-3" },
+  { workload_id = "reed-muller-measured" },
+]
+
+[variants.execution]
+batch_size = "auto"
+postselect = "off"
 
 [[variants]]
 id = "clifft-bulk"
 implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+]
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
 
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 256
+[[variants]]
+id = "clifft-bulk-off"
+implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+  { workload_id = "draper-adder-m16-basis-all-observables", shots_per_call = 100000 },
+]
 
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis-all-observables"
-shots_per_call = 100000
+[variants.execution]
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[variants]]
 id = "symft-bulk"
 implementation_id = "symft-2026.10.8"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+]
 
 [variants.execution]
 batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
-[variants.execution.options]
-sample_chunk_shots = 0
+[[variants]]
+id = "symft-bulk-off"
+implementation_id = "symft-2026.10.8"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+]
 
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 256
+[variants.execution]
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"
 
 [[variants]]
 id = "tsim-bulk"
 implementation_id = "tsim-1.0.0"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+]
 
 [variants.execution]
 batch_size = "auto"
+postselect = "on"
 
-[[variants.workloads]]
-workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-shots_per_call = 256
+[[variants]]
+id = "tsim-bulk-off"
+implementation_id = "tsim-1.0.0"
+workloads = [
+  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
+  { workload_id = "draper-adder-m16-basis-all-observables", shots_per_call = 100000 },
+]
 
-[[variants.workloads]]
-workload_id = "draper-adder-m16-basis-all-observables"
-shots_per_call = 100000
+[variants.execution]
+batch_size = "auto"
+postselect = "off"
 
 [[variants]]
 id = "clifft-coverage"
 implementation_id = "clifft-0.13.0"
-workloads = "coverage"
+workloads = [
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
 options_preset = "clifft-scheduled"
+postselect = "on"
+
+[[variants]]
+id = "clifft-coverage-off"
+implementation_id = "clifft-0.13.0"
+workloads = [
+  { workload_id = "quantum-volume-q10-seed42-all-observables" },
+  { workload_id = "quantum-volume-q20-seed42-all-observables" },
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
+]
+
+[variants.execution]
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+postselect = "off"
 
 [[variants]]
 id = "symft-coverage"
 implementation_id = "symft-2026.10.8"
+workloads = [
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "on"
 
-[variants.execution.options]
-sample_chunk_shots = 0
+[[variants]]
+id = "symft-coverage-off"
+implementation_id = "symft-2026.10.8"
+workloads = [
+  { workload_id = "quantum-volume-q10-seed42-all-observables" },
+  { workload_id = "quantum-volume-q20-seed42-all-observables" },
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+]
 
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-
-[[variants.workloads]]
-workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-
-[[variants.workloads]]
-workload_id = "quantum-volume-q10-seed42-all-observables"
-
-[[variants.workloads]]
-workload_id = "quantum-volume-q20-seed42-all-observables"
-
-[[variants.workloads]]
-workload_id = "msc-d7-proxy-unverified-p1e-3"
+[variants.execution]
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"
 
 [[variants]]
 id = "tsim-coverage"
 implementation_id = "tsim-1.0.0"
-workloads = "coverage"
+workloads = [
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
+postselect = "on"
 
 [[variants]]
-id = "xtim-coverage"
-implementation_id = "xtim-3.2.2-edf0dd0"
+id = "tsim-coverage-off"
+implementation_id = "tsim-1.0.0"
+workloads = [
+  { workload_id = "quantum-volume-q10-seed42-all-observables" },
+  { workload_id = "quantum-volume-q20-seed42-all-observables" },
+  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
+  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
+]
 
 [variants.execution]
 batch_size = "auto"
-
-[variants.execution.options]
-
-[[variants.workloads]]
-workload_id = "msc-d3-inject-cultivate-p1e-3-unselected"
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
-
-[[variants]]
-id = "stim-coverage"
-implementation_id = "stim-1.16.0"
-
-[variants.execution]
-batch_size = "auto"
-
-[variants.execution.options]
-
-[[variants.workloads]]
-workload_id = "surface-code-d7-r7-p1e-3-unselected"
+postselect = "off"

@@ -1,7 +1,8 @@
-suite_version = "0.2.9"
+suite_version = "0.3.0"
 
 [[workloads]]
 id = "msc-d3-inject-cultivate-p1e-3"
+postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Distance-3 injection and cultivation circuit with circuit-level Pauli noise."
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
@@ -35,6 +36,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "msc-d5-inject-cultivate-p1e-3"
+postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Distance-5 injection and cultivation circuit with circuit-level Pauli noise."
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
@@ -68,6 +70,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "surface-code-d7-r7-p1e-3"
+postselect_modes = ["on", "off"]
 family = "surface-code-memory"
 description = "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds."
 compatible_adapters = ["clifft", "symft", "stim", "xtim", "tsim"]
@@ -102,6 +105,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "distillation-color-code-85q-p5e-2"
+postselect_modes = ["on", "off"]
 family = "magic-state-distillation"
 description = "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -135,6 +139,7 @@ notes = "Byte-for-byte copy of the paper workload; the benchmark contract select
 
 [[workloads]]
 id = "coherent-surface-d3-r1-p1e-3-rz2e-2"
+postselect_modes = ["on", "off"]
 family = "coherent-noise-surface-code"
 description = "Distance-3 surface-code circuit with one round of coherent Z over-rotation noise."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -168,6 +173,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "coherent-surface-d3-r3-p1e-3-rz2e-2"
+postselect_modes = ["on", "off"]
 family = "coherent-noise-surface-code"
 description = "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -202,6 +208,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "coherent-surface-d5-r1-p1e-3-rz2e-2"
+postselect_modes = ["on", "off"]
 family = "coherent-noise-surface-code"
 description = "Distance-5 surface-code circuit with one round of coherent Z over-rotation noise."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -235,6 +242,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
+postselect_modes = ["on", "off"]
 family = "coherent-noise-surface-code"
 description = "Distance-5 surface-code circuit with five rounds of coherent Z over-rotation noise."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -269,6 +277,7 @@ notes = "Byte-for-byte copy of the paper workload."
 
 [[workloads]]
 id = "quantum-volume-q10-seed42-all-observables"
+postselect_modes = ["off"]
 family = "quantum-volume"
 description = "Fixed depth-10 Quantum Volume circuit on 10 qubits, transpiled to CX and U3 gates, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -303,6 +312,7 @@ notes = "Generated with Qiskit 2.5.1 and seed 42; one OBSERVABLE_INCLUDE(k) per 
 
 [[workloads]]
 id = "quantum-volume-q20-seed42-all-observables"
+postselect_modes = ["off"]
 family = "quantum-volume"
 description = "Fixed depth-20 Quantum Volume circuit on 20 qubits, transpiled to CX and U3 gates, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -337,6 +347,7 @@ notes = "Generated with Qiskit 2.5.1 and seed 42; one OBSERVABLE_INCLUDE(k) per 
 
 [[workloads]]
 id = "draper-adder-m16-basis-all-observables"
+postselect_modes = ["off"]
 family = "prepared-basis-arithmetic"
 description = "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise or postselection, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "tsim"]
@@ -375,6 +386,7 @@ notes = "Generated with MQT Bench 2.3.0 and Qiskit 2.5.2 at optimization level 0
 
 [[workloads]]
 id = "distillation-15to1-rm15-p1e-3"
+postselect_modes = ["on", "off"]
 family = "magic-state-distillation"
 description = "15-to-1 [[15,1,3]] Reed-Muller T-state distillation with T-gate Z noise and ideal output verification."
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
@@ -409,6 +421,7 @@ notes = "Preserve all source instructions except the two PAULI_EXPECTATION decla
 
 [[workloads]]
 id = "bt27-direct-x"
+postselect_modes = ["off"]
 family = "code-switching"
 description = "Noiseless BT27 code switching on 135 qubits with direct logical-X readout."
 compatible_adapters = ["clifft"]
@@ -441,6 +454,7 @@ notes = "Merlin generator 097380fac1a3968ca47925146e211fe990f4c396, p_phys=0, ta
 
 [[workloads]]
 id = "bt81-direct-x"
+postselect_modes = ["off"]
 family = "code-switching"
 description = "Noiseless BT81 code switching on 405 qubits with direct logical-X readout."
 compatible_adapters = ["clifft"]
@@ -473,6 +487,7 @@ notes = "Unmodified direct-X fixture from the same Merlin generator as BT27; no 
 
 [[workloads]]
 id = "reed-muller-measured"
+postselect_modes = ["off"]
 family = "reed-muller"
 description = "Measured 15-qubit Reed-Muller preparation, feedback, transversal T, and logical-X readout."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -504,111 +519,8 @@ license = "Apache-2.0"
 notes = "Remove EXP_VAL declarations; retain all preparation, feedback, T gates, and logical-X measurement."
 
 [[workloads]]
-id = "msc-d3-inject-cultivate-p1e-3-unselected"
-family = "magic-state-cultivation"
-description = "Distance-3 injection and cultivation circuit with circuit-level Pauli noise. Detector postselection disabled; retain every attempted shot."
-compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
-shots_per_call = 100000
-
-[workloads.artifact]
-path = "workloads/circuits/msc_d3_inject_cultivate_p1e-3.stim"
-sha256 = "90a7d841e003e5ee38137cd9a3eb6529bb552e49c424bc6b0932a27d97cdb41f"
-
-[workloads.parameters]
-distance = 3
-physical_error_rate = 0.001
-stages = ["injection", "cultivation"]
-postselection_pair = "msc-d3-inject-cultivate-p1e-3"
-
-[workloads.semantics]
-observable_index = 0
-postselect_all_detectors = false
-
-[workloads.expected_metadata]
-num_qubits = 15
-num_measurements = 21
-num_detectors = 20
-num_observables = 1
-
-[workloads.provenance]
-source_url = "https://github.com/unitaryfoundation/clifft-paper"
-source_commit = "db7dc9f13a2c2854690e92390c779048a1ac1400"
-source_path = "qec_bench/circuits/cultivation_d3.stim"
-license = "Apache-2.0"
-notes = "Byte-for-byte copy of the paper workload."
-
-[[workloads]]
-id = "surface-code-d7-r7-p1e-3-unselected"
-family = "surface-code-memory"
-description = "Rotated surface-code memory-Z circuit at distance 7 for 7 rounds. Detector postselection disabled; retain every attempted shot."
-compatible_adapters = ["clifft", "symft", "stim", "xtim", "tsim"]
-shots_per_call = 100000
-
-[workloads.artifact]
-path = "workloads/circuits/pure_surface_d7_r7_p1e-3.stim"
-sha256 = "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
-
-[workloads.parameters]
-distance = 7
-rounds = 7
-physical_error_rate = 0.001
-basis = "Z"
-postselection_pair = "surface-code-d7-r7-p1e-3"
-
-[workloads.semantics]
-observable_index = 0
-postselect_all_detectors = false
-
-[workloads.expected_metadata]
-num_qubits = 118
-num_measurements = 385
-num_detectors = 336
-num_observables = 1
-
-[workloads.provenance]
-source_url = "https://github.com/unitaryfoundation/clifft-paper"
-source_commit = "db7dc9f13a2c2854690e92390c779048a1ac1400"
-source_path = "qec_bench/circuits/surface_d7_r7.stim"
-license = "Apache-2.0"
-notes = "Byte-for-byte copy of the paper workload."
-
-[[workloads]]
-id = "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected"
-family = "coherent-noise-surface-code"
-description = "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise. Detector postselection disabled; retain every attempted shot."
-compatible_adapters = ["clifft", "symft", "tsim"]
-shots_per_call = 100000
-
-[workloads.artifact]
-path = "workloads/circuits/coherent_d3_r3.stim"
-sha256 = "87d1308c83894e87c60aeb2dc31b74be89b3460a951929951f2c3ac92606827d"
-
-[workloads.parameters]
-distance = 3
-rounds = 3
-physical_error_rate = 0.001
-coherent_z_rotation = 0.02
-postselection_pair = "coherent-surface-d3-r3-p1e-3-rz2e-2"
-
-[workloads.semantics]
-observable_index = 0
-postselect_all_detectors = false
-
-[workloads.expected_metadata]
-num_qubits = 26
-num_measurements = 33
-num_detectors = 24
-num_observables = 1
-
-[workloads.provenance]
-source_url = "https://github.com/unitaryfoundation/clifft-paper"
-source_commit = "db7dc9f13a2c2854690e92390c779048a1ac1400"
-source_path = "qec_bench/circuits/coherent_d3_r3.stim"
-license = "Apache-2.0"
-notes = "Byte-for-byte copy of the paper workload."
-
-[[workloads]]
 id = "msc-d7-proxy-unverified-p1e-3"
+postselect_modes = ["on", "off"]
 family = "msc-performance-proxy"
 description = "Unverified distance-7 MSC-like performance proxy; not a validated cultivation protocol."
 compatible_adapters = ["clifft", "symft", "tsim"]
@@ -642,6 +554,7 @@ notes = "Unmodified public performance proxy; source README explicitly disclaims
 
 [[workloads]]
 id = "msc-full-d5-cultivation-selected-p1e-3"
+postselect_modes = ["on", "off"]
 family = "magic-state-cultivation-full"
 description = "Full d5 T-state cultivation through d15 escape, selecting only the 107 cultivation-stage detectors."
 compatible_adapters = ["clifft", "tsim"]
@@ -680,6 +593,7 @@ notes = "Generated by make_d5_end2end(0.001), without EXP_VAL probes, using the 
 
 [[workloads]]
 id = "fold-transversal-d3-p1e-3"
+postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Terminated fold-transversal d3 native-T core with ideal logical H_XY readout."
 compatible_adapters = ["clifft", "tsim"]
@@ -711,6 +625,7 @@ notes = "Generated by workloads/generate_fold_transversal.py. Unitary injection 
 
 [[workloads]]
 id = "fold-transversal-d5-p1e-3"
+postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Fold-transversal d5 native-T reconstruction with ideal logical H_XY readout."
 compatible_adapters = ["clifft", "tsim"]
@@ -741,23 +656,12 @@ license = "Apache-2.0"
 notes = "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T† and X readout."
 
 [groups]
-qec-and-adder = [
+release-survivors = [
   "msc-d3-inject-cultivate-p1e-3",
   "msc-d5-inject-cultivate-p1e-3",
   "distillation-color-code-85q-p5e-2",
   "surface-code-d7-r7-p1e-3",
   "coherent-surface-d3-r3-p1e-3-rz2e-2",
   "coherent-surface-d5-r5-p1e-3-rz2e-2",
-  "draper-adder-m16-basis-all-observables",
   "distillation-15to1-rm15-p1e-3",
-  "reed-muller-measured",
-]
-coverage = [
-  "msc-d3-inject-cultivate-p1e-3-unselected",
-  "surface-code-d7-r7-p1e-3-unselected",
-  "coherent-surface-d3-r3-p1e-3-rz2e-2-unselected",
-  "quantum-volume-q10-seed42-all-observables",
-  "quantum-volume-q20-seed42-all-observables",
-  "msc-d7-proxy-unverified-p1e-3",
-  "msc-full-d5-cultivation-selected-p1e-3",
 ]

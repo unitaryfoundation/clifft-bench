@@ -1,39 +1,16 @@
 # Supplemental sampling coverage
 
-The `*-coverage` variants in the normal release campaign add 23 current-tool
-cases. They use the release [automatic sizing](../docs/benchmark-contract.md#batching).
-Results appear in `cases.csv` and `coverage-alternatives-vs-current` comparison rows, outside
-short-call and bulk comparison groups. There is no previous-release baseline
-for these coverage comparisons. Tool pins, single-core restrictions, timed boundaries,
-and the aggregate-count contract are otherwise unchanged.
+The `*-coverage` variants add repeated QV sampling, the unverified d7 cultivation
+proxy, and full d5 cultivation to the normal release campaign. They share its
+[endpoint and timing contract](../docs/benchmark-contract.md) and have no paired
+previous-release baseline. `coverage-smoke.toml` exercises the same selections
+with smaller calls.
 
-| Workload | Attempted shots per public call | Eligible adapters |
-|---|---:|---|
-| Cultivation d3, selection off | 100,000 | Clifft, SymFT, Tsim, xtim |
-| Surface d7/r7, selection off | 100,000 | Clifft, SymFT, Tsim, xtim, Stim |
-| Coherent surface d3/r3, selection off | 100,000 | Clifft, SymFT, Tsim |
-| QV10, seed 42, repeated sampling | 4,096 | Clifft, SymFT, Tsim |
-| QV20, seed 42, repeated sampling | 32 | Clifft, SymFT, Tsim |
-| Unverified d7 MSC performance proxy | 20,000 | Clifft, SymFT, Tsim |
-| Full d5 cultivation, selective mask | 20,000 | Clifft, Tsim |
-
-Eligibility applies to the pinned implementation and this repository's adapter,
-not every capability of the underlying simulator. Failed collection attempts
-remain explicit outcomes; they do not become zero throughput or disappear.
-
-## Postselection controls
-
-Each `-unselected` workload reuses its selected counterpart's exact circuit,
-digest, observable, noise, and public call size. Only the semantic selection
-flag changes. Selected rows already exist in the `*-current` variants. These
-controls expose the cost of continuing rejected trajectories and whether
-selection enables compiler optimizations. They count raw observable-0 ones
-over all attempts; they are not decoded logical-error estimates.
-
-SymFT uses its measurement-record path for these cases because its native
-counts endpoint always discards detector-fired shots. The materialization and
-parity reduction are timed. The selected and unselected rows therefore compare
-the complete available adapter paths, including that endpoint difference.
+Postselection on/off uses the same canonical circuit, digest, noise, and public
+call size. Cases select the mode explicitly; on returns survivor counts and off
+returns all packed detector/observable rows. These compare whole workflows and
+do not isolate postselection cost. Unsupported pinned endpoints remain explicit
+outcomes. Modes and supported circuit adapters are declared in `workloads.toml`.
 
 ## Cultivation sources and semantics
 
@@ -62,9 +39,8 @@ survivors. It performs no decoding, frame correction, expectation calculation,
 or fidelity estimation. Escape detectors are sampled but do not reject a shot.
 
 Clifft receives this same mask before HIR passes and during lowering. Tsim
-receives it at sampling and the adapter reduces only selected detector columns.
-SymFT, xtim, and Stim adapters currently reject explicit subsets instead of
-silently selecting all or none. Licenses and attribution are in
+receives it at sampling, then counts observable ones among native survivors.
+For on, SymFT and xtim reject subsets and Stim rejects the endpoint. Licenses and attribution are in
 [`NOTICE-cultivation-coverage`](circuits/NOTICE-cultivation-coverage).
 
 To reproduce the d5 bytes and mask in a separate generator environment:
@@ -87,9 +63,8 @@ annotations, never to simulate or validate the non-Clifford output law.
 ## Quantum Volume
 
 The QV10/QV20 seed-42 workloads declare every terminal measurement as an
-observable. These rows measure repeated aggregate sampling from a prepared
-sampler and report raw observable-0 ones, corresponding to qubit 0. There are
-no selected detectors. They are distinct from the setup-plus-one-shot study
+observable. These rows measure repeated packed sampling from a prepared sampler.
+There are no selected detectors. They are distinct from the setup-plus-one-shot study
 under `experiments/qv` and say nothing about heavy-output-generation success.
 
 ## Validation and collection

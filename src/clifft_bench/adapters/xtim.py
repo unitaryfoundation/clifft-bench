@@ -8,8 +8,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
-from clifft_bench.adapters._shared import PackedCountsReducer, verify_source_installation
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.adapters._shared import verify_source_installation
+from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter, UnsupportedConfiguration
 from clifft_bench.selection import require_all_or_none
 
 
@@ -60,19 +60,16 @@ def _validate_report(sampler, text):
 
 
 class _PreparedXtim(PreparedAdapter):
-    def __init__(
-        self, sampler, chunk, observable, postselect, det_ref, obs_ref, detector_mask, metadata
-    ):
+    def __init__(self, sampler, chunk, observable, detector_mask, metadata):
         self._chunk = chunk
         self._detector_mask = detector_mask
-        self._counts = PackedCountsReducer(
-            det_ref, obs_ref, observable=observable,
-            postselect=postselect and detector_mask is None,
-        )
+        self._observable = observable
         self.runtime_metadata = metadata
         self._sampler = sampler
 
     def sample(self, shots: int, seed: int) -> Counts:
+        import numpy as np
+
         if shots < 1:
             raise ValueError("xtim shots per call must be positive")
         attempted = accepted = discarded = errors = 0
@@ -81,25 +78,18 @@ class _PreparedXtim(PreparedAdapter):
             n = min(chunk, shots - offset)
             # Reseed once per harness call, then continue the stream for chunks.
             chunk_seed = seed if offset == 0 else None
-            if self._detector_mask is None:
-                dets, obs = self._sampler.sample(n, seed=chunk_seed)
-                attempts = n
-            else:
-                dets, obs, native = self._sampler.sample(
-                    n, seed=chunk_seed, postselect=self._detector_mask
-                )
-                attempts = int(native["attempts"])
-                passed = int(native["passed"])
-                rejected = int(native["discarded"])
-                if (
-                    attempts != n
-                    or passed != len(dets)
-                    or passed != len(obs)
-                    or passed + rejected != attempts
-                    or not 0 <= int(native["early"]) <= rejected
-                ):
-                    raise RuntimeError(f"xtim returned inconsistent postselection counts: {native}")
-            kept, logical_errors = self._counts.count(dets, obs)
+            dets, obs, native = self._sampler.sample(
+                n, seed=chunk_seed, postselect=self._detector_mask
+            )
+            attempts = int(native["attempts"])
+            kept = int(native["passed"])
+            rejected = int(native["discarded"])
+            if (attempts != n or kept != len(dets) or kept != len(obs)
+                    or kept + rejected != attempts or not 0 <= int(native["early"]) <= rejected):
+                raise RuntimeError(f"xtim returned inconsistent postselection counts: {native}")
+            logical_errors = int(np.count_nonzero(
+                obs[:, self._observable // 8] & (1 << (self._observable % 8))
+            ))
             attempted += attempts
             accepted += kept
             discarded += attempts - kept
@@ -154,13 +144,9 @@ class XtimAdapter(Adapter):
         det_ref, obs_ref = layout.compile_m2d_converter(skip_reference_sample=True).convert(
             measurements=records, separate_observables=True
         )
-        postselect = bool(semantics["postselect_all_detectors"])
-        # The native mask accepts zero reference-relative detector bits. It
-        # implements raw-zero selection only when every raw reference is zero.
-        detector_mask = (
-            np.ones(layout.num_detectors, dtype=bool)
-            if postselect and not np.any(det_ref) else None
-        )
+        if np.any(det_ref) or obs_ref[0, observable]:
+            raise UnsupportedConfiguration("xtim requires zero raw reference parity")
+        detector_mask = np.ones(layout.num_detectors, dtype=bool)
         metadata = {
             "name": "xtim",
             "version": xtim.__version__,
@@ -172,14 +158,8 @@ class XtimAdapter(Adapter):
             "batch_parameter": "public-twirl-sampler-chunk-shots",
             "seed_policy": "per-call-seed-with-continuous-chunks",
             "sampling_backend": "compile_twirl_sampler",
-            "record_materialization": (
-                "bit-packed-accepted-detectors-and-observables"
-                if detector_mask is not None else "bit-packed-detectors-and-observables"
-            ),
-            "postselection_backend": (
-                "native-twirl-sampler" if detector_mask is not None
-                else "adapter-raw-record-parity" if postselect else "disabled"
-            ),
+            "record_materialization": "bit-packed-accepted-detectors-and-observables",
+            "postselection_backend": "native-twirl-sampler",
             "cache_policy": "worker-local; reused-after-first-call",
             "disk_cache": False,
             "selfcheck": 0,
@@ -199,9 +179,6 @@ class XtimAdapter(Adapter):
             sampler,
             chunk,
             observable,
-            postselect,
-            np.packbits(det_ref, axis=1, bitorder="little"),
-            np.packbits(obs_ref, axis=1, bitorder="little"),
             detector_mask,
             metadata,
         )
