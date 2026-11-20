@@ -60,12 +60,13 @@ precision = "binary-stabilizer"
 compiler_flags = []
 
 [[implementations]]
-id = "xtim-3.2.2-edf0dd0"
+id = "xtim-4.1.2"
 name = "xtim"
 adapter = "xtim"
 distribution = "xtim"
-version = "3.2.2"
-commit_sha = "edf0dd0cff804ac0228d517889e49b0c286cb19a"
+version = "4.1.2"
+source_tag = "v4.1.2"
+commit_sha = "b6dc0302604c4faf59a7b753004fddb42cb8d615"
 source_url = "https://github.com/ikim-quantum/xtim"
 dependency_distributions = ["numpy", "stim"]
 

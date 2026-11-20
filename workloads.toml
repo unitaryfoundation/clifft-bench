@@ -18,6 +18,7 @@ physical_error_rate = 0.001
 stages = ["injection", "cultivation"]
 
 [workloads.semantics]
+raw_zero_reference = { on = "clifft", off = "clifft" }
 observable_index = 0
 postselect_all_detectors = true
 
@@ -52,6 +53,7 @@ physical_error_rate = 0.001
 stages = ["injection", "cultivation"]
 
 [workloads.semantics]
+raw_zero_reference = { on = "clifft", off = "clifft" }
 observable_index = 0
 postselect_all_detectors = true
 
@@ -87,6 +89,7 @@ physical_error_rate = 0.001
 basis = "Z"
 
 [workloads.semantics]
+raw_zero_reference = { on = "stim", off = "stim" }
 observable_index = 0
 postselect_all_detectors = true
 
@@ -403,6 +406,7 @@ noise_model = "independent Z after each physical T; ideal preparation, checks, a
 readout = "inverse transversal T followed by logical X parity"
 
 [workloads.semantics]
+raw_zero_reference = { on = "clifft", off = "clifft" }
 observable_index = 0
 postselect_all_detectors = true
 
@@ -557,7 +561,7 @@ id = "msc-full-d5-cultivation-selected-p1e-3"
 postselect_modes = ["on", "off"]
 family = "magic-state-cultivation-full"
 description = "Full d5 T-state cultivation through d15 escape, selecting only the 107 cultivation-stage detectors."
-compatible_adapters = ["clifft", "tsim"]
+compatible_adapters = ["clifft", "tsim", "xtim"]
 shots_per_call = 20000
 
 [workloads.artifact]

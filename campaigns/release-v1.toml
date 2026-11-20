@@ -51,7 +51,7 @@ candidate_variants = ["symft-bulk", "tsim-bulk"]
 [[comparisons]]
 id = "coverage-alternatives-vs-current"
 baseline_variant = "clifft-coverage"
-candidate_variants = ["symft-coverage", "tsim-coverage"]
+candidate_variants = ["symft-coverage", "tsim-coverage", "xtim-coverage"]
 
 [[comparisons]]
 id = "xtim-vs-current-off"
@@ -81,7 +81,7 @@ candidate_variants = ["symft-bulk-off", "tsim-bulk-off"]
 [[comparisons]]
 id = "coverage-alternatives-vs-current-off"
 baseline_variant = "clifft-coverage-off"
-candidate_variants = ["symft-coverage-off", "tsim-coverage-off"]
+candidate_variants = ["symft-coverage-off", "tsim-coverage-off", "xtim-coverage-off"]
 
 [resources]
 
@@ -189,7 +189,7 @@ postselect = "off"
 
 [[variants]]
 id = "xtim-current"
-implementation_id = "xtim-3.2.2-edf0dd0"
+implementation_id = "xtim-4.1.2"
 workloads = [
   { workload_id = "msc-d3-inject-cultivate-p1e-3" },
   { workload_id = "msc-d5-inject-cultivate-p1e-3" },
@@ -204,7 +204,7 @@ postselect = "on"
 
 [[variants]]
 id = "xtim-current-off"
-implementation_id = "xtim-3.2.2-edf0dd0"
+implementation_id = "xtim-4.1.2"
 workloads = [
   { workload_id = "msc-d3-inject-cultivate-p1e-3" },
   { workload_id = "msc-d5-inject-cultivate-p1e-3" },
@@ -392,6 +392,24 @@ workloads = [
   { workload_id = "msc-d7-proxy-unverified-p1e-3" },
   { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
 ]
+
+[variants.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[variants]]
+id = "xtim-coverage"
+implementation_id = "xtim-4.1.2"
+workloads = [{ workload_id = "msc-full-d5-cultivation-selected-p1e-3" }]
+
+[variants.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[variants]]
+id = "xtim-coverage-off"
+implementation_id = "xtim-4.1.2"
+workloads = [{ workload_id = "msc-full-d5-cultivation-selected-p1e-3" }]
 
 [variants.execution]
 batch_size = "auto"

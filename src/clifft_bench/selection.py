@@ -7,6 +7,14 @@ from typing import Any
 from clifft_bench.adapters.base import UnsupportedConfiguration
 
 
+def validate_reference_sources(semantics: dict, modes: list[str]) -> None:
+    if "raw_zero_reference" in semantics:
+        sources = semantics["raw_zero_reference"]
+        if (not isinstance(sources, dict) or not sources or sources.keys() - set(modes)
+                or any(source not in ("stim", "clifft") for source in sources.values())):
+            raise ValueError("raw_zero_reference must map declared modes to stim or clifft")
+
+
 def has_postselection(semantics: dict[str, Any]) -> bool:
     return bool(semantics["postselect_all_detectors"]
                 or semantics.get("postselection_detector_indices"))

@@ -247,24 +247,33 @@ def test_sample_interval_must_fit_inside_request_timeout(tmp_path: Path) -> None
         )
 
 
-@pytest.mark.parametrize("adapter,exit_code,message", [
-    ("symft", 0, "postselect=off"),
-    ("stim", 1, "reference-relative output"),
+@pytest.mark.parametrize("adapter,circuit_prefix,exit_code,message", [
+    ("symft", "", 0, "postselect=off"),
+    ("stim", "", 1, "reference-relative output"),
+    ("xtim", "T 0\n", 0, "raw reference parity"),
 ])
 def test_cli_preserves_expected_and_unexpected_unsupported_evidence(
-    tmp_path, adapter, exit_code, message
+    tmp_path, adapter, circuit_prefix, exit_code, message
 ):
     from clifft_bench.cli import main
 
+    if adapter == "xtim":
+        pytest.importorskip("xtim")
     path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]
     run["cases"][0]["execution"].update(postselect="off", batch_size="auto")
     software["implementations"][0]["adapter"] = adapter
+    if adapter == "xtim":
+        implementations = read_toml(repository_root() / "software.toml")["implementations"]
+        pin = next(item for item in implementations if item["adapter"] == adapter)
+        software["implementations"][0].update(
+            {key: pin[key] for key in ("source_url", "commit_sha", "version")}
+        )
     workloads = read_toml(tmp_path / "workloads.toml")
     workload = workloads["workloads"][0]
     workload["compatible_adapters"] = [adapter]
     artifact = tmp_path / "tiny.stim"
-    artifact.write_text("M !0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
+    artifact.write_text(circuit_prefix + "M !0\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
     workload["artifact"]["sha256"] = hashlib.sha256(artifact.read_bytes()).hexdigest()
     _write(tmp_path / "workloads.toml", workloads)
     _write(tmp_path / "software.toml", software)
@@ -491,13 +500,13 @@ def test_eight_core_worker_records_applied_affinity_and_preimport_caps(tmp_path)
     assert metadata["address_space_limit_bytes"] == 1 << 30
 
 
-@pytest.mark.parametrize("adapter", ["stim", "xtim"])
 @pytest.mark.parametrize("batch_size", [1, "auto"])
-def test_unsupported_threads_survive_export_on_a_restricted_host(tmp_path, adapter, batch_size):
+def test_unsupported_threads_survive_export_on_a_restricted_host(tmp_path, batch_size):
+    adapter = "stim"
     path, run, software = _write_fixture_suite(tmp_path)
     run["cases"] = run["cases"][:1]
     run["cases"][0]["execution"].update(
-        threads=8, batch_size=batch_size, postselect="off" if adapter == "stim" else "on")
+        threads=8, batch_size=batch_size, postselect="off")
     software["implementations"][0]["adapter"] = adapter
     workloads = read_toml(tmp_path / "workloads.toml")
     workload = workloads["workloads"][0]

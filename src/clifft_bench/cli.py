@@ -149,7 +149,11 @@ def _run(args: argparse.Namespace) -> int:
             adapter = load_adapter(case["simulator"]["adapter"], case["simulator"]["version"])
             execution = case["execution"]
             expected = (execution["postselect"] not in adapter.supported_postselect
-                        or execution["threads"] not in adapter.supported_threads)
+                        or execution["threads"] not in adapter.supported_threads
+                        or (adapter.name == "xtim"
+                            and error["type"] == "UnsupportedReferenceCircuit"
+                            and execution["postselect"] not in
+                            case["workload"]["semantics"].get("raw_zero_reference", {})))
             expected_unsupported += expected
             outcome = "Unsupported" if expected else "Unexpected unsupported"
         print(

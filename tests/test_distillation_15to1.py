@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import math
 import os
 from collections import Counter
@@ -32,8 +33,16 @@ def _prepare(adapter, tmp_path, text):
             .cases[0]
             .definition["execution"]["options"]["scheduler"]
         )
+    workload = case.workload.definition
+    if adapter == "xtim":
+        # These tests vary only stochastic faults. Check the ideal circuit before
+        # carrying its reference declaration onto the generated fixture bytes.
+        assert (module.Circuit(text).without_noise().text.split()
+                == module.Circuit(ARTIFACT.read_text()).without_noise().text.split())
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        workload = {**workload, "artifact": {"sha256": digest}}
     prepared = load_adapter(adapter).prepare(
-        artifact_path=path, workload=case.workload.definition, execution=execution,
+        artifact_path=path, workload=workload, execution=execution,
     )
     for key, expected in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == expected
