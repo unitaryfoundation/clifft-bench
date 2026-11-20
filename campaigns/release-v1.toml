@@ -60,7 +60,7 @@ candidate_variants = ["tsim-current-off-8c", "xtim-current-off-8c", "symft-curre
 [[variants]]
 id = "clifft-previous"
 implementation_id = "clifft-0.13.0"
-workloads = "cpu-release"
+workloads = "previous-clifft-survivors"
 
 [variants.execution]
 postselect = "on"
@@ -184,7 +184,7 @@ batch_size = "auto"
 [[variants]]
 id = "clifft-previous-8c"
 implementation_id = "clifft-0.13.0"
-workloads = "cpu-release"
+workloads = "previous-clifft-survivors"
 
 [variants.execution]
 postselect = "on"

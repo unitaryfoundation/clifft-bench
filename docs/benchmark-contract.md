@@ -43,7 +43,7 @@ supported previous-release baseline is current coverage, with no release ratio.
 The representative suite may change between campaigns. The release profiles share
 one public call size per circuit across simulators, endpoints and core budgets.
 Fast circuits use a common 262,144-shot bulk call. Wide or expensive circuits use
-16,384 shots, with 1,024 shots for fold-transversal d5 and 32 shots for QV q20.
+16,384 shots, with 32 shots for QV q20.
 
 The [corpus notes](../workloads/README.md) own circuit provenance and validation;
 [coverage notes](../workloads/coverage.md) describe repeated QV sampling,

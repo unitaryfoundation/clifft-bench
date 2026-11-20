@@ -86,6 +86,9 @@ native sampling checks. SymFT rejects the fold circuits at the first `CCZ`
 instruction. xtim parses the circuits, but
 lacks a verified raw reference for their non-Clifford gates in either mode.
 The release campaign includes both distances in both output modes.
+It omits the Clifft 0.13.0 survivor-count baseline for d5 because smaller-call
+measurements project about 1.9 hours for one 262,144-shot call on a single core.
+[Reference-host sizing measurements](https://github.com/unitaryfoundation/clifft-bench/tree/9edce397f5f229e8141c34a0ba0f1afe58bcbcf1/evidence/2026-11-20-fold-d5-sizing)
 
 [The converter](generate_fold_transversal.py) verifies the source model hashes,
 densely renumbers qubits, and preserves native gate/noise placement. Its

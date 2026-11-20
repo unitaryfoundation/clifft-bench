@@ -129,6 +129,8 @@ def test_release_matches_modes_core_budgets_and_one_public_call_size_per_circuit
             and adapter in w["compatible_adapters"]
             and v["execution"]["postselect"] in w["postselect_modes"]
         }
+        if v["id"] in {"clifft-previous", "clifft-previous-8c"}:
+            expected.remove("fold-transversal-d5-p1e-3")
         assert {w["workload_id"] for w in v["workloads"]} == expected
 
 

@@ -40,7 +40,7 @@ candidate_variants = ["clifft-current-8c"]
 [[variants]]
 id = "clifft-previous"
 implementation_id = "clifft-0.13.0"
-workloads = "cpu-release"
+workloads = "previous-clifft-survivors"
 
 [variants.execution]
 postselect = "on"
@@ -82,7 +82,7 @@ batch_size = "auto"
 [[variants]]
 id = "clifft-previous-8c"
 implementation_id = "clifft-0.13.0"
-workloads = "cpu-release"
+workloads = "previous-clifft-survivors"
 
 [variants.execution]
 postselect = "on"
