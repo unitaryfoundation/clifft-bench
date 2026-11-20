@@ -1,0 +1,300 @@
+suite_version = "0.3.0"
+profile_id = "call-size-pilot"
+title = "Clifft and Tsim public call-size pilot"
+classification = "smoke"
+seed = 20261120
+hardware_epoch = "aws-m7a-4xlarge-ubuntu2404-v1"
+workloads_file = "../workloads.toml"
+software_file = "../software.toml"
+
+[reference_host]
+provider = "aws"
+instance_type = "m7a.4xlarge"
+architecture = "x86_64"
+os_id = "ubuntu"
+os_version = "24.04"
+
+[collection]
+run_timeout_minutes = 420
+memory_limit_gib = 32
+
+[resources]
+
+[measurement]
+setup_timeout_seconds = 600
+request_timeout_seconds = 1800
+correctness_shots = 8
+min_sample_seconds = 30
+repetitions = 5
+
+[[comparisons]]
+id = "tools-on-1c-65536"
+baseline_variant = "clifft-on-1c-65536"
+candidate_variants = ["tsim-on-1c-65536"]
+
+[[variants]]
+id = "clifft-on-1c-65536"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-1c-65536"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-1c-262144"
+baseline_variant = "clifft-on-1c-262144"
+candidate_variants = ["tsim-on-1c-262144"]
+
+[[variants]]
+id = "clifft-on-1c-262144"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-1c-262144"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-8c-65536"
+baseline_variant = "clifft-on-8c-65536"
+candidate_variants = ["tsim-on-8c-65536"]
+
+[[variants]]
+id = "clifft-on-8c-65536"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-8c-65536"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-8c-262144"
+baseline_variant = "clifft-on-8c-262144"
+candidate_variants = ["tsim-on-8c-262144"]
+
+[[variants]]
+id = "clifft-on-8c-262144"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-8c-262144"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "msc-d3-inject-cultivate-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-1c-65536"
+baseline_variant = "clifft-off-1c-65536"
+candidate_variants = ["tsim-off-1c-65536"]
+
+[[variants]]
+id = "clifft-off-1c-65536"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-1c-65536"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-1c-262144"
+baseline_variant = "clifft-off-1c-262144"
+candidate_variants = ["tsim-off-1c-262144"]
+
+[[variants]]
+id = "clifft-off-1c-262144"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-1c-262144"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-8c-65536"
+baseline_variant = "clifft-off-8c-65536"
+candidate_variants = ["tsim-off-8c-65536"]
+
+[[variants]]
+id = "clifft-off-8c-65536"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-8c-65536"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-8c-262144"
+baseline_variant = "clifft-off-8c-262144"
+candidate_variants = ["tsim-off-8c-262144"]
+
+[[variants]]
+id = "clifft-off-8c-262144"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-8c-262144"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 262144 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-1c-4096"
+baseline_variant = "clifft-on-1c-4096"
+candidate_variants = ["tsim-on-1c-4096"]
+
+[[variants]]
+id = "clifft-on-1c-4096"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 4096 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-1c-4096"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 4096 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-1c-16384"
+baseline_variant = "clifft-on-1c-16384"
+candidate_variants = ["tsim-on-1c-16384"]
+
+[[variants]]
+id = "clifft-on-1c-16384"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 16384 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-1c-16384"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 16384 }]
+execution = { postselect = "on", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-8c-4096"
+baseline_variant = "clifft-on-8c-4096"
+candidate_variants = ["tsim-on-8c-4096"]
+
+[[variants]]
+id = "clifft-on-8c-4096"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 4096 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-8c-4096"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 4096 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-on-8c-16384"
+baseline_variant = "clifft-on-8c-16384"
+candidate_variants = ["tsim-on-8c-16384"]
+
+[[variants]]
+id = "clifft-on-8c-16384"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 16384 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-on-8c-16384"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 16384 }]
+execution = { postselect = "on", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-1c-4096"
+baseline_variant = "clifft-off-1c-4096"
+candidate_variants = ["tsim-off-1c-4096"]
+
+[[variants]]
+id = "clifft-off-1c-4096"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 4096 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-1c-4096"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 4096 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-1c-16384"
+baseline_variant = "clifft-off-1c-16384"
+candidate_variants = ["tsim-off-1c-16384"]
+
+[[variants]]
+id = "clifft-off-1c-16384"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 16384 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-1c-16384"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 16384 }]
+execution = { postselect = "off", threads = 1, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-8c-4096"
+baseline_variant = "clifft-off-8c-4096"
+candidate_variants = ["tsim-off-8c-4096"]
+
+[[variants]]
+id = "clifft-off-8c-4096"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 4096 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-8c-4096"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 4096 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[comparisons]]
+id = "tools-off-8c-16384"
+baseline_variant = "clifft-off-8c-16384"
+candidate_variants = ["tsim-off-8c-16384"]
+
+[[variants]]
+id = "clifft-off-8c-16384"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 16384 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
+
+[[variants]]
+id = "tsim-off-8c-16384"
+implementation_id = "tsim-1.0.0"
+workloads = [{ workload_id = "cain-15to1-d9-p1e-3", shots_per_call = 16384 }]
+execution = { postselect = "off", threads = 8, batch_size = "auto" }
