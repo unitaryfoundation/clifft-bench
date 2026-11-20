@@ -44,7 +44,7 @@ The representative suite may change between campaigns.
 
 The [corpus notes](../workloads/README.md) own circuit provenance and validation;
 [coverage notes](../workloads/coverage.md) describe repeated QV sampling,
-selection-off controls, the unverified d7 proxy, and full d5 detector subsets.
+packed sampling and full d5 detector subsets, and identify the separate unverified d7 proxy.
 Neither cultivation stress input estimates decoded logical error or fidelity.
 Repeated QV sampling measures a different question from the optional
 [setup-plus-one-shot QV study](../experiments/qv/README.md).
@@ -135,19 +135,19 @@ and the on endpoint's count reduction remain inside sampling timers. Correctness
 throughput. Deadlines apply to every phase; failures retain their phase and
 completed evidence without a throughput value.
 
-The worker keeps in-memory caches across calls. Tsim retains its upstream Numba disk cache. These are process-fresh measurements,
+The worker keeps in-memory caches across calls. xtim's plan cache is in memory.
+Tsim retains its upstream Numba disk cache. These are process-fresh measurements,
 not guaranteed cold-disk builds or fully converged steady state.
 
 ## Resources and ordering
 
-Official results use the campaign's declared hardware epoch: a shared-tenancy,
-On-Demand AWS `m7a.xlarge` with Ubuntu 24.04 on x86-64. Use one placement for a
-fresh paired release comparison. The [host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
-found paired identical-software differences below 0.72% across three placements;
-absolute throughput varied by up to 2.60% on the slower workload. Treat paired
-changes at or below 1.1% as inconclusive. One execution does not re-estimate
-placement variability; studies that need that estimate use independent
-stop/start placements.
+The reference host is an On-Demand AWS `m7a.4xlarge` with shared tenancy,
+Ubuntu 24.04 on x86-64, and 16 physical cores. A single placement supplies all
+fresh release and peer measurements. The worker uses one or eight physical cores.
+The remaining cores provide headroom for collection and the operating system.
+The existing ±1.1% reporting band comes from the earlier
+[host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
+on the `m7a.xlarge`. The new placement has its own timing dispersion.
 
 Do not combine absolute rates from different hardware epochs without labeling
 the boundary or measuring a bridge. Shared CI hosts provide correctness and
@@ -172,8 +172,7 @@ identities, and requested/effective counts. Effective counts describe the native
 pool or plan, or are null when unreported (including multi-core Clifft 0.13.0).
 Release/peer ratios require equal core budgets.
 
-Official workers receive the campaign's 12 GiB address-space ceiling, leaving
-headroom on the 16 GiB reference host. The requested ceiling is embedded in the
+Official workers receive a 32 GiB address-space ceiling on the 64 GiB reference host. The requested ceiling is embedded in the
 raw result, the applied `RLIMIT_AS` is recorded after setup, and input validation
 rejects a mismatch.
 
@@ -409,7 +408,7 @@ matching workload digest and selection semantics, call size, measurement setting
 and resource limits. The endpoint (`postselect`) must also match, including for
 explicit peer reuse. The raw format fixes raw-record parity and attempted-shot
 throughput for every case. Internal batches may differ. Declared
-comparison groups keep short calls, bulk calls, and supplemental coverage separate.
+comparison groups pair measurements within each output mode and core budget.
 Only successful compatible pairs receive ratios. Missing expected case records
 are errors; recorded failures, unsupported adapters, and intentionally unmeasured
 combinations remain distinct. A new current workload without a previous baseline

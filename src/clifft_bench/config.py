@@ -117,34 +117,46 @@ def _case_definitions(run: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def _resolve_selections(run: dict, workloads: dict, software: dict) -> None:
-    defaults = {w["id"]: w.get("shots_per_call") for w in workloads["workloads"]}
+    definitions = {w["id"]: w for w in workloads["workloads"]}
     implementations = {i["id"]: i for i in software["implementations"]}
     for item in run.get("variants", run.get("cases", [])):
+        implementation_id = item["implementation_id"]
+        if implementation_id not in implementations:
+            raise ValueError(
+                f"{item['id']!r} references unknown implementation {implementation_id!r}"
+            )
+        adapter = implementations[implementation_id]["adapter"]
+        execution = item["execution"]
         if "workloads" in item:
             selections = item["workloads"]
             if isinstance(selections, str):
                 if selections not in workloads.get("groups", {}):
                     raise ValueError(f"unknown workload group {selections!r}")
-                selections = [{"workload_id": w} for w in workloads["groups"][selections]]
+                group = selections
+                selections = [
+                    {"workload_id": wid} for wid in workloads["groups"][group]
+                    if adapter in definitions[wid]["compatible_adapters"]
+                    and execution["postselect"] in definitions[wid]["postselect_modes"]
+                ]
+                if not selections:
+                    raise ValueError(f"{item['id']!r} selects no eligible workloads in {group!r}")
             item["workloads"] = selections
         else:
             selections = [item]
         for selection in selections:
             identifier = selection["workload_id"]
-            if identifier not in defaults:
+            if identifier not in definitions:
                 raise ValueError(f"{item['id']!r} references unknown workload {identifier!r}")
             if "shots_per_call" not in selection:
-                if defaults[identifier] is None:
+                if "shots_per_call" not in definitions[identifier]:
                     raise ValueError(f"workload {identifier!r} needs an explicit shots_per_call")
-                selection["shots_per_call"] = defaults[identifier]
-        execution = item["execution"]
+                selection["shots_per_call"] = definitions[identifier]["shots_per_call"]
         if "options_preset" in execution:
             name = execution.pop("options_preset")
             preset = software.get("option_presets", {}).get(name)
             if preset is None:
                 raise ValueError(f"unknown options preset {name!r}")
-            implementation = implementations.get(item["implementation_id"])
-            if implementation is None or implementation["adapter"] != preset["adapter"]:
+            if adapter != preset["adapter"]:
                 raise ValueError(f"options preset {name!r} requires adapter {preset['adapter']!r}")
             execution["options"] = deepcopy(preset["options"])
 
@@ -216,10 +228,6 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
         implementation_id = str(definition["implementation_id"])
         if workload_id not in workloads:
             raise ValueError(f"case {identifier!r} references unknown workload {workload_id!r}")
-        if implementation_id not in implementations:
-            raise ValueError(
-                f"case {identifier!r} references unknown implementation {implementation_id!r}"
-            )
         workload = workloads[workload_id]
         if definition["execution"]["postselect"] not in workload.definition["postselect_modes"]:
             raise ValueError(f"case {identifier!r}: postselect mode is not declared by workload")

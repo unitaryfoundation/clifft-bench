@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from clifft_bench.adapters import load_adapter
+from clifft_bench.adapters.base import Counts
 from clifft_bench.config import load_suite
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -64,12 +65,17 @@ def _case(workload_id):
                 and c.definition["variant_id"] == "clifft-current-off")
 
 
-def _check_counts(counts, probability):
-    assert counts.attempted_shots == counts.accepted_shots
-    assert counts.discarded_shots == 0
-    shots = counts.attempted_shots
+def _check_readout(sample, shots, probability):
+    if isinstance(sample, Counts):
+        assert sample.attempted_shots == sample.accepted_shots == shots
+        assert sample.discarded_shots == 0
+        ones = sample.logical_errors
+    else:
+        detectors, observables = sample
+        assert len(detectors) == len(observables) == shots
+        ones = int((observables[:, 0] & 1).sum())
     tolerance = 6 * math.sqrt(shots * probability * (1 - probability)) + 1
-    assert abs(counts.logical_errors - shots * probability) <= tolerance
+    assert abs(ones - shots * probability) <= tolerance
 
 
 def test_new_circuits_are_part_of_the_release_campaign():
@@ -79,9 +85,7 @@ def test_new_circuits_are_part_of_the_release_campaign():
     assert all(c.definition["execution"]["postselect"] == "off" for c in cases)
     for case in cases:
         assert not case.workload.definition["semantics"]["postselect_all_detectors"]
-        assert case.definition["shots_per_call"] == (
-            100000 if case.workload.id == "reed-muller-measured" else 2048
-        )
+        assert case.definition["shots_per_call"] == case.workload.definition["shots_per_call"]
         assert case.definition["execution"]["batch_size"] == "auto"
     smoke_cases = [case for path in ("smoke.toml", "tsim-smoke.toml")
                    for case in load_suite(ROOT / "campaigns" / path).cases]
@@ -96,34 +100,35 @@ def test_logical_reference_probabilities():
 @pytest.mark.parametrize("adapter", ["clifft", "symft", "tsim"])
 @pytest.mark.parametrize("batch_size", [1, 32])
 def test_measured_reed_muller_sampling(adapter, batch_size):
-    pytest.importorskip(adapter)
+    module = pytest.importorskip(adapter)
     case = _case("reed-muller-measured")
-    execution = {"postselect": "on", "batch_size": batch_size,
+    sampler = load_adapter(adapter, module.version() if adapter == "clifft" else None)
+    mode = "off" if "off" in sampler.supported_postselect else "on"
+    execution = {"postselect": mode, "batch_size": batch_size,
                  "options": {"sample_chunk_shots": 2048} if adapter == "symft" else {}}
-    if adapter == "clifft":
-        execution["options"]["scheduler"] = case.definition["execution"]["options"]["scheduler"]
-    prepared = load_adapter(adapter).prepare(
+    prepared = sampler.prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
         execution=execution, seed=87,
     )
     for key, value in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == value
-    _check_counts(prepared.sample(16384, 88), reed_muller_probability())
+    _check_readout(prepared.sample(16384, 88), 16384, reed_muller_probability())
 
 
 @pytest.mark.parametrize("workload_id,width", [("bt27-direct-x", 9), ("bt81-direct-x", 6)])
 @pytest.mark.parametrize("batch_size", [1, 32])
 def test_current_clifft_code_switching_sampling(workload_id, width, batch_size):
     clifft = pytest.importorskip("clifft")
-    if not hasattr(clifft.HirModule, "postselection_mask"):
-        pytest.skip("requires the post-0.12 code-switching compiler")
+    sampler = load_adapter("clifft", clifft.version())
+    if "off" not in sampler.supported_postselect:
+        pytest.skip("requires Clifft packed sampling")
     case = _case(workload_id)
-    execution = dict(case.definition["execution"], batch_size=batch_size, postselect="on")
-    prepared = load_adapter("clifft").prepare(
+    execution = dict(case.definition["execution"], batch_size=batch_size)
+    prepared = sampler.prepare(
         artifact_path=case.workload.artifact_path, workload=case.workload.definition,
         execution=execution, seed=117,
     )
     for key, value in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == value
     assert prepared.runtime_metadata["peak_active_width"] == width
-    _check_counts(prepared.sample(4096, 118), bt_observable_probability())
+    _check_readout(prepared.sample(4096, 118), 4096, bt_observable_probability())

@@ -19,9 +19,9 @@ The benchmark corpus contains:
 - BT27 and BT81 code switching with direct logical-X readout, and
 - measured 15-qubit Reed-Muller preparation and transversal T.
 
-The release campaign also includes postselection-off controls, repeated QV
-sampling, an explicitly unverified d7 MSC performance proxy, and full d5
-cultivation with a selective detector mask. See the [coverage notes](coverage.md)
+The release campaign includes packed sampling, repeated QV sampling, and
+full d5 cultivation with a selective detector mask. The corpus also retains
+an explicitly unverified d7 MSC performance proxy. See the [coverage notes](coverage.md)
 for provenance, exact semantics, eligibility, reproduction, and validation.
 
 The near-Clifford and Quantum Volume files use the extended Clifft/SymFT
@@ -87,7 +87,7 @@ noiseless terminal code projection and omit escape/decoding. Clifft and Tsim pas
 native sampling checks. SymFT rejects the fold circuits at the first `CCZ`
 instruction. xtim parses the circuits, but
 lacks a verified raw reference for their non-Clifford gates in either mode.
-Release campaigns do not yet include these inputs.
+The release campaign includes both distances in both output modes.
 
 [The converter](generate_fold_transversal.py) verifies the source model hashes,
 densely renumbers qubits, and preserves native gate/noise placement. Its
@@ -107,8 +107,7 @@ along its `x=d-1/2` data boundary after terminal H gates. Its unconditioned idea
 is 50/50, not a logical error flag. All source detectors, including the 32 raw
 logical readouts, are retained. Clifft and Tsim support packed output.
 SymFT lacks this paired detector/observable endpoint. xtim parses both Cain
-circuits but cannot verify their raw reference parity. The registered
-16,384-shot call sizes await the host pilot.
+circuits but cannot verify their raw reference parity. Both distances run in packed mode with a fixed public call size for each circuit.
 
 To reproduce either input, download `distillation.zip` from that record and run
 (use `9` for d9):

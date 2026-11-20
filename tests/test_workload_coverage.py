@@ -48,16 +48,19 @@ def test_full_cultivation_mask_follows_pinned_coordinate_rule():
     assert not re.search(r"^EXP_VAL\b", case.workload.artifact_path.read_text(), re.MULTILINE)
 
 
-def test_coverage_smoke_exercises_every_declared_release_combination():
+def test_coverage_smoke_exercises_release_endpoints_on_wide_and_subset_circuits():
     release = load_suite(ROOT / "campaigns/release-v1.toml")
     smoke = load_suite(ROOT / "campaigns/coverage-smoke.toml")
-    expected = {c.id: c for c in release.cases
-                if "-coverage" in c.definition["variant_id"]}
+    workloads = {c.workload.id for c in smoke.cases}
+    expected = {c.id: c for c in release.cases if c.workload.id in workloads
+                and c.definition["execution"]["threads"] == 1
+                and c.definition["variant_id"] != "clifft-previous"}
     assert expected
     assert set(expected) == {c.id for c in smoke.cases}
     for case in smoke.cases:
         assert case.workload == expected[case.id].workload
         assert case.implementation == expected[case.id].implementation
+        assert case.definition["execution"] == expected[case.id].definition["execution"]
 
 
 @pytest.mark.parametrize("indices", [None, [], [1, 1], [1, 0], [-1], [2], [True], [0.5]])
@@ -140,7 +143,6 @@ def qv_observable_probability(path: Path, qubits: int, observable: int) -> float
 
 
 def _observable_ones(result, shots, observable):
-    # Clifft's detector-free counts still provide a physics check before packed support lands.
     if isinstance(result, Counts):
         assert result.attempted_shots == result.accepted_shots == shots
         assert result.discarded_shots == 0
@@ -154,20 +156,19 @@ def _observable_ones(result, shots, observable):
 @pytest.mark.parametrize("batch", [1, 32])
 @pytest.mark.parametrize("observable", [0, 9])
 def test_repeated_qv10_matches_independent_statevector(adapter, batch, observable):
-    pytest.importorskip(adapter)
+    module = pytest.importorskip(adapter)
+    sampler = load_adapter(adapter, module.version() if adapter == "clifft" else None)
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases
                 if c.workload.id == "quantum-volume-q10-seed42-all-observables")
     probability = qv_observable_probability(case.workload.artifact_path, 10, observable)
     execution = copy.deepcopy(case.definition["execution"])
     execution["batch_size"] = batch
-    if adapter == "clifft":
+    if "off" not in sampler.supported_postselect:
         execution["postselect"] = "on"
-    else:
-        execution["options"].pop("scheduler", None)
     workload = copy.deepcopy(case.workload.definition)
     workload["semantics"]["observable_index"] = observable
-    prepared = load_adapter(adapter).prepare(
+    prepared = sampler.prepare(
         artifact_path=case.workload.artifact_path, workload=workload,
         execution=execution, seed=1742,
     )
@@ -182,7 +183,8 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch, observabl
 @pytest.mark.parametrize("batch", [1, 32])
 @pytest.mark.parametrize("observable", [1, 16, 17, 32])
 def test_adder_readout_matches_basis_sum(adapter, batch, observable):
-    pytest.importorskip(adapter)
+    module = pytest.importorskip(adapter)
+    sampler = load_adapter(adapter, module.version() if adapter == "clifft" else None)
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases
                 if c.workload.id == "draper-adder-m16-basis-all-observables")
@@ -196,11 +198,9 @@ def test_adder_readout_matches_basis_sum(adapter, batch, observable):
     expected = ((output_a, output_b)[register] >> bit) & 1
     execution = copy.deepcopy(case.definition["execution"])
     execution["batch_size"] = batch
-    if adapter == "clifft":
+    if "off" not in sampler.supported_postselect:
         execution["postselect"] = "on"
-    else:
-        execution["options"] = {}
-    prepared = load_adapter(adapter).prepare(
+    prepared = sampler.prepare(
         artifact_path=case.workload.artifact_path, workload=workload,
         execution=execution, seed=1742,
     )

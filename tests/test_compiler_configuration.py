@@ -35,7 +35,8 @@ def _scheduler_options() -> dict:
 ])
 def test_invalid_scheduler_options_are_rejected_before_launch(tmp_path, options):
     path, document = _release_copy(tmp_path)
-    document["variants"][1]["execution"]["options"]["scheduler"] = {
+    previous = next(v for v in document["variants"] if v["id"] == "clifft-previous")
+    previous["execution"]["options"]["scheduler"] = {
         **_scheduler_options(),
         **options,
     }
@@ -70,7 +71,8 @@ def test_scheduler_requires_explicit_options(tmp_path):
     path, document = _release_copy(tmp_path)
     options = _scheduler_options()
     options.pop("search_budget")
-    document["variants"][1]["execution"]["options"]["scheduler"] = options
+    previous = next(v for v in document["variants"] if v["id"] == "clifft-previous")
+    previous["execution"]["options"]["scheduler"] = options
     write_toml(path, document)
     with pytest.raises(ValueError, match="requires explicit"):
         load_suite(path)

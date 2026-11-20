@@ -15,99 +15,56 @@ min_sample_seconds = 0.01
 repetitions = 1
 
 [[cases]]
-id = "msc-d7-proxy-unverified-p1e-3--clifft-coverage"
-variant_id = "clifft-coverage"
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-postselect = "on"
-threads = 1
-options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
-
-[[cases]]
-id = "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage"
-variant_id = "clifft-coverage"
+id = "msc-full-d5-cultivation-selected-p1e-3--clifft-current"
+variant_id = "clifft-current"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "clifft-0.13.0"
+implementation_id = "clifft-dev-f1bb0d88"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
 postselect = "on"
 threads = 1
-options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
-id = "quantum-volume-q10-seed42-all-observables--clifft-coverage-off"
-variant_id = "clifft-coverage-off"
+id = "quantum-volume-q10-seed42-all-observables--clifft-current-off"
+variant_id = "clifft-current-off"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "clifft-0.13.0"
+implementation_id = "clifft-dev-f1bb0d88"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
 postselect = "off"
 threads = 1
-options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
-id = "quantum-volume-q20-seed42-all-observables--clifft-coverage-off"
-variant_id = "clifft-coverage-off"
+id = "quantum-volume-q20-seed42-all-observables--clifft-current-off"
+variant_id = "clifft-current-off"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "clifft-0.13.0"
+implementation_id = "clifft-dev-f1bb0d88"
 shots_per_call = 32
 
 [cases.execution]
 batch_size = "auto"
 postselect = "off"
 threads = 1
-options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
-id = "msc-d7-proxy-unverified-p1e-3--clifft-coverage-off"
-variant_id = "clifft-coverage-off"
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "clifft-0.13.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-postselect = "off"
-threads = 1
-options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
-
-[[cases]]
-id = "msc-full-d5-cultivation-selected-p1e-3--clifft-coverage-off"
-variant_id = "clifft-coverage-off"
+id = "msc-full-d5-cultivation-selected-p1e-3--clifft-current-off"
+variant_id = "clifft-current-off"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "clifft-0.13.0"
+implementation_id = "clifft-dev-f1bb0d88"
 shots_per_call = 128
 
 [cases.execution]
 batch_size = "auto"
 postselect = "off"
 threads = 1
-options = { scheduler = { beam_width = 8, search_budget = 16.0, noise_transparent = true, sink_neutral_rotations = true } }
 
 [[cases]]
-id = "msc-d7-proxy-unverified-p1e-3--symft-coverage"
-variant_id = "symft-coverage"
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "symft-2026.10.8"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "on"
-threads = 1
-
-[[cases]]
-id = "quantum-volume-q10-seed42-all-observables--symft-coverage-off"
-variant_id = "symft-coverage-off"
+id = "quantum-volume-q10-seed42-all-observables--symft-current-off"
+variant_id = "symft-current-off"
 workload_id = "quantum-volume-q10-seed42-all-observables"
 implementation_id = "symft-2026.10.8"
 shots_per_call = 128
@@ -119,8 +76,8 @@ postselect = "off"
 threads = 1
 
 [[cases]]
-id = "quantum-volume-q20-seed42-all-observables--symft-coverage-off"
-variant_id = "symft-coverage-off"
+id = "quantum-volume-q20-seed42-all-observables--symft-current-off"
+variant_id = "symft-current-off"
 workload_id = "quantum-volume-q20-seed42-all-observables"
 implementation_id = "symft-2026.10.8"
 shots_per_call = 32
@@ -132,34 +89,8 @@ postselect = "off"
 threads = 1
 
 [[cases]]
-id = "msc-d7-proxy-unverified-p1e-3--symft-coverage-off"
-variant_id = "symft-coverage-off"
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "symft-2026.10.8"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "off"
-threads = 1
-
-[[cases]]
-id = "msc-d7-proxy-unverified-p1e-3--tsim-coverage"
-variant_id = "tsim-coverage"
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "tsim-1.0.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-postselect = "on"
-threads = 1
-options = {  }
-
-[[cases]]
-id = "msc-full-d5-cultivation-selected-p1e-3--tsim-coverage"
-variant_id = "tsim-coverage"
+id = "msc-full-d5-cultivation-selected-p1e-3--tsim-current"
+variant_id = "tsim-current"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
 implementation_id = "tsim-1.0.0"
 shots_per_call = 128
@@ -171,8 +102,8 @@ threads = 1
 options = {  }
 
 [[cases]]
-id = "quantum-volume-q10-seed42-all-observables--tsim-coverage-off"
-variant_id = "tsim-coverage-off"
+id = "quantum-volume-q10-seed42-all-observables--tsim-current-off"
+variant_id = "tsim-current-off"
 workload_id = "quantum-volume-q10-seed42-all-observables"
 implementation_id = "tsim-1.0.0"
 shots_per_call = 128
@@ -184,8 +115,8 @@ threads = 1
 options = {  }
 
 [[cases]]
-id = "quantum-volume-q20-seed42-all-observables--tsim-coverage-off"
-variant_id = "tsim-coverage-off"
+id = "quantum-volume-q20-seed42-all-observables--tsim-current-off"
+variant_id = "tsim-current-off"
 workload_id = "quantum-volume-q20-seed42-all-observables"
 implementation_id = "tsim-1.0.0"
 shots_per_call = 32
@@ -197,21 +128,8 @@ threads = 1
 options = {  }
 
 [[cases]]
-id = "msc-d7-proxy-unverified-p1e-3--tsim-coverage-off"
-variant_id = "tsim-coverage-off"
-workload_id = "msc-d7-proxy-unverified-p1e-3"
-implementation_id = "tsim-1.0.0"
-shots_per_call = 128
-
-[cases.execution]
-batch_size = "auto"
-postselect = "off"
-threads = 1
-options = {  }
-
-[[cases]]
-id = "msc-full-d5-cultivation-selected-p1e-3--tsim-coverage-off"
-variant_id = "tsim-coverage-off"
+id = "msc-full-d5-cultivation-selected-p1e-3--tsim-current-off"
+variant_id = "tsim-current-off"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
 implementation_id = "tsim-1.0.0"
 shots_per_call = 128
@@ -223,8 +141,8 @@ threads = 1
 options = {  }
 
 [[cases]]
-id = "msc-full-d5-cultivation-selected-p1e-3--xtim-coverage"
-variant_id = "xtim-coverage"
+id = "msc-full-d5-cultivation-selected-p1e-3--xtim-current"
+variant_id = "xtim-current"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
 implementation_id = "xtim-4.1.2"
 shots_per_call = 128
@@ -234,11 +152,209 @@ batch_size = "auto"
 postselect = "on"
 
 [[cases]]
-id = "msc-full-d5-cultivation-selected-p1e-3--xtim-coverage-off"
-variant_id = "xtim-coverage-off"
+id = "msc-full-d5-cultivation-selected-p1e-3--xtim-current-off"
+variant_id = "xtim-current-off"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
 implementation_id = "xtim-4.1.2"
 shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "fold-transversal-d3-p1e-3--clifft-current"
+variant_id = "clifft-current"
+workload_id = "fold-transversal-d3-p1e-3"
+implementation_id = "clifft-dev-f1bb0d88"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "fold-transversal-d3-p1e-3--clifft-current-off"
+variant_id = "clifft-current-off"
+workload_id = "fold-transversal-d3-p1e-3"
+implementation_id = "clifft-dev-f1bb0d88"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "fold-transversal-d5-p1e-3--clifft-current"
+variant_id = "clifft-current"
+workload_id = "fold-transversal-d5-p1e-3"
+implementation_id = "clifft-dev-f1bb0d88"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "fold-transversal-d5-p1e-3--clifft-current-off"
+variant_id = "clifft-current-off"
+workload_id = "fold-transversal-d5-p1e-3"
+implementation_id = "clifft-dev-f1bb0d88"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "cain-15to1-d5-p1e-3--clifft-current-off"
+variant_id = "clifft-current-off"
+workload_id = "cain-15to1-d5-p1e-3"
+implementation_id = "clifft-dev-f1bb0d88"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "cain-15to1-d9-p1e-3--clifft-current-off"
+variant_id = "clifft-current-off"
+workload_id = "cain-15to1-d9-p1e-3"
+implementation_id = "clifft-dev-f1bb0d88"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "fold-transversal-d3-p1e-3--tsim-current"
+variant_id = "tsim-current"
+workload_id = "fold-transversal-d3-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "fold-transversal-d3-p1e-3--tsim-current-off"
+variant_id = "tsim-current-off"
+workload_id = "fold-transversal-d3-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "fold-transversal-d5-p1e-3--tsim-current"
+variant_id = "tsim-current"
+workload_id = "fold-transversal-d5-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "fold-transversal-d5-p1e-3--tsim-current-off"
+variant_id = "tsim-current-off"
+workload_id = "fold-transversal-d5-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "cain-15to1-d5-p1e-3--tsim-current-off"
+variant_id = "tsim-current-off"
+workload_id = "cain-15to1-d5-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "cain-15to1-d9-p1e-3--tsim-current-off"
+variant_id = "tsim-current-off"
+workload_id = "cain-15to1-d9-p1e-3"
+implementation_id = "tsim-1.0.0"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "fold-transversal-d3-p1e-3--xtim-current"
+variant_id = "xtim-current"
+workload_id = "fold-transversal-d3-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "fold-transversal-d3-p1e-3--xtim-current-off"
+variant_id = "xtim-current-off"
+workload_id = "fold-transversal-d3-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "fold-transversal-d5-p1e-3--xtim-current"
+variant_id = "xtim-current"
+workload_id = "fold-transversal-d5-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "fold-transversal-d5-p1e-3--xtim-current-off"
+variant_id = "xtim-current-off"
+workload_id = "fold-transversal-d5-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "cain-15to1-d5-p1e-3--xtim-current-off"
+variant_id = "xtim-current-off"
+workload_id = "cain-15to1-d5-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 8
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"
+
+[[cases]]
+id = "cain-15to1-d9-p1e-3--xtim-current-off"
+variant_id = "xtim-current-off"
+workload_id = "cain-15to1-d9-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 8
 
 [cases.execution]
 batch_size = "auto"

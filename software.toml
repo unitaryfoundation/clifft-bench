@@ -1,25 +1,6 @@
 suite_version = "0.3.0"
 
 [[implementations]]
-id = "clifft-0.12.0rc1"
-name = "Clifft"
-adapter = "clifft"
-distribution = "clifft"
-version = "0.12.0rc1"
-display_version = "0.12.0"
-commit_sha = "847757e2bc8c4f7439b9e92011550fd61719eb85"
-source_url = "https://github.com/unitaryfoundation/clifft"
-source_tag = "v0.12.0rc1"
-dependency_distributions = ["numpy"]
-
-[implementations.environment]
-import_modules = ["clifft"]
-
-[implementations.build]
-precision = "complex-fp64"
-compiler_flags = []
-
-[[implementations]]
 id = "symft-2026.10.8"
 name = "SymFT"
 adapter = "symft"
@@ -129,3 +110,25 @@ beam_width = 8
 search_budget = 16.0
 noise_transparent = true
 sink_neutral_rotations = true
+
+[[implementations]]
+id = "clifft-dev-f1bb0d88"
+name = "Clifft"
+adapter = "clifft"
+distribution = "clifft"
+version = "0.13.1.dev33+gf1bb0d883"
+commit_sha = "f1bb0d883495b73ba3e834be6d61d9c440ddfef5"
+source_url = "https://github.com/unitaryfoundation/clifft"
+dependency_distributions = ["numpy"]
+
+[implementations.environment]
+import_modules = ["clifft"]
+
+[implementations.environment.install_environment]
+CLIFFT_CPU_BASELINE = "x86-64-v2"
+CLIFFT_OPENMP = "ON"
+CMAKE_BUILD_PARALLEL_LEVEL = "8"
+
+[implementations.build]
+precision = "complex-fp64"
+compiler_flags = ["CLIFFT_CPU_BASELINE=x86-64-v2", "CLIFFT_OPENMP=ON"]

@@ -1,87 +1,22 @@
 suite_version = "0.3.0"
-profile_id = "release-v1"
-title = "Recurring single-core Clifft release benchmark"
-classification = "official"
+profile_id = "release-v1-preflight"
+title = "CPU release matrix preflight"
+classification = "smoke"
 seed = 20260819
-hardware_epoch = "aws-m7a-xlarge-ubuntu2404-v1"
+hardware_epoch = "aws-m7a-4xlarge-ubuntu2404-v1"
 workloads_file = "../workloads.toml"
 software_file = "../software.toml"
 
 [reference_host]
 provider = "aws"
-instance_type = "m7a.xlarge"
+instance_type = "m7a.4xlarge"
 architecture = "x86_64"
 os_id = "ubuntu"
 os_version = "24.04"
 
 [collection]
 run_timeout_minutes = 420
-memory_limit_gib = 12
-
-[[comparisons]]
-id = "xtim-vs-current"
-baseline_variant = "clifft-current"
-candidate_variants = ["xtim-current"]
-
-[[comparisons]]
-id = "current-vs-previous"
-baseline_variant = "clifft-previous"
-candidate_variants = ["clifft-current"]
-
-[[comparisons]]
-id = "alternatives-vs-current"
-baseline_variant = "clifft-current"
-candidate_variants = ["symft-current"]
-
-[[comparisons]]
-id = "stim-anchor-vs-current"
-baseline_variant = "clifft-current"
-candidate_variants = ["stim-current"]
-
-[[comparisons]]
-id = "tsim-vs-current"
-baseline_variant = "clifft-current"
-candidate_variants = ["tsim-current"]
-
-[[comparisons]]
-id = "bulk-alternatives-vs-current"
-baseline_variant = "clifft-bulk"
-candidate_variants = ["symft-bulk", "tsim-bulk"]
-
-[[comparisons]]
-id = "coverage-alternatives-vs-current"
-baseline_variant = "clifft-coverage"
-candidate_variants = ["symft-coverage", "tsim-coverage", "xtim-coverage"]
-
-[[comparisons]]
-id = "xtim-vs-current-off"
-baseline_variant = "clifft-current-off"
-candidate_variants = ["xtim-current-off"]
-
-[[comparisons]]
-id = "alternatives-vs-current-off"
-baseline_variant = "clifft-current-off"
-candidate_variants = ["symft-current-off"]
-
-[[comparisons]]
-id = "stim-anchor-vs-current-off"
-baseline_variant = "clifft-current-off"
-candidate_variants = ["stim-current-off"]
-
-[[comparisons]]
-id = "tsim-vs-current-off"
-baseline_variant = "clifft-current-off"
-candidate_variants = ["tsim-current-off"]
-
-[[comparisons]]
-id = "bulk-alternatives-vs-current-off"
-baseline_variant = "clifft-bulk-off"
-candidate_variants = ["symft-bulk-off", "tsim-bulk-off"]
-
-[[comparisons]]
-id = "coverage-alternatives-vs-current-off"
-baseline_variant = "clifft-coverage-off"
-candidate_variants = ["symft-coverage-off", "tsim-coverage-off", "xtim-coverage-off"]
+memory_limit_gib = 32
 
 [resources]
 
@@ -92,325 +27,258 @@ correctness_shots = 8
 min_sample_seconds = 30
 repetitions = 5
 
+[[comparisons]]
+id = "current-vs-previous"
+baseline_variant = "clifft-previous"
+candidate_variants = ["clifft-current"]
+
+[[comparisons]]
+id = "peers-vs-current"
+baseline_variant = "clifft-current"
+candidate_variants = ["tsim-current", "xtim-current", "symft-current", "stim-current"]
+
+[[comparisons]]
+id = "peers-vs-current-off"
+baseline_variant = "clifft-current-off"
+candidate_variants = ["tsim-current-off", "xtim-current-off", "symft-current-off", "stim-current-off"]
+
+[[comparisons]]
+id = "current-vs-previous-8c"
+baseline_variant = "clifft-previous-8c"
+candidate_variants = ["clifft-current-8c"]
+
+[[comparisons]]
+id = "peers-vs-current-8c"
+baseline_variant = "clifft-current-8c"
+candidate_variants = ["tsim-current-8c", "xtim-current-8c", "symft-current-8c", "stim-current-8c"]
+
+[[comparisons]]
+id = "peers-vs-current-off-8c"
+baseline_variant = "clifft-current-off-8c"
+candidate_variants = ["tsim-current-off-8c", "xtim-current-off-8c", "symft-current-off-8c", "stim-current-off-8c"]
+
 [[variants]]
 id = "clifft-previous"
-implementation_id = "clifft-0.12.0rc1"
-workloads = "release-survivors"
+implementation_id = "clifft-0.13.0"
+workloads = "cpu-release"
 
 [variants.execution]
+postselect = "on"
+threads = 1
 batch_size = "auto"
 options_preset = "clifft-scheduled"
-postselect = "on"
 
 [[variants]]
 id = "clifft-current"
-implementation_id = "clifft-0.13.0"
-workloads = "release-survivors"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = "cpu-release"
 
 [variants.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
 postselect = "on"
-
-[[variants]]
-id = "clifft-current-off"
-implementation_id = "clifft-0.13.0"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "draper-adder-m16-basis-all-observables" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-  { workload_id = "bt27-direct-x" },
-  { workload_id = "bt81-direct-x" },
-  { workload_id = "reed-muller-measured" },
-]
-
-[variants.execution]
+threads = 1
 batch_size = "auto"
-options_preset = "clifft-scheduled"
-postselect = "off"
-
-[[variants]]
-id = "symft-current"
-implementation_id = "symft-2026.10.8"
-workloads = "release-survivors"
-
-[variants.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "on"
-
-[[variants]]
-id = "symft-current-off"
-implementation_id = "symft-2026.10.8"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-  { workload_id = "reed-muller-measured" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "off"
-
-[[variants]]
-id = "stim-current"
-implementation_id = "stim-1.16.0"
-workloads = [
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = {  }
-postselect = "on"
-
-[[variants]]
-id = "stim-current-off"
-implementation_id = "stim-1.16.0"
-workloads = [
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = {  }
-postselect = "off"
-
-[[variants]]
-id = "xtim-current"
-implementation_id = "xtim-4.1.2"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = {  }
-postselect = "on"
-
-[[variants]]
-id = "xtim-current-off"
-implementation_id = "xtim-4.1.2"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = {  }
-postselect = "off"
 
 [[variants]]
 id = "tsim-current"
 implementation_id = "tsim-1.0.0"
-workloads = "release-survivors"
+workloads = "cpu-release"
 
 [variants.execution]
-batch_size = "auto"
 postselect = "on"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-current"
+implementation_id = "xtim-4.1.2"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "symft-current"
+implementation_id = "symft-2026.10.8"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 1
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+
+[[variants]]
+id = "stim-current"
+implementation_id = "stim-1.16.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "clifft-current-off"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 1
+batch_size = "auto"
 
 [[variants]]
 id = "tsim-current-off"
 implementation_id = "tsim-1.0.0"
-workloads = [
-  { workload_id = "msc-d3-inject-cultivate-p1e-3" },
-  { workload_id = "msc-d5-inject-cultivate-p1e-3" },
-  { workload_id = "distillation-color-code-85q-p5e-2" },
-  { workload_id = "surface-code-d7-r7-p1e-3" },
-  { workload_id = "coherent-surface-d3-r3-p1e-3-rz2e-2" },
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2" },
-  { workload_id = "draper-adder-m16-basis-all-observables" },
-  { workload_id = "distillation-15to1-rm15-p1e-3" },
-  { workload_id = "reed-muller-measured" },
-]
+workloads = "cpu-release"
 
 [variants.execution]
-batch_size = "auto"
 postselect = "off"
-
-[[variants]]
-id = "clifft-bulk"
-implementation_id = "clifft-0.13.0"
-workloads = [
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
-]
-
-[variants.execution]
+threads = 1
 batch_size = "auto"
-options_preset = "clifft-scheduled"
-postselect = "on"
 
 [[variants]]
-id = "clifft-bulk-off"
-implementation_id = "clifft-0.13.0"
-workloads = [
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
-  { workload_id = "draper-adder-m16-basis-all-observables", shots_per_call = 100000 },
-]
-
-[variants.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-postselect = "off"
-
-[[variants]]
-id = "symft-bulk"
-implementation_id = "symft-2026.10.8"
-workloads = [
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "on"
-
-[[variants]]
-id = "symft-bulk-off"
-implementation_id = "symft-2026.10.8"
-workloads = [
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "off"
-
-[[variants]]
-id = "tsim-bulk"
-implementation_id = "tsim-1.0.0"
-workloads = [
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
-]
-
-[variants.execution]
-batch_size = "auto"
-postselect = "on"
-
-[[variants]]
-id = "tsim-bulk-off"
-implementation_id = "tsim-1.0.0"
-workloads = [
-  { workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2", shots_per_call = 256 },
-  { workload_id = "draper-adder-m16-basis-all-observables", shots_per_call = 100000 },
-]
-
-[variants.execution]
-batch_size = "auto"
-postselect = "off"
-
-[[variants]]
-id = "clifft-coverage"
-implementation_id = "clifft-0.13.0"
-workloads = [
-  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
-  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-postselect = "on"
-
-[[variants]]
-id = "clifft-coverage-off"
-implementation_id = "clifft-0.13.0"
-workloads = [
-  { workload_id = "quantum-volume-q10-seed42-all-observables" },
-  { workload_id = "quantum-volume-q20-seed42-all-observables" },
-  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
-  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options_preset = "clifft-scheduled"
-postselect = "off"
-
-[[variants]]
-id = "symft-coverage"
-implementation_id = "symft-2026.10.8"
-workloads = [
-  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "on"
-
-[[variants]]
-id = "symft-coverage-off"
-implementation_id = "symft-2026.10.8"
-workloads = [
-  { workload_id = "quantum-volume-q10-seed42-all-observables" },
-  { workload_id = "quantum-volume-q20-seed42-all-observables" },
-  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-options = { sample_chunk_shots = 0 }
-postselect = "off"
-
-[[variants]]
-id = "tsim-coverage"
-implementation_id = "tsim-1.0.0"
-workloads = [
-  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
-  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-postselect = "on"
-
-[[variants]]
-id = "tsim-coverage-off"
-implementation_id = "tsim-1.0.0"
-workloads = [
-  { workload_id = "quantum-volume-q10-seed42-all-observables" },
-  { workload_id = "quantum-volume-q20-seed42-all-observables" },
-  { workload_id = "msc-d7-proxy-unverified-p1e-3" },
-  { workload_id = "msc-full-d5-cultivation-selected-p1e-3" },
-]
-
-[variants.execution]
-batch_size = "auto"
-postselect = "off"
-
-[[variants]]
-id = "xtim-coverage"
+id = "xtim-current-off"
 implementation_id = "xtim-4.1.2"
-workloads = [{ workload_id = "msc-full-d5-cultivation-selected-p1e-3" }]
+workloads = "cpu-release"
 
 [variants.execution]
+postselect = "off"
+threads = 1
 batch_size = "auto"
-postselect = "on"
 
 [[variants]]
-id = "xtim-coverage-off"
-implementation_id = "xtim-4.1.2"
-workloads = [{ workload_id = "msc-full-d5-cultivation-selected-p1e-3" }]
+id = "symft-current-off"
+implementation_id = "symft-2026.10.8"
+workloads = "cpu-release"
 
 [variants.execution]
-batch_size = "auto"
 postselect = "off"
+threads = 1
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+
+[[variants]]
+id = "stim-current-off"
+implementation_id = "stim-1.16.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "clifft-previous-8c"
+implementation_id = "clifft-0.13.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+
+[[variants]]
+id = "clifft-current-8c"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "tsim-current-8c"
+implementation_id = "tsim-1.0.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-current-8c"
+implementation_id = "xtim-4.1.2"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "symft-current-8c"
+implementation_id = "symft-2026.10.8"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+
+[[variants]]
+id = "stim-current-8c"
+implementation_id = "stim-1.16.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "clifft-current-off-8c"
+implementation_id = "clifft-dev-f1bb0d88"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "tsim-current-off-8c"
+implementation_id = "tsim-1.0.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-current-off-8c"
+implementation_id = "xtim-4.1.2"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "symft-current-off-8c"
+implementation_id = "symft-2026.10.8"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+
+[[variants]]
+id = "stim-current-off-8c"
+implementation_id = "stim-1.16.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
