@@ -748,3 +748,16 @@ cpu-release = [
   "cain-15to1-d5-p1e-3",
   "cain-15to1-d9-p1e-3",
 ]
+
+# When 0.14 replaces the slow 0.13.0 fold d5 baseline, switch back to cpu-release and remove this group and its test exception.
+previous-clifft-survivors = [
+  "msc-d3-inject-cultivate-p1e-3",
+  "msc-d5-inject-cultivate-p1e-3",
+  "surface-code-d7-r7-p1e-3",
+  "distillation-color-code-85q-p5e-2",
+  "coherent-surface-d3-r3-p1e-3-rz2e-2",
+  "coherent-surface-d5-r5-p1e-3-rz2e-2",
+  "distillation-15to1-rm15-p1e-3",
+  "msc-full-d5-cultivation-selected-p1e-3",
+  "fold-transversal-d3-p1e-3",
+]
