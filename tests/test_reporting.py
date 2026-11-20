@@ -104,8 +104,20 @@ def test_bulk_and_short_calls_are_separate_report_groups(raw_result):
     )
     validate_result(raw_result)
     report = build_report(raw_result)
-    assert len(report["release"]) == len(report["tools"]) == 1
-    assert report["tools"][0]["cases"]["current-bulk"]["execution"]["shots_per_call"] == 16
+    assert not report["tools"]
+    assert {p["candidate"]["execution"]["shots_per_call"] for p in report["release"]} == {8, 16}
+    assert {c["variant_id"] for c in report["current"]} == {"current", "current-bulk"}
+
+
+def test_comparing_two_variants_of_one_build_is_not_a_release_change(raw_result):
+    a, b = raw_result["cases"]
+    b["simulator"] = a["simulator"].copy()
+    b["setup"]["runtime_metadata"]["version"] = a["simulator"]["version"]
+    raw_result["campaign"]["cases"][1]["implementation_id"] = b["simulator"]["implementation_id"]
+    validate_result(raw_result)
+    report = build_report(raw_result)
+    assert report["release"] == []
+    assert report["tools"][0]["cases"] == {"previous": a, "current": b}
 
 
 @pytest.mark.parametrize("all_failed", [False, True])
@@ -393,7 +405,7 @@ def test_review_measurements_preserve_zero_missing_and_failed_values(raw_result,
     for line in summary.splitlines():
         if line.startswith("|"):
             cells = [cell.strip() for cell in line.strip("|").split("|")]
-            if len(cells) == 7:
+            if len(cells) == 9:
                 rows[cells[0]] = cells[1:]
     for case, expected in (
         (previous, ["0", "0.5", "0", "100"]),
@@ -401,7 +413,8 @@ def test_review_measurements_preserve_zero_missing_and_failed_values(raw_result,
         (peer, ["3.25", "4.5", "7", "—"]),
     ):
         assert rows[case["case_id"]] == [case["execution"]["postselect"],
-                                           str(case["execution"]["shots_per_call"]), *expected]
+                                           str(case["execution"]["shots_per_call"]), *expected,
+                                           str(case["execution"]["threads_requested"]), "—"]
 
 
 @pytest.mark.parametrize("section,key,value", [
@@ -742,3 +755,45 @@ def test_both_endpoints_render_separate_panels_from_one_canonical_workload(tmp_p
         assert len(modes) == 1
         assert f"Postselection {next(iter(modes))}" in panel["title"]
         assert all(v["outcome"] == "measured" for row in panel["rows"] for v in row["values"])
+
+
+@pytest.mark.parametrize("mismatch", [None, "shots_per_call", "batch_size", "status", "ambiguous"])
+def test_scaling_requires_matched_successful_calls(raw_result, mismatch):
+    for case, contract in zip(list(raw_result["cases"]), list(raw_result["campaign"]["cases"]),
+                              strict=True):
+        multi, definition = copy.deepcopy(case), copy.deepcopy(contract)
+        variant = case["variant_id"] + "-8c"
+        multi.update(case_id=variant, variant_id=variant)
+        definition.update(id=variant, variant_id=variant)
+        multi["execution"].update(threads=8, threads_requested=8)
+        definition["execution"]["threads"] = 8
+        for sample in multi["samples"]:
+            sample["throughput_attempted_shots_per_second"] *= 3
+            sample["duration_seconds"] /= 3
+        if mismatch == "status":
+            multi.update(status="error", error={"phase": "sampling", "type": "Timeout",
+                                               "message": "timeout"})
+        elif mismatch in {"shots_per_call", "batch_size"}:
+            multi["execution"][mismatch] = 1024
+        raw_result["cases"].append(multi)
+        raw_result["campaign"]["cases"].append(definition)
+    if mismatch == "ambiguous":
+        duplicate = copy.deepcopy(raw_result["cases"][1])
+        contract = copy.deepcopy(raw_result["campaign"]["cases"][1])
+        duplicate.update(case_id="also-current", variant_id="also-current")
+        contract.update(id="also-current", variant_id="also-current")
+        raw_result["cases"].append(duplicate)
+        raw_result["campaign"]["cases"].append(contract)
+    raw_result["campaign"]["comparisons"].append({
+        "id": "eight-core-releases", "baseline_variant": "previous-8c",
+        "candidate_variants": ["current-8c"],
+    })
+    report = build_report(raw_result)
+    assert len(report["release"]) == 2
+    panels = throughput_data(report)["panels"]
+    assert len(panels) == 2
+    assert len({row["label"] for panel in panels for row in panel["rows"]}) == 1
+    values = {v["threads_requested"]: v for panel in panels for row in panel["rows"]
+              for v in row["values"]}
+    assert values[1]["eight_core_speedup"] is None
+    assert values[8]["eight_core_speedup"] == (None if mismatch else 3)

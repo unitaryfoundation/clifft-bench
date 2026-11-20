@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 import textwrap
 from pathlib import Path
@@ -45,31 +46,63 @@ THEMES = {
 }
 
 
-def build_report(document: dict, *, peer_document: dict | None = None) -> dict[str, Any]:
+def _measurement_rows(document: dict) -> dict[str, dict]:
+    """Match core counts within one execution, using the full measurement inputs."""
     rows = {row["case_id"]: row for row in case_rows(document)}
+    groups = {}
+    for case in document["cases"]:
+        execution, workload = case["execution"], case["workload"]
+        key = (
+            case["simulator"]["implementation_id"], case["simulator"]["commit_sha"],
+            workload["id"], workload["artifact"]["sha256"],
+            json.dumps(workload["semantics"], sort_keys=True),
+            json.dumps(execution["options"], sort_keys=True),
+            *(execution[k] for k in ("postselect", "shots_per_call", "batch_size",
+                                     "memory_limit_bytes", "min_sample_seconds",
+                                     "request_timeout_seconds", "repetitions")),
+        )
+        row = rows[case["case_id"]]
+        row["eight_core_speedup"] = None
+        groups.setdefault(key, {}).setdefault(execution["threads_requested"], []).append(row)
+    for budgets in groups.values():
+        single, multi = budgets.get(1, []), budgets.get(8, [])
+        if (len(single) == len(multi) == 1
+                and single[0]["status"] == multi[0]["status"] == "success"):
+            rate = "median_attempted_shots_per_second"
+            multi[0]["eight_core_speedup"] = multi[0][rate] / single[0][rate]
+    return rows
+
+
+def build_report(document: dict, *, peer_document: dict | None = None) -> dict[str, Any]:
+    rows = _measurement_rows(document)
     pairs = comparison_pairs(document)
-    release = [p for p in pairs if p["comparison_id"] == "current-vs-previous"]
-    previous = {p["baseline_variant"] for p in release}
+    variants = {case["variant_id"]: case["simulator"] for case in document["cases"]}
+    release_ids = set()
+    previous = set()
+    for comparison in document["campaign"].get("comparisons", []):
+        baseline = variants.get(comparison["baseline_variant"])
+        candidates = [variants.get(v) for v in comparison["candidate_variants"]]
+        if baseline and baseline["adapter"] == "clifft" and all(
+            candidate and candidate["adapter"] == "clifft"
+            and candidate["implementation_id"] != baseline["implementation_id"]
+            for candidate in candidates
+        ):
+            release_ids.add(comparison["id"])
+            previous.add(baseline["implementation_id"])
+    release = [p for p in pairs if p["comparison_id"] in release_ids]
     current = [
-        c
-        for c in document["cases"]
-        if c["simulator"]["adapter"] == "clifft" and c["variant_id"] not in previous
+        c for c in document["cases"]
+        if c["simulator"]["adapter"] == "clifft"
+        and c["simulator"]["implementation_id"] not in previous
     ]
-    for pair in release:
-        for case in (pair["baseline"], pair["candidate"]):
-            if case is not None and case["simulator"]["adapter"] != "clifft":
-                raise ValueError("current-vs-previous must compare Clifft implementations")
     groups: dict[tuple[str, str], dict] = {}
     for pair in pairs:
-        if pair["comparison_id"] == "current-vs-previous":
+        if pair["comparison_id"] in release_ids:
             continue
         key = pair["baseline_variant"], pair["workload_id"]
         group = groups.setdefault(key, {"workload_id": key[1], "variant": key[0], "cases": {}})
         group["cases"][pair["baseline_variant"]] = pair["baseline"]
         group["cases"][pair["candidate_variant"]] = pair["candidate"]
-    variants = {}
-    for case in document["cases"]:
-        variants.setdefault(case["variant_id"], case["simulator"])
     report = {
         "document": document,
         "sources": {"primary": {"document": document, "cases": document["cases"]}},
@@ -218,16 +251,19 @@ def review_summary(report: dict) -> str:
         lines.append(f"| {case['case_id']} | {case['status']} | {detail} |")
     lines += ["", "## Measurements", "",
               "| Case | Postselection | Shots per call | Compile (s) | First call (s) | "
-              "Peak active width | Attempted shots/s (median) |",
-              "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
+              "Peak active width | Attempted shots/s (median) | Cores | 8-core / 1-core |",
+              "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for case in cases:
         row = report["rows"][case["case_id"]]
         values = [f"{row[key]:.6g}" if row[key] not in ("", None) else "—" for key in (
             "compile_seconds", "first_call_warmup_seconds", "peak_active_width",
             "median_attempted_shots_per_second",
         )]
+        ratio = row["eight_core_speedup"]
+        speedup = f"{ratio:.4g}×" if ratio is not None else "—"
         lines.append(f"| {case['case_id']} | {row['postselect']} | "
-                     f"{row['shots_per_call']} | {' | '.join(values)} |")
+                     f"{row['shots_per_call']} | {' | '.join(values)} | "
+                     f"{row['threads_requested']} | {speedup} |")
     lines += [
         "",
         "## Paired comparisons",
@@ -296,7 +332,9 @@ def _workload_label(case: dict) -> str:
     workload = case["workload"]
     family, parameters = workload["family"], workload["parameters"]
     if family == "magic-state-cultivation":
-        return f"Cultivation d{parameters['distance']}"
+        fold = workload["id"].startswith("fold-transversal-")
+        name = "Fold-transversal" if fold else "Cultivation"
+        return f"{name} d{parameters['distance']}"
     if family in {"surface-code-memory", "coherent-noise-surface-code"}:
         name = "Surface code" if family == "surface-code-memory" else "Coherent"
         return f"{name} d{parameters['distance']}, r{parameters['rounds']}"
@@ -457,7 +495,9 @@ def _throughput_panels(entries: list[dict]) -> dict[str, list[dict]]:
         endpoint = ("Postselection on — survivor counts"
                     if case["execution"]["postselect"] == "on"
                     else "Postselection off — packed detector and observable samples")
-        panels.setdefault(f"{endpoint} · {heading}", []).append(entry)
+        threads = case["execution"]["threads_requested"]
+        core_label = "1 core" if threads == 1 else f"{threads} cores"
+        panels.setdefault(f"{endpoint} · {core_label} · {heading}", []).append(entry)
     return panels or {"Other workloads": []}
 
 
@@ -510,7 +550,7 @@ def throughput_data(report: dict) -> dict:
                     **{key: None if row.get(key, "") == "" else row[key] for key in (
                         "median_attempted_shots_per_second", "mad_attempted_shots_per_second",
                         "sample_count", "shots_per_call", "batch_size_effective",
-                        "threads_requested", "threads_effective",
+                        "threads_requested", "threads_effective", "eight_core_speedup",
                         "peak_active_width", "compile_seconds", "first_call_warmup_seconds",
                     )},
                 }
@@ -519,7 +559,8 @@ def throughput_data(report: dict) -> dict:
                     rates.append(value["median_attempted_shots_per_second"])
             rows.append({
                 "workload_id": workload["id"], "baseline_variant": entry["variant"],
-                "label": _label(representative), "artifact_sha256": workload["artifact"]["sha256"],
+                "label": _workload_label(representative),
+                "artifact_sha256": workload["artifact"]["sha256"],
                 "semantics": workload["semantics"],
                 "postselect": representative["execution"]["postselect"], "values": values,
             })
@@ -554,7 +595,7 @@ def _render_throughput(report, theme):
                     != "unsupported"), key=lambda item: variants.index(item[0]))
             for entry in group
         ]
-        names = [textwrap.fill(_label(_representative(entry)), 29) for entry in group]
+        names = [textwrap.fill(_workload_label(_representative(entry)), 29) for entry in group]
         heights = [
             max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
             for values, name in zip(visible, names, strict=True)
