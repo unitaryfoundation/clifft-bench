@@ -105,9 +105,9 @@ def test_fold_metadata_and_logical_readout_match_the_manifest(distance):
 @pytest.mark.parametrize("adapter", ["clifft", "tsim"])
 @pytest.mark.parametrize("distance", [3, 5])
 def test_fold_noisy_artifact_with_auto_batch(adapter, distance):
-    pytest.importorskip(adapter)
+    module = pytest.importorskip(adapter)
     workload = _workload(distance)
-    prepared = load_adapter(adapter).prepare(
+    prepared = load_adapter(adapter, module.version() if adapter == "clifft" else None).prepare(
         artifact_path=ROOT / workload["artifact"]["path"], workload=workload,
         execution={"postselect": "on", "batch_size": "auto"}, seed=91,
     )
@@ -122,7 +122,7 @@ def test_fold_noisy_artifact_with_auto_batch(adapter, distance):
 @pytest.mark.parametrize("distance", [3, 5])
 @pytest.mark.parametrize("logical_flip", [False, True])
 def test_fold_ideal_acceptance_and_logical_error(adapter, distance, logical_flip, tmp_path):
-    pytest.importorskip(adapter)
+    module = pytest.importorskip(adapter)
     workload = _workload(distance)
     text = (ROOT / workload["artifact"]["path"]).read_text()
     text = re.sub(r"(?m)^(?:[XYZ]_ERROR|DEPOLARIZE[12]|CORRELATED_ERROR)\([^\n]*\n", "", text)
@@ -134,7 +134,7 @@ def test_fold_ideal_acceptance_and_logical_error(adapter, distance, logical_flip
         text = prefix + f"Z {target}\nT_DAG " + readout
     artifact = tmp_path / "fold.stim"
     artifact.write_text(text)
-    prepared = load_adapter(adapter).prepare(
+    prepared = load_adapter(adapter, module.version() if adapter == "clifft" else None).prepare(
         artifact_path=artifact, workload=workload,
         execution={"postselect": "on", "batch_size": 1}, seed=91,
     )

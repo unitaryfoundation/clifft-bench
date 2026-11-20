@@ -1,4 +1,4 @@
-"""Clifft aggregate-count adapter."""
+"""Clifft CPU sampling with the compiler and endpoints of each measured release."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter
+from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter, Sample
 from clifft_bench.selection import detector_mask
 
 
@@ -19,7 +19,7 @@ class _PreparedClifft(PreparedAdapter):
         self,
         clifft: Any,
         program: Any,
-        observable_index: int,
+        observable_index: int | None,
         runtime_metadata: dict[str, Any],
         batch_size: int | str,
         threads: int = 1,
@@ -36,6 +36,9 @@ class _PreparedClifft(PreparedAdapter):
             self._program, shots, seed=seed, keep_records=False,
             threads=self._threads, batch_size=self._batch_size,
         )
+        return self._counts(result)
+
+    def _counts(self, result) -> Counts:
         return Counts(
             attempted_shots=int(result.total_shots),
             accepted_shots=int(result.passed_shots),
@@ -168,4 +171,83 @@ class ClifftAdapter(Adapter):
             metadata,
             requested_batch_size,
             threads,
+        )
+
+
+class _PreparedClifftPlan(_PreparedClifft):
+    _execution = None
+
+    def sample(self, shots: int, seed: int) -> Sample:
+        if self._observable_index is not None:
+            result = self._clifft.sample_survivors(
+                self._program, shots, seed=seed, threads=self._threads,
+                keep_records=False, batch_size=self._batch_size,
+            )
+            self._execution = result.execution
+            return self._counts(result)
+        result = self._clifft.sample(
+            self._program, shots, seed=seed, threads=self._threads, batch_size=self._batch_size,
+            keep_records="syndromes", bit_packed=True,
+        )
+        self._execution = result.execution
+        return result.detectors, result.observables
+
+    def first_call_metadata(self) -> dict:
+        execution = self._execution
+        threads = execution.shot_workers * execution.intra_shot_workers
+        if not 1 <= threads <= self._threads:
+            raise ValueError("Clifft execution exceeded its thread budget or reported no workers")
+        return {
+            "threads": threads,
+            "shot_workers": execution.shot_workers,
+            "intra_shot_workers": execution.intra_shot_workers,
+            "sampling_backend": execution.executor,
+            "trajectory_sharing": execution.sharing,
+            "effective_batch_size": execution.batch_size,
+            "batch_enabled": execution.batch_size > 1,
+        }
+
+
+class ClifftPlanAdapter(ClifftAdapter):
+    """Use Clifft's public default compiler and output-specific sampling plan."""
+
+    supported_postselect = ("on", "off")
+    validate_options = Adapter.validate_options
+
+    def prepare(
+        self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
+    ) -> PreparedAdapter:
+        threads = self.validate_execution(execution, workload)
+        import clifft
+
+        postselect = execution["postselect"] == "on"
+        mask = []
+        if postselect:
+            mask = detector_mask(
+                workload["semantics"], workload["expected_metadata"]["num_detectors"]
+            )
+        text = artifact_path.read_text()
+        started = time.perf_counter()
+        program = clifft.compile(text, postselection_mask=mask)
+        compile_seconds = time.perf_counter() - started
+        plan = program.sampling_plan(keep_records=False if postselect else "syndromes")
+        metadata = {
+            "name": self.name,
+            "version": clifft.version(),
+            "precision": "complex-fp64",
+            "reference_convention": "raw-record-parity",
+            "threads": None,
+            "batch_enabled": None,
+            "effective_batch_size": None,
+            "peak_active_width": plan.peak_active_width,
+            "reconstruction_selected": plan.reconstruction_selected,
+            "compile_seconds": compile_seconds,
+            "cpu_baseline": clifft.CPU_BASELINE,
+            **{key: getattr(program, key) for key in (
+                "num_qubits", "num_measurements", "num_detectors", "num_observables"
+            )},
+        }
+        return _PreparedClifftPlan(
+            clifft, program, workload["semantics"]["observable_index"] if postselect else None,
+            metadata, execution["batch_size"], threads,
         )

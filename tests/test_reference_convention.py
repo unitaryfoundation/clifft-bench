@@ -199,3 +199,37 @@ def test_native_auto_preserves_noisy_counts_across_reused_calls(adapter_name, tm
         counts = prepared.sample(16384, seed)
         assert counts.attempted_shots == counts.accepted_shots == 16384
         assert counts.logical_errors / 16384 == pytest.approx(0.25, abs=0.025)
+
+
+@pytest.mark.parametrize("mode", ["on", "off"])
+def test_clifft_sampling_plan_preserves_raw_packed_parity_and_subset(tmp_path, mode):
+    clifft = pytest.importorskip("clifft")
+    if not hasattr(clifft, "SamplingExecution"):
+        pytest.skip("requires the Clifft selective-output API")
+    from clifft_bench.adapters.base import Counts
+
+    path = tmp_path / "subset.stim"
+    path.write_text("M 0\nM !1\nDETECTOR rec[-2]\nDETECTOR rec[-1]\n"
+                    "OBSERVABLE_INCLUDE(9) rec[-1]\n")
+    workload = {
+        "semantics": {"observable_index": 9, "postselect_all_detectors": False,
+                      "postselection_detector_indices": [0]},
+        "expected_metadata": {"num_detectors": 2},
+    }
+    prepared = load_adapter("clifft", clifft.version()).prepare(
+        artifact_path=path, workload=workload,
+        execution={"postselect": mode, "batch_size": "auto", "threads": 1},
+    )
+    result = prepared.sample(37, 102)
+    if mode == "on":
+        assert result == Counts(37, 37, 0, 37)
+    else:
+        detectors, observables = result
+        assert detectors.shape == (37, 1) and (detectors == 2).all()
+        assert observables.shape == (37, 2)
+        assert (observables[:, 0] == 0).all() and (observables[:, 1] == 2).all()
+    execution = prepared.first_call_metadata()
+    assert execution["threads"] == execution["shot_workers"] * execution["intra_shot_workers"] == 1
+    assert execution["effective_batch_size"] >= 1
+    assert prepared.runtime_metadata["peak_active_width"] == 0
+    assert isinstance(prepared.runtime_metadata["reconstruction_selected"], bool)

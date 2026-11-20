@@ -146,7 +146,7 @@ def _run(args: argparse.Namespace) -> int:
         error = case.get("error") or {}
         outcome = "Failed"
         if case["status"] == "unsupported":
-            adapter = load_adapter(case["simulator"]["adapter"])
+            adapter = load_adapter(case["simulator"]["adapter"], case["simulator"]["version"])
             execution = case["execution"]
             expected = (execution["postselect"] not in adapter.supported_postselect
                         or execution["threads"] not in adapter.supported_threads)

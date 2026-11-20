@@ -231,7 +231,8 @@ def load_suite(run_path: Path, *, verify_artifacts: bool = True) -> Suite:
                 f"workload {workload_id!r}"
             )
         execution = definition["execution"]
-        load_adapter(adapter).validate_options(execution["options"])
+        configured_adapter = load_adapter(adapter, implementation.definition["version"])
+        configured_adapter.validate_options(execution["options"])
         cases.append(Case(definition, workload, implementation))
 
     variants = {str(case.definition["variant_id"]) for case in cases}

@@ -27,8 +27,8 @@ attempted shots as the numerator. Each canonical workload declares
 Both endpoints use raw measurement-record parity, without reference correction.
 They compare complete available workflows; their difference does not isolate
 postselection cost. Counts on supports Clifft, SymFT, Tsim, and pinned xtim;
-only Clifft and Tsim support detector subsets. Packed off supports Tsim and
-Stim; the current Clifft, SymFT, and xtim pins report `unsupported`. Stim also
+only Clifft and Tsim support detector subsets. Packed off supports Clifft 0.14, Tsim and
+Stim. The 0.13 baseline, SymFT, and the pinned xtim release report `unsupported`. Stim also
 rejects nonzero raw references because its native output is reference-relative.
 Only unsupported modes or thread budgets declared by an adapter permit a zero
 exit code. Other setup rejections retain their `unsupported` evidence but fail
@@ -208,14 +208,18 @@ separate workloads in the report.
 
 ## Compiler configuration
 
-Each release uses its own default HIR pipeline before the optional scheduler.
-Both maintained Clifft implementations use the scheduled configuration.
-Release-over-release results include their compiler defaults; they are not a
-same-version pass ablation.
+Clifft 0.14 uses its public default compiler, including automatic scheduling and
+reconstruction. Survivor counts compile with the raw-zero selection mask and
+call `sample_survivors(..., keep_records=False)`. Packed sampling compiles
+with no selected detectors and calls `sample(..., keep_records="syndromes",
+bit_packed=True)`. The adapter records peak width and reconstruction from
+the sampling plan for the requested outputs. The first full call supplies the
+native executor, sharing decision, batch capacity, and shot and intra-shot
+worker counts. Their product is the effective thread count for that call.
+The smaller correctness call can select a different configuration.
 
-Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
-pipeline. When pinning a scheduler-capable RC, set
-`clifft-current.execution.options_preset` to `clifft-scheduled` from
+The 0.13 baseline uses the opt-in `ActiveWidthSchedulePass` after its default
+pipeline, with the `clifft-scheduled` preset from
 [`software.toml`](../software.toml).
 Use the same settings across the release workloads. The four pass options must
 be explicit; the benchmark supplies no defaults. Scheduling is disabled when the

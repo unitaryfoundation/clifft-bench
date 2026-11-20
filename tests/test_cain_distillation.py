@@ -103,15 +103,16 @@ def test_unconditioned_ideal_output_is_maximally_mixed(distance):
 
 def _sample(adapter, distance, text, shots, tmp_path):
     module = pytest.importorskip(adapter)
-    if adapter == "clifft":
-        # Public 0.13 API provides raw (unpacked) syndromes for conformance.
-        # The release adapter's packed endpoint arrives with the 0.14 upgrade.
+    if adapter == "clifft" and not hasattr(module, "SamplingExecution"):
+        if distance == 9:
+            pytest.skip("d9 requires the new default compiler")
+        # The 0.13 baseline exposes unpacked syndromes for conformance.
         program = module.compile(text)
         result = module.sample(program, shots, seed=91, threads=1, batch_size=1)
         return result.detectors, result.observables
     path = tmp_path / "cain.stim"
     path.write_text(text)
-    prepared = load_adapter(adapter).prepare(
+    prepared = load_adapter(adapter, module.version() if adapter == "clifft" else None).prepare(
         artifact_path=path, workload=_workload(distance),
         execution={"postselect": "off", "batch_size": "auto"}, seed=91,
     )
@@ -125,7 +126,7 @@ def _sample(adapter, distance, text, shots, tmp_path):
 
 
 @pytest.mark.parametrize("adapter,distance,noisy", [
-    ("clifft", 5, False), ("clifft", 5, True),
+    ("clifft", 5, False), ("clifft", 5, True), ("clifft", 9, False), ("clifft", 9, True),
     ("tsim", 5, False), ("tsim", 9, False),
     ("tsim", 5, True), ("tsim", 9, True),
 ])

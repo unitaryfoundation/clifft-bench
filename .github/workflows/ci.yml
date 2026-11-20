@@ -127,7 +127,7 @@ jobs:
 
   clifft-current:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: "4"
       OMP_NUM_THREADS: "1"
@@ -159,3 +159,10 @@ jobs:
             /tmp/clifft-smoke/raw.json
             /tmp/bulk-clifft-pilot/raw.json
             /tmp/coverage-clifft/raw.json
+
+      - name: Check pinned Clifft development compiler and native sampling endpoints
+        run: |
+          python -m pip install 'clifft @ git+https://github.com/unitaryfoundation/clifft.git@f1bb0d883495b73ba3e834be6d61d9c440ddfef5'
+          ulimit -v 12582912
+          python -m pytest tests/test_reference_convention.py -k clifft_sampling_plan
+          python -m pytest tests/test_cain_distillation.py tests/test_fold_transversal.py -k clifft
