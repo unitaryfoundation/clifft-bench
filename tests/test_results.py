@@ -176,7 +176,7 @@ def test_eight_core_resource_evidence_must_match_the_contract(raw_result, damage
     validate_result(raw_result)
     data = throughput_data(build_report(raw_result))
     row = data["panels"][0]["rows"][0]
-    assert "8 cores" in row["label"]
+    assert "8 cores" in data["panels"][0]["title"]
     assert row["values"][0]["threads_requested"] == 8
     assert row["values"][0]["threads_effective"] is None
     case = raw_result["cases"][0]

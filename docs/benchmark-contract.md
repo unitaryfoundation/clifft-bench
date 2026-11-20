@@ -59,7 +59,7 @@ with its own throughput ticks. Horizontal positions are comparable within a pane
 absolute labels remain comparable across panels. Within each theme, circuits follow a stable
 family and size order, independent of measured speed. Each rate is directly
 labeled; short circuit names and consistent simulator colors and shapes aid
-comparison. Postselection modes occupy separate labeled panels. The unverified
+comparison. Each postselection mode and physical-core budget has its own panels. The unverified
 cultivation proxy and bulk-call variants stay in the detailed tables rather than the main figures.
 Unsupported pairings have no marker; failed and unmeasured cases are labeled.
 Every selected case and declared comparison remains in the review tables.
@@ -92,8 +92,12 @@ themselves. This is the data interface for the
   the attempted-shot rate median and median absolute deviation (both in shots/s),
   sample count, shots per call, effective batch size, `threads_requested`,
   `threads_effective`, `compile_seconds`, `first_call_warmup_seconds`, and peak
-  active width where recorded. MAD describes sample dispersion, not a confidence
-  interval.
+  active width where recorded. For each measured eight-core point,
+  `eight_core_speedup` divides its median attempted shots/s by the matching
+  one-core median in the same source execution. Both cases must succeed and
+  uniquely match in implementation, circuit, output, call size, batching,
+  simulator options, memory limit, and measurement settings. Other values are null.
+  MAD describes sample dispersion. It does not estimate a confidence interval.
 - `outcome` is `measured`, a recorded failure status, `unsupported`, or
   `not measured`. Failed and absent cases have null rates and dispersion; missing
   metadata is null rather than zero. Unsupported cases remain in the export for
