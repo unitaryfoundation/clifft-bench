@@ -569,7 +569,7 @@ def validate_software(document: dict) -> None:
             "source_url",
         ):
             _text(imp[key], key)
-        load_adapter(imp["adapter"])
+        load_adapter(imp["adapter"], imp["version"])
         if not re.fullmatch(r"[0-9a-f]{40}", imp["commit_sha"]):
             raise ValueError("invalid implementation commit")
         for key in ("display_version", "source_tag"):

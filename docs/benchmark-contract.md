@@ -226,6 +226,12 @@ be explicit; the benchmark supplies no defaults. Scheduling is disabled when the
 resolved `execution.options` has no `scheduler` table. Unsupported installations
 fail when the pass is requested.
 
+The 0.13 adapter sets the HIR `postselection_mask` before optimization and
+supplies the same mask to lowering. Its runtime metadata includes
+`postselection_before_optimization`, `batch_control`, and, when available,
+`optimized_t_gates`. The 0.14 adapter records the output-specific plan and
+the worker layout reported by the first full call.
+
 With `execution` containing the resolved options, the public Python configuration is:
 
 ```python
@@ -352,19 +358,6 @@ within a comparison. Failed cases retain their diagnostics.
 The short-call comparisons use one shot per call for d5/r5. Keep those rows
 separate from the bulk comparison: sharing work across shots changes the
 question, even on the same circuit and host.
-
-### Compatibility with newer Clifft APIs
-
-On Clifft versions exposing a writable HIR `postselection_mask`, the adapter
-sets the workload's raw-parity mask before running compiler passes and supplies
-it again to lowering. Earlier versions retain selection at lowering. Sampling
-uses the case's thread budget and batch setting. Runtime metadata
-records batching and the point at which postselection is applied. Development/VCS
-builds also verify the full installed source URL and commit; release wheels retain
-version validation.
-Runtime metadata records `postselection_before_optimization`, `batch_control`
-and, when available, `optimized_t_gates`.
-
 
 ## Result evidence and comparisons
 

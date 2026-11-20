@@ -34,8 +34,8 @@ def verify_environment(implementation: Implementation) -> None:
             "installed=importlib.metadata.version(d['distribution']); "
             "\nif installed != d['version']: "
             "raise ValueError(f'expected {d[\"version\"]}, got {installed}')\n"
-            "load_adapter(d['adapter']).verify_installation(expected_commit=d['commit_sha'], "
-            "source_url=d['source_url'])",
+            "load_adapter(d['adapter'], d['version']).verify_installation("
+            "expected_commit=d['commit_sha'], source_url=d['source_url'])",
             json.dumps(implementation.definition),
         ],
         env=environment,

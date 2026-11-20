@@ -103,7 +103,8 @@ def test_identity_probe_executes_version_and_source_checks(
     adapter = Mock()
     monkeypatch.setattr(importlib, "import_module", imported)
     monkeypatch.setattr(importlib.metadata, "version", lambda name: installed_version)
-    monkeypatch.setattr(adapters, "load_adapter", lambda name: adapter)
+    loader = Mock(return_value=adapter)
+    monkeypatch.setattr(adapters, "load_adapter", loader)
     monkeypatch.setattr(sys, "argv", ["-c", command[-1]])
     if installed_version == "2":
         with pytest.raises(ValueError, match="expected 1, got 2"):
@@ -112,5 +113,6 @@ def test_identity_probe_executes_version_and_source_checks(
     else:
         exec(command[2], {})
         imported.assert_called_once_with("example")
+        loader.assert_called_once_with("fixture", "1")
         adapter.verify_installation.assert_called_once_with(
             expected_commit="a"*40, source_url="https://example.com/source")

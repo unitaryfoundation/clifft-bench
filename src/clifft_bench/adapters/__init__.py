@@ -6,7 +6,7 @@ from clifft_bench.adapters.base import Adapter
 
 
 def load_adapter(name: str, version: str | None = None) -> Adapter:
-    """Select capabilities from the manifest without importing a native simulator."""
+    """Select an implementation by version. Unversioned Clifft uses the legacy options schema."""
     if name == "clifft":
         from clifft_bench.adapters.clifft import ClifftAdapter, ClifftPlanAdapter
 
