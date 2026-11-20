@@ -1,0 +1,5108 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-256",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 256,
+        "variant_id": "clifft-previous-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-256",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 256,
+        "variant_id": "clifft-current-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-256",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 256,
+        "variant_id": "tsim-current-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-off-256",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 256,
+        "variant_id": "clifft-current-off-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-off-256",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 256,
+        "variant_id": "tsim-current-off-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-8c-256",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 256,
+        "variant_id": "clifft-previous-8c-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-8c-256",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 256,
+        "variant_id": "clifft-current-8c-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-8c-256",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 256,
+        "variant_id": "tsim-current-8c-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-off-8c-256",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 256,
+        "variant_id": "clifft-current-off-8c-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-off-8c-256",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 256,
+        "variant_id": "tsim-current-off-8c-256",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-1024",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 1024,
+        "variant_id": "clifft-previous-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-1024",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 1024,
+        "variant_id": "clifft-current-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-1024",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 1024,
+        "variant_id": "tsim-current-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-off-1024",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 1024,
+        "variant_id": "clifft-current-off-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-off-1024",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 1024,
+        "variant_id": "tsim-current-off-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-8c-1024",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 1024,
+        "variant_id": "clifft-previous-8c-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-8c-1024",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 1024,
+        "variant_id": "clifft-current-8c-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-8c-1024",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 1024,
+        "variant_id": "tsim-current-8c-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-off-8c-1024",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 1024,
+        "variant_id": "clifft-current-off-8c-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-off-8c-1024",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 1024,
+        "variant_id": "tsim-current-off-8c-1024",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      }
+    ],
+    "classification": "smoke",
+    "collection": {
+      "memory_limit_gib": 32,
+      "run_timeout_minutes": 20
+    },
+    "hardware_epoch": "aws-m7a-4xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 0.001,
+      "repetitions": 1,
+      "request_timeout_seconds": 240,
+      "setup_timeout_seconds": 180
+    },
+    "profile_id": "fold-d5-call-size-check",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.4xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 34359738368
+    },
+    "seed": 20260819,
+    "suite_version": "0.3.0",
+    "title": "Clifft and peer CPU release matrix"
+  },
+  "cases": [
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.16430827299999962,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 48,
+        "attempted_shots": 256,
+        "discarded_shots": 208,
+        "duration_seconds": 7.248595069,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 42,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 214,
+          "duration_seconds": 7.145622711999998,
+          "logical_errors": 0,
+          "peak_rss_bytes": 120999936,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 0,
+          "started_at": "2026-11-20T20:56:38.496939Z",
+          "throughput_attempted_shots_per_second": 35.826128850895884
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.2586670009999992,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "compile_seconds": 0.05975246600000261,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": null,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "optimized_t_gates": 342,
+          "parse_seconds": 0.003207192000001413,
+          "peak_active_width": 22,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 143119,
+            "incumbent_dense_work": 657649162.0,
+            "incumbent_peak": 22,
+            "result_dense_work": 207644538.0,
+            "result_peak": 22,
+            "swept_ops": 96962
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-previous-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.0037114129999977763,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 256,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 49,
+        "attempted_shots": 256,
+        "discarded_shots": 207,
+        "duration_seconds": 0.02030664600000165,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 327,
+          "adapter_timing_totals": {},
+          "api_calls": 8,
+          "attempted_shots": 2048,
+          "discarded_shots": 1721,
+          "duration_seconds": 0.0010739299999897867,
+          "logical_errors": 0,
+          "peak_rss_bytes": 57483264,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270826,
+          "sequence_index": 1,
+          "started_at": "2026-11-20T20:56:46.078039Z",
+          "throughput_attempted_shots_per_second": 1907014.423677034
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.3149305049999995,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.11800256600000125,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 256,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "shared",
+          "shot_workers": 1,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.0008835730000029685,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 44,
+        "attempted_shots": 256,
+        "discarded_shots": 212,
+        "duration_seconds": 14.308917208000004,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 27,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 229,
+          "duration_seconds": 0.00123384399999793,
+          "logical_errors": 0,
+          "peak_rss_bytes": 517234688,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 2,
+          "started_at": "2026-11-20T20:57:04.579312Z",
+          "throughput_attempted_shots_per_second": 207481.65894588738
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 4.092641273999995,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.5154502259999987,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.008418362000000457,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-off-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.00013832099999433467,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 128,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "attempted_shots": 256,
+        "duration_seconds": 0.014974160999997821,
+        "packed_output": {
+          "detectors": [
+            256,
+            15
+          ],
+          "observables": [
+            256,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "duration_seconds": 0.005176787999999988,
+          "packed_output": {
+            "detectors": [
+              256,
+              15
+            ],
+            "observables": [
+              256,
+              1
+            ]
+          },
+          "peak_rss_bytes": 55795712,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 3,
+          "started_at": "2026-11-20T20:57:05.258615Z",
+          "throughput_attempted_shots_per_second": 49451.51317766936
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.13897871100000003,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.10090369200000282,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 128,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "packed",
+          "shot_workers": 1,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": false,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-off-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-off-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0009166229999948428,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "attempted_shots": 256,
+        "duration_seconds": 0.2213039600000002,
+        "packed_output": {
+          "detectors": [
+            256,
+            15
+          ],
+          "observables": [
+            256,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "duration_seconds": 0.00965275200000093,
+          "packed_output": {
+            "detectors": [
+              256,
+              15
+            ],
+            "observables": [
+              256,
+              1
+            ]
+          },
+          "peak_rss_bytes": 371425280,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 4,
+          "started_at": "2026-11-20T20:57:06.737318Z",
+          "throughput_attempted_shots_per_second": 26520.934133599963
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.157861871999998,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.4669277219999941,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.00805940699999752,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-off-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-8c-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.16629715300000214,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 8,
+        "threads_effective": null,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 48,
+        "attempted_shots": 256,
+        "discarded_shots": 208,
+        "duration_seconds": 9.358591719000003,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 42,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 214,
+          "duration_seconds": 9.282458434999995,
+          "logical_errors": 0,
+          "peak_rss_bytes": 591405056,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 5,
+          "started_at": "2026-11-20T20:57:16.685259Z",
+          "throughput_attempted_shots_per_second": 27.57890076132618
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.08814471799999524,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "compile_seconds": 0.050050349999999355,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": null,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "optimized_t_gates": 342,
+          "parse_seconds": 0.002039426999999705,
+          "peak_active_width": 22,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 143119,
+            "incumbent_dense_work": 657649162.0,
+            "incumbent_peak": 22,
+            "result_dense_work": 207644538.0,
+            "result_peak": 22,
+            "swept_ops": 96962
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": null,
+          "version": "0.13.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-previous-8c-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-8c-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.0038851730000004636,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 256,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 8,
+        "threads_effective": 1,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 49,
+        "attempted_shots": 256,
+        "discarded_shots": 207,
+        "duration_seconds": 0.010374986000002195,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 327,
+          "adapter_timing_totals": {},
+          "api_calls": 8,
+          "attempted_shots": 2048,
+          "discarded_shots": 1721,
+          "duration_seconds": 0.0010455740000310243,
+          "logical_errors": 0,
+          "peak_rss_bytes": 57266176,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270826,
+          "sequence_index": 6,
+          "started_at": "2026-11-20T20:57:26.215534Z",
+          "throughput_attempted_shots_per_second": 1958732.7151777223
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.14103387499999087,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.10270115999999518,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 256,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "shared",
+          "shot_workers": 1,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-8c-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-8c-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.024713136000002578,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 44,
+        "attempted_shots": 256,
+        "discarded_shots": 212,
+        "duration_seconds": 7.747818268000003,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 27,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "discarded_shots": 229,
+          "duration_seconds": 0.0013195829999972375,
+          "logical_errors": 0,
+          "peak_rss_bytes": 483643392,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 7,
+          "started_at": "2026-11-20T20:57:35.232392Z",
+          "throughput_attempted_shots_per_second": 194000.68051841826
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.149347328999994,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.46399816699999974,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.00796509799999967,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-8c-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-off-8c-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.000293460999998274,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 128,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 8,
+        "threads_effective": 2,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "attempted_shots": 256,
+        "duration_seconds": 0.01262763299999392,
+        "packed_output": {
+          "detectors": [
+            256,
+            15
+          ],
+          "observables": [
+            256,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "duration_seconds": 0.002690435000005209,
+          "packed_output": {
+            "detectors": [
+              256,
+              15
+            ],
+            "observables": [
+              256,
+              1
+            ]
+          },
+          "peak_rss_bytes": 56033280,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 8,
+          "started_at": "2026-11-20T20:57:35.862246Z",
+          "throughput_attempted_shots_per_second": 95151.89922800749
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.13957205499998793,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.10118080499999849,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 128,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "packed",
+          "shot_workers": 2,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 2,
+          "trajectory_sharing": false,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-off-8c-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-off-8c-256",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.025724257000007356,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 256,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "attempted_shots": 256,
+        "duration_seconds": 0.22170412600000589,
+        "packed_output": {
+          "detectors": [
+            256,
+            15
+          ],
+          "observables": [
+            256,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 256,
+          "duration_seconds": 0.010357128999999077,
+          "packed_output": {
+            "detectors": [
+              256,
+              15
+            ],
+            "observables": [
+              256,
+              1
+            ]
+          },
+          "peak_rss_bytes": 384581632,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 9,
+          "started_at": "2026-11-20T20:57:37.360548Z",
+          "throughput_attempted_shots_per_second": 24717.27444932112
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.1535590609999957,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.4653472420000071,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.007806164000001559,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-off-8c-256",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.17192051399999286,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 175,
+        "attempted_shots": 1024,
+        "discarded_shots": 849,
+        "duration_seconds": 29.916500032000002,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 153,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "discarded_shots": 871,
+          "duration_seconds": 26.581680483,
+          "logical_errors": 0,
+          "peak_rss_bytes": 121155584,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 10,
+          "started_at": "2026-11-20T20:58:07.874187Z",
+          "throughput_attempted_shots_per_second": 38.52277137462724
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.08871829200001002,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "compile_seconds": 0.050608433000007835,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": null,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "optimized_t_gates": 342,
+          "parse_seconds": 0.0020562540000099716,
+          "peak_active_width": 22,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 143119,
+            "incumbent_dense_work": 657649162.0,
+            "incumbent_peak": 22,
+            "result_dense_work": 207644538.0,
+            "result_peak": 22,
+            "swept_ops": 96962
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-previous-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.0037469000000101005,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 1024,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 179,
+        "attempted_shots": 1024,
+        "discarded_shots": 845,
+        "duration_seconds": 0.011125690999989502,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 648,
+          "adapter_timing_totals": {},
+          "api_calls": 4,
+          "attempted_shots": 4096,
+          "discarded_shots": 3448,
+          "duration_seconds": 0.0013547940000080416,
+          "logical_errors": 0,
+          "peak_rss_bytes": 58085376,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270822,
+          "sequence_index": 11,
+          "started_at": "2026-11-20T20:58:34.704634Z",
+          "throughput_attempted_shots_per_second": 3023337.8653697073
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.14084954100002278,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.1027026019999937,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1024,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "shared",
+          "shot_workers": 1,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.0006876319999946645,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 189,
+        "attempted_shots": 1024,
+        "discarded_shots": 835,
+        "duration_seconds": 0.21140340099998411,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 157,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "discarded_shots": 867,
+          "duration_seconds": 0.002068095999987918,
+          "logical_errors": 0,
+          "peak_rss_bytes": 372121600,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 12,
+          "started_at": "2026-11-20T20:58:36.169466Z",
+          "throughput_attempted_shots_per_second": 495141.4247723425
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.156794571000006,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.4659664249999764,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.007850921999988714,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-off-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.00013995999998428488,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 128,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "attempted_shots": 1024,
+        "duration_seconds": 0.030666926999998623,
+        "packed_output": {
+          "detectors": [
+            1024,
+            15
+          ],
+          "observables": [
+            1024,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "duration_seconds": 0.020652849000015294,
+          "packed_output": {
+            "detectors": [
+              1024,
+              15
+            ],
+            "observables": [
+              1024,
+              1
+            ]
+          },
+          "peak_rss_bytes": 55812096,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 13,
+          "started_at": "2026-11-20T20:58:36.667405Z",
+          "throughput_attempted_shots_per_second": 49581.53715253725
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.13893628499999977,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.1009853780000185,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 128,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "packed",
+          "shot_workers": 1,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": false,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-off-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-off-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0009218030000113231,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "attempted_shots": 1024,
+        "duration_seconds": 0.23501629899999443,
+        "packed_output": {
+          "detectors": [
+            1024,
+            15
+          ],
+          "observables": [
+            1024,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "duration_seconds": 0.028484251000008953,
+          "packed_output": {
+            "detectors": [
+              1024,
+              15
+            ],
+            "observables": [
+              1024,
+              1
+            ]
+          },
+          "peak_rss_bytes": 372506624,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 14,
+          "started_at": "2026-11-20T20:58:38.172609Z",
+          "throughput_attempted_shots_per_second": 35949.690234076304
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.1535888810000188,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.46735806999998886,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.007946812999989561,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-off-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-8c-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.16762099100000682,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 8,
+        "threads_effective": null,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 175,
+        "attempted_shots": 1024,
+        "discarded_shots": 849,
+        "duration_seconds": 38.180457913,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 153,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "discarded_shots": 871,
+          "duration_seconds": 33.95436052100001,
+          "logical_errors": 0,
+          "peak_rss_bytes": 591343616,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 15,
+          "started_at": "2026-11-20T20:59:16.915019Z",
+          "throughput_attempted_shots_per_second": 30.158129450462745
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.08895389299999579,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "compile_seconds": 0.05043896300000483,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": null,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "optimized_t_gates": 342,
+          "parse_seconds": 0.002072596000004978,
+          "peak_active_width": 22,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 143119,
+            "incumbent_dense_work": 657649162.0,
+            "incumbent_peak": 22,
+            "result_dense_work": 207644538.0,
+            "result_peak": 22,
+            "swept_ops": 96962
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": null,
+          "version": "0.13.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-previous-8c-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-8c-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.003894309999992629,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 1024,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 8,
+        "threads_effective": 1,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 179,
+        "attempted_shots": 1024,
+        "discarded_shots": 845,
+        "duration_seconds": 0.010528567999983807,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 648,
+          "adapter_timing_totals": {},
+          "api_calls": 4,
+          "attempted_shots": 4096,
+          "discarded_shots": 3448,
+          "duration_seconds": 0.001308093000034205,
+          "logical_errors": 0,
+          "peak_rss_bytes": 57245696,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270822,
+          "sequence_index": 16,
+          "started_at": "2026-11-20T20:59:51.119635Z",
+          "throughput_attempted_shots_per_second": 3131275.83428158
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.14116242200000784,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.1027663680000046,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 1024,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "shared",
+          "shot_workers": 1,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "trajectory_sharing": true,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-8c-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-8c-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 1,
+          "attempted_shots": 8,
+          "discarded_shots": 7,
+          "duration_seconds": 0.0030963180000185275,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 189,
+        "attempted_shots": 1024,
+        "discarded_shots": 835,
+        "duration_seconds": 0.22060454700002197,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 157,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "discarded_shots": 867,
+          "duration_seconds": 0.004747812999994494,
+          "logical_errors": 0,
+          "peak_rss_bytes": 385818624,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 17,
+          "started_at": "2026-11-20T20:59:52.600192Z",
+          "throughput_attempted_shots_per_second": 215678.25017564665
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.15946854500001,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.46554930899998226,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.007906191999978773,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-8c-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-off-8c-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0002056599999775699,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 128,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "attempted_shots": 1024,
+        "duration_seconds": 0.013278225999982851,
+        "packed_output": {
+          "detectors": [
+            1024,
+            15
+          ],
+          "observables": [
+            1024,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "duration_seconds": 0.002827908000000434,
+          "packed_output": {
+            "detectors": [
+              1024,
+              15
+            ],
+            "observables": [
+              1024,
+              1
+            ]
+          },
+          "peak_rss_bytes": 59084800,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 18,
+          "started_at": "2026-11-20T20:59:53.085969Z",
+          "throughput_attempted_shots_per_second": 362105.1321329558
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.13998027099998467,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.10188499600002388,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": 128,
+          "intra_shot_workers": 1,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "reconstruction_selected": true,
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "packed",
+          "shot_workers": 8,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "trajectory_sharing": false,
+          "version": "0.14.0rc1"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "success",
+      "variant_id": "clifft-current-off-8c-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-off-8c-1024",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0033784990000071957,
+          "packed_output": {
+            "detectors": [
+              8,
+              15
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 240,
+        "shots_per_call": 1024,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "attempted_shots": 1024,
+        "duration_seconds": 0.22635019199998396,
+        "packed_output": {
+          "detectors": [
+            1024,
+            15
+          ],
+          "observables": [
+            1024,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 1024,
+          "duration_seconds": 0.015448071999998092,
+          "packed_output": {
+            "detectors": [
+              1024,
+              15
+            ],
+            "observables": [
+              1024,
+              1
+            ]
+          },
+          "peak_rss_bytes": 393584640,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 19,
+          "started_at": "2026-11-20T20:59:54.572583Z",
+          "throughput_attempted_shots_per_second": 66286.58903195988
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 1.1575226200000088,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "statevector-batch-shots",
+          "batch_size_applicable": true,
+          "compile_seconds": 0.46779944499999715,
+          "effective_batch_size": null,
+          "initial_seed": 20260818,
+          "installed_direct_url": {
+            "url": "https://github.com/QuEraComputing/tsim.git",
+            "vcs_info": {
+              "commit_id": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "requested_revision": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+          "jit_cache_policy": "upstream-numba-disk-cache; no-harness-cache-clearing",
+          "name": "tsim",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "parse_seconds": 0.007852041000006693,
+          "peak_active_width": 8,
+          "precision": "complex-fp64",
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "active_statevector",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "statevector_component_widths": [
+            8
+          ],
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "trajectory_sharing": true,
+          "version": "1.0.0"
+        }
+      },
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {
+          "equinox": "0.13.8",
+          "jax": "0.12.0.1",
+          "jaxlib": "0.12.0.1",
+          "llvmlite": "0.47.0",
+          "numba": "0.65.0",
+          "numpy": "2.4.4",
+          "stim": "1.16.0",
+          "zxparam": "0.1.0"
+        },
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "success",
+      "variant_id": "tsim-current-off-8c-1024",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v2",
+  "run": {
+    "classification": "smoke",
+    "finished_at": "2026-11-20T20:59:54.858818Z",
+    "id": "5a69cffa-9b8a-45b9-8466-836653c329a6",
+    "overrides": {},
+    "profile_id": "fold-d5-call-size-check",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-20T20:56:30.674693Z",
+    "workflow": {
+      "image_os": null,
+      "image_version": null,
+      "provider": null,
+      "ref": null,
+      "repository": null,
+      "run_attempt": null,
+      "run_id": null,
+      "runner_name": null,
+      "runner_os": null,
+      "sha": null,
+      "workflow": null
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "cloud": null,
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-2-20",
+    "kernel_version": "#19~24.04.1-Ubuntu SMP PREEMPT Thu Nov 12 17:17:32 UTC 2026",
+    "load_average_at_start": [
+      0.06689453125,
+      0.015625,
+      0.00439453125
+    ],
+    "logical_cpus": 16,
+    "machine": "x86_64",
+    "memory_bytes": 65971580928,
+    "os": "Linux",
+    "os_release": "7.0.0-1018-aws",
+    "physical_cores": 16,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "eee0ef9a6958c47cdc983659f71ed2b29e80e71b",
+      "dirty": false
+    }
+  }
+}

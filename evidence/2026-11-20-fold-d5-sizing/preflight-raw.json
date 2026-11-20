@@ -1,0 +1,3498 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-previous",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-current",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--tsim-current",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--xtim-current",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--xtim-current",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-previous-off",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous-off",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-off",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous-off",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-current-off",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current-off",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-off",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current-off",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--tsim-current-off",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current-off",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-off",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current-off",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d3-p1e-3--xtim-current-off",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current-off",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "fold-transversal-d5-p1e-3--xtim-current-off",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current-off",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-previous-8c",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-8c",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-current-8c",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-8c",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--tsim-current-8c",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-8c",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--xtim-current-8c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--xtim-current-8c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-previous-off-8c",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous-off-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {
+            "scheduler": {
+              "beam_width": 8,
+              "noise_transparent": true,
+              "search_budget": 16.0,
+              "sink_neutral_rotations": true
+            }
+          },
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-previous-off-8c",
+        "implementation_id": "clifft-0.13.0",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-previous-off-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--clifft-current-off-8c",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current-off-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--clifft-current-off-8c",
+        "implementation_id": "clifft-0.14.0rc1",
+        "shots_per_call": 262144,
+        "variant_id": "clifft-current-off-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--tsim-current-off-8c",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current-off-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--tsim-current-off-8c",
+        "implementation_id": "tsim-1.0.0",
+        "shots_per_call": 262144,
+        "variant_id": "tsim-current-off-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d3-p1e-3--xtim-current-off-8c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current-off-8c",
+        "workload_id": "fold-transversal-d3-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "fold-transversal-d5-p1e-3--xtim-current-off-8c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 262144,
+        "variant_id": "xtim-current-off-8c",
+        "workload_id": "fold-transversal-d5-p1e-3"
+      }
+    ],
+    "classification": "smoke",
+    "collection": {
+      "memory_limit_gib": 32,
+      "run_timeout_minutes": 420
+    },
+    "comparisons": [
+      {
+        "baseline_variant": "clifft-previous",
+        "candidate_variants": [
+          "clifft-current"
+        ],
+        "id": "current-vs-previous"
+      },
+      {
+        "baseline_variant": "clifft-current",
+        "candidate_variants": [
+          "tsim-current",
+          "xtim-current",
+          "symft-current",
+          "stim-current"
+        ],
+        "id": "peers-vs-current"
+      },
+      {
+        "baseline_variant": "clifft-current-off",
+        "candidate_variants": [
+          "tsim-current-off",
+          "xtim-current-off",
+          "symft-current-off",
+          "stim-current-off"
+        ],
+        "id": "peers-vs-current-off"
+      },
+      {
+        "baseline_variant": "clifft-previous-8c",
+        "candidate_variants": [
+          "clifft-current-8c"
+        ],
+        "id": "current-vs-previous-8c"
+      },
+      {
+        "baseline_variant": "clifft-current-8c",
+        "candidate_variants": [
+          "tsim-current-8c",
+          "xtim-current-8c",
+          "symft-current-8c",
+          "stim-current-8c"
+        ],
+        "id": "peers-vs-current-8c"
+      },
+      {
+        "baseline_variant": "clifft-current-off-8c",
+        "candidate_variants": [
+          "tsim-current-off-8c",
+          "xtim-current-off-8c",
+          "symft-current-off-8c",
+          "stim-current-off-8c"
+        ],
+        "id": "peers-vs-current-off-8c"
+      }
+    ],
+    "hardware_epoch": "aws-m7a-4xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 0.001,
+      "repetitions": 1,
+      "request_timeout_seconds": 1800,
+      "setup_timeout_seconds": 1800
+    },
+    "profile_id": "fold-preflight",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.4xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 34359738368
+    },
+    "seed": 20260819,
+    "suite_version": "0.3.0",
+    "title": "Clifft and peer CPU release matrix"
+  },
+  "cases": [
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-previous",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 7,
+          "attempted_shots": 8,
+          "discarded_shots": 1,
+          "duration_seconds": 5.2050999983066504e-05,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 196410,
+        "attempted_shots": 262144,
+        "discarded_shots": 65734,
+        "duration_seconds": 0.782193105999994,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 196864,
+          "adapter_timing_totals": {},
+          "api_calls": 1,
+          "attempted_shots": 262144,
+          "discarded_shots": 65280,
+          "duration_seconds": 0.7825054389999764,
+          "logical_errors": 0,
+          "peak_rss_bytes": 48336896,
+          "repetition": 0,
+          "seed_first": 20270819,
+          "seed_last": 20270819,
+          "sequence_index": 0,
+          "started_at": "2026-11-20T20:40:58.309697Z",
+          "throughput_attempted_shots_per_second": 335005.9781501505
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.04452582899997992,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "compile_seconds": 0.006755256000019472,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": null,
+          "name": "clifft",
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20,
+          "optimized_t_gates": 85,
+          "parse_seconds": 0.00044861300000320625,
+          "peak_active_width": 8,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 64517,
+            "incumbent_dense_work": 17698.0,
+            "incumbent_peak": 8,
+            "result_dense_work": 8360.0,
+            "result_peak": 8,
+            "swept_ops": 12606
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "success",
+      "variant_id": "clifft-previous",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "first_call_warmup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.08840754999999945,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_control": "native-auto",
+          "batch_enabled": null,
+          "compile_seconds": 0.05033618199999523,
+          "cpu_baseline": "x86-64-v2",
+          "effective_batch_size": null,
+          "name": "clifft",
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56,
+          "optimized_t_gates": 342,
+          "parse_seconds": 0.0020594400000106816,
+          "peak_active_width": 22,
+          "postselection_before_optimization": true,
+          "precision": "complex-fp64",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "symbolic-coordinate",
+          "scheduler_statistics": {
+            "applied": true,
+            "classification_probes": 143119,
+            "incumbent_dense_work": 657649162.0,
+            "incumbent_peak": 22,
+            "result_dense_work": 207644538.0,
+            "result_peak": 22,
+            "swept_ops": 96962
+          },
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "0.13.0"
+        }
+      },
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {
+          "numpy": "2.5.4"
+        },
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-current",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--tsim-current",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--xtim-current",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--xtim-current",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-previous-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {},
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {},
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-current-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--tsim-current-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--xtim-current-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--xtim-current-off",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current-off",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-previous-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {},
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {},
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-current-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--tsim-current-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--xtim-current-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--xtim-current-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-previous-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {},
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-previous-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {
+          "scheduler": {
+            "beam_width": 8,
+            "noise_transparent": true,
+            "search_budget": 16.0,
+            "sink_neutral_rotations": true
+          }
+        },
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "9b9091c8267321e2a2fd967f0674a65e4baf0e38",
+        "dependencies": {},
+        "display_version": "0.13.0",
+        "implementation_id": "clifft-0.13.0",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.13.0/bin/python",
+        "source_tag": "v0.13.0",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.13.0"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-previous-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--clifft-current-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--clifft-current-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "clifft",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "7381d33e0038ab969b54ff65f8131196178f48f6",
+        "dependencies": {},
+        "display_version": "0.14.0",
+        "implementation_id": "clifft-0.14.0rc1",
+        "name": "Clifft",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/clifft-0.14.0rc1/bin/python",
+        "source_tag": "v0.14.0rc1",
+        "source_url": "https://github.com/unitaryfoundation/clifft",
+        "version": "0.14.0rc1"
+      },
+      "status": "interrupted",
+      "variant_id": "clifft-current-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--tsim-current-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--tsim-current-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "tsim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "136bcc6bec7edba88bbb28152da05e33d17f77d0",
+        "dependencies": {},
+        "display_version": "1.0.0",
+        "implementation_id": "tsim-1.0.0",
+        "name": "Tsim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/tsim-1.0.0/bin/python",
+        "source_tag": "v1.0.0",
+        "source_url": "https://github.com/QuEraComputing/tsim",
+        "version": "1.0.0"
+      },
+      "status": "interrupted",
+      "variant_id": "tsim-current-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d3-p1e-3--xtim-current-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d3_p1e-3.stim",
+          "sha256": "1fdbf09ac0d2b7ef628088f4a37b5e0a8c55d37a70ba7c74fbfcc541de3ed00b"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 26,
+          "num_measurements": 27,
+          "num_observables": 1,
+          "num_qubits": 20
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d3-p1e-3",
+        "parameters": {
+          "distance": 3,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Unitary injection and two H_XY checks; no noisy pre-escape round or escape. Source projectors become measured raw-zero detectors; ideal logical T\u2020 and X readout expose the source logical error.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d3/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "fold-transversal-d5-p1e-3--xtim-current-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "143",
+        "phase": "setup",
+        "type": "SystemExit"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 0.001,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 1,
+        "request_timeout_seconds": 1800,
+        "shots_per_call": 262144,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {},
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-rc1/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "interrupted",
+      "variant_id": "xtim-current-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-rc1/workloads/circuits/fold_d5_p1e-3.stim",
+          "sha256": "889e66c00699c11019cca3dafe75704686246d75db624274a9659183b8fb41dc"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "tsim",
+          "xtim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 118,
+          "num_measurements": 123,
+          "num_observables": 1,
+          "num_qubits": 56
+        },
+        "family": "magic-state-cultivation",
+        "id": "fold-transversal-d5-p1e-3",
+        "parameters": {
+          "distance": 5,
+          "physical_error_rate": 0.001
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Generated by workloads/generate_fold_transversal.py. Explicit native-T reconstruction, not an author-supplied noisy T circuit: hook injection, growth rounds (2,0), native layers 3,3,7,7, no escape. Retains reported-bit noise dilation and ideal code projection; adds ideal logical T\u2020 and X readout.",
+          "source_commit": "332bc0481843ebc9718e152e92f5ee10f8f0b148",
+          "source_path": "data/alternatives/inputs/fold-d5/model.json",
+          "source_url": "https://github.com/kh428/exact_ler_for_msc"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v2",
+  "run": {
+    "classification": "smoke",
+    "finished_at": "2026-11-20T20:51:49.842880Z",
+    "id": "d9a29b59-d63f-4a5d-af82-06efb8067387",
+    "overrides": {
+      "min_sample_seconds": 0.001,
+      "repetitions": 1
+    },
+    "profile_id": "fold-preflight",
+    "schedule_policy": "serial-campaign-order",
+    "selection": "^fold-transversal-d[35]-",
+    "started_at": "2026-11-20T20:40:57.414999Z",
+    "workflow": {
+      "image_os": null,
+      "image_version": null,
+      "provider": null,
+      "ref": null,
+      "repository": null,
+      "run_attempt": null,
+      "run_id": null,
+      "runner_name": null,
+      "runner_os": null,
+      "sha": null,
+      "workflow": null
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "cloud": null,
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-2-20",
+    "kernel_version": "#19~24.04.1-Ubuntu SMP PREEMPT Thu Nov 12 17:17:32 UTC 2026",
+    "load_average_at_start": [
+      0.60205078125,
+      0.17041015625,
+      0.05908203125
+    ],
+    "logical_cpus": 16,
+    "machine": "x86_64",
+    "memory_bytes": 65971576832,
+    "os": "Linux",
+    "os_release": "7.0.0-1018-aws",
+    "physical_cores": 16,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "eee0ef9a6958c47cdc983659f71ed2b29e80e71b",
+      "dirty": false
+    }
+  }
+}
