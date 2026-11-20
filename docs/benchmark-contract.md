@@ -131,8 +131,7 @@ and the on endpoint's count reduction remain inside sampling timers. Correctness
 throughput. Deadlines apply to every phase; failures retain their phase and
 completed evidence without a throughput value.
 
-The worker keeps in-memory caches across calls. xtim's disk cache is disabled;
-Tsim's upstream Numba disk cache is retained. These are process-fresh measurements,
+The worker keeps in-memory caches across calls. Tsim retains its upstream Numba disk cache. These are process-fresh measurements,
 not guaranteed cold-disk builds or fully converged steady state.
 
 ## Resources and ordering
@@ -273,14 +272,19 @@ Compile xtim 4.1.2 with `compile_twirl_sampler(text, p_factor=1.0, selfcheck=0)`
 The sampler owns its in-memory plans and receives a fresh seed and the worker's
 thread budget per call. Its first full call reports the effective worker count.
 
-Validate the unchanged circuit with Stim's noiseless reference sample and
-raw record-to-detector/observable converter. For survivor counts, the selected
-detectors and counted observable must have deterministic zero raw reference.
-For packed sampling this condition applies to every returned column.
-Check the participating channels against xtim's public `record_report()`.
-Circuits outside Stim's instruction set are recorded as unsupported because
-xtim lacks a verified raw reference for them. This includes the non-Clifford
-cultivation and distillation inputs.
+For survivor counts, every selected detector and the counted observable must
+have deterministic zero raw parity in the noiseless circuit. Packed sampling
+requires this for every detector and observable. The adapter checks the
+participating channels against xtim's public `record_report()`.
+
+Stim-compatible inputs use Stim's noiseless reference sample and raw
+record-to-detector/observable converter. For MSC d3, MSC d5, and RM15, the
+workload semantics declare `raw_zero_reference` per endpoint, with Clifft as
+the independent sign check. CI samples raw parities from the noiseless circuit
+with postselection disabled. The declaration applies to the artifact SHA-256;
+a digest mismatch or loss of a declared reference fails the run. Extended
+circuits without a verified reference for the requested endpoint report
+`unsupported`.
 
 Counts use xtim's native Boolean selection mask. Validate attempts, passes,
 discards and early rejections and count the selected observable over survivors.

@@ -294,3 +294,18 @@ def test_run_cli_only_accepts_declared_unsupported_capabilities(
     assert main(["run", "--output-dir", str(tmp_path / "result")]) == exit_code
     if status == "unsupported" and exit_code:
         assert "Unexpected unsupported" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("sources,exit_code", [({}, 0), ({"on": "clifft"}, 1),
+                                              ({"off": "stim"}, 0)])
+def test_xtim_reference_loss_fails_declared_endpoint(monkeypatch, tmp_path, sources, exit_code):
+    from clifft_bench import cli
+
+    case = {"case_id": "xtim-on", "status": "unsupported",
+            "simulator": {"adapter": "xtim", "version": "4.1.2"},
+            "execution": {"postselect": "on", "threads": 1},
+            "workload": {"semantics": {"raw_zero_reference": sources} if sources else {}},
+            "error": {"phase": "setup", "type": "UnsupportedReferenceCircuit",
+                      "message": "raw reference parity unavailable"}}
+    monkeypatch.setattr(cli, "run_suite", lambda *args, **kwargs: {"cases": [case]})
+    assert main(["run", "--output-dir", str(tmp_path / "result")]) == exit_code

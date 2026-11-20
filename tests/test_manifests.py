@@ -214,6 +214,14 @@ def test_source_provenance_requires_an_immutable_identity(identity):
         validate_workloads(workloads)
 
 
+@pytest.mark.parametrize("sources", [{"off": "unknown"}, {"counts": "clifft"}, [], {}])
+def test_raw_reference_declaration_requires_known_endpoint_and_source(sources):
+    workloads = read_toml(ROOT / "workloads.toml")
+    workloads["workloads"][0]["semantics"]["raw_zero_reference"] = sources
+    with pytest.raises(ValueError, match="raw_zero_reference"):
+        validate_workloads(workloads)
+
+
 def test_incompatible_case_is_rejected_before_execution(tmp_path: Path) -> None:
     _, workloads, workloads_path, run = _suite_with_local_workloads(tmp_path)
     workloads["workloads"][0]["compatible_adapters"] = ["clifft"]

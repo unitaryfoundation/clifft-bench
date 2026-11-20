@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import time
 from pathlib import Path
 from typing import Any
@@ -24,9 +25,44 @@ def _compile(text: str) -> Any:
     return xtim.compile_twirl_sampler(text, p_factor=1.0, selfcheck=0)
 
 
+def _reference_metadata(data, workload, mode, mask, observable):
+    import numpy as np
+    import stim
+
+    source = workload["semantics"].get("raw_zero_reference", {}).get(mode)
+    if source and hashlib.sha256(data).hexdigest() != workload["artifact"]["sha256"]:
+        raise ValueError("xtim reference declaration does not match the circuit SHA-256")
+    try:
+        layout = stim.Circuit(data.decode())
+    except ValueError as error:
+        if source == "stim":
+            raise ValueError("Stim could not parse the declared reference circuit") from error
+        if source != "clifft":
+            raise UnsupportedReferenceCircuit(
+                "xtim raw reference parity is unavailable for this circuit: " + str(error)
+            ) from error
+        # xtim counts synthetic ancillas when it expands MPP. CI checks the input
+        # qubit count and raw parities with Clifft for these exact circuit bytes.
+        return {"num_qubits": workload["expected_metadata"]["num_qubits"]}
+
+    det_ref, obs_ref = layout.compile_m2d_converter(skip_reference_sample=True).convert(
+        measurements=layout.reference_sample()[None, :], separate_observables=True
+    )
+    selected_refs = det_ref[0, mask] if mask is not None else det_ref[0]
+    observed_refs = obs_ref[0, observable] if mask is not None else obs_ref[0]
+    if np.any(selected_refs) or np.any(observed_refs):
+        raise UnsupportedConfiguration("xtim requires zero raw reference parity")
+    return {
+        "num_qubits": layout.num_qubits,
+        "raw_reference_detector_ones": int(det_ref.sum()),
+        "raw_reference_observable_ones": int(obs_ref.sum()),
+    }
+
+
 class _PreparedXtim(PreparedAdapter):
     def __init__(self, sampler, chunk, observable, mask, threads, metadata):
         self._chunk = chunk
+        self._multiple_chunks = False
         self._detector_mask = mask
         self._threads = threads
         self._observable = observable
@@ -96,41 +132,26 @@ class XtimAdapter(Adapter):
     ) -> PreparedAdapter:
         threads = self.validate_execution(execution, workload)
         import numpy as np
-        import stim
         import xtim
 
         semantics = workload["semantics"]
         postselect = execution["postselect"] == "on"
         chunk = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
-        text = artifact_path.read_text()
+        data = artifact_path.read_bytes()
+        text = data.decode()
         circuit = xtim.Circuit(text)
         if circuit.num_expectations:
             raise ValueError("PAULI_EXPECTATION is outside the detector/observable contract")
-        # xtim returns reference-relative bits and does not expose a verified raw
-        # reference for its extended instruction set. Certify unchanged Stim inputs.
-        try:
-            layout = stim.Circuit(text)
-        except ValueError as error:
-            raise UnsupportedReferenceCircuit(
-                "xtim raw reference parity is unavailable for this circuit: " + str(error)
-            ) from error
         observable = int(semantics["observable_index"])
-        if not 0 <= observable < layout.num_observables:
+        if not 0 <= observable < circuit.num_observables:
             raise ValueError("observable index is outside the circuit")
         mask = None
         if postselect:
-            selected = detector_mask(semantics, layout.num_detectors)
-            mask = np.zeros(layout.num_detectors, dtype=bool)
+            selected = detector_mask(semantics, circuit.num_detectors)
+            mask = np.zeros(circuit.num_detectors, dtype=bool)
             if selected:
                 mask[:] = selected
-        reference = layout.reference_sample()
-        det_ref, obs_ref = layout.compile_m2d_converter(skip_reference_sample=True).convert(
-            measurements=reference[None, :], separate_observables=True
-        )
-        selected_refs = det_ref[0, mask] if postselect else det_ref[0]
-        observed_refs = obs_ref[0, observable] if postselect else obs_ref[0]
-        if np.any(selected_refs) or np.any(observed_refs):
-            raise UnsupportedConfiguration("xtim requires zero raw reference parity")
+        reference = _reference_metadata(data, workload, execution["postselect"], mask, observable)
 
         started = time.perf_counter()
         sampler = _compile(text)
@@ -159,16 +180,13 @@ class XtimAdapter(Adapter):
                                        else "bit-packed-detectors-and-observables"),
             "postselection_backend": "native-twirl-sampler" if postselect else None,
             "cache_policy": "worker-local; reused-after-first-call",
-            "disk_cache": False,
             "selfcheck": 0,
             "compile_seconds": compile_seconds,
-            "raw_reference_detector_ones": int(det_ref.sum()),
-            "raw_reference_observable_ones": int(obs_ref.sum()),
+            **reference,
             "native_num_qubits": circuit.num_qubits,
-            **{
-                key: getattr(layout, key)
-                for key in ("num_qubits", "num_measurements", "num_detectors", "num_observables")
-            },
+            "num_detectors": circuit.num_detectors,
+            "num_observables": circuit.num_observables,
+            "num_measurements": circuit.num_measurements,
         }
         return _PreparedXtim(
             sampler,

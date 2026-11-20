@@ -83,8 +83,9 @@ The fold-transversal d3/d5 inputs use Wan and Zapirain's
 of Sahay et al.'s protocol, under [Apache-2.0](circuits/LICENSE-exact-ler).
 The d3 model is a terminated core without the noisy pre-escape round; d5 is an
 explicit reconstruction, not an author-supplied noisy T circuit. Both retain
-noiseless terminal code projection and omit escape/decoding. Clifft and Tsim pass the native sampling checks. SymFT rejects the
-fold circuits at the first `CCZ` instruction. xtim parses the circuits, but
+noiseless terminal code projection and omit escape/decoding. Clifft and Tsim pass the
+native sampling checks. SymFT rejects the fold circuits at the first `CCZ`
+instruction. xtim parses the circuits, but
 lacks a verified raw reference for their non-Clifford gates in either mode.
 Release campaigns do not yet include these inputs.
 

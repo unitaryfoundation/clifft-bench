@@ -13,7 +13,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.selection import detector_mask, has_postselection
+from clifft_bench.selection import detector_mask, has_postselection, validate_reference_sources
 
 
 def repository_root() -> Path:
@@ -502,7 +502,8 @@ def validate_workloads(document: dict) -> None:
             _number(value, key, integer=True, inclusive=True)
         sem = w["semantics"]
         _fields(
-            sem, "observable_index postselect_all_detectors", "postselection_detector_indices"
+            sem, "observable_index postselect_all_detectors",
+            "postselection_detector_indices raw_zero_reference"
         )
         _number(sem["observable_index"], "observable_index", integer=True, inclusive=True)
         if type(sem["postselect_all_detectors"]) is not bool:
@@ -511,6 +512,7 @@ def validate_workloads(document: dict) -> None:
         _strings(modes, "postselect_modes")
         if set(modes) - {"on", "off"} or len(set(modes)) != len(modes):
             raise ValueError("postselect_modes must contain unique on/off values")
+        validate_reference_sources(sem, modes)
         if "on" in modes and not has_postselection(sem):
             raise ValueError("postselect=on requires a detector selection")
         _strings(w["compatible_adapters"], "compatible_adapters")

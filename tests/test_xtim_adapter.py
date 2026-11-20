@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -11,7 +12,8 @@ from clifft_bench.adapters import _shared
 from clifft_bench.adapters import xtim as adapter
 from clifft_bench.adapters.base import Counts, UnsupportedConfiguration
 from clifft_bench.adapters.clifft import ClifftAdapter
-from clifft_bench.config import load_suite
+from clifft_bench.config import load_suite, read_toml
+from clifft_bench.selection import detector_mask
 
 ROOT = Path(__file__).resolve().parents[1]
 EXECUTION = {"postselect": "on", "batch_size": 32, "options": {}}
@@ -268,15 +270,12 @@ def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed):
 
 
 @pytest.mark.parametrize("workload_id", [
-    "msc-d3-inject-cultivate-p1e-3", "msc-full-d5-cultivation-selected-p1e-3",
-    "msc-d5-inject-cultivate-p1e-3", "distillation-15to1-rm15-p1e-3",
+    "msc-full-d5-cultivation-selected-p1e-3",
     "fold-transversal-d3-p1e-3", "fold-transversal-d5-p1e-3",
     "cain-15to1-d5-p1e-3", "cain-15to1-d9-p1e-3",
 ])
 def test_extended_circuits_require_verified_raw_reference(workload_id):
     pytest.importorskip("xtim")
-    from clifft_bench.config import read_toml
-
     workload = next(w for w in read_toml(ROOT / "workloads.toml")["workloads"]
                     if w["id"] == workload_id)
     for mode in workload["postselect_modes"]:
@@ -287,8 +286,99 @@ def test_extended_circuits_require_verified_raw_reference(workload_id):
             )
 
 
-def test_release_native_postselection_matches_unmasked_stream():
-    workload_id = "surface-code-d7-r7-p1e-3"
+QUALIFIED_WORKLOADS = [
+    "msc-d3-inject-cultivate-p1e-3", "msc-d5-inject-cultivate-p1e-3",
+    "distillation-15to1-rm15-p1e-3", "surface-code-d7-r7-p1e-3",
+]
+DECLARED = [w for w in read_toml(ROOT / "workloads.toml")["workloads"]
+            if "raw_zero_reference" in w["semantics"]]
+
+
+@pytest.mark.parametrize("workload", DECLARED, ids=lambda w: w["id"])
+def test_declared_endpoint_has_deterministic_zero_raw_reference(workload):
+    xtim = pytest.importorskip("xtim")
+    clifft = pytest.importorskip("clifft")
+    np = pytest.importorskip("numpy")
+    artifact = (ROOT / workload["artifact"]["path"]).read_bytes()
+    assert hashlib.sha256(artifact).hexdigest() == workload["artifact"]["sha256"]
+    text = artifact.decode()
+    ideal = xtim.Circuit(text).without_noise().text
+    program = clifft.compile(ideal, postselection_mask=[], normalize_syndromes=False)
+    assert clifft.parse(text).num_qubits == workload["expected_metadata"]["num_qubits"]
+    raw = clifft.sample(program, 1024, seed=731, threads=1)
+    assert raw.detectors.shape == (1024, workload["expected_metadata"]["num_detectors"])
+    assert raw.observables.shape == (1024, workload["expected_metadata"]["num_observables"])
+    semantics = workload["semantics"]
+    for mode in semantics["raw_zero_reference"]:
+        # Preparing also checks xtim's determinism classification for these channels.
+        adapter.XtimAdapter().prepare(
+            artifact_path=ROOT / workload["artifact"]["path"], workload=workload,
+            execution={**EXECUTION, "postselect": mode, "batch_size": "auto"},
+        )
+        det, obs = raw.detectors, raw.observables
+        if mode == "on":
+            selected = detector_mask(semantics, det.shape[1])
+            det = det[:, np.flatnonzero(selected)]
+            obs = obs[:, semantics["observable_index"]]
+        assert not np.any(det)
+        assert not np.any(obs)
+
+
+def test_extended_reference_requires_matching_bytes_and_endpoint(tmp_path):
+    pytest.importorskip("xtim")
+    text = "T 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
+    path = tmp_path / "extended.stim"
+    path.write_text(text)
+    workload = {"artifact": {"sha256": hashlib.sha256(path.read_bytes()).hexdigest()},
+                "semantics": {**SEMANTICS, "raw_zero_reference": {"on": "clifft"}},
+                "expected_metadata": {"num_qubits": 1}}
+    def run(mode):
+        return adapter.XtimAdapter().prepare(
+            artifact_path=path, workload=workload,
+            execution={**EXECUTION, "postselect": mode, "batch_size": "auto"},
+        )
+    run("on")
+    with pytest.raises(adapter.UnsupportedReferenceCircuit):
+        run("off")
+    workload["semantics"]["raw_zero_reference"]["on"] = "stim"
+    with pytest.raises(ValueError, match="Stim could not parse"):
+        run("on")
+    path.write_text(text.replace("M 0", "M !0"))
+    with pytest.raises(ValueError, match="SHA-256"):
+        run("on")
+
+
+def test_surface_packed_distribution_and_thread_reproducibility():
+    pytest.importorskip("xtim")
+    np = pytest.importorskip("numpy")
+    stim = pytest.importorskip("stim")
+    workload = next(w for w in DECLARED if w["id"] == "surface-code-d7-r7-p1e-3")
+    path = ROOT / workload["artifact"]["path"]
+    circuit = stim.Circuit(path.read_text())
+    shots = 65536
+    def sample(threads):
+        p = adapter.XtimAdapter().prepare(
+            artifact_path=path, workload=workload,
+            execution={"threads": threads, "batch_size": "auto", "postselect": "off"},
+        )
+        return p.sample(shots, seed=101)
+    single, multi = sample(1), sample(8)
+    reference = circuit.compile_detector_sampler(seed=202).sample(
+        shots, separate_observables=True, bit_packed=True,
+    )
+    for one, eight, oracle, cols in zip(single, multi, reference,
+                                        (circuit.num_detectors, circuit.num_observables),
+                                        strict=True):
+        np.testing.assert_array_equal(one, eight)
+        rates = [np.unpackbits(x, axis=1, bitorder="little", count=cols).mean(axis=0)
+                 for x in (one, oracle)]
+        pooled = (rates[0] + rates[1]) / 2
+        tolerance = 6 * np.sqrt(2 * pooled * (1 - pooled) / shots) + 2 / shots
+        assert np.all(np.abs(rates[0] - rates[1]) <= tolerance)
+
+
+@pytest.mark.parametrize("workload_id", QUALIFIED_WORKLOADS)
+def test_release_native_postselection_matches_unmasked_stream(workload_id):
     pytest.importorskip("xtim")
     np = pytest.importorskip("numpy")
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
@@ -302,10 +392,12 @@ def test_release_native_postselection_matches_unmasked_stream():
     assert p.runtime_metadata["record_materialization"] == (
         "bit-packed-accepted-detectors-and-observables"
     )
-    assert p.runtime_metadata["raw_reference_detector_ones"] == 0
-    assert p.runtime_metadata["raw_reference_observable_ones"] == 0
     shots, seed = 2049, 103
-    dets, obs = adapter._compile(case.workload.artifact_path.read_text()).sample(shots, seed)
+    packed = adapter.XtimAdapter().prepare(
+        artifact_path=case.workload.artifact_path, workload=case.workload.definition,
+        execution={**EXECUTION, "postselect": "off", "batch_size": "auto"},
+    )
+    dets, obs = packed.sample(shots, seed)
     keep = ~np.any(dets, axis=1)
     observable = case.workload.definition["semantics"]["observable_index"]
     logical = (obs[:, observable // 8] >> (observable % 8)) & 1
@@ -315,8 +407,8 @@ def test_release_native_postselection_matches_unmasked_stream():
     )
 
 
-def test_release_workload_metadata_and_acceptance_agree_with_clifft():
-    workload_id = "surface-code-d7-r7-p1e-3"
+@pytest.mark.parametrize("workload_id", QUALIFIED_WORKLOADS)
+def test_release_workload_metadata_and_acceptance_agree_with_clifft(workload_id):
     pytest.importorskip("xtim")
     pytest.importorskip("clifft")
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
@@ -331,5 +423,6 @@ def test_release_workload_metadata_and_acceptance_agree_with_clifft():
         assert p.runtime_metadata[key] == value
     a = p.sample(20000, 103)
     b = ClifftAdapter().prepare(**args).sample(20000, 104)
-    assert abs(a.accepted_shots - b.accepted_shots) / 20000 < 0.025
-    assert abs(a.logical_errors - b.logical_errors) / 20000 < 0.025
+    for left, right in [(a.accepted_shots, b.accepted_shots), (a.logical_errors, b.logical_errors)]:
+        pooled = (left + right) / (2 * a.attempted_shots)
+        assert abs(left - right) <= 6 * math.sqrt(2 * a.attempted_shots * pooled * (1 - pooled)) + 2

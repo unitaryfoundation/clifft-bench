@@ -13,7 +13,7 @@ from typing import Any
 
 from clifft_bench.adapters import load_adapter
 from clifft_bench.adapters.base import UNSUPPORTED_ERROR_TYPES, Counts, validate_counts
-from clifft_bench.selection import detector_mask
+from clifft_bench.selection import detector_mask, validate_reference_sources
 from clifft_bench.system import thread_environment
 
 FORMAT = "clifft-bench/raw/v2"
@@ -214,6 +214,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         f"case {identifier}: invalid workload digest",
     )
     semantics = workload["semantics"]
+    validate_reference_sources(semantics, workload.get("postselect_modes", ["on", "off"]))
     expected_metadata = workload["expected_metadata"]
     for key in ("num_qubits", "num_measurements", "num_detectors", "num_observables"):
         _number(expected_metadata[key], key, integer=True)

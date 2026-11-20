@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import math
 import os
 from collections import Counter
@@ -32,8 +33,16 @@ def _prepare(adapter, tmp_path, text):
             .cases[0]
             .definition["execution"]["options"]["scheduler"]
         )
+    workload = case.workload.definition
+    if adapter == "xtim":
+        # These tests vary only stochastic faults. Check the ideal circuit before
+        # carrying its reference declaration onto the generated fixture bytes.
+        assert (module.Circuit(text).without_noise().text.split()
+                == module.Circuit(ARTIFACT.read_text()).without_noise().text.split())
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        workload = {**workload, "artifact": {"sha256": digest}}
     prepared = load_adapter(adapter).prepare(
-        artifact_path=path, workload=case.workload.definition, execution=execution,
+        artifact_path=path, workload=workload, execution=execution,
     )
     for key, expected in case.workload.definition["expected_metadata"].items():
         assert prepared.runtime_metadata[key] == expected
@@ -72,7 +81,7 @@ def test_circuit_checks_match_hamming_matrix_and_cubic_error_floor():
     assert counts[3] == 35
 
 
-@pytest.mark.parametrize("adapter", ["clifft", "symft", "tsim"])
+@pytest.mark.parametrize("adapter", ["clifft", "symft", "xtim", "tsim"])
 @pytest.mark.parametrize("faults,accepted,logical", [
     ([], True, 0), ([0], False, 0), ([0, 1], False, 0),
     ([0, 1, 2], True, 1), ([0, 1, 3, 6], True, 0),
@@ -89,7 +98,7 @@ def test_exact_fault_patterns_verify_postselection_and_logical_readout(
     assert result.logical_errors == logical * 32
 
 
-@pytest.mark.parametrize("adapter", ["clifft", "symft", "tsim"])
+@pytest.mark.parametrize("adapter", ["clifft", "symft", "xtim", "tsim"])
 def test_noisy_distribution_matches_exhaustive_phase_fault_enumeration(adapter, tmp_path):
     probability = 0.05  # Enough accepted logical faults for a useful statistical check.
     text = ARTIFACT.read_text().replace("Z_ERROR(0.001)", f"Z_ERROR({probability})")
