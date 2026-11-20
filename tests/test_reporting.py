@@ -393,7 +393,7 @@ def test_review_measurements_preserve_zero_missing_and_failed_values(raw_result,
     for line in summary.splitlines():
         if line.startswith("|"):
             cells = [cell.strip() for cell in line.strip("|").split("|")]
-            if len(cells) == 7:
+            if len(cells) == 9:
                 rows[cells[0]] = cells[1:]
     for case, expected in (
         (previous, ["0", "0.5", "0", "100"]),
@@ -401,7 +401,8 @@ def test_review_measurements_preserve_zero_missing_and_failed_values(raw_result,
         (peer, ["3.25", "4.5", "7", "—"]),
     ):
         assert rows[case["case_id"]] == [case["execution"]["postselect"],
-                                           str(case["execution"]["shots_per_call"]), *expected]
+                                           str(case["execution"]["shots_per_call"]), *expected,
+                                           str(case["execution"]["threads_requested"]), "—"]
 
 
 @pytest.mark.parametrize("section,key,value", [
@@ -742,3 +743,37 @@ def test_both_endpoints_render_separate_panels_from_one_canonical_workload(tmp_p
         assert len(modes) == 1
         assert f"Postselection {next(iter(modes))}" in panel["title"]
         assert all(v["outcome"] == "measured" for row in panel["rows"] for v in row["values"])
+
+
+@pytest.mark.parametrize("mismatch", [None, "shots_per_call", "batch_size", "status"])
+def test_scaling_requires_matched_successful_calls(raw_result, mismatch):
+    for case, contract in zip(list(raw_result["cases"]), list(raw_result["campaign"]["cases"]),
+                              strict=True):
+        multi, definition = copy.deepcopy(case), copy.deepcopy(contract)
+        variant = case["variant_id"] + "-8c"
+        multi.update(case_id=variant, variant_id=variant)
+        definition.update(id=variant, variant_id=variant)
+        multi["execution"].update(threads=8, threads_requested=8)
+        definition["execution"]["threads"] = 8
+        for sample in multi["samples"]:
+            sample["throughput_attempted_shots_per_second"] *= 3
+            sample["duration_seconds"] /= 3
+        if mismatch == "status":
+            multi.update(status="error", error={"phase": "sampling", "type": "Timeout",
+                                               "message": "timeout"})
+        elif mismatch:
+            multi["execution"][mismatch] = 1024
+        raw_result["cases"].append(multi)
+        raw_result["campaign"]["cases"].append(definition)
+    raw_result["campaign"]["comparisons"].append({
+        "id": "current-vs-previous-8c", "baseline_variant": "previous-8c",
+        "candidate_variants": ["current-8c"],
+    })
+    report = build_report(raw_result)
+    assert len(report["release"]) == 2
+    panels = throughput_data(report)["panels"]
+    assert len(panels) == 2
+    values = {v["threads_requested"]: v for panel in panels for row in panel["rows"]
+              for v in row["values"]}
+    assert values[1]["eight_core_speedup"] is None
+    assert values[8]["eight_core_speedup"] == (None if mismatch else 3)
