@@ -634,7 +634,7 @@ postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Fold-transversal d5 native-T reconstruction with ideal logical H_XY readout."
 compatible_adapters = ["clifft", "tsim", "xtim"]
-shots_per_call = 262144
+shots_per_call = 1024
 
 [workloads.artifact]
 path = "workloads/circuits/fold_d5_p1e-3.stim"
