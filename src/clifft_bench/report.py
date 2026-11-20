@@ -193,6 +193,14 @@ def _outcome(case: dict | None, other: dict | None, simulator: dict | None) -> s
     return "not measured"
 
 
+def _release_change_band(document: dict) -> float | None:
+    """Paired single-core release runs on the commissioned host epoch."""
+    if (document["run"]["classification"] == "official"
+            and document["campaign"].get("hardware_epoch") == "aws-m7a-xlarge-ubuntu2404-v1"):
+        return 1.1
+    return None
+
+
 def review_summary(report: dict) -> str:
     document = report["document"]
     run, runner = document["run"], document["runner"]
@@ -309,10 +317,12 @@ def review_summary(report: dict) -> str:
         "are recorded above. Each source cases.csv/raw.json retains call sizes and postselection.",
         "",
         "Release changes within ±50% use a linear percentage axis; larger changes use",
-        "a separate logarithmic ratio panel. The shaded ±1.1% band is the contract's",
-        "inconclusive region, not a confidence interval. Unpaired workloads have no ratio.",
-        "",
+        "a separate logarithmic ratio panel. Unpaired workloads have no ratio.",
     ]
+    band = _release_change_band(document)
+    if band is not None:
+        lines.append(f"The shaded ±{band}% band marks the inconclusive range for this host epoch.")
+    lines.append("")
     for kind, title in zip(FIGURES, ("CPU simulator throughput", "Clifft release changes")):
         lines += [
             f"### {title}", "", f"[Dark version]({kind}-dark.png)", "",
@@ -689,7 +699,9 @@ def _render_release(report, colors, foreground, grid):
     span = max([3, *(abs((ratio - 1) * 100) * 1.65 for ratio in small)])
     percent.set_xlim(-span, span)
     percent.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}%"))
-    percent.axvspan(-1.1, 1.1, color=grid, alpha=0.45, zorder=0)
+    band = _release_change_band(report["document"])
+    if band is not None:
+        percent.axvspan(-band, band, color=grid, alpha=0.45, zorder=0)
     percent.axvline(0, color=foreground, linestyle="--", linewidth=0.8)
     percent.set_title("Percentage change", fontsize=12, pad=13)
     percent.set_xlabel("0% = unchanged", labelpad=10, fontsize=11)
@@ -715,7 +727,7 @@ def _render_release(report, colors, foreground, grid):
         axis = percent if is_small else ratio_axis
         value, baseline = ((ratio - 1) * 100, 0) if is_small else (ratio, 1)
         color = colors[0] if ratio >= 1 else colors[-1]
-        if is_small and abs(value) <= 1.1:
+        if band is not None and is_small and abs(value) <= band:
             color = foreground
         axis.hlines(y, baseline, value, color=color, linewidth=2.7)
         axis.plot(value, y, "o", color=color, markersize=8)

@@ -18,7 +18,7 @@ repetitions = 3
 id = "coherent-surface-d5-r5-p1e-3-rz2e-2--clifft-current"
 variant_id = "clifft-current"
 workload_id = "coherent-surface-d5-r5-p1e-3-rz2e-2"
-implementation_id = "clifft-dev-f1bb0d88"
+implementation_id = "clifft-0.14.0rc1"
 shots_per_call = 256
 
 [cases.execution]
@@ -52,7 +52,7 @@ postselect = "on"
 id = "draper-adder-m16-basis-all-observables--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "draper-adder-m16-basis-all-observables"
-implementation_id = "clifft-dev-f1bb0d88"
+implementation_id = "clifft-0.14.0rc1"
 shots_per_call = 100000
 
 [cases.execution]

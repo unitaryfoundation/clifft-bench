@@ -49,7 +49,7 @@ For a new Clifft release:
 1. Add its identity and install environment to
    [`software.toml`](software.toml).
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
-   Update the previous-release and current-source installs in
+   Update the previous-release and candidate installs in
    [CI](.github/workflows/ci.yml) to exercise both maintained implementations.
    Remove superseded software entries and environments after updating consumers.
 3. Point the current Clifft variants and their smoke cases at the candidate.
@@ -57,8 +57,10 @@ For a new Clifft release:
    its scheduled compiler configuration. Use the current compiler defaults for
    the candidate. Both release profiles must resolve the same Clifft cases.
 4. Keep each workload's `shots_per_call` aligned across every variant and
-   release within each comparison. Update those workload-level values only when measurement evidence
-   requires it; internal capacity is chosen by each simulator.
+   release within each comparison. Record which sizes were measured directly and
+   which implement a shared bulk-call policy. For newly enlarged calls without
+   reference-host timings, check full-call completion and correctness at both
+   core budgets under the release memory limit before collecting the matrix.
 5. Validate locally, then follow the [EC2 collection procedure](#reference-host-collection).
 
 Choose and record the previous/current configurations for the new campaign.
@@ -71,7 +73,12 @@ For a release candidate, keep its exact prerelease value in `version` and its
 environment lock, record the immutable `source_tag` and commit, and set
 `display_version` to the intended final release label. Runtime checks and raw
 evidence retain the exact candidate identity; derived tables expose the display
-version for plots, summaries, and release docs.
+version for plots, summaries, and release docs. Collect the full peer matrix on
+RC1. If the measured simulator code, native build and build settings ship
+unchanged, publish the RC1 execution for the final release with its original
+identity. If they change, refresh Clifft. Repeat a small speedup or regression
+before citing it in release notes. Use the Clifft-only profile for that repeat
+and retain compatible peers as described under [release reporting](#release-reporting).
 
 One collection produces a raw result containing every selected variant, including
 structured case failures. Persisted-input validation checks coverage and measurement

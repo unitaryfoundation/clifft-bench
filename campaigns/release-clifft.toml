@@ -1,7 +1,7 @@
 suite_version = "0.3.0"
-profile_id = "release-clifft-preflight"
-title = "CPU release matrix preflight"
-classification = "smoke"
+profile_id = "release-clifft"
+title = "Clifft-only CPU release matrix"
+classification = "official"
 seed = 20260819
 hardware_epoch = "aws-m7a-4xlarge-ubuntu2404-v1"
 workloads_file = "../workloads.toml"
@@ -24,8 +24,8 @@ memory_limit_gib = 32
 setup_timeout_seconds = 1800
 request_timeout_seconds = 1800
 correctness_shots = 8
-min_sample_seconds = 30
-repetitions = 5
+min_sample_seconds = 15
+repetitions = 3
 
 [[comparisons]]
 id = "current-vs-previous"
@@ -50,7 +50,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current"
-implementation_id = "clifft-dev-f1bb0d88"
+implementation_id = "clifft-0.14.0rc1"
 workloads = "cpu-release"
 
 [variants.execution]
@@ -71,7 +71,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-off"
-implementation_id = "clifft-dev-f1bb0d88"
+implementation_id = "clifft-0.14.0rc1"
 workloads = "cpu-release"
 
 [variants.execution]
@@ -92,7 +92,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-8c"
-implementation_id = "clifft-dev-f1bb0d88"
+implementation_id = "clifft-0.14.0rc1"
 workloads = "cpu-release"
 
 [variants.execution]
@@ -113,7 +113,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-off-8c"
-implementation_id = "clifft-dev-f1bb0d88"
+implementation_id = "clifft-0.14.0rc1"
 workloads = "cpu-release"
 
 [variants.execution]

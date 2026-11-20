@@ -40,7 +40,10 @@ The report follows the resolved campaign's workload selections and comparison
 groups. Match circuit bytes, selection semantics, public call sizes, measurement
 settings, and resource limits within each comparison. A new workload without a
 supported previous-release baseline is current coverage, with no release ratio.
-The representative suite may change between campaigns.
+The representative suite may change between campaigns. The release profiles share
+one public call size per circuit across simulators, endpoints and core budgets.
+Fast circuits use a common 262,144-shot bulk call. Wide or expensive circuits use
+16,384 shots, with 32 shots for QV q20.
 
 The [corpus notes](../workloads/README.md) own circuit provenance and validation;
 [coverage notes](../workloads/coverage.md) describe repeated QV sampling,
@@ -67,9 +70,7 @@ Call sizes and postselection modes are in `cases.csv`; exact masks remain in `ra
 
 Release figures show changes within ±50% on a linear percentage axis and larger
 changes on an adjacent logarithmic ratio axis sharing the same rows. This display
-threshold keeps modest changes visible alongside large gains or losses; it is not
-a significance threshold. The percentage panel shades the ±1.1% inconclusive band
-defined below.
+threshold keeps modest changes visible alongside large gains or losses.
 Both figures use the same circuit selection and ordering; the release figure
 includes only measured pairs. New pairs automatically appear in their circuit's
 thematic position when the recorded campaign includes compatible measurements.
@@ -126,8 +127,11 @@ Each case uses one fresh worker and one measurement sampler:
    including lazy planning, JIT/cache loading, and sampling. No earlier sampling
    call uses the measurement sampler. Retain this result separately from throughput.
 3. Check correctness, then measure repeated calls using the same sampler.
-   Each repetition accumulates calls until its minimum sampling interval elapses;
-   the final call can overrun it. Retain individual samples and derive median/MAD.
+   Each release case uses three repetitions, each accumulating full calls for at
+   least 15 seconds. The last call can overrun the interval. Retain all three
+   rates and report their median and median absolute deviation (MAD). With three
+   samples, MAD is the smaller distance from the median to either extreme.
+   The raw samples show the full range.
 
 Compilation, first-call time, call size, and subsequent throughput are reported
 separately; do not extrapolate finite-shot turnaround. Native output allocation
@@ -145,9 +149,10 @@ The reference host is an On-Demand AWS `m7a.4xlarge` with shared tenancy,
 Ubuntu 24.04 on x86-64, and 16 physical cores. A single placement supplies all
 fresh release and peer measurements. The worker uses one or eight physical cores.
 The remaining cores provide headroom for collection and the operating system.
-The existing ±1.1% reporting band comes from the earlier
-[host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
-on the `m7a.xlarge`. The new placement has its own timing dispersion.
+The ±1.1% inconclusive band applies only to paired release measurements from the
+commissioned single-core `m7a.xlarge` epoch. Release figures on the
+`m7a.4xlarge` show measured changes without a calibrated band.
+[Host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
 
 Do not combine absolute rates from different hardware epochs without labeling
 the boundary or measuring a bridge. Shared CI hosts provide correctness and
@@ -388,8 +393,7 @@ OS/Python/thread settings, measurement protocol, seeds, and resource limits.
 Compared workloads must also pass the digest, selection, and call-size checks
 below. Incompatible or ambiguous sources are rejected. Reports identify the peer
 run, collection time, source revision, and exact software versions in the
-companion review. These cross-collection absolute rates are
-not a fresh paired comparison and do not acquire the paired 1.1% interpretation.
+companion review. These cross-collection absolute rates retain their original collection identity.
 
 Paired ratios use candidate median divided by baseline median. Pairing requires
 matching workload digest and selection semantics, call size, measurement settings,

@@ -41,7 +41,7 @@ postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Distance-5 injection and cultivation circuit with circuit-level Pauli noise."
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
-shots_per_call = 16384
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/msc_d5_inject_cultivate_p1e-3.stim"
@@ -112,7 +112,7 @@ postselect_modes = ["on", "off"]
 family = "magic-state-distillation"
 description = "85-qubit logical magic-state distillation circuit using five [17,1,5] color-code blocks."
 compatible_adapters = ["clifft", "symft", "tsim"]
-shots_per_call = 16384
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/distillation.stim"
@@ -180,7 +180,7 @@ postselect_modes = ["on", "off"]
 family = "coherent-noise-surface-code"
 description = "Distance-3 surface-code circuit with three rounds of coherent Z over-rotation noise."
 compatible_adapters = ["clifft", "symft", "tsim"]
-shots_per_call = 65536
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/coherent_d3_r3.stim"
@@ -354,7 +354,7 @@ postselect_modes = ["off"]
 family = "prepared-basis-arithmetic"
 description = "Fixed-input 16-bit Draper QFT adder on 32 qubits, without noise or postselection, with every terminal measurement declared as an observable."
 compatible_adapters = ["clifft", "tsim"]
-shots_per_call = 16384
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/draper_adder_16_basis.stim"
@@ -393,7 +393,7 @@ postselect_modes = ["on", "off"]
 family = "magic-state-distillation"
 description = "15-to-1 [[15,1,3]] Reed-Muller T-state distillation with T-gate Z noise and ideal output verification."
 compatible_adapters = ["clifft", "symft", "xtim", "tsim"]
-shots_per_call = 65536
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/distillation_15to1_rm15_p1e-3.stim"
@@ -495,7 +495,7 @@ postselect_modes = ["off"]
 family = "reed-muller"
 description = "Measured 15-qubit Reed-Muller preparation, feedback, transversal T, and logical-X readout."
 compatible_adapters = ["clifft", "symft", "tsim", "xtim"]
-shots_per_call = 65536
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/reed_muller_measured_sampling.stim"
@@ -601,7 +601,7 @@ postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Terminated fold-transversal d3 native-T core with ideal logical H_XY readout."
 compatible_adapters = ["clifft", "tsim", "xtim"]
-shots_per_call = 16384
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/fold_d3_p1e-3.stim"
@@ -634,7 +634,7 @@ postselect_modes = ["on", "off"]
 family = "magic-state-cultivation"
 description = "Fold-transversal d5 native-T reconstruction with ideal logical H_XY readout."
 compatible_adapters = ["clifft", "tsim", "xtim"]
-shots_per_call = 16384
+shots_per_call = 262144
 
 [workloads.artifact]
 path = "workloads/circuits/fold_d5_p1e-3.stim"

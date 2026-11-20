@@ -1,2 +1,0 @@
-clifft @ git+https://github.com/unitaryfoundation/clifft.git@f1bb0d883495b73ba3e834be6d61d9c440ddfef5
-numpy==2.5.4
