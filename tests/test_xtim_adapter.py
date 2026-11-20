@@ -39,15 +39,40 @@ def prepare(tmp_path, text, *, observable=0, chunk=32):
     return prepared
 
 
-@pytest.mark.parametrize("measurement", ["X 0\nM 0", "M !0"])
+@pytest.mark.parametrize("measurement", ["X 0\nM 0", "M !0", "MPP !Z0"])
 def test_nonzero_raw_reference_is_unsupported(tmp_path, measurement):
     with pytest.raises(UnsupportedConfiguration, match="zero raw reference"):
         prepare(tmp_path, measurement + "\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]\n")
 
 
-def test_pinned_xtim_packed_endpoint_is_unsupported():
-    with pytest.raises(UnsupportedConfiguration, match="postselect=off"):
-        adapter.XtimAdapter().validate_execution({**EXECUTION, "postselect": "off"}, {})
+@pytest.mark.parametrize("threads", [1, 8])
+def test_subset_counts_and_unselected_packed_reference(tmp_path, threads):
+    pytest.importorskip("xtim")
+    np = pytest.importorskip("numpy")
+    artifact = tmp_path / "subset.stim"
+    artifact.write_text("M !0\nX_ERROR(1) 1\nM 1\nDETECTOR rec[-1] rec[-1]\n"
+                        "DETECTOR rec[-2]\nOBSERVABLE_INCLUDE(9) rec[-1]\n")
+    workload = {"semantics": {"postselect_all_detectors": False,
+                              "postselection_detector_indices": [0], "observable_index": 9}}
+    options = {"threads": threads, "batch_size": "auto", "postselect": "on"}
+    def prepared():
+        return adapter.XtimAdapter().prepare(
+            artifact_path=artifact, workload=workload, execution=options,
+        )
+
+    p = prepared()
+    assert p.sample(257, 42) == Counts(257, 257, 0, 257)
+    assert 1 <= p.first_call_metadata()["threads"] <= threads
+    options["postselect"] = "off"
+    with pytest.raises(UnsupportedConfiguration, match="zero raw reference"):
+        prepared()
+    artifact.write_text(artifact.read_text().replace("M !0", "M 0"))
+    p = prepared()
+    dets, obs = p.sample(257, 42)
+    assert dets.shape == (257, 1) and dets.dtype == np.uint8 and not np.any(dets)
+    assert obs.shape == (257, 2) and obs.dtype == np.uint8
+    assert np.all(obs[:, 0] == 0) and np.all(obs[:, 1] == 2)
+    assert 1 <= p.first_call_metadata()["threads"] <= threads
 
 
 @pytest.mark.parametrize("probability", [0, 0.25, 1])
@@ -85,10 +110,10 @@ def test_native_postselection_counts_attempts_and_early_rejects(tmp_path):
     native_sample = p._sampler.sample
     calls = []
 
-    def sample(shots, seed, *, postselect):
+    def sample(shots, seed, *, postselect, threads):
         assert postselect.dtype == bool
         assert postselect.tolist() == [True]
-        result = native_sample(shots, seed=seed, postselect=postselect)
+        result = native_sample(shots, seed=seed, postselect=postselect, threads=threads)
         calls.append((shots, seed, result[2]))
         return result
 
@@ -143,7 +168,8 @@ def test_noise_counts_and_fresh_per_call_streams(tmp_path):
 def test_refuses_nondeterministic_channels(tmp_path, channel):
     with pytest.raises((ValueError, RuntimeError), match="deterministic|anti|refused"):
         prepare(
-            tmp_path, f"H 0\nM 0\n{channel}\nM 1\nOBSERVABLE_INCLUDE(1) rec[-1]\n", observable=1
+            tmp_path, f"H 0\nM 0\n{channel}\nM 1\nOBSERVABLE_INCLUDE(1) rec[-1]\n",
+            observable=1 if channel.startswith("DETECTOR") else 0
         )
 
 
@@ -207,12 +233,8 @@ def test_verifies_source_identity(monkeypatch, mismatch):
 
 @pytest.mark.parametrize("seed", [1, 42, 74])
 def test_continuation_keeps_independent_coins_across_chunks(tmp_path, seed):
-    # The certain q1 fault makes O a fair coin. Select an independent zero detector
-    # so all coins survive; replaying a per-shot counter would produce 0 or 4096 ones.
-    text = (
-        "H 0\nX_ERROR(1) 1\nT 0\nCX 1 0\nT_DAG 0\nCX 1 0\n"
-        "M 2\nDETECTOR rec[-1]\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
-    )
+    # The noisy observable is an independent fair coin, with a zero reference.
+    text = "X_ERROR(0.5) 0\nM 0 1\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-2]\n"
     results = []
     for chunk in [1, 32, 4096]:
         p = prepare(tmp_path, text, chunk=chunk)
@@ -226,18 +248,16 @@ def test_continuation_keeps_independent_coins_across_chunks(tmp_path, seed):
 
 @pytest.mark.parametrize("seed", [1, 42, 74])
 def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed):
-    text = (
-        "H 0\nDEPOLARIZE1(0.05) 0 1\nT 0\nCX 1 0\nT_DAG 0\nCX 1 0\n"
-        "M 1\nDETECTOR rec[-1]\nH 0\nM 0\nOBSERVABLE_INCLUDE(0) rec[-1]\n"
-    )
+    text = ("X_ERROR(0.1) 0\nCX 0 1\nX_ERROR(0.25) 1\nM 0 1\n"
+            "DETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-2]\n")
     shots = 131072
     results = []
     for chunk in [1, 32, 2048, shots]:
         p = prepare(tmp_path, text, chunk=chunk)
         counts = p.sample(shots, seed)
         for observed, probability in [
-            (counts.accepted_shots, 29 / 30),
-            (counts.logical_errors, 29 / 900),
+            (counts.accepted_shots, 0.9 * 0.75 + 0.1 * 0.25),
+            (counts.logical_errors, 0.1 * 0.25),
         ]:
             assert abs(observed - shots * probability) <= (
                 6 * math.sqrt(shots * probability * (1 - probability)) + 1
@@ -247,16 +267,28 @@ def test_noisy_joint_law_is_preserved_across_chunks(tmp_path, seed):
     assert all(counts == results[0] for counts in results)
 
 
-@pytest.mark.parametrize(
-    "workload_id",
-    [
-        "msc-d3-inject-cultivate-p1e-3",
-        "msc-d5-inject-cultivate-p1e-3",
-        "surface-code-d7-r7-p1e-3",
-        "distillation-15to1-rm15-p1e-3",
-    ],
-)
-def test_release_native_postselection_matches_unmasked_stream(workload_id):
+@pytest.mark.parametrize("workload_id", [
+    "msc-d3-inject-cultivate-p1e-3", "msc-full-d5-cultivation-selected-p1e-3",
+    "msc-d5-inject-cultivate-p1e-3", "distillation-15to1-rm15-p1e-3",
+    "fold-transversal-d3-p1e-3", "fold-transversal-d5-p1e-3",
+    "cain-15to1-d5-p1e-3", "cain-15to1-d9-p1e-3",
+])
+def test_extended_circuits_require_verified_raw_reference(workload_id):
+    pytest.importorskip("xtim")
+    from clifft_bench.config import read_toml
+
+    workload = next(w for w in read_toml(ROOT / "workloads.toml")["workloads"]
+                    if w["id"] == workload_id)
+    for mode in workload["postselect_modes"]:
+        with pytest.raises(adapter.UnsupportedReferenceCircuit, match="raw reference parity"):
+            adapter.XtimAdapter().prepare(
+                artifact_path=ROOT / workload["artifact"]["path"], workload=workload,
+                execution={"postselect": mode, "batch_size": "auto"},
+            )
+
+
+def test_release_native_postselection_matches_unmasked_stream():
+    workload_id = "surface-code-d7-r7-p1e-3"
     pytest.importorskip("xtim")
     np = pytest.importorskip("numpy")
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
@@ -283,15 +315,8 @@ def test_release_native_postselection_matches_unmasked_stream(workload_id):
     )
 
 
-@pytest.mark.parametrize(
-    "workload_id",
-    [
-        "msc-d3-inject-cultivate-p1e-3",
-        "msc-d5-inject-cultivate-p1e-3",
-        "surface-code-d7-r7-p1e-3",
-    ],
-)
-def test_release_workload_metadata_and_acceptance_agree_with_clifft(workload_id):
+def test_release_workload_metadata_and_acceptance_agree_with_clifft():
+    workload_id = "surface-code-d7-r7-p1e-3"
     pytest.importorskip("xtim")
     pytest.importorskip("clifft")
     suite = load_suite(ROOT / "campaigns/release-v1.toml")

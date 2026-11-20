@@ -2,76 +2,54 @@
 
 from __future__ import annotations
 
-import re
 import time
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Any
 
 from clifft_bench.adapters._shared import verify_source_installation
-from clifft_bench.adapters.base import Adapter, Counts, PreparedAdapter, UnsupportedConfiguration
-from clifft_bench.selection import require_all_or_none
-
-
-def _record_layout(text: str) -> Any:
-    """Stim supplies only record indexing, never the non-Clifford physics."""
-    import stim
-
-    layout = re.sub(
-        r"(?im)^([ \t]*)(?:T_DAG|T|CS_DAG|CS|CCZ_DAG|CCZ|CH)([ \t]+)",
-        r"\1I\2",
-        text,
-    )
-    return stim.Circuit(layout)
+from clifft_bench.adapters.base import (
+    Adapter,
+    Counts,
+    PreparedAdapter,
+    Sample,
+    UnsupportedConfiguration,
+    UnsupportedReferenceCircuit,
+)
+from clifft_bench.selection import detector_mask
 
 
 def _compile(text: str) -> Any:
     import xtim
 
-    sampler = xtim.compile_twirl_sampler(text, selfcheck=0, disk_cache=False)
-    return sampler
-
-
-def _validate_report(sampler, text):
-    report = sampler.record_report()
-    declared_observables = {
-        int(index) for index in re.findall(r"OBSERVABLE_INCLUDE\s*\(\s*(\d+)\s*\)", text, re.I)
-    }
-    if (
-        report["nondeterministic_detectors"]
-        or report["nondeterministic_observables"]
-        or {
-            int(index)
-            for index, kind in report["classes"]["detectors"].items()
-            if kind == "deterministic"
-        }
-        != set(range(sampler.num_detectors))
-        or {
-            int(index)
-            for index, kind in report["classes"]["observables"].items()
-            if kind == "deterministic"
-        }
-        != declared_observables
-    ):
-        raise ValueError(
-            f"xtim requires deterministic noiseless detectors and observables: {report}"
-        )
-    return report
+    return xtim.compile_twirl_sampler(text, p_factor=1.0, selfcheck=0)
 
 
 class _PreparedXtim(PreparedAdapter):
-    def __init__(self, sampler, chunk, observable, detector_mask, metadata):
+    def __init__(self, sampler, chunk, observable, mask, threads, metadata):
         self._chunk = chunk
-        self._detector_mask = detector_mask
+        self._detector_mask = mask
+        self._threads = threads
         self._observable = observable
         self.runtime_metadata = metadata
         self._sampler = sampler
 
-    def sample(self, shots: int, seed: int) -> Counts:
+    def first_call_metadata(self) -> dict:
+        # Explicit multi-chunk counts calls can use several worker widths.
+        if self._multiple_chunks:
+            return {"threads": None}
+        plan = self._sampler.record_report()["threads"]
+        if plan["requested"] != self._threads or not 1 <= plan["effective"] <= self._threads:
+            raise ValueError(f"xtim returned an invalid thread plan: {plan}")
+        return {"threads": plan["effective"]}
+
+    def sample(self, shots: int, seed: int) -> Sample:
         import numpy as np
 
         if shots < 1:
             raise ValueError("xtim shots per call must be positive")
+        self._multiple_chunks = self._chunk is not None and shots > self._chunk
+        if self._detector_mask is None:
+            return self._sampler.sample(shots, seed=seed, threads=self._threads)
         attempted = accepted = discarded = errors = 0
         chunk = self._chunk or shots
         for offset in range(0, shots, chunk):
@@ -79,7 +57,7 @@ class _PreparedXtim(PreparedAdapter):
             # Reseed once per harness call, then continue the stream for chunks.
             chunk_seed = seed if offset == 0 else None
             dets, obs, native = self._sampler.sample(
-                n, seed=chunk_seed, postselect=self._detector_mask
+                n, seed=chunk_seed, postselect=self._detector_mask, threads=self._threads
             )
             attempts = int(native["attempts"])
             kept = int(native["passed"])
@@ -99,6 +77,14 @@ class _PreparedXtim(PreparedAdapter):
 
 class XtimAdapter(Adapter):
     name = "xtim"
+    supported_postselect = ("on", "off")
+    supported_threads = (1, 8)
+
+    def validate_execution(self, execution, workload):
+        threads = super().validate_execution(execution, workload)
+        if execution["postselect"] == "off" and execution["batch_size"] != "auto":
+            raise ValueError('packed xtim sampling requires batch_size="auto"')
+        return threads
 
     def verify_installation(self, *, expected_commit: str, source_url: str) -> dict[str, Any]:
         return verify_source_installation(
@@ -108,49 +94,60 @@ class XtimAdapter(Adapter):
     def prepare(
         self, *, artifact_path: Path, workload: dict, execution: dict, seed: int = 0
     ) -> PreparedAdapter:
-        self.validate_execution(execution, workload)
+        threads = self.validate_execution(execution, workload)
         import numpy as np
+        import stim
         import xtim
 
         semantics = workload["semantics"]
-        require_all_or_none(semantics, self.name)
+        postselect = execution["postselect"] == "on"
         chunk = None if execution["batch_size"] == "auto" else int(execution["batch_size"])
         text = artifact_path.read_text()
-        started = time.perf_counter()
         circuit = xtim.Circuit(text)
-        parse_seconds = time.perf_counter() - started
         if circuit.num_expectations:
-            raise ValueError("PAULI_EXPECTATION is outside the aggregate-count contract")
-        layout = _record_layout(text)
+            raise ValueError("PAULI_EXPECTATION is outside the detector/observable contract")
+        # xtim returns reference-relative bits and does not expose a verified raw
+        # reference for its extended instruction set. Certify unchanged Stim inputs.
+        try:
+            layout = stim.Circuit(text)
+        except ValueError as error:
+            raise UnsupportedReferenceCircuit(
+                "xtim raw reference parity is unavailable for this circuit: " + str(error)
+            ) from error
         observable = int(semantics["observable_index"])
         if not 0 <= observable < layout.num_observables:
             raise ValueError("observable index is outside the circuit")
+        mask = None
+        if postselect:
+            selected = detector_mask(semantics, layout.num_detectors)
+            mask = np.zeros(layout.num_detectors, dtype=bool)
+            if selected:
+                mask[:] = selected
+        reference = layout.reference_sample()
+        det_ref, obs_ref = layout.compile_m2d_converter(skip_reference_sample=True).convert(
+            measurements=reference[None, :], separate_observables=True
+        )
+        selected_refs = det_ref[0, mask] if postselect else det_ref[0]
+        observed_refs = obs_ref[0, observable] if postselect else obs_ref[0]
+        if np.any(selected_refs) or np.any(observed_refs):
+            raise UnsupportedConfiguration("xtim requires zero raw reference parity")
+
         started = time.perf_counter()
         sampler = _compile(text)
         compile_seconds = time.perf_counter() - started
-        report = _validate_report(sampler, text)
-
-        # Certified deterministic channels have a unique noiseless raw parity.
-        # Recover it from an exact raw trajectory, then use Stim ONLY to XOR the
-        # declared record indices. A private cache prevents cross-case disk reuse.
-        started = time.perf_counter()
-        previous_cache = xtim.cache_dir
-        try:
-            with TemporaryDirectory(prefix="clifft-bench-xtim-reference-") as cache:
-                xtim.cache_dir = cache
-                records = circuit.without_noise().compile_sampler(seed=0).sample(1)
-        finally:
-            xtim.cache_dir = previous_cache
-        det_ref, obs_ref = layout.compile_m2d_converter(skip_reference_sample=True).convert(
-            measurements=records, separate_observables=True
+        report = sampler.record_report()
+        random_dets = report["nondeterministic_detectors"]
+        random_obs = report["nondeterministic_observables"]
+        random_required_detectors = (
+            any(mask[i] for i in random_dets) if postselect else bool(random_dets)
         )
-        if np.any(det_ref) or obs_ref[0, observable]:
-            raise UnsupportedConfiguration("xtim requires zero raw reference parity")
-        detector_mask = np.ones(layout.num_detectors, dtype=bool)
+        random_required_observables = observable in random_obs if postselect else bool(random_obs)
+        if random_required_detectors or random_required_observables:
+            raise UnsupportedConfiguration("xtim requires deterministic reference channels")
         metadata = {
             "name": "xtim",
             "version": xtim.__version__,
-            "threads": 1,
+            "threads": None,
             "precision": "complex-fp64",
             "reference_convention": "raw-record-parity",
             "batch_enabled": None if chunk is None else chunk > 1,
@@ -158,15 +155,13 @@ class XtimAdapter(Adapter):
             "batch_parameter": "public-twirl-sampler-chunk-shots",
             "seed_policy": "per-call-seed-with-continuous-chunks",
             "sampling_backend": "compile_twirl_sampler",
-            "record_materialization": "bit-packed-accepted-detectors-and-observables",
-            "postselection_backend": "native-twirl-sampler",
+            "record_materialization": ("bit-packed-accepted-detectors-and-observables" if postselect
+                                       else "bit-packed-detectors-and-observables"),
+            "postselection_backend": "native-twirl-sampler" if postselect else None,
             "cache_policy": "worker-local; reused-after-first-call",
             "disk_cache": False,
             "selfcheck": 0,
-            "record_report": report,
-            "parse_seconds": parse_seconds,
             "compile_seconds": compile_seconds,
-            "reference_setup_seconds": time.perf_counter() - started,
             "raw_reference_detector_ones": int(det_ref.sum()),
             "raw_reference_observable_ones": int(obs_ref.sum()),
             "native_num_qubits": circuit.num_qubits,
@@ -179,6 +174,7 @@ class XtimAdapter(Adapter):
             sampler,
             chunk,
             observable,
-            detector_mask,
+            mask,
+            threads,
             metadata,
         )

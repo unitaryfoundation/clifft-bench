@@ -17,6 +17,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
+from clifft_bench.adapters.base import UNSUPPORTED_ERROR_TYPES
 from clifft_bench.config import Case, Suite, repository_root
 from clifft_bench.results import FORMAT, export_csv, write_json
 from clifft_bench.system import (
@@ -415,7 +416,7 @@ def run_suite(
                 except Exception as error:  # noqa: BLE001
                     result["error"] = _error_record(error, "setup")
                     result["status"] = (
-                        "unsupported" if result["error"]["type"] == "UnsupportedConfiguration"
+                        "unsupported" if result["error"]["type"] in UNSUPPORTED_ERROR_TYPES
                         else "error"
                     )
 

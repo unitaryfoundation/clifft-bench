@@ -149,7 +149,8 @@ def _run(args: argparse.Namespace) -> int:
             adapter = load_adapter(case["simulator"]["adapter"], case["simulator"]["version"])
             execution = case["execution"]
             expected = (execution["postselect"] not in adapter.supported_postselect
-                        or execution["threads"] not in adapter.supported_threads)
+                        or execution["threads"] not in adapter.supported_threads
+                        or error["type"] == "UnsupportedReferenceCircuit")
             expected_unsupported += expected
             outcome = "Unsupported" if expected else "Unexpected unsupported"
         print(

@@ -557,7 +557,7 @@ id = "msc-full-d5-cultivation-selected-p1e-3"
 postselect_modes = ["on", "off"]
 family = "magic-state-cultivation-full"
 description = "Full d5 T-state cultivation through d15 escape, selecting only the 107 cultivation-stage detectors."
-compatible_adapters = ["clifft", "tsim"]
+compatible_adapters = ["clifft", "tsim", "xtim"]
 shots_per_call = 20000
 
 [workloads.artifact]

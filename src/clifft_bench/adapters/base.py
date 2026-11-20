@@ -19,6 +19,13 @@ class UnsupportedConfiguration(ValueError):
     """The adapter has no native implementation of the requested execution."""
 
 
+class UnsupportedReferenceCircuit(UnsupportedConfiguration):
+    """The pinned simulator cannot certify the native reference for this circuit."""
+
+
+UNSUPPORTED_ERROR_TYPES = {UnsupportedConfiguration.__name__, UnsupportedReferenceCircuit.__name__}
+
+
 @dataclass(frozen=True)
 class Counts:
     attempted_shots: int
