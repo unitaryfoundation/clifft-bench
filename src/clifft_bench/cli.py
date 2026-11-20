@@ -149,17 +149,16 @@ def _run(args: argparse.Namespace) -> int:
         if case["status"] == "unsupported":
             adapter = load_adapter(case["simulator"]["adapter"], case["simulator"]["version"])
             execution = case["execution"]
-            try:
-                adapter.validate_execution(execution, case["workload"])
-            except UnsupportedConfiguration:
-                expected = True
+            if error["type"] == UnsupportedReferenceCircuit.__name__:
+                sources = case["workload"]["semantics"].get("raw_zero_reference", {})
+                expected = adapter.name == "xtim" and execution["postselect"] not in sources
             else:
-                expected = (
-                    adapter.name == "xtim"
-                    and error["type"] == UnsupportedReferenceCircuit.__name__
-                    and execution["postselect"] not in
-                    case["workload"]["semantics"].get("raw_zero_reference", {})
-                )
+                try:
+                    adapter.validate_execution(execution, case["workload"])
+                except UnsupportedConfiguration:
+                    expected = True
+                else:
+                    expected = False
             expected_unsupported += expected
             outcome = "Unsupported" if expected else "Unexpected unsupported"
         print(

@@ -160,7 +160,8 @@ def test_repeated_qv10_matches_independent_statevector(adapter, batch, observabl
     sampler = load_adapter(adapter, module.version() if adapter == "clifft" else None)
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases
-                if c.workload.id == "quantum-volume-q10-seed42-all-observables")
+                if c.workload.id == "quantum-volume-q10-seed42-all-observables"
+                and c.definition["variant_id"] == f"{adapter}-current-off")
     probability = qv_observable_probability(case.workload.artifact_path, 10, observable)
     execution = copy.deepcopy(case.definition["execution"])
     execution["batch_size"] = batch
@@ -187,7 +188,8 @@ def test_adder_readout_matches_basis_sum(adapter, batch, observable):
     sampler = load_adapter(adapter, module.version() if adapter == "clifft" else None)
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     case = next(c for c in suite.cases
-                if c.workload.id == "draper-adder-m16-basis-all-observables")
+                if c.workload.id == "draper-adder-m16-basis-all-observables"
+                and c.definition["variant_id"] == f"{adapter}-current-off")
     workload = copy.deepcopy(case.workload.definition)
     workload["semantics"]["observable_index"] = observable
     params = workload["parameters"]
