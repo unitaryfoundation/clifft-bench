@@ -1,0 +1,2184 @@
+{
+  "campaign": {
+    "cases": [
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "surface-code-d7-r7-p1e-3--symft-on-1c",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 65536,
+        "variant_id": "symft-on-1c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "surface-code-d7-r7-p1e-3--symft-on-8c",
+        "implementation_id": "symft-2026.10.8",
+        "shots_per_call": 65536,
+        "variant_id": "symft-on-8c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 1
+        },
+        "id": "surface-code-d7-r7-p1e-3--xtim-on-1c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 65536,
+        "variant_id": "xtim-on-1c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "on",
+          "threads": 8
+        },
+        "id": "surface-code-d7-r7-p1e-3--xtim-on-8c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 65536,
+        "variant_id": "xtim-on-8c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "surface-code-d7-r7-p1e-3--xtim-off-1c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 65536,
+        "variant_id": "xtim-off-1c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "surface-code-d7-r7-p1e-3--xtim-off-8c",
+        "implementation_id": "xtim-4.1.2",
+        "shots_per_call": 65536,
+        "variant_id": "xtim-off-8c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 1
+        },
+        "id": "surface-code-d7-r7-p1e-3--stim-off-1c",
+        "implementation_id": "stim-1.16.0",
+        "shots_per_call": 65536,
+        "variant_id": "stim-off-1c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      },
+      {
+        "execution": {
+          "batch_size": "auto",
+          "options": {},
+          "postselect": "off",
+          "threads": 8
+        },
+        "id": "surface-code-d7-r7-p1e-3--stim-off-8c",
+        "implementation_id": "stim-1.16.0",
+        "shots_per_call": 65536,
+        "variant_id": "stim-off-8c",
+        "workload_id": "surface-code-d7-r7-p1e-3"
+      }
+    ],
+    "classification": "smoke",
+    "collection": {
+      "memory_limit_gib": 32,
+      "run_timeout_minutes": 30
+    },
+    "hardware_epoch": "aws-m7a-4xlarge-ubuntu2404-v1",
+    "measurement": {
+      "correctness_shots": 8,
+      "min_sample_seconds": 1,
+      "repetitions": 2,
+      "request_timeout_seconds": 120,
+      "setup_timeout_seconds": 600
+    },
+    "profile_id": "physical-core-pilot",
+    "reference_host": {
+      "architecture": "x86_64",
+      "instance_type": "m7a.4xlarge",
+      "os_id": "ubuntu",
+      "os_version": "24.04",
+      "provider": "aws"
+    },
+    "resources": {
+      "logical_cpu": 0,
+      "memory_limit_bytes": 34359738368
+    },
+    "seed": 20261120,
+    "suite_version": "0.3.0",
+    "title": "Physical-core and memory verification for CPU peers"
+  },
+  "cases": [
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--symft-on-1c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 2,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 4.936e-05,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 2.614e-05,
+            "sample_s": 7.567e-05
+          },
+          "attempted_shots": 8,
+          "discarded_shots": 6,
+          "duration_seconds": 8.970999988378026e-05,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 2048,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 5774,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 0.0040753199999999995,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 0.01479292,
+          "sample_s": 0.01887137
+        },
+        "attempted_shots": 65536,
+        "discarded_shots": 59762,
+        "duration_seconds": 0.01890449000075023,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 322340,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.22826676600000004,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.7812453350000002,
+            "sample_s": 1.0096578910000003
+          },
+          "api_calls": 56,
+          "attempted_shots": 3670016,
+          "discarded_shots": 3347676,
+          "duration_seconds": 1.0108114610029588,
+          "logical_errors": 0,
+          "peak_rss_bytes": 54099968,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20271175,
+          "sequence_index": 0,
+          "started_at": "2026-11-20T15:38:56.000257Z",
+          "throughput_attempted_shots_per_second": 3630762.156533618
+        },
+        {
+          "accepted_shots": 322128,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.22833350299999997,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.7815988780000003,
+            "sample_s": 1.010077081
+          },
+          "api_calls": 56,
+          "attempted_shots": 3670016,
+          "discarded_shots": 3347888,
+          "duration_seconds": 1.0110664909989282,
+          "logical_errors": 0,
+          "peak_rss_bytes": 54099968,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120271175,
+          "sequence_index": 1,
+          "started_at": "2026-11-20T15:38:57.012722Z",
+          "throughput_attempted_shots_per_second": 3629846.3381711366
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.05552268300016294,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.022033320999071293,
+          "effective_batch_size": 2048,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "peak_active_width": 0,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "2026.10.8"
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-on-1c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--symft-on-8c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 2,
+          "adapter_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 5.294e-05,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 3.156e-05,
+            "sample_s": 8.476e-05
+          },
+          "attempted_shots": 8,
+          "discarded_shots": 6,
+          "duration_seconds": 0.0001001800001176889,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": true,
+        "batch_size": "auto",
+        "batch_size_effective": 2048,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 5774,
+        "adapter_timing": {
+          "accumulate_s": 0.0,
+          "execute_s": 0.00493665,
+          "parse_s": 0.0,
+          "plan_s": 0.0,
+          "presample_s": 0.023271770000000004,
+          "sample_s": 0.00420479
+        },
+        "attempted_shots": 65536,
+        "discarded_shots": 59762,
+        "duration_seconds": 0.0042462999999770545,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 2253864,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 1.6491433609999981,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 5.609493854000002,
+            "sample_s": 0.9924291809999998
+          },
+          "api_calls": 391,
+          "attempted_shots": 25624576,
+          "discarded_shots": 23370712,
+          "duration_seconds": 1.0003818319955826,
+          "logical_errors": 0,
+          "peak_rss_bytes": 84246528,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20271510,
+          "sequence_index": 2,
+          "started_at": "2026-11-20T15:38:58.182716Z",
+          "throughput_attempted_shots_per_second": 25614795.451536298
+        },
+        {
+          "accepted_shots": 2269834,
+          "adapter_timing_totals": {
+            "accumulate_s": 0.0,
+            "execute_s": 1.6613944539999996,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 5.6485893239999925,
+            "sample_s": 0.9921782989999995
+          },
+          "api_calls": 394,
+          "attempted_shots": 25821184,
+          "discarded_shots": 23551350,
+          "duration_seconds": 1.0001831099925766,
+          "logical_errors": 0,
+          "peak_rss_bytes": 84295680,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120271513,
+          "sequence_index": 3,
+          "started_at": "2026-11-20T15:38:59.186610Z",
+          "throughput_attempted_shots_per_second": 25816456.748796374
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.06336409300001833,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": true,
+          "compile_seconds": 0.030090692000158015,
+          "effective_batch_size": 2048,
+          "installed_direct_url": {
+            "subdirectory": "python",
+            "url": "https://github.com/haoliri0/SOFT.git",
+            "vcs_info": {
+              "commit_id": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "requested_revision": "81d28499b6da8c0b84b7567482c4692f509bd416",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "81d28499b6da8c0b84b7567482c4692f509bd416",
+          "name": "symft",
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "peak_active_width": 0,
+          "precision": "complex-fp64",
+          "preprocessing_timing": {
+            "accumulate_s": 0.0,
+            "execute_s": 0.0,
+            "parse_s": 0.0,
+            "plan_s": 0.0,
+            "presample_s": 0.0,
+            "sample_s": 0.0
+          },
+          "record_materialization": "native-aggregate-counts",
+          "reference_convention": "raw-record-parity",
+          "sample_chunk_shots": 2048,
+          "sampling_backend": "compile_counts_sampler",
+          "seed_policy": "per-call-counts-stream-id",
+          "simd_backend": "avx512",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "version": "2026.10.8"
+        }
+      },
+      "simulator": {
+        "adapter": "symft",
+        "build": {
+          "compiler_flags": [
+            "SYMFT_PY_NATIVE=1"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "81d28499b6da8c0b84b7567482c4692f509bd416",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "2026.10.8",
+        "implementation_id": "symft-2026.10.8",
+        "name": "SymFT",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/symft-2026.10.8/bin/python",
+        "source_tag": "v0.1.0",
+        "source_url": "https://github.com/haoliri0/SOFT",
+        "version": "2026.10.8"
+      },
+      "status": "success",
+      "variant_id": "symft-on-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--xtim-on-1c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 0,
+          "attempted_shots": 8,
+          "discarded_shots": 8,
+          "duration_seconds": 0.00016080000023066532,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "accepted_shots": 5670,
+        "attempted_shots": 65536,
+        "discarded_shots": 59866,
+        "duration_seconds": 0.005170160000488977,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 1176604,
+          "adapter_timing_totals": {},
+          "api_calls": 204,
+          "attempted_shots": 13369344,
+          "discarded_shots": 12192740,
+          "duration_seconds": 1.00228517099913,
+          "logical_errors": 0,
+          "peak_rss_bytes": 86646784,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20271323,
+          "sequence_index": 4,
+          "started_at": "2026-11-20T15:39:00.382871Z",
+          "throughput_attempted_shots_per_second": 13338862.418439995
+        },
+        {
+          "accepted_shots": 1174693,
+          "adapter_timing_totals": {},
+          "api_calls": 204,
+          "attempted_shots": 13369344,
+          "discarded_shots": 12194651,
+          "duration_seconds": 1.0021384310002759,
+          "logical_errors": 0,
+          "peak_rss_bytes": 86646784,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120271323,
+          "sequence_index": 5,
+          "started_at": "2026-11-20T15:39:01.387508Z",
+          "throughput_attempted_shots_per_second": 13340815.586381119
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.09757382400039205,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "public-twirl-sampler-chunk-shots",
+          "cache_policy": "worker-local; reused-after-first-call",
+          "compile_seconds": 0.04813347200069984,
+          "disk_cache": false,
+          "effective_batch_size": null,
+          "installed_direct_url": {
+            "url": "https://github.com/ikim-quantum/xtim.git",
+            "vcs_info": {
+              "commit_id": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "requested_revision": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+          "name": "xtim",
+          "native_num_qubits": 118,
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "postselection_backend": "native-twirl-sampler",
+          "precision": "complex-fp64",
+          "raw_reference_detector_ones": 0,
+          "raw_reference_observable_ones": 0,
+          "record_materialization": "bit-packed-accepted-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "compile_twirl_sampler",
+          "seed_policy": "per-call-seed-with-continuous-chunks",
+          "selfcheck": 0,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "4.1.2"
+        }
+      },
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {
+          "numpy": "2.5.2",
+          "stim": "1.16.0"
+        },
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "success",
+      "variant_id": "xtim-on-1c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--xtim-on-8c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "accepted_shots": 0,
+          "attempted_shots": 8,
+          "discarded_shots": 8,
+          "duration_seconds": 0.00031622000005882,
+          "logical_errors": 0
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "on",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "accepted_shots": 5670,
+        "attempted_shots": 65536,
+        "discarded_shots": 59866,
+        "duration_seconds": 0.0029093299999658484,
+        "logical_errors": 0
+      },
+      "samples": [
+        {
+          "accepted_shots": 3713483,
+          "adapter_timing_totals": {},
+          "api_calls": 645,
+          "attempted_shots": 42270720,
+          "discarded_shots": 38557237,
+          "duration_seconds": 1.00109335099296,
+          "logical_errors": 0,
+          "peak_rss_bytes": 86835200,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20271764,
+          "sequence_index": 6,
+          "started_at": "2026-11-20T15:39:02.579949Z",
+          "throughput_attempted_shots_per_second": 42224553.742238626
+        },
+        {
+          "accepted_shots": 3716464,
+          "adapter_timing_totals": {},
+          "api_calls": 645,
+          "attempted_shots": 42270720,
+          "discarded_shots": 38554256,
+          "duration_seconds": 1.0003626800125858,
+          "logical_errors": 0,
+          "peak_rss_bytes": 86835200,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120271764,
+          "sequence_index": 7,
+          "started_at": "2026-11-20T15:39:03.585198Z",
+          "throughput_attempted_shots_per_second": 42255394.81287745
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.09544818399990618,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "public-twirl-sampler-chunk-shots",
+          "cache_policy": "worker-local; reused-after-first-call",
+          "compile_seconds": 0.04671586199947342,
+          "disk_cache": false,
+          "effective_batch_size": null,
+          "installed_direct_url": {
+            "url": "https://github.com/ikim-quantum/xtim.git",
+            "vcs_info": {
+              "commit_id": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "requested_revision": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+          "name": "xtim",
+          "native_num_qubits": 118,
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "postselection_backend": "native-twirl-sampler",
+          "precision": "complex-fp64",
+          "raw_reference_detector_ones": 0,
+          "raw_reference_observable_ones": 0,
+          "record_materialization": "bit-packed-accepted-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "compile_twirl_sampler",
+          "seed_policy": "per-call-seed-with-continuous-chunks",
+          "selfcheck": 0,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "version": "4.1.2"
+        }
+      },
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {
+          "numpy": "2.5.2",
+          "stim": "1.16.0"
+        },
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "success",
+      "variant_id": "xtim-on-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--xtim-off-1c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0001378699998895172,
+          "packed_output": {
+            "detectors": [
+              8,
+              42
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "attempted_shots": 65536,
+        "duration_seconds": 0.0062644010004078154,
+        "packed_output": {
+          "detectors": [
+            65536,
+            42
+          ],
+          "observables": [
+            65536,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 200,
+          "attempted_shots": 13107200,
+          "duration_seconds": 1.0022183310029504,
+          "packed_output": {
+            "detectors": [
+              65536,
+              42
+            ],
+            "observables": [
+              65536,
+              1
+            ]
+          },
+          "peak_rss_bytes": 86704128,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20271319,
+          "sequence_index": 8,
+          "started_at": "2026-11-20T15:39:04.781892Z",
+          "throughput_attempted_shots_per_second": 13078188.249543615
+        },
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 200,
+          "attempted_shots": 13107200,
+          "duration_seconds": 1.0011995299964838,
+          "packed_output": {
+            "detectors": [
+              65536,
+              42
+            ],
+            "observables": [
+              65536,
+              1
+            ]
+          },
+          "peak_rss_bytes": 86704128,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120271319,
+          "sequence_index": 9,
+          "started_at": "2026-11-20T15:39:05.787158Z",
+          "throughput_attempted_shots_per_second": 13091496.357420417
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.09578222300024208,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "public-twirl-sampler-chunk-shots",
+          "cache_policy": "worker-local; reused-after-first-call",
+          "compile_seconds": 0.046576656000070216,
+          "disk_cache": false,
+          "effective_batch_size": null,
+          "installed_direct_url": {
+            "url": "https://github.com/ikim-quantum/xtim.git",
+            "vcs_info": {
+              "commit_id": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "requested_revision": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+          "name": "xtim",
+          "native_num_qubits": 118,
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "postselection_backend": null,
+          "precision": "complex-fp64",
+          "raw_reference_detector_ones": 0,
+          "raw_reference_observable_ones": 0,
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "compile_twirl_sampler",
+          "seed_policy": "per-call-seed-with-continuous-chunks",
+          "selfcheck": 0,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "4.1.2"
+        }
+      },
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {
+          "numpy": "2.5.2",
+          "stim": "1.16.0"
+        },
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "success",
+      "variant_id": "xtim-off-1c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--xtim-off-8c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0002658299999893643,
+          "packed_output": {
+            "detectors": [
+              8,
+              42
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 8,
+        "threads_effective": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": {
+        "attempted_shots": 65536,
+        "duration_seconds": 0.002849170000445156,
+        "packed_output": {
+          "detectors": [
+            65536,
+            42
+          ],
+          "observables": [
+            65536,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 951,
+          "attempted_shots": 62324736,
+          "duration_seconds": 1.0004476410076677,
+          "packed_output": {
+            "detectors": [
+              65536,
+              42
+            ],
+            "observables": [
+              65536,
+              1
+            ]
+          },
+          "peak_rss_bytes": 91136000,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20272070,
+          "sequence_index": 10,
+          "started_at": "2026-11-20T15:39:06.979645Z",
+          "throughput_attempted_shots_per_second": 62296849.375571
+        },
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 950,
+          "attempted_shots": 62259200,
+          "duration_seconds": 1.0001483210053266,
+          "packed_output": {
+            "detectors": [
+              65536,
+              42
+            ],
+            "observables": [
+              65536,
+              1
+            ]
+          },
+          "peak_rss_bytes": 91136000,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120272069,
+          "sequence_index": 11,
+          "started_at": "2026-11-20T15:39:07.986446Z",
+          "throughput_attempted_shots_per_second": 62249967.022309706
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            },
+            {
+              "core": 1,
+              "logical_cpu": 1,
+              "socket": 0
+            },
+            {
+              "core": 2,
+              "logical_cpu": 2,
+              "socket": 0
+            },
+            {
+              "core": 3,
+              "logical_cpu": 3,
+              "socket": 0
+            },
+            {
+              "core": 4,
+              "logical_cpu": 4,
+              "socket": 0
+            },
+            {
+              "core": 5,
+              "logical_cpu": 5,
+              "socket": 0
+            },
+            {
+              "core": 6,
+              "logical_cpu": 6,
+              "socket": 0
+            },
+            {
+              "core": 7,
+              "logical_cpu": 7,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.09586543299974437,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "public-twirl-sampler-chunk-shots",
+          "cache_policy": "worker-local; reused-after-first-call",
+          "compile_seconds": 0.04725428599977022,
+          "disk_cache": false,
+          "effective_batch_size": null,
+          "installed_direct_url": {
+            "url": "https://github.com/ikim-quantum/xtim.git",
+            "vcs_info": {
+              "commit_id": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "requested_revision": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+              "vcs": "git"
+            }
+          },
+          "installed_source_commit": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+          "name": "xtim",
+          "native_num_qubits": 118,
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "postselection_backend": null,
+          "precision": "complex-fp64",
+          "raw_reference_detector_ones": 0,
+          "raw_reference_observable_ones": 0,
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "compile_twirl_sampler",
+          "seed_policy": "per-call-seed-with-continuous-chunks",
+          "selfcheck": 0,
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "8",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "8",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 8,
+          "version": "4.1.2"
+        }
+      },
+      "simulator": {
+        "adapter": "xtim",
+        "build": {
+          "compiler_flags": [
+            "-O3",
+            "-funroll-loops",
+            "QECCORE_PORTABLE=1",
+            "CXXFLAGS=-include cstdint"
+          ],
+          "precision": "complex-fp64"
+        },
+        "commit_sha": "b6dc0302604c4faf59a7b753004fddb42cb8d615",
+        "dependencies": {
+          "numpy": "2.5.2",
+          "stim": "1.16.0"
+        },
+        "display_version": "4.1.2",
+        "implementation_id": "xtim-4.1.2",
+        "name": "xtim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/xtim-4.1.2/bin/python",
+        "source_tag": "v4.1.2",
+        "source_url": "https://github.com/ikim-quantum/xtim",
+        "version": "4.1.2"
+      },
+      "status": "success",
+      "variant_id": "xtim-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--stim-off-1c",
+      "correctness": {
+        "check_id": "endpoint-and-circuit-metadata-v1",
+        "details": {
+          "attempted_shots": 8,
+          "duration_seconds": 0.0010973509997711517,
+          "packed_output": {
+            "detectors": [
+              8,
+              42
+            ],
+            "observables": [
+              8,
+              1
+            ]
+          }
+        },
+        "errors": [],
+        "status": "passed",
+        "timed_region": false
+      },
+      "error": null,
+      "execution": {
+        "batch_enabled": null,
+        "batch_size": "auto",
+        "batch_size_effective": null,
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 1,
+        "threads_effective": 1,
+        "threads_requested": 1
+      },
+      "first_call_warmup": {
+        "attempted_shots": 65536,
+        "duration_seconds": 0.06809783800053992,
+        "packed_output": {
+          "detectors": [
+            65536,
+            42
+          ],
+          "observables": [
+            65536,
+            1
+          ]
+        }
+      },
+      "samples": [
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 18,
+          "attempted_shots": 1179648,
+          "duration_seconds": 1.0466706750012236,
+          "packed_output": {
+            "detectors": [
+              65536,
+              42
+            ],
+            "observables": [
+              65536,
+              1
+            ]
+          },
+          "peak_rss_bytes": 70049792,
+          "repetition": 0,
+          "seed_first": 20271120,
+          "seed_last": 20271137,
+          "sequence_index": 12,
+          "started_at": "2026-11-20T15:39:09.190200Z",
+          "throughput_attempted_shots_per_second": 1127047.913135257
+        },
+        {
+          "adapter_timing_totals": {},
+          "api_calls": 18,
+          "attempted_shots": 1179648,
+          "duration_seconds": 1.039005305997307,
+          "packed_output": {
+            "detectors": [
+              65536,
+              42
+            ],
+            "observables": [
+              65536,
+              1
+            ]
+          },
+          "peak_rss_bytes": 70049792,
+          "repetition": 1,
+          "seed_first": 120271120,
+          "seed_last": 120271137,
+          "sequence_index": 13,
+          "started_at": "2026-11-20T15:39:10.239315Z",
+          "throughput_attempted_shots_per_second": 1135362.8255706497
+        }
+      ],
+      "setup": {
+        "adapter_version": "2",
+        "affinity": {
+          "applied": true,
+          "available_after": [
+            0
+          ],
+          "available_before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "logical_cpus": [
+            0
+          ],
+          "physical_cores": [
+            {
+              "core": 0,
+              "logical_cpu": 0,
+              "socket": 0
+            }
+          ],
+          "reason": null,
+          "requested": true
+        },
+        "duration_seconds": 0.03816959499999939,
+        "runtime_metadata": {
+          "address_space_limit_bytes": 34359738368,
+          "batch_enabled": null,
+          "batch_parameter": "native-detector-sampler",
+          "compile_seconds": 0.00011196000104973791,
+          "effective_batch_size": null,
+          "initial_seed": 20261119,
+          "name": "stim",
+          "native_extensions": [
+            "stim._stim_sse2"
+          ],
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118,
+          "precision": "binary-stabilizer",
+          "raw_reference_detector_ones": 0,
+          "raw_reference_observable_ones": 0,
+          "record_materialization": "bit-packed-detectors-and-observables",
+          "reference_convention": "raw-record-parity",
+          "sampling_backend": "compiled-circuit-detector-sampler",
+          "seed_policy": "continuous-stream-seeded-at-prepare",
+          "thread_environment": {
+            "BLIS_NUM_THREADS": "1",
+            "JAX_DEFAULT_MATMUL_PRECISION": "highest",
+            "JAX_ENABLE_X64": "true",
+            "JAX_PLATFORMS": "cpu",
+            "MKL_NUM_THREADS": "1",
+            "NUMBA_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1",
+            "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+          },
+          "threads": 1,
+          "version": "1.16.0"
+        }
+      },
+      "simulator": {
+        "adapter": "stim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "binary-stabilizer"
+        },
+        "commit_sha": "e2fc1eca7fd21684d433aa5f10f4504ea4860d07",
+        "dependencies": {
+          "numpy": "2.5.2"
+        },
+        "display_version": "1.16.0",
+        "implementation_id": "stim-1.16.0",
+        "name": "Stim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/stim-1.16.0/bin/python",
+        "source_tag": "v1.16.0",
+        "source_url": "https://github.com/quantumlib/Stim",
+        "version": "1.16.0"
+      },
+      "status": "success",
+      "variant_id": "stim-off-1c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    },
+    {
+      "case_id": "surface-code-d7-r7-p1e-3--stim-off-8c",
+      "correctness": null,
+      "error": {
+        "message": "stim does not support threads=8",
+        "phase": "setup",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/ubuntu/clifft-bench-014-peer-check/src/clifft_bench/worker.py\", line 151, in main\n    adapter.validate_execution(execution, workload)\n  File \"/home/ubuntu/clifft-bench-014-peer-check/src/clifft_bench/adapters/stim.py\", line 63, in validate_execution\n    threads = super().validate_execution(execution, workload)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/clifft-bench-014-peer-check/src/clifft_bench/adapters/base.py\", line 81, in validate_execution\n    raise UnsupportedConfiguration(f\"{self.name} does not support threads={threads}\")\nclifft_bench.adapters.base.UnsupportedConfiguration: stim does not support threads=8\n",
+        "type": "UnsupportedConfiguration"
+      },
+      "execution": {
+        "batch_size": "auto",
+        "memory_limit_bytes": 34359738368,
+        "min_sample_seconds": 1,
+        "options": {},
+        "postselect": "off",
+        "repetitions": 2,
+        "request_timeout_seconds": 120,
+        "shots_per_call": 65536,
+        "threads": 8,
+        "threads_requested": 8
+      },
+      "first_call_warmup": null,
+      "samples": [],
+      "setup": null,
+      "simulator": {
+        "adapter": "stim",
+        "build": {
+          "compiler_flags": [],
+          "precision": "binary-stabilizer"
+        },
+        "commit_sha": "e2fc1eca7fd21684d433aa5f10f4504ea4860d07",
+        "dependencies": {},
+        "display_version": "1.16.0",
+        "implementation_id": "stim-1.16.0",
+        "name": "Stim",
+        "python_executable": "/home/ubuntu/clifft-bench-014-peer-check/.campaign-envs/stim-1.16.0/bin/python",
+        "source_tag": "v1.16.0",
+        "source_url": "https://github.com/quantumlib/Stim",
+        "version": "1.16.0"
+      },
+      "status": "unsupported",
+      "variant_id": "stim-off-8c",
+      "workload": {
+        "artifact": {
+          "path": "/home/ubuntu/clifft-bench-014-peer-check/workloads/circuits/pure_surface_d7_r7_p1e-3.stim",
+          "sha256": "30d1940101d70e05a63f0d2f877756ffaeaba7e8e17e94cd2ea40fce04b99583"
+        },
+        "compatible_adapters": [
+          "clifft",
+          "symft",
+          "stim",
+          "xtim",
+          "tsim"
+        ],
+        "expected_metadata": {
+          "num_detectors": 336,
+          "num_measurements": 385,
+          "num_observables": 1,
+          "num_qubits": 118
+        },
+        "family": "surface-code-memory",
+        "id": "surface-code-d7-r7-p1e-3",
+        "parameters": {
+          "basis": "Z",
+          "distance": 7,
+          "physical_error_rate": 0.001,
+          "rounds": 7
+        },
+        "postselect_modes": [
+          "on",
+          "off"
+        ],
+        "provenance": {
+          "license": "Apache-2.0",
+          "notes": "Byte-for-byte copy of the paper workload.",
+          "source_commit": "db7dc9f13a2c2854690e92390c779048a1ac1400",
+          "source_path": "qec_bench/circuits/surface_d7_r7.stim",
+          "source_url": "https://github.com/unitaryfoundation/clifft-paper"
+        },
+        "semantics": {
+          "observable_index": 0,
+          "postselect_all_detectors": true
+        }
+      }
+    }
+  ],
+  "format": "clifft-bench/raw/v2",
+  "run": {
+    "classification": "smoke",
+    "finished_at": "2026-11-20T15:39:11.374452Z",
+    "id": "ec6d2e3f-0dd1-44bd-8290-9087c5012cff",
+    "overrides": {},
+    "profile_id": "physical-core-pilot",
+    "schedule_policy": "serial-campaign-order",
+    "selection": null,
+    "started_at": "2026-11-20T15:38:55.851890Z",
+    "workflow": {
+      "image_os": "ubuntu-24.04",
+      "image_version": "ami-0a951420c495183dc",
+      "provider": "aws-ec2-manual",
+      "ref": "data/014-physical-core-pilot",
+      "repository": "https://github.com/unitaryfoundation/clifft-bench.git",
+      "run_id": "ec6d2e3f-0dd1-44bd-8290-9087c5012cff",
+      "runner_name": "i-026f1b94ca0273f67",
+      "runner_os": "Linux",
+      "sha": "93a0e1997e2ca491d95435b0228d97b071ba9f66",
+      "workflow": "scripts/ec2-run.sh"
+    }
+  },
+  "runner": {
+    "accelerator": null,
+    "allowed_logical_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "cloud": {
+      "availability_zone": "us-east-1c",
+      "boot_id": "687a39d5-357b-4d84-83f7-14dd77b28914",
+      "image_id": "ami-0a951420c495183dc",
+      "instance_id": "i-026f1b94ca0273f67",
+      "instance_type": "m7a.4xlarge",
+      "lifecycle": "on-demand",
+      "provider": "aws",
+      "region": "us-east-1"
+    },
+    "cpu_model": "AMD EPYC 9R14",
+    "hostname": "ip-172-31-2-20",
+    "kernel_version": "#19~24.04.1-Ubuntu SMP PREEMPT Thu Nov 12 17:17:32 UTC 2026",
+    "load_average_at_start": [
+      1.05419921875,
+      2.7958984375,
+      3.4296875
+    ],
+    "logical_cpus": 16,
+    "machine": "x86_64",
+    "memory_bytes": 65971580928,
+    "os": "Linux",
+    "os_release": "7.0.0-1018-aws",
+    "physical_cores": 16,
+    "python": "3.12.3",
+    "python_compiler": "GCC 13.3.0",
+    "suite_source": {
+      "commit": "93a0e1997e2ca491d95435b0228d97b071ba9f66",
+      "dirty": false
+    }
+  }
+}
