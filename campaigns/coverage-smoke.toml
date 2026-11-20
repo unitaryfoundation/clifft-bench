@@ -221,3 +221,25 @@ batch_size = "auto"
 postselect = "off"
 threads = 1
 options = {  }
+
+[[cases]]
+id = "msc-full-d5-cultivation-selected-p1e-3--xtim-coverage"
+variant_id = "xtim-coverage"
+workload_id = "msc-full-d5-cultivation-selected-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+postselect = "on"
+
+[[cases]]
+id = "msc-full-d5-cultivation-selected-p1e-3--xtim-coverage-off"
+variant_id = "xtim-coverage-off"
+workload_id = "msc-full-d5-cultivation-selected-p1e-3"
+implementation_id = "xtim-4.1.2"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+postselect = "off"

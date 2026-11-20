@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from clifft_bench.adapters import load_adapter
-from clifft_bench.adapters.base import Counts, validate_counts
+from clifft_bench.adapters.base import UNSUPPORTED_ERROR_TYPES, Counts, validate_counts
 from clifft_bench.selection import detector_mask
 from clifft_bench.system import thread_environment
 
@@ -251,7 +251,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     if case["status"] == "unsupported":
         _require(case["setup"] is None and not case["samples"]
                  and case["error"]["phase"] == "setup"
-                 and case["error"]["type"] == "UnsupportedConfiguration",
+                 and case["error"]["type"] in UNSUPPORTED_ERROR_TYPES,
                  "unsupported case must retain its setup rejection")
     if case["status"] == "success":
         _require(case["error"] is None, "successful case has an error")

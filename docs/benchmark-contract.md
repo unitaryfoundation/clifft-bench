@@ -26,13 +26,13 @@ attempted shots as the numerator. Each canonical workload declares
 
 Both endpoints use raw measurement-record parity, without reference correction.
 They compare complete available workflows; their difference does not isolate
-postselection cost. Counts on supports Clifft, SymFT, Tsim, and pinned xtim;
-only Clifft and Tsim support detector subsets. Packed off supports Clifft 0.14, Tsim and
-Stim. The 0.13 baseline, SymFT, and the pinned xtim release report `unsupported`. Stim also
-rejects nonzero raw references because its native output is reference-relative.
-Only unsupported modes or thread budgets declared by an adapter permit a zero
-exit code. Other setup rejections retain their `unsupported` evidence but fail
-the command, so unexpected coverage loss is visible in CI.
+postselection cost. Clifft, SymFT, Tsim, and xtim have native counts endpoints.
+Clifft, Tsim, and xtim support detector subsets. Clifft 0.14, Tsim, Stim,
+and xtim support packed sampling. Stim and xtim require verified raw
+reference parity for their reference-relative output.
+An unavailable xtim reference circuit, unsupported endpoint, or unsupported
+thread budget is recorded as `unsupported`. Other setup rejections fail the
+command so unexpected coverage losses are visible in CI.
 
 ## Release workload selection
 
@@ -155,9 +155,9 @@ Cases execute serially in manifest order. Every case gets a fresh worker
 process using the Python environment recorded for its implementation.
 `execution.threads` is 1 (default) or 8. Before imports, workers set
 `OMP_NUM_THREADS` and `NUMBA_NUM_THREADS` to that budget; BLAS, NumExpr,
-Accelerate, and XLA remain serial. Clifft, Tsim, and SymFT's legacy counts backend
-support both budgets. Stim and pinned xtim
-support only 1; unsupported requests are recorded before resource allocation.
+Accelerate, and XLA remain serial. Clifft, Tsim, xtim and SymFT's legacy counts backend
+support both budgets. Stim supports one core. Unsupported thread budgets are
+recorded before resource allocation.
 
 Before imports, Linux workers pin one logical CPU per distinct `(socket, core)`
 within the allowed mask, starting at `--cpu`. Setup fails if topology is missing
@@ -199,7 +199,7 @@ Adapters request Clifft's `"auto"`, Tsim's `None`, and SymFT's `batch=True`,
 `batch_size=0`, `sample_chunk_shots=0`. Stim and xtim receive each full public call
 without harness chunking. Positive integer overrides remain available for focused
 checks; they specify internal capacity for Clifft/SymFT/Tsim and output chunks for
-xtim. SymFT uses `cpu_backend="legacy"` for both core budgets.
+xtim's counts endpoint. Its packed endpoint receives the complete public call. SymFT uses `cpu_backend="legacy"` for both core budgets.
 
 `batch_size_effective` records a reported native capacity, capped at the public
 call size, or null if unavailable. Automatic capacity is not inferred from the
@@ -263,18 +263,22 @@ release wheel; the recorded extension identifies the SIMD implementation used.
 
 ## xtim comparison
 
-Pinned xtim 3.2.2 supports the on endpoint for deterministic noiseless detectors
-and observables. Compile `TwirlSampler` once with `selfcheck=0, disk_cache=False`;
-reseed once per harness call and continue internal chunks with `seed=None`.
-Reference validation uses `record_report()` plus a separate noiseless raw sampler
-and Stim's layout-only record converter. Reject nonzero selected-detector or
-counted-observable reference parity; do not correct samples in Python.
+Compile xtim 4.1.2 with `compile_twirl_sampler(text, p_factor=1.0, selfcheck=0)`.
+The sampler owns its in-memory plans and receives a fresh seed and the worker's
+thread budget per call. Its first full call reports the effective worker count.
 
-Pass an all-true native mask and validate `attempts`, `passed`, `discarded`, and
-`early`. Reduce only the counted observable over returned survivors. Subset masks,
-packed off, and `PAULI_EXPECTATION` are unsupported by this adapter. Plan caches
-persist within each worker; the 512 MiB plan-payload budget is not a process
-memory ceiling. Raw evidence records process peak RSS.
+Validate the unchanged circuit with Stim's noiseless reference sample and
+raw record-to-detector/observable converter. For survivor counts, the selected
+detectors and counted observable must have deterministic zero raw reference.
+For packed sampling this condition applies to every returned column.
+Check the participating channels against xtim's public `record_report()`.
+Circuits outside Stim's instruction set are recorded as unsupported because
+xtim lacks a verified raw reference for them. This includes the non-Clifford
+cultivation and distillation inputs.
+
+Counts use xtim's native Boolean selection mask. Validate attempts, passes,
+discards and early rejections and count the selected observable over survivors.
+Packed sampling returns the native little-endian detector and observable arrays.
 
 The source pin and portable build settings live in `software.toml` and its
 locked environment. Verify the installed PEP 610 repository and commit before

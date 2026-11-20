@@ -40,7 +40,9 @@ or fidelity estimation. Escape detectors are sampled but do not reject a shot.
 
 Clifft receives this same mask before HIR passes and during lowering. Tsim
 receives it at sampling, then counts observable ones among native survivors.
-For on, SymFT and xtim reject subsets and Stim rejects the endpoint. Licenses and attribution are in
+SymFT supports all-detector selection. Stim has no native survivor endpoint.
+xtim accepts detector masks, but its raw reference parity for this circuit is
+unverified, so both modes report an unsupported outcome. Licenses and attribution are in
 [`NOTICE-cultivation-coverage`](circuits/NOTICE-cultivation-coverage).
 
 To reproduce the d5 bytes and mask in a separate generator environment:
