@@ -97,7 +97,7 @@ themselves. This is the data interface for the
   one-core median in the same source execution. Both cases must succeed and
   uniquely match in implementation, circuit, output, call size, batching,
   simulator options, memory limit, and measurement settings. Other values are null.
-  MAD describes sample dispersion.
+  MAD describes sample dispersion. It does not estimate a confidence interval.
 - `outcome` is `measured`, a recorded failure status, `unsupported`, or
   `not measured`. Failed and absent cases have null rates and dispersion; missing
   metadata is null rather than zero. Unsupported cases remain in the export for

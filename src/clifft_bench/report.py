@@ -76,18 +76,25 @@ def _measurement_rows(document: dict) -> dict[str, dict]:
 def build_report(document: dict, *, peer_document: dict | None = None) -> dict[str, Any]:
     rows = _measurement_rows(document)
     pairs = comparison_pairs(document)
-    release_ids = {"current-vs-previous", "current-vs-previous-8c"}
+    variants = {case["variant_id"]: case["simulator"] for case in document["cases"]}
+    release_ids = set()
+    previous = set()
+    for comparison in document["campaign"].get("comparisons", []):
+        baseline = variants.get(comparison["baseline_variant"])
+        candidates = [variants.get(v) for v in comparison["candidate_variants"]]
+        if baseline and baseline["adapter"] == "clifft" and all(
+            candidate and candidate["adapter"] == "clifft"
+            and candidate["implementation_id"] != baseline["implementation_id"]
+            for candidate in candidates
+        ):
+            release_ids.add(comparison["id"])
+            previous.add(baseline["implementation_id"])
     release = [p for p in pairs if p["comparison_id"] in release_ids]
-    previous = {p["baseline_variant"] for p in release}
     current = [
-        c
-        for c in document["cases"]
-        if c["simulator"]["adapter"] == "clifft" and c["variant_id"] not in previous
+        c for c in document["cases"]
+        if c["simulator"]["adapter"] == "clifft"
+        and c["simulator"]["implementation_id"] not in previous
     ]
-    for pair in release:
-        for case in (pair["baseline"], pair["candidate"]):
-            if case is not None and case["simulator"]["adapter"] != "clifft":
-                raise ValueError("current-vs-previous must compare Clifft implementations")
     groups: dict[tuple[str, str], dict] = {}
     for pair in pairs:
         if pair["comparison_id"] in release_ids:
@@ -96,9 +103,6 @@ def build_report(document: dict, *, peer_document: dict | None = None) -> dict[s
         group = groups.setdefault(key, {"workload_id": key[1], "variant": key[0], "cases": {}})
         group["cases"][pair["baseline_variant"]] = pair["baseline"]
         group["cases"][pair["candidate_variant"]] = pair["candidate"]
-    variants = {}
-    for case in document["cases"]:
-        variants.setdefault(case["variant_id"], case["simulator"])
     report = {
         "document": document,
         "sources": {"primary": {"document": document, "cases": document["cases"]}},
@@ -556,7 +560,8 @@ def throughput_data(report: dict) -> dict:
                     rates.append(value["median_attempted_shots_per_second"])
             rows.append({
                 "workload_id": workload["id"], "baseline_variant": entry["variant"],
-                "label": _label(representative), "artifact_sha256": workload["artifact"]["sha256"],
+                "label": _workload_label(representative),
+                "artifact_sha256": workload["artifact"]["sha256"],
                 "semantics": workload["semantics"],
                 "postselect": representative["execution"]["postselect"], "values": values,
             })
@@ -591,7 +596,7 @@ def _render_throughput(report, theme):
                     != "unsupported"), key=lambda item: variants.index(item[0]))
             for entry in group
         ]
-        names = [textwrap.fill(_label(_representative(entry)), 29) for entry in group]
+        names = [textwrap.fill(_workload_label(_representative(entry)), 29) for entry in group]
         heights = [
             max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
             for values, name in zip(visible, names, strict=True)
