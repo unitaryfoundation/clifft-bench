@@ -1,10 +1,10 @@
 # Supplemental sampling coverage
 
-The `*-coverage` variants add repeated QV sampling, the unverified d7 cultivation
-proxy, and full d5 cultivation to the normal release campaign. They share its
-[endpoint and timing contract](../docs/benchmark-contract.md) and have no paired
-previous-release baseline. `coverage-smoke.toml` exercises the same selections
-with smaller calls.
+Full d5 cultivation and repeated Quantum Volume sampling use the release
+campaign's [endpoint and timing contract](../docs/benchmark-contract.md).
+The coverage smoke profile exercises these inputs and the fold-transversal and
+Cain circuits with bounded calls. The corpus also preserves the unverified d7
+proxy and its original provenance.
 
 Postselection on/off uses the same canonical circuit, digest, noise, and public
 call size. Cases select the mode explicitly; on returns survivor counts and off

@@ -82,7 +82,7 @@ postselect = "off"
 
 [[cases]]
 id = "reed-muller-measured-smoke-tsim"
-variant_id = "tsim-current"
+variant_id = "tsim-current-off"
 workload_id = "reed-muller-measured"
 implementation_id = "tsim-1.0.0"
 shots_per_call = 2048

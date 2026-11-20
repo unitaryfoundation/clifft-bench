@@ -36,7 +36,7 @@ generators and official raw results with the benchmarking code they support.
 
 [`campaigns/release-v1.toml`](campaigns/release-v1.toml) is the
 recurring campaign definition. It selects previous/current Clifft and compatible
-peer tools in explicit short-call, bulk, and coverage comparisons. The expanded
+peer tools for each circuit, output mode, and physical-core budget. The expanded
 case listing and [`software.toml`](software.toml) identify the active versions
 and source pins; the [contract](docs/benchmark-contract.md) defines measurement
 semantics.
@@ -49,17 +49,18 @@ For a new Clifft release:
 1. Add its identity and install environment to
    [`software.toml`](software.toml).
 2. Add its direct requirement and resolved lock under [`environments/`](environments/).
-   Update the previous-release and current-source installs in
+   Update the previous-release and candidate installs in
    [CI](.github/workflows/ci.yml) to exercise both maintained implementations.
    Remove superseded software entries and environments after updating consumers.
-3. Point `clifft-current`, `clifft-bulk`, and `clifft-coverage` at the
-   new implementation and `clifft-previous` at the prior measured release in the release manifest.
-   Update the Clifft smoke, coverage smoke and pilot cases and the `clifft-current` CI install
-   to the same new implementation. Keep the intended scheduler settings in
-   the shared `clifft-scheduled` option preset in `software.toml`.
+3. Point the current Clifft variants and their smoke cases at the candidate.
+   Pin the previous Clifft survivor-count variants to the last release and keep
+   its scheduled compiler configuration. Use the current compiler defaults for
+   the candidate. Both release profiles must resolve the same Clifft cases.
 4. Keep each workload's `shots_per_call` aligned across every variant and
-   release within each comparison. Update those workload-level values only when measurement evidence
-   requires it; internal capacity is chosen by each simulator.
+   release within each comparison. Record which sizes were measured directly and
+   which implement a shared bulk-call policy. For newly enlarged calls without
+   reference-host timings, check full-call completion and correctness at both
+   core budgets under the release memory limit before collecting the matrix.
 5. Validate locally, then follow the [EC2 collection procedure](#reference-host-collection).
 
 Choose and record the previous/current configurations for the new campaign.
@@ -72,7 +73,12 @@ For a release candidate, keep its exact prerelease value in `version` and its
 environment lock, record the immutable `source_tag` and commit, and set
 `display_version` to the intended final release label. Runtime checks and raw
 evidence retain the exact candidate identity; derived tables expose the display
-version for plots, summaries, and release docs.
+version for plots, summaries, and release docs. Collect the full peer matrix on
+RC1. If the measured simulator code, native build and build settings ship
+unchanged, publish the RC1 execution for the final release with its original
+identity. If they change, refresh Clifft. Repeat a small speedup or regression
+before citing it in release notes. Use the Clifft-only profile for that repeat
+and retain compatible peers as described under [release reporting](#release-reporting).
 
 One collection produces a raw result containing every selected variant, including
 structured case failures. Persisted-input validation checks coverage and measurement
@@ -92,8 +98,10 @@ measurements, and explicit comparison groups.
 
 A variant's `workloads` is either a group name or a list of workload selections.
 Selections and explicit cases inherit the workload's default call size unless
-they set `shots_per_call`; bulk and smoke call sizes stay explicit. A group's
-members expand in their declared order. Simulator settings use either inline
+they set `shots_per_call`. A named group expands in order to circuits that
+list both the requested adapter and the requested mode. Explicit selections
+must satisfy those same eligibility checks. The release group uses one call
+size per circuit across all variants. Simulator settings use either inline
 `execution.options` or one `execution.options_preset` from `software.toml`, with
 no merging or inheritance between presets. The owning adapter validates the
 resolved options without importing the simulator. Unknown keys, invalid values,
@@ -127,8 +135,8 @@ Official collection requires isolated, verified implementation environments.
 ## Reference-host collection
 
 Launch the host declared by the release campaign: Canonical Ubuntu Server 24.04
-LTS, x86-64 `m7a.xlarge`, shared tenancy, On-Demand, with IMDSv2 enabled. Use a
-16 GiB `gp3` root volume, restrict SSH access, and set instance-initiated shutdown behavior to
+LTS, x86-64 `m7a.4xlarge`, shared tenancy, On-Demand, with IMDSv2 enabled. Use a
+32 GiB `gp3` root volume, restrict SSH access, and set instance-initiated shutdown behavior to
 **Stop**. No AWS credentials or IAM role are needed by the collector.
 
 Clone the repository, select a clean data branch, and run inside `tmux` if the
@@ -145,8 +153,8 @@ For a Clifft-only release refresh, use `release-clifft` in the same command:
 ./scripts/ec2-run.sh release-clifft "$HOME/clifft-bench-ec2-results/clifft-release"
 ```
 
-This campaign collects the full release campaign's previous/current Clifft,
-current bulk, and current coverage cases with the same measurement settings.
+This campaign repeats the full run's Clifft cases at both core budgets,
+including packed output on the candidate. It retains the original measurement settings.
 It installs only the two Clifft environments and produces a fresh paired release
 comparison. Keep existing peer measurements tied to their original execution;
 the new execution contains no peer comparison data. Use a new output directory
@@ -294,14 +302,14 @@ uv run clifft-bench validate /tmp/tsim-smoke/raw.json
 ```
 
 Workers apply thread restrictions before simulator imports. Linux CI also
-exercises the campaign's 12 GiB address-space ceiling. Local timings are
+runs smoke cases under a 12 GiB address-space ceiling. Local timings are
 installation/correctness diagnostics, not official performance results.
 The optional [Tsim GPU study](experiments/tsim-gpu/README.md) remains independently pinned.
 
 ## Bounded three-tool CPU pilot
 
-`campaigns/tsim-pilot.toml` reuses the release's bulk coherent d5/r5 and adder
-cases and its 85q distillation control. Run on Linux to enforce the memory ceiling:
+`campaigns/tsim-pilot.toml` exercises coherent d5/r5 and the adder with the
+release endpoints and bounded call sizes. Run on Linux to enforce the memory ceiling:
 
 ```bash
 uv run clifft-bench bootstrap tsim-pilot

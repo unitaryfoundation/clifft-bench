@@ -39,6 +39,32 @@ def test_release_reporting_needs_only_one_execution(raw_result, tmp_path, monkey
     assert main(["report", str(tmp_path), "--check"]) == 0
 
 
+@pytest.mark.parametrize("epoch,classification,calibrated", [
+    ("aws-m7a-xlarge-ubuntu2404-v1", "official", True),
+    ("aws-m7a-4xlarge-ubuntu2404-v1", "official", False),
+    ("aws-m7a-xlarge-ubuntu2404-v1", "smoke", False),
+])
+def test_release_plot_uses_only_its_host_calibration(raw_result, epoch, classification, calibrated):
+    plt = pytest.importorskip("matplotlib.pyplot")
+    from clifft_bench.report import THEMES, _render_release
+
+    raw_result["campaign"]["hardware_epoch"] = epoch
+    raw_result["run"]["classification"] = classification
+    report = build_report(raw_result)
+    report["release"][0]["ratio"] = 1.005
+    _, foreground, grid, colors = THEMES["light"]
+    figure = _render_release(report, colors, foreground, grid)
+    try:
+        axis = figure.axes[0]
+        # The band is a vertical span across the full height of the percentage axis.
+        bands = [patch for patch in axis.patches if patch.get_height() == 1]
+        assert [(p.get_x(), p.get_width()) for p in bands] == ([(-1.1, 2.2)] if calibrated else [])
+        marker, = (line for line in axis.lines if line.get_marker() == "o")
+        assert marker.get_color() == (foreground if calibrated else colors[0])
+    finally:
+        plt.close(figure)
+
+
 def test_current_coverage_without_previous_baseline_has_no_release_ratio(raw_result):
     case = copy.deepcopy(raw_result["cases"][1])
     expected = copy.deepcopy(raw_result["campaign"]["cases"][1])

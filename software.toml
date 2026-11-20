@@ -1,25 +1,6 @@
 suite_version = "0.3.0"
 
 [[implementations]]
-id = "clifft-0.12.0rc1"
-name = "Clifft"
-adapter = "clifft"
-distribution = "clifft"
-version = "0.12.0rc1"
-display_version = "0.12.0"
-commit_sha = "847757e2bc8c4f7439b9e92011550fd61719eb85"
-source_url = "https://github.com/unitaryfoundation/clifft"
-source_tag = "v0.12.0rc1"
-dependency_distributions = ["numpy"]
-
-[implementations.environment]
-import_modules = ["clifft"]
-
-[implementations.build]
-precision = "complex-fp64"
-compiler_flags = []
-
-[[implementations]]
 id = "symft-2026.10.8"
 name = "SymFT"
 adapter = "symft"
@@ -107,6 +88,25 @@ distribution = "clifft"
 version = "0.13.0"
 commit_sha = "9b9091c8267321e2a2fd967f0674a65e4baf0e38"
 source_tag = "v0.13.0"
+source_url = "https://github.com/unitaryfoundation/clifft"
+dependency_distributions = ["numpy"]
+
+[implementations.environment]
+import_modules = ["clifft"]
+
+[implementations.build]
+precision = "complex-fp64"
+compiler_flags = []
+
+[[implementations]]
+id = "clifft-0.14.0rc1"
+name = "Clifft"
+adapter = "clifft"
+distribution = "clifft"
+version = "0.14.0rc1"
+display_version = "0.14.0"
+commit_sha = "7381d33e0038ab969b54ff65f8131196178f48f6"
+source_tag = "v0.14.0rc1"
 source_url = "https://github.com/unitaryfoundation/clifft"
 dependency_distributions = ["numpy"]
 

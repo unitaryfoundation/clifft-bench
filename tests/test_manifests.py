@@ -91,10 +91,13 @@ def test_release_compares_distinct_clifft_implementations() -> None:
 
 def test_release_current_variants_share_one_implementation_per_adapter() -> None:
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
-    comparison = next(c for c in suite.run["comparisons"] if c["id"] == "current-vs-previous")
+    previous = {c["baseline_variant"] for c in suite.run["comparisons"]
+                if c["id"].startswith("current-vs-previous")}
+    previous_ids = {c.implementation.id for c in suite.cases
+                    if c.definition["variant_id"] in previous}
     current: dict[str, set[str]] = {}
     for case in suite.cases:
-        if case.definition["variant_id"] == comparison["baseline_variant"]:
+        if case.implementation.id in previous_ids:
             continue
         adapter = case.implementation.definition["adapter"]
         current.setdefault(adapter, set()).add(case.implementation.id)
@@ -103,19 +106,30 @@ def test_release_current_variants_share_one_implementation_per_adapter() -> None
         assert len(implementations) == 1, f"{adapter}: current variants disagree: {implementations}"
 
 
-def test_release_bulk_calls_exceed_their_short_call_siblings() -> None:
+def test_release_matches_modes_core_budgets_and_one_public_call_size_per_circuit():
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
-    variants = {variant["id"]: variant for variant in suite.run["variants"]}
-    bulk = [variant for variant in variants.values() if "-bulk" in variant["id"]]
-    assert bulk
-    for variant in bulk:
-        short_id = variant["id"].replace("-bulk", "-current")
-        assert short_id in variants, f"{variant['id']}: missing short-call sibling {short_id}"
-        short = {w["workload_id"]: w["shots_per_call"] for w in variants[short_id]["workloads"]}
-        for workload in variant["workloads"]:
-            workload_id = workload["workload_id"]
-            assert workload_id in short, f"{variant['id']}: {workload_id} missing from {short_id}"
-            assert workload["shots_per_call"] > short[workload_id], (variant["id"], workload_id)
+    paired_cores = {}
+    for case in suite.cases:
+        execution = case.definition["execution"]
+        workload = case.workload.definition
+        assert case.definition["shots_per_call"] == workload["shots_per_call"]
+        assert execution["batch_size"] == "auto"
+        assert execution["postselect"] in workload["postselect_modes"]
+        assert case.implementation.definition["adapter"] in workload["compatible_adapters"]
+        key = case.implementation.id, case.workload.id, execution["postselect"]
+        paired_cores.setdefault(key, set()).add(execution["threads"])
+    assert all(cores == {1, 8} for cores in paired_cores.values())
+    variants = {v["id"]: v for v in suite.run["variants"]}
+    for v in variants.values():
+        adapter = next(c.implementation.definition["adapter"] for c in suite.cases
+                       if c.definition["variant_id"] == v["id"])
+        expected = {
+            w["id"] for w in suite.workloads_document["workloads"]
+            if w["id"] in suite.workloads_document["groups"]["cpu-release"]
+            and adapter in w["compatible_adapters"]
+            and v["execution"]["postselect"] in w["postselect_modes"]
+        }
+        assert {w["workload_id"] for w in v["workloads"]} == expected
 
 
 @pytest.mark.parametrize("path", SMOKE_MANIFESTS, ids=lambda p: p.name)
@@ -141,6 +155,7 @@ def test_official_implementations_require_environment_locks(tmp_path):
     software_path = tmp_path / "software.toml"
     write_toml(software_path, suite.software_document)
     run = copy.deepcopy(suite.run)
+    run["classification"] = "official"
     run["software_file"] = str(software_path)
     run["workloads_file"] = str(suite.workloads_path)
     path = tmp_path / "run.toml"
@@ -319,13 +334,14 @@ def test_thread_budgets_reject_invalid_values(tmp_path, threads):
         load_suite(path)
 
 
-def test_tsim_pilot_reuses_exact_release_cases():
+def test_bulk_smoke_uses_the_release_endpoints_and_implementations():
     release = load_suite(ROOT / "campaigns/release-v1.toml")
-    pilot = load_suite(ROOT / "campaigns/tsim-pilot.toml")
-    expected = {case.id: case.definition for case in release.cases}
-    assert pilot.run["classification"] == "smoke"
-    assert pilot.cases
-    assert all(case.definition == expected[case.id] for case in pilot.cases)
+    smoke = load_suite(ROOT / "campaigns/tsim-pilot.toml")
+    expected = {case.id: case for case in release.cases}
+    for case in smoke.cases:
+        assert case.implementation == expected[case.id].implementation
+        assert case.definition["execution"] == expected[case.id].definition["execution"]
+        assert case.workload == expected[case.id].workload
 
 
 @pytest.mark.parametrize("damage", ["unknown", "type", "nonfinite", "duplicate"])

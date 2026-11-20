@@ -40,11 +40,14 @@ The report follows the resolved campaign's workload selections and comparison
 groups. Match circuit bytes, selection semantics, public call sizes, measurement
 settings, and resource limits within each comparison. A new workload without a
 supported previous-release baseline is current coverage, with no release ratio.
-The representative suite may change between campaigns.
+The representative suite may change between campaigns. The release profiles share
+one public call size per circuit across simulators, endpoints and core budgets.
+Fast circuits use a common 262,144-shot bulk call. Wide or expensive circuits use
+16,384 shots, with 32 shots for QV q20.
 
 The [corpus notes](../workloads/README.md) own circuit provenance and validation;
 [coverage notes](../workloads/coverage.md) describe repeated QV sampling,
-selection-off controls, the unverified d7 proxy, and full d5 detector subsets.
+packed sampling and full d5 detector subsets, and identify the separate unverified d7 proxy.
 Neither cultivation stress input estimates decoded logical error or fidelity.
 Repeated QV sampling measures a different question from the optional
 [setup-plus-one-shot QV study](../experiments/qv/README.md).
@@ -67,9 +70,7 @@ Call sizes and postselection modes are in `cases.csv`; exact masks remain in `ra
 
 Release figures show changes within ±50% on a linear percentage axis and larger
 changes on an adjacent logarithmic ratio axis sharing the same rows. This display
-threshold keeps modest changes visible alongside large gains or losses; it is not
-a significance threshold. The percentage panel shades the ±1.1% inconclusive band
-defined below.
+threshold keeps modest changes visible alongside large gains or losses.
 Both figures use the same circuit selection and ordering; the release figure
 includes only measured pairs. New pairs automatically appear in their circuit's
 thematic position when the recorded campaign includes compatible measurements.
@@ -126,8 +127,11 @@ Each case uses one fresh worker and one measurement sampler:
    including lazy planning, JIT/cache loading, and sampling. No earlier sampling
    call uses the measurement sampler. Retain this result separately from throughput.
 3. Check correctness, then measure repeated calls using the same sampler.
-   Each repetition accumulates calls until its minimum sampling interval elapses;
-   the final call can overrun it. Retain individual samples and derive median/MAD.
+   Each release case uses three repetitions, each accumulating full calls for at
+   least 15 seconds. The last call can overrun the interval. Retain all three
+   rates and report their median and median absolute deviation (MAD). With three
+   samples, MAD is the smaller distance from the median to either extreme.
+   The raw samples show the full range.
 
 Compilation, first-call time, call size, and subsequent throughput are reported
 separately; do not extrapolate finite-shot turnaround. Native output allocation
@@ -135,19 +139,20 @@ and the on endpoint's count reduction remain inside sampling timers. Correctness
 throughput. Deadlines apply to every phase; failures retain their phase and
 completed evidence without a throughput value.
 
-The worker keeps in-memory caches across calls. Tsim retains its upstream Numba disk cache. These are process-fresh measurements,
+The worker keeps in-memory caches across calls. xtim's plan cache is in memory.
+Tsim retains its upstream Numba disk cache. These are process-fresh measurements,
 not guaranteed cold-disk builds or fully converged steady state.
 
 ## Resources and ordering
 
-Official results use the campaign's declared hardware epoch: a shared-tenancy,
-On-Demand AWS `m7a.xlarge` with Ubuntu 24.04 on x86-64. Use one placement for a
-fresh paired release comparison. The [host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
-found paired identical-software differences below 0.72% across three placements;
-absolute throughput varied by up to 2.60% on the slower workload. Treat paired
-changes at or below 1.1% as inconclusive. One execution does not re-estimate
-placement variability; studies that need that estimate use independent
-stop/start placements.
+The reference host is an On-Demand AWS `m7a.4xlarge` with shared tenancy,
+Ubuntu 24.04 on x86-64, and 16 physical cores. A single placement supplies all
+fresh release and peer measurements. The worker uses one or eight physical cores.
+The remaining cores provide headroom for collection and the operating system.
+The ±1.1% inconclusive band applies only to paired release measurements from the
+commissioned single-core `m7a.xlarge` epoch. Release figures on the
+`m7a.4xlarge` show measured changes without a calibrated band.
+[Host commissioning study](https://github.com/unitaryfoundation/clifft-bench/pull/19)
 
 Do not combine absolute rates from different hardware epochs without labeling
 the boundary or measuring a bridge. Shared CI hosts provide correctness and
@@ -172,8 +177,7 @@ identities, and requested/effective counts. Effective counts describe the native
 pool or plan, or are null when unreported (including multi-core Clifft 0.13.0).
 Release/peer ratios require equal core budgets.
 
-Official workers receive the campaign's 12 GiB address-space ceiling, leaving
-headroom on the 16 GiB reference host. The requested ceiling is embedded in the
+Official workers receive a 32 GiB address-space ceiling on the 64 GiB reference host. The requested ceiling is embedded in the
 raw result, the applied `RLIMIT_AS` is recorded after setup, and input validation
 rejects a mismatch.
 
@@ -206,8 +210,8 @@ xtim's counts endpoint. Its packed endpoint receives the complete public call. S
 
 `batch_size_effective` records a reported native capacity, capped at the public
 call size, or null if unavailable. Automatic capacity is not inferred from the
-request. Every comparison matches `shots_per_call`; short and bulk calls remain
-separate workloads in the report.
+request. The campaign uses one `shots_per_call` per circuit across both outputs,
+physical-core budgets and compared implementations.
 
 ## Compiler configuration
 
@@ -359,18 +363,6 @@ compiled program has statevector components. Raw metadata also records component
 widths, strategy, precision, seed policy, and threads. No preparation sample is
 performed; first-use kernel compilation/cache loading belongs to the first call.
 
-### Matched bulk sampling
-
-`bulk-alternatives-vs-current` compares `clifft-bulk`, `symft-bulk`, and
-`tsim-bulk` on the unchanged coherent d5/r5 circuit at 256 attempted shots per
-call. Each tool uses native automatic sizing under the same resource ceiling.
-The manifest validator rejects unequal public call sizes
-within a comparison. Failed cases retain their diagnostics.
-
-The short-call comparisons use one shot per call for d5/r5. Keep those rows
-separate from the bulk comparison: sharing work across shots changes the
-question, even on the same circuit and host.
-
 ## Result evidence and comparisons
 
 A new execution contains `raw.json` in format `clifft-bench/raw/v2` and one derived
@@ -401,15 +393,14 @@ OS/Python/thread settings, measurement protocol, seeds, and resource limits.
 Compared workloads must also pass the digest, selection, and call-size checks
 below. Incompatible or ambiguous sources are rejected. Reports identify the peer
 run, collection time, source revision, and exact software versions in the
-companion review. These cross-collection absolute rates are
-not a fresh paired comparison and do not acquire the paired 1.1% interpretation.
+companion review. These cross-collection absolute rates retain their original collection identity.
 
 Paired ratios use candidate median divided by baseline median. Pairing requires
 matching workload digest and selection semantics, call size, measurement settings,
 and resource limits. The endpoint (`postselect`) must also match, including for
 explicit peer reuse. The raw format fixes raw-record parity and attempted-shot
 throughput for every case. Internal batches may differ. Declared
-comparison groups keep short calls, bulk calls, and supplemental coverage separate.
+comparison groups pair measurements within each output mode and core budget.
 Only successful compatible pairs receive ratios. Missing expected case records
 are errors; recorded failures, unsupported adapters, and intentionally unmeasured
 combinations remain distinct. A new current workload without a previous baseline

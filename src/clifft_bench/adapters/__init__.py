@@ -10,7 +10,7 @@ def load_adapter(name: str, version: str | None = None) -> Adapter:
     if name == "clifft":
         from clifft_bench.adapters.clifft import ClifftAdapter, ClifftPlanAdapter
 
-        if version is None or version in {"0.12.0rc1", "0.13.0"}:
+        if version is None or version == "0.13.0":
             return ClifftAdapter()
         return ClifftPlanAdapter()
     if name == "symft":
