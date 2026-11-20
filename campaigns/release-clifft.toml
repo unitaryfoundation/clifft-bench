@@ -59,6 +59,17 @@ threads = 1
 batch_size = "auto"
 
 [[variants]]
+id = "clifft-previous-off"
+implementation_id = "clifft-0.13.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 1
+batch_size = "auto"
+options_preset = "clifft-scheduled"
+
+[[variants]]
 id = "clifft-current-off"
 implementation_id = "clifft-dev-f1bb0d88"
 workloads = "cpu-release"
@@ -88,6 +99,17 @@ workloads = "cpu-release"
 postselect = "on"
 threads = 8
 batch_size = "auto"
+
+[[variants]]
+id = "clifft-previous-off-8c"
+implementation_id = "clifft-0.13.0"
+workloads = "cpu-release"
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
+options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-off-8c"

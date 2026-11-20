@@ -428,7 +428,7 @@ id = "bt27-direct-x"
 postselect_modes = ["off"]
 family = "code-switching"
 description = "Noiseless BT27 code switching on 135 qubits with direct logical-X readout."
-compatible_adapters = ["clifft"]
+compatible_adapters = ["clifft", "xtim"]
 shots_per_call = 16384
 
 [workloads.artifact]
@@ -461,7 +461,7 @@ id = "bt81-direct-x"
 postselect_modes = ["off"]
 family = "code-switching"
 description = "Noiseless BT81 code switching on 405 qubits with direct logical-X readout."
-compatible_adapters = ["clifft"]
+compatible_adapters = ["clifft", "xtim"]
 shots_per_call = 16384
 
 [workloads.artifact]
@@ -494,7 +494,7 @@ id = "reed-muller-measured"
 postselect_modes = ["off"]
 family = "reed-muller"
 description = "Measured 15-qubit Reed-Muller preparation, feedback, transversal T, and logical-X readout."
-compatible_adapters = ["clifft", "symft", "tsim"]
+compatible_adapters = ["clifft", "symft", "tsim", "xtim"]
 shots_per_call = 65536
 
 [workloads.artifact]
@@ -561,7 +561,7 @@ id = "msc-full-d5-cultivation-selected-p1e-3"
 postselect_modes = ["on", "off"]
 family = "magic-state-cultivation-full"
 description = "Full d5 T-state cultivation through d15 escape, selecting only the 107 cultivation-stage detectors."
-compatible_adapters = ["clifft", "tsim", "xtim"]
+compatible_adapters = ["clifft", "tsim", "xtim", "symft"]
 shots_per_call = 16384
 
 [workloads.artifact]

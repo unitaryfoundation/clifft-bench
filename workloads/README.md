@@ -34,9 +34,8 @@ The original eight QEC files are byte-for-byte copies from
 commit `db7dc9f13a2c2854690e92390c779048a1ac1400`. The Quantum Volume
 files were generated from that commit with Qiskit 2.5.1 and seed 42, then given
 one observable per terminal measurement to expose the complete terminal readout.
-QV observable k is the measurement of qubit k. The benchmark still returns
-aggregate observable-0 counts; declaring these outputs does not require every
-adapter to materialize a full bitstring. The generated files are immutable inputs;
+QV observable k is the measurement of qubit k. The packed endpoint returns every terminal
+observable and a detector array with zero columns. The generated files are immutable inputs;
 Qiskit is not a runtime benchmark dependency. The applicable Apache-2.0 license
 is included as
 [`circuits/LICENSE-Clifft-paper`](circuits/LICENSE-Clifft-paper).
@@ -68,15 +67,14 @@ adapters are checked against this distribution and representative exact faults.
 The BT27/BT81 and measured Reed-Muller circuits come from Clifft's public
 fixtures, with [Clifft/Merlin attribution](circuits/NOTICE-code-switching).
 BT27 adds direct-X readout on nine decoded logical qubits; BT81 is unchanged;
-Reed-Muller removes only the expectation-value declarations. All three sample
-without postselection and count observable-0 ones, not logical errors.
+Reed-Muller removes only the expectation-value declarations. All three use the packed endpoint
+without postselection. The conformance checks count observable-0 ones.
 Tests check probabilities 3/8 for BT and (1 − 1/√2)/2 for Reed-Muller; the BT
 reference is a logical-model prediction, not an independent full-circuit simulation.
 
-The regular release campaign runs BT27/BT81 on current Clifft, and Reed-Muller
-on both Clifft versions, SymFT, and Tsim. BT requires the post-0.12 compiler;
-peer tools are omitted where the smoke checks did not establish a usable run.
-Results appear in the case table and their declared comparison groups.
+Clifft supplies packed samples for BT27 and BT81. Clifft and Tsim supply
+packed samples for measured Reed–Muller. xtim parses all three circuits but
+lacks a verified raw reference. The case table records its exclusions.
 
 The fold-transversal d3/d5 inputs use Wan and Zapirain's
 [frozen native-T models](https://github.com/kh428/exact_ler_for_msc/tree/332bc0481843ebc9718e152e92f5ee10f8f0b148/data/alternatives/inputs)

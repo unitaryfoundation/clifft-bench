@@ -287,7 +287,8 @@ def test_run_cli_only_accepts_declared_unsupported_capabilities(
         {"case_id": "measured", "status": "success"},
         {"case_id": "other", "status": status,
          "simulator": {"adapter": adapter, "version": "0.13.0"},
-         "execution": {"postselect": postselect, "threads": threads},
+         "execution": {"postselect": postselect, "threads": threads, "batch_size": "auto"},
+         "workload": {"semantics": {"postselect_all_detectors": True}},
          "error": {"phase": "setup", "type": "UnsupportedConfiguration",
                    "message": "endpoint unavailable"}},
     ]})

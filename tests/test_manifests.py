@@ -93,9 +93,11 @@ def test_release_current_variants_share_one_implementation_per_adapter() -> None
     suite = load_suite(ROOT / "campaigns/release-v1.toml")
     previous = {c["baseline_variant"] for c in suite.run["comparisons"]
                 if c["id"].startswith("current-vs-previous")}
+    previous_ids = {c.implementation.id for c in suite.cases
+                    if c.definition["variant_id"] in previous}
     current: dict[str, set[str]] = {}
     for case in suite.cases:
-        if case.definition["variant_id"] in previous:
+        if case.implementation.id in previous_ids:
             continue
         adapter = case.implementation.definition["adapter"]
         current.setdefault(adapter, set()).add(case.implementation.id)

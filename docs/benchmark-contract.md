@@ -205,8 +205,8 @@ xtim's counts endpoint. Its packed endpoint receives the complete public call. S
 
 `batch_size_effective` records a reported native capacity, capped at the public
 call size, or null if unavailable. Automatic capacity is not inferred from the
-request. Every comparison matches `shots_per_call`; short and bulk calls remain
-separate workloads in the report.
+request. The campaign uses one `shots_per_call` per circuit across both outputs,
+physical-core budgets and compared implementations.
 
 ## Compiler configuration
 
@@ -357,18 +357,6 @@ sharing can reduce statevector work. `batch_size_applicable` records whether the
 compiled program has statevector components. Raw metadata also records component
 widths, strategy, precision, seed policy, and threads. No preparation sample is
 performed; first-use kernel compilation/cache loading belongs to the first call.
-
-### Matched bulk sampling
-
-`bulk-alternatives-vs-current` compares `clifft-bulk`, `symft-bulk`, and
-`tsim-bulk` on the unchanged coherent d5/r5 circuit at 256 attempted shots per
-call. Each tool uses native automatic sizing under the same resource ceiling.
-The manifest validator rejects unequal public call sizes
-within a comparison. Failed cases retain their diagnostics.
-
-The short-call comparisons use one shot per call for d5/r5. Keep those rows
-separate from the bulk comparison: sharing work across shots changes the
-question, even on the same circuit and host.
 
 ## Result evidence and comparisons
 

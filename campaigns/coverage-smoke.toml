@@ -359,3 +359,27 @@ shots_per_call = 8
 [cases.execution]
 batch_size = "auto"
 postselect = "off"
+
+[[cases]]
+id = "msc-full-d5-cultivation-selected-p1e-3--symft-current"
+variant_id = "symft-current"
+workload_id = "msc-full-d5-cultivation-selected-p1e-3"
+implementation_id = "symft-2026.10.8"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "on"
+
+[[cases]]
+id = "msc-full-d5-cultivation-selected-p1e-3--symft-current-off"
+variant_id = "symft-current-off"
+workload_id = "msc-full-d5-cultivation-selected-p1e-3"
+implementation_id = "symft-2026.10.8"
+shots_per_call = 128
+
+[cases.execution]
+batch_size = "auto"
+options = { sample_chunk_shots = 0 }
+postselect = "off"

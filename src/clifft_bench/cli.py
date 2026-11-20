@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Sequence
 
 from clifft_bench.adapters import load_adapter
+from clifft_bench.adapters.base import UnsupportedConfiguration, UnsupportedReferenceCircuit
 from clifft_bench.bootstrap import bootstrap
 from clifft_bench.config import (
     campaign_path,
@@ -148,12 +149,17 @@ def _run(args: argparse.Namespace) -> int:
         if case["status"] == "unsupported":
             adapter = load_adapter(case["simulator"]["adapter"], case["simulator"]["version"])
             execution = case["execution"]
-            expected = (execution["postselect"] not in adapter.supported_postselect
-                        or execution["threads"] not in adapter.supported_threads
-                        or (adapter.name == "xtim"
-                            and error["type"] == "UnsupportedReferenceCircuit"
-                            and execution["postselect"] not in
-                            case["workload"]["semantics"].get("raw_zero_reference", {})))
+            try:
+                adapter.validate_execution(execution, case["workload"])
+            except UnsupportedConfiguration:
+                expected = True
+            else:
+                expected = (
+                    adapter.name == "xtim"
+                    and error["type"] == UnsupportedReferenceCircuit.__name__
+                    and execution["postselect"] not in
+                    case["workload"]["semantics"].get("raw_zero_reference", {})
+                )
             expected_unsupported += expected
             outcome = "Unsupported" if expected else "Unexpected unsupported"
         print(

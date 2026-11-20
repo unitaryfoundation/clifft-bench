@@ -54,7 +54,7 @@ def test_coverage_smoke_exercises_release_endpoints_on_wide_and_subset_circuits(
     workloads = {c.workload.id for c in smoke.cases}
     expected = {c.id: c for c in release.cases if c.workload.id in workloads
                 and c.definition["execution"]["threads"] == 1
-                and c.definition["variant_id"] != "clifft-previous"}
+                and not c.definition["variant_id"].startswith("clifft-previous")}
     assert expected
     assert set(expected) == {c.id for c in smoke.cases}
     for case in smoke.cases:
