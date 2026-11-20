@@ -22,6 +22,9 @@ class _PreparedFixture(PreparedAdapter):
         self._parameters = parameters
         self.runtime_metadata = runtime_metadata
 
+    def first_call_metadata(self) -> dict:
+        return self._parameters.get("first_call_metadata", {})
+
     def sample(self, shots: int, seed: int) -> Sample:
         if self._parameters.get("write_native_stdout"):
             os.write(1, b"fixture native sample output\n")

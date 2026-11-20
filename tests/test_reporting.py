@@ -709,6 +709,8 @@ def test_throughput_export_matches_plot_labels_order_and_styles(raw_result, peer
 def test_both_endpoints_render_separate_panels_from_one_canonical_workload(tmp_path):
     import sys
 
+    pytest.importorskip("matplotlib")
+
     from test_runner import _write_fixture_suite
     from toml_helpers import write_toml
 

@@ -27,8 +27,8 @@ attempted shots as the numerator. Each canonical workload declares
 Both endpoints use raw measurement-record parity, without reference correction.
 They compare complete available workflows; their difference does not isolate
 postselection cost. Counts on supports Clifft, SymFT, Tsim, and pinned xtim;
-only Clifft and Tsim support detector subsets. Packed off supports Tsim and
-Stim; the current Clifft, SymFT, and xtim pins report `unsupported`. Stim also
+only Clifft and Tsim support detector subsets. Packed off supports Clifft 0.14, Tsim and
+Stim. The 0.13 baseline, SymFT, and the pinned xtim release report `unsupported`. Stim also
 rejects nonzero raw references because its native output is reference-relative.
 Only unsupported modes or thread budgets declared by an adapter permit a zero
 exit code. Other setup rejections retain their `unsupported` evidence but fail
@@ -208,19 +208,29 @@ separate workloads in the report.
 
 ## Compiler configuration
 
-Each release uses its own default HIR pipeline before the optional scheduler.
-Both maintained Clifft implementations use the scheduled configuration.
-Release-over-release results include their compiler defaults; they are not a
-same-version pass ablation.
+Clifft 0.14 uses its public default compiler, including automatic scheduling and
+reconstruction. Survivor counts compile with the raw-zero selection mask and
+call `sample_survivors(..., keep_records=False)`. Packed sampling compiles
+with no selected detectors and calls `sample(..., keep_records="syndromes",
+bit_packed=True)`. The adapter records peak width and reconstruction from
+the sampling plan for the requested outputs. The first full call supplies the
+native executor, sharing decision, batch capacity, and shot and intra-shot
+worker counts. Their product is the effective thread count for that call.
+The smaller correctness call can select a different configuration.
 
-Use the standard opt-in `ActiveWidthSchedulePass` after Clifft's default
-pipeline. When pinning a scheduler-capable RC, set
-`clifft-current.execution.options_preset` to `clifft-scheduled` from
+The 0.13 baseline uses the opt-in `ActiveWidthSchedulePass` after its default
+pipeline, with the `clifft-scheduled` preset from
 [`software.toml`](../software.toml).
 Use the same settings across the release workloads. The four pass options must
 be explicit; the benchmark supplies no defaults. Scheduling is disabled when the
 resolved `execution.options` has no `scheduler` table. Unsupported installations
 fail when the pass is requested.
+
+The 0.13 adapter sets the HIR `postselection_mask` before optimization and
+supplies the same mask to lowering. Its runtime metadata includes
+`postselection_before_optimization`, `batch_control`, and, when available,
+`optimized_t_gates`. The 0.14 adapter records the output-specific plan and
+the worker layout reported by the first full call.
 
 With `execution` containing the resolved options, the public Python configuration is:
 
@@ -348,19 +358,6 @@ within a comparison. Failed cases retain their diagnostics.
 The short-call comparisons use one shot per call for d5/r5. Keep those rows
 separate from the bulk comparison: sharing work across shots changes the
 question, even on the same circuit and host.
-
-### Compatibility with newer Clifft APIs
-
-On Clifft versions exposing a writable HIR `postselection_mask`, the adapter
-sets the workload's raw-parity mask before running compiler passes and supplies
-it again to lowering. Earlier versions retain selection at lowering. Sampling
-uses the case's thread budget and batch setting. Runtime metadata
-records batching and the point at which postselection is applied. Development/VCS
-builds also verify the full installed source URL and commit; release wheels retain
-version validation.
-Runtime metadata records `postselection_before_optimization`, `batch_control`
-and, when available, `optimized_t_gates`.
-
 
 ## Result evidence and comparisons
 

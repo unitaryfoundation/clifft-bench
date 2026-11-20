@@ -42,6 +42,10 @@ class Counts:
 class PreparedAdapter(ABC):
     runtime_metadata: dict[str, Any]
 
+    def first_call_metadata(self) -> dict:
+        """Native execution settings resolved by the first full sampling call."""
+        return {}
+
     @abstractmethod
     def sample(self, shots: int, seed: int) -> Sample:
         """Return survivor counts (on) or native packed detector/observable arrays (off)."""

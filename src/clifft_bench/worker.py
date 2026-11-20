@@ -147,7 +147,7 @@ def main() -> int:
                                for key in thread_environment(execution["threads"])}
                 if environment != thread_environment(execution["threads"]):
                     raise ValueError("worker thread caps must be set before simulator imports")
-                adapter = load_adapter(request["adapter"])
+                adapter = load_adapter(request["adapter"], request["expected_version"])
                 adapter.validate_execution(execution, workload)
                 affinity = apply_affinity(request.get("logical_cpu"), execution["threads"])
                 if execution["threads"] > 1 and not affinity["applied"]:
@@ -220,6 +220,8 @@ def main() -> int:
                         "ok": True,
                         "duration_seconds": duration,
                         **evidence,
+                        **({"runtime_metadata": prepared.first_call_metadata()}
+                           if command == "first_call_warmup" else {}),
                         **({"contract_errors": errors} if command == "correctness" else {}),
                     }
                 )

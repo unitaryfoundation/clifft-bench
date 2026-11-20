@@ -224,7 +224,7 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
     )
     detector_mask(semantics, expected_metadata["num_detectors"])
     _require(simulator["adapter"] in workload["compatible_adapters"], "incompatible adapter")
-    load_adapter(simulator["adapter"]).validate_options(execution["options"])
+    load_adapter(simulator["adapter"], simulator["version"]).validate_options(execution["options"])
     _require(execution["options"] == contract["execution"]["options"], "mismatched options")
     requested_batch = contract["execution"]["batch_size"]
     if requested_batch != "auto":
@@ -298,6 +298,16 @@ def _validate_case(case: dict, contract: dict, campaign: dict) -> None:
         _number(setup["duration_seconds"], "setup duration")
         metadata = setup["runtime_metadata"]
         _number(metadata["compile_seconds"], "compile duration")
+        if metadata.get("peak_active_width") is not None:
+            _number(metadata["peak_active_width"], "peak active width", integer=True)
+        if "reconstruction_selected" in metadata:
+            _require(type(metadata["reconstruction_selected"]) is bool,
+                     "invalid reconstruction selection")
+            if first_call is not None:
+                for key in ("shot_workers", "intra_shot_workers"):
+                    _number(metadata[key], key, integer=True, positive=True)
+                _require(metadata["shot_workers"] * metadata["intra_shot_workers"]
+                         == execution["threads_effective"], "invalid Clifft worker layout")
         if case["status"] == "success":
             _require(
                 all(metadata[k] == v for k, v in expected_metadata.items()),

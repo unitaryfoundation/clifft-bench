@@ -101,9 +101,10 @@ def test_worker_compiles_once_then_times_first_full_call_and_reuses_sampler(
         assert not calls
         preparations.append(kwargs)
         clock[0] += 2
-        return SimpleNamespace(sample=sample, runtime_metadata={
-            "version": "test", "compile_seconds": 2, "num_qubits": 1,
-        })
+        return SimpleNamespace(
+            sample=sample, first_call_metadata=lambda: {"threads": 1},
+            runtime_metadata={"version": "test", "compile_seconds": 2, "num_qubits": 1},
+        )
 
     adapter = SimpleNamespace(adapter_version="1", prepare=prepare,
                               verify_installation=verify,
@@ -112,7 +113,7 @@ def test_worker_compiles_once_then_times_first_full_call_and_reuses_sampler(
         monkeypatch.setenv(key, value)
     monkeypatch.setattr(worker, "isolate_protocol_stream", lambda: None)
     monkeypatch.setattr(worker, "apply_affinity", lambda cpu, threads: {"applied": True})
-    monkeypatch.setattr(worker, "load_adapter", lambda _: adapter)
+    monkeypatch.setattr(worker, "load_adapter", lambda name, version: adapter)
     monkeypatch.setattr(worker, "emit", emitted.append)
     monkeypatch.setattr(worker.time, "perf_counter", lambda: clock[0])
     requests = [
@@ -145,6 +146,7 @@ def test_worker_compiles_once_then_times_first_full_call_and_reuses_sampler(
         assert calls == [(16, 9), (4, 10), (16, 10010), (16, 10011)]
         assert emitted[0]["duration_seconds"] == 2
         assert emitted[0]["runtime_metadata"]["compile_seconds"] == 2
+        assert emitted[1]["runtime_metadata"] == {"threads": 1}
         assert emitted[1]["duration_seconds"] == 5
         assert emitted[2]["contract_errors"] == []
         assert emitted[3]["duration_seconds"] == 0.5

@@ -131,6 +131,22 @@ def test_effective_batch_size_is_capped_by_shots_per_call() -> None:
     assert _effective_batch_size(metadata, 4096) == 2048
 
 
+def test_first_call_worker_layout_is_merged_and_validated(tmp_path):
+    layout = {"reconstruction_selected": False, "shot_workers": 1, "intra_shot_workers": 1}
+    path, _, _ = _write_fixture_suite(tmp_path, parameters={"first_call_metadata": layout})
+    result = run_suite(load_suite(path), case_pattern="fixture-a", python_executable=sys.executable,
+                       output_dir=tmp_path / "result")
+    case = result["cases"][0]
+    assert case["status"] == "success", case["error"]
+    metadata = case["setup"]["runtime_metadata"]
+    assert {key: metadata[key] for key in layout} == layout
+    assert case["execution"]["threads_effective"] == 1
+    validate_result(result)
+    metadata["intra_shot_workers"] = 2
+    with pytest.raises(ValueError, match="invalid Clifft worker layout"):
+        validate_result(result)
+
+
 def test_isolated_workers_emit_valid_serial_raw_results(tmp_path: Path) -> None:
     run_path, run, software = _write_fixture_suite(
         tmp_path, parameters={"write_native_stdout": True}

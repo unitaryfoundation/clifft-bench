@@ -286,7 +286,7 @@ def test_run_cli_only_accepts_declared_unsupported_capabilities(
     monkeypatch.setattr(cli, "run_suite", lambda *args, **kwargs: {"cases": [
         {"case_id": "measured", "status": "success"},
         {"case_id": "other", "status": status,
-         "simulator": {"adapter": adapter},
+         "simulator": {"adapter": adapter, "version": "0.13.0"},
          "execution": {"postselect": postselect, "threads": threads},
          "error": {"phase": "setup", "type": "UnsupportedConfiguration",
                    "message": "endpoint unavailable"}},

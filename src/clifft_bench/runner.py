@@ -429,6 +429,11 @@ def run_suite(
                             },
                             timeout_seconds=request_timeout,
                         )
+                        metadata = result["setup"]["runtime_metadata"]
+                        metadata.update(warmup.pop("runtime_metadata"))
+                        _record_runtime_execution(
+                            result["execution"], metadata, case.definition["shots_per_call"]
+                        )
                         result["first_call_warmup"] = {
                             key: value for key, value in warmup.items() if key != "ok"
                         }
