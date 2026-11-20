@@ -1,0 +1,108 @@
+suite_version = "0.3.0"
+profile_id = "physical-core-pilot"
+title = "Physical-core and memory verification for CPU peers"
+classification = "smoke"
+seed = 20261120
+hardware_epoch = "aws-m7a-4xlarge-ubuntu2404-v1"
+workloads_file = "../workloads.toml"
+software_file = "../software.toml"
+
+[reference_host]
+provider = "aws"
+instance_type = "m7a.4xlarge"
+architecture = "x86_64"
+os_id = "ubuntu"
+os_version = "24.04"
+
+[collection]
+run_timeout_minutes = 30
+memory_limit_gib = 32
+
+[resources]
+
+[measurement]
+setup_timeout_seconds = 600
+request_timeout_seconds = 120
+correctness_shots = 8
+min_sample_seconds = 1
+repetitions = 2
+
+[[variants]]
+id = "symft-on-1c"
+implementation_id = "symft-2026.10.8"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "on"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "symft-on-8c"
+implementation_id = "symft-2026.10.8"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-on-1c"
+implementation_id = "xtim-4.1.2"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "on"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-on-8c"
+implementation_id = "xtim-4.1.2"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "on"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-off-1c"
+implementation_id = "xtim-4.1.2"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "off"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "xtim-off-8c"
+implementation_id = "xtim-4.1.2"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
+
+[[variants]]
+id = "stim-off-1c"
+implementation_id = "stim-1.16.0"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "off"
+threads = 1
+batch_size = "auto"
+
+[[variants]]
+id = "stim-off-8c"
+implementation_id = "stim-1.16.0"
+workloads = [{ workload_id = "surface-code-d7-r7-p1e-3", shots_per_call = 65536 }]
+
+[variants.execution]
+postselect = "off"
+threads = 8
+batch_size = "auto"
