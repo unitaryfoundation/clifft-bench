@@ -19,55 +19,57 @@ Looking to use Clifft? Start with the
 See the [Performance guide](https://unitaryfoundation.github.io/clifft/stable/guide/performance/)
 for interpretation, methodology, and longer-term performance history.
 
-These figures use the reviewed
-[Clifft 0.12.0 release-candidate results](results/release-v1/release-v1-20261009-192718/).
-Plot labels show the intended release versions; the measurements used
-0.12.0rc1 and the 0.11.0rc1 baseline, with each release's default compiler passes
-and active-width scheduling. Batch size is calibrated independently for each
-workload and implementation on one pinned logical CPU.
+The release and peer figures use the Clifft **0.14.0rc1** campaign on an AWS
+`m7a.4xlarge` with one or eight pinned physical cores. The 0.14.0 label refers
+to RC1. Throughput is the median attempted shots per second across three
+repetitions after compilation and the first full sampling call.
+[Campaign report](https://github.com/unitaryfoundation/clifft-bench/blob/1993504c9217da4d4f432bcf853614b29c315bec/results/release-v1/0.14.0rc1-20261120-2134/report/review.md) ·
+[Case table](https://github.com/unitaryfoundation/clifft-bench/blob/1993504c9217da4d4f432bcf853614b29c315bec/results/release-v1/0.14.0rc1-20261120-2134/cases.csv) · [Raw measurements](https://github.com/unitaryfoundation/clifft-bench/blob/1993504c9217da4d4f432bcf853614b29c315bec/results/release-v1/0.14.0rc1-20261120-2134/raw.json)
 
 ### Did Clifft get faster in the latest release?
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/v012-vs-v011-dark.png">
-  <img src="reporting/figures/web/v012-vs-v011-light.png" alt="Clifft 0.12.0 throughput changes from 0.11.0 across seven QEC workloads, all within two percent">
+  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/release-change-dark.png">
+  <img src="reporting/figures/web/release-change-light.png" alt="Clifft 0.14.0rc1 versus 0.13.0 survivor-count throughput on one and eight cores. RC1 is faster in all 18 measured pairs.">
 </picture>
 
-The QEC changes range from −1.16% to +1.90% on this host. These small changes
-should not be read as an established release-wide speedup. The historical
-median retains its original six workloads; 15-to-1 joins the current comparisons.
-
-The prepared-basis adder shows the larger compiler improvement and is reported
-separately from QEC:
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/draper-adder-dark.png">
-  <img src="reporting/figures/web/draper-adder-light.png" alt="Fixed-input 16-bit Draper adder: throughput rises from 6.6 thousand to 217.6 million shots per second; compile time falls from 3.41 to 2.06 milliseconds and peak active width from 15 to zero">
-</picture>
-
-These adder rates apply to the specified basis input (37449 + 18724), with no
-noise or postselection. They exclude compilation, which is shown separately.
-The calibrated batch changes from 1 to 1024; this is a full release comparison,
-not an isolated compiler-pass ablation.
+Clifft 0.14.0rc1 had higher survivor-count throughput than 0.13.0 on all nine
+circuits at both core counts. For example, fold d3 reached 18.3× the previous
+release’s throughput on one core and 18.7× on eight. Fold d5 appears in the
+peer figure below. The campaign omitted its two 0.13.0 survivor-count baselines
+because of their runtime.
 
 ### How does Clifft compare with other simulators?
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/simulator-throughput-dark.png">
-  <img src="reporting/figures/web/simulator-throughput-light.png" alt="Attempted shots per second for Clifft 0.12.0, SymFT 0.1.1, xtim 3.1.4 and Stim 1.16.0 on their measured QEC workloads, including 15-to-1 distillation">
+  <img src="reporting/figures/web/simulator-throughput-light.png" alt="Attempted shots per second for Clifft 0.14.0rc1, Tsim 1.0.0, xtim 4.1.2, SymFT 2026.10.8, and Stim 1.16.0, grouped by workload, postselection mode, and core count.">
 </picture>
 
-Missing markers mean no measurement in this campaign. xtim covers cultivation
-d3/d5, surface code, and 15-to-1; Stim supplies the Clifford surface-code anchor.
-For xtim, each timed sample starts with an empty plan cache and includes lazy
-plan construction. See the [benchmark contract](docs/benchmark-contract.md) for
-timing, postselection endpoints, and build settings. The
-[Tsim GPU study](experiments/tsim-gpu/README.md) uses its own hardware and contract.
+On eight cores, Clifft led Tsim on all 10 shared survivor-count workloads and
+15 of 16 packed-sampling workloads. Tsim led on packed fold d3, and xtim led
+Clifft on three of its four eight-core packed workloads. Stim’s single measured
+comparison is one-core surface-code d7/r7, where both tools return packed
+detector and observable samples. [Benchmark contract](docs/benchmark-contract.md)
+
+### Earlier Draper adder comparison
+
+The Clifft 0.12.0rc1 and 0.11.0rc1 campaign measured the prepared-basis
+adder separately. [Archived release results](results/release-v1/release-v1-20261009-192718/)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/draper-adder-dark.png">
+  <img src="reporting/figures/web/draper-adder-light.png" alt="Clifft 0.11 and 0.12 on the fixed-input 16-bit Draper adder. Throughput rises from 6.6 thousand to 217.6 million shots per second as peak active width falls from 15 to zero.">
+</picture>
+
+These adder rates apply to the specified basis input (37449 + 18724), with no
+noise or postselection. They exclude compilation, which is shown separately.
+The release configurations also differ in calibrated batch size, which rises from 1 to 1024.
 
 ## Reproduce or contribute
 
 - [Generate release reports](CONTRIBUTING.md#release-reporting) from one execution.
-  The published figures above use [archived tools](CONTRIBUTING.md#historical-evidence).
+  The earlier adder figure uses the [archived tools](CONTRIBUTING.md#historical-evidence).
 - [Collect release benchmarks](CONTRIBUTING.md#reference-host-collection) on the reference EC2 host.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including
