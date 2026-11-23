@@ -99,14 +99,14 @@ precision = "complex-fp64"
 compiler_flags = []
 
 [[implementations]]
-id = "clifft-0.14.0rc1"
+id = "clifft-0.14.0rc2"
 name = "Clifft"
 adapter = "clifft"
 distribution = "clifft"
-version = "0.14.0rc1"
+version = "0.14.0rc2"
 display_version = "0.14.0"
-commit_sha = "7381d33e0038ab969b54ff65f8131196178f48f6"
-source_tag = "v0.14.0rc1"
+commit_sha = "4e5d60dc34ebf49722aba59dd92e8a61cad6cd6d"
+source_tag = "v0.14.0rc2"
 source_url = "https://github.com/unitaryfoundation/clifft"
 dependency_distributions = ["numpy"]
 
