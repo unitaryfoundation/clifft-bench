@@ -18,7 +18,7 @@ repetitions = 1
 id = "msc-full-d5-cultivation-selected-p1e-3--clifft-current"
 variant_id = "clifft-current"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 128
 
 [cases.execution]
@@ -30,7 +30,7 @@ threads = 1
 id = "quantum-volume-q10-seed42-all-observables--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "quantum-volume-q10-seed42-all-observables"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 128
 
 [cases.execution]
@@ -42,7 +42,7 @@ threads = 1
 id = "quantum-volume-q20-seed42-all-observables--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "quantum-volume-q20-seed42-all-observables"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 32
 
 [cases.execution]
@@ -54,7 +54,7 @@ threads = 1
 id = "msc-full-d5-cultivation-selected-p1e-3--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "msc-full-d5-cultivation-selected-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 128
 
 [cases.execution]
@@ -166,7 +166,7 @@ postselect = "off"
 id = "fold-transversal-d3-p1e-3--clifft-current"
 variant_id = "clifft-current"
 workload_id = "fold-transversal-d3-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]
@@ -177,7 +177,7 @@ postselect = "on"
 id = "fold-transversal-d3-p1e-3--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "fold-transversal-d3-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]
@@ -188,7 +188,7 @@ postselect = "off"
 id = "fold-transversal-d5-p1e-3--clifft-current"
 variant_id = "clifft-current"
 workload_id = "fold-transversal-d5-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]
@@ -199,7 +199,7 @@ postselect = "on"
 id = "fold-transversal-d5-p1e-3--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "fold-transversal-d5-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]
@@ -210,7 +210,7 @@ postselect = "off"
 id = "cain-15to1-d5-p1e-3--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "cain-15to1-d5-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]
@@ -221,7 +221,7 @@ postselect = "off"
 id = "cain-15to1-d9-p1e-3--clifft-current-off"
 variant_id = "clifft-current-off"
 workload_id = "cain-15to1-d9-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]

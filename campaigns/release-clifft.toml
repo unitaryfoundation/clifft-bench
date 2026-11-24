@@ -50,7 +50,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 workloads = "cpu-release"
 
 [variants.execution]
@@ -71,7 +71,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-off"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 workloads = "cpu-release"
 
 [variants.execution]
@@ -92,7 +92,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-8c"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 workloads = "cpu-release"
 
 [variants.execution]
@@ -113,7 +113,7 @@ options_preset = "clifft-scheduled"
 
 [[variants]]
 id = "clifft-current-off-8c"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 workloads = "cpu-release"
 
 [variants.execution]

@@ -18,7 +18,7 @@ repetitions = 2
 id = "distillation-15to1-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "distillation-15to1-rm15-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 10000
 
 [cases.execution]
@@ -77,7 +77,7 @@ postselect = "on"
 id = "draper-adder-smoke-clifft"
 variant_id = "clifft-current-off"
 workload_id = "draper-adder-m16-basis-all-observables"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 2
 
 [cases.execution]
@@ -89,7 +89,7 @@ postselect = "off"
 id = "msc-d3-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "msc-d3-inject-cultivate-p1e-3"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 2048
 
 [cases.execution]
@@ -112,7 +112,7 @@ postselect = "on"
 id = "distillation-85q-smoke-clifft"
 variant_id = "clifft-current"
 workload_id = "distillation-color-code-85q-p5e-2"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 8
 
 [cases.execution]
@@ -147,7 +147,7 @@ postselect = "off"
 id = "bt27-direct-x-smoke-clifft"
 variant_id = "clifft-current-off"
 workload_id = "bt27-direct-x"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 2048
 
 [cases.execution]
@@ -158,7 +158,7 @@ postselect = "off"
 id = "bt81-direct-x-smoke-clifft"
 variant_id = "clifft-current-off"
 workload_id = "bt81-direct-x"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 2048
 
 [cases.execution]
@@ -169,7 +169,7 @@ postselect = "off"
 id = "reed-muller-measured-smoke-clifft"
 variant_id = "clifft-current-off"
 workload_id = "reed-muller-measured"
-implementation_id = "clifft-0.14.0rc1"
+implementation_id = "clifft-0.14.0rc3"
 shots_per_call = 2048
 
 [cases.execution]
