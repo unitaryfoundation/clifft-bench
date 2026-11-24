@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import math
 import textwrap
 from pathlib import Path
 from typing import Any
@@ -17,7 +16,22 @@ from clifft_bench.results import (
     write_json,
 )
 
-FIGURES = ("simulator-throughput", "release-change")
+THROUGHPUT_MODES = (
+    (
+        "off",
+        "simulator-throughput-packed",
+        "CPU simulator throughput — packed samples",
+        "Postselection off · packed detector and observable samples",
+    ),
+    (
+        "on",
+        "simulator-throughput-survivors",
+        "CPU simulator throughput — survivor counts",
+        "Postselection on · survivor counts",
+    ),
+)
+THROUGHPUT_STEMS = tuple(stem for _, stem, _, _ in THROUGHPUT_MODES)
+FIGURES = (*THROUGHPUT_STEMS, "release-change")
 WORKLOAD_GROUPS = (
     ("Magic-state preparation", (
         "magic-state-cultivation", "magic-state-cultivation-full",
@@ -308,34 +322,35 @@ def review_summary(report: dict) -> str:
         "are reported separately. Later lazy planning remains timed. The main figures",
         "share circuit selection and thematic ordering.",
         "Each case uses a fresh worker. Tsim retains its upstream Numba disk cache.",
-        "Throughput panels have independent logarithmic axes; compare horizontal positions",
-        "within a panel. Quantum Volume has its own panel.",
+        "Peer-comparison throughput figures are split by output mode with 1-core and",
+        "8-core budgets side by side; each thematic band has its own logarithmic scale.",
+        "When peer comparisons are present, peerless circuits are omitted from the",
+        "static peer-comparison PNGs while remaining in the tables above, `cases.csv`,",
+        "`raw.json`, and `simulator-throughput.json`.",
         "The unverified cultivation proxy and bulk-call variants",
         "remain in the detailed results above. Colors and marker shapes identify simulators.",
         "Unsupported pairings have",
         "no marker; unmeasured and failed cases are labeled. Exact identities and outcomes",
         "are recorded above. Each source cases.csv/raw.json retains call sizes and postselection.",
         "",
-        "Release changes within ±50% use a linear percentage axis; larger changes use",
-        "a separate logarithmic ratio panel. Unpaired workloads have no ratio.",
+        "Release changes use a single logarithmic ratio axis when any change exceeds ±50%,",
+        "and a linear percentage axis when all changes remain within ±50%, with core",
+        "budgets side by side. Unpaired workloads have no ratio.",
     ]
     band = _release_change_band(document)
     if band is not None:
         lines.append(f"The shaded ±{band}% band marks the inconclusive range for this host epoch.")
     lines.append("")
-    for kind, title in zip(FIGURES, ("CPU simulator throughput", "Clifft release changes")):
+    figure_items = [
+        *((stem, title) for _, stem, title, _ in _throughput_figure_specs(report)),
+        ("release-change", "Clifft release changes"),
+    ]
+    for kind, title in figure_items:
         lines += [
             f"### {title}", "", f"[Dark version]({kind}-dark.png)", "",
             f"![{title}]({kind}-light.png)", "",
         ]
     return "\n".join(lines).rstrip() + "\n"
-
-
-def _label(case: dict) -> str:
-    """Use recorded workload fields; reporting never needs the current manifest."""
-    label = _workload_label(case)
-    threads = case["execution"]["threads_requested"]
-    return label if threads == 1 else f"{label} · {threads} cores"
 
 
 def _workload_label(case: dict) -> str:
@@ -422,22 +437,6 @@ def _release_pairs(report: dict) -> list[dict]:
     )
 
 
-def _layout(cases: list[dict], heights: list[float]) -> tuple[list, list, float]:
-    headers, positions = [], []
-    y, last = 0.0, None
-    for case, height in zip(cases, heights, strict=True):
-        group, _, heading = _workload_group(case)
-        if group != last:
-            if last is not None:
-                y += 0.20
-            headers.append((heading, y + 0.10))
-            y += 0.55
-            last = group
-        positions.append(y + height / 2)
-        y += height
-    return headers, positions, max(0.65, y + 0.12)
-
-
 def _number_label(value: float) -> str:
     for divisor, suffix in ((1e9, "B"), (1e6, "M"), (1e3, "k")):
         if value >= divisor:
@@ -445,24 +444,37 @@ def _number_label(value: float) -> str:
     return f"{value:.3g}"
 
 
+def _blend_hex(base: str, tint: str, alpha: float) -> str:
+    b = tuple(int(base[i:i + 2], 16) for i in (1, 3, 5))
+    t = tuple(int(tint[i:i + 2], 16) for i in (1, 3, 5))
+    rgb = tuple(round(bc * (1 - alpha) + tc * alpha) for bc, tc in zip(b, t, strict=True))
+    return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+
+
+def _draw_section_band(
+    axes: list, y0: float, y1: float, heading: str,
+    *, header_left: float, col_gap: float, col_w: float, fill: str,
+) -> None:
+    gap_span = col_gap / col_w if len(axes) > 1 else 0.0
+    for index, axis in enumerate(axes):
+        xmin = header_left if index == 0 else 0.0
+        xmax = 1.0 + (gap_span if index < len(axes) - 1 else 0.0)
+        axis.axhspan(y0, y1, xmin=xmin, xmax=xmax, color=fill, clip_on=False, zorder=2)
+    axes[0].text(
+        header_left + 0.02, (y0 + y1) / 2, heading,
+        transform=axes[0].get_yaxis_transform(), va="center",
+        fontsize=11.5, fontweight="bold", zorder=3,
+    )
+
+
 def _style_axis(axis, extent: float, grid: str) -> None:
-    axis.set_ylim(extent, -0.12)
+    axis.set_ylim(extent, -0.02)
     axis.set_yticks([])
     axis.grid(axis="x", color=grid, linewidth=0.8)
     axis.set_axisbelow(True)
     axis.tick_params(axis="x", labelsize=11)
     for spine in axis.spines.values():
         spine.set_visible(False)
-
-
-def _header_bands(axis, headers, grid, *, left=-0.46, right=1, labels=True):
-    for heading, y in headers:
-        axis.axhspan(y - 0.15, y + 0.20, xmin=left, xmax=right,
-                     color=grid, alpha=0.45, clip_on=False, zorder=0)
-        if labels:
-            axis.text(left + 0.015, y + 0.025, heading,
-                      transform=axis.get_yaxis_transform(), va="center",
-                      fontsize=13, fontweight="bold")
 
 
 def _throughput_series(report: dict, entries: list[dict]) -> list[dict]:
@@ -585,83 +597,320 @@ def throughput_data(report: dict) -> dict:
     }
 
 
-def _render_throughput(report, theme):
-    import matplotlib.pyplot as plt
-    from matplotlib.lines import Line2D
+def _core_label(threads: int) -> str:
+    return "1 core" if threads == 1 else f"{threads} cores"
+
+
+def _configure_log_x_axis(axis, low: float, high: float, formatter) -> None:
     from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
 
-    _, _, grid, _ = THEMES[theme]
+    axis.set_xscale("log")
+    axis.set_xlim(low, high)
+    if high / low < 30:
+        axis.xaxis.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 5.0), numticks=6))
+    else:
+        axis.xaxis.set_major_locator(LogLocator(base=10, numticks=6))
+    axis.xaxis.set_major_formatter(FuncFormatter(formatter))
+    axis.xaxis.set_minor_locator(NullLocator())
+
+
+def _visible_cases(entry: dict, report: dict, variants: list[str]) -> list[tuple[str, dict | None]]:
+    representative = _representative(entry)
+    return sorted(
+        (
+            (variant, case)
+            for variant, case in entry["cases"].items()
+            if _outcome(case, representative, report["variants"].get(variant)) != "unsupported"
+        ),
+        key=lambda item: variants.index(item[0]),
+    )
+
+
+def _has_recorded_peer(entry: dict, visible: list[tuple[str, dict | None]]) -> bool:
+    return any(variant != entry["variant"] and case is not None for variant, case in visible)
+
+
+def _has_peer_comparisons(report: dict, entries: list[dict], variants: list[str]) -> bool:
+    return any(
+        _has_recorded_peer(entry, _visible_cases(entry, report, variants))
+        for entry in entries
+    )
+
+
+def _config_signature(case: dict) -> tuple:
+    execution = case["execution"]
+    return (
+        execution["postselect"],
+        execution["shots_per_call"],
+        execution["batch_size"],
+        json.dumps(execution["options"], sort_keys=True),
+    )
+
+
+def _group_rows_by_threads(
+    items: list[tuple[Any, dict, tuple, tuple[str, ...], Any]],
+) -> list[dict[str, Any]]:
+    """Pair matching configurations across core budgets without overwriting collisions."""
+    rows: list[dict[str, Any]] = []
+    index_by_key: dict[tuple, list[dict[str, Any]]] = {}
+    for base_key, case, config_key, label_candidates, payload in items:
+        threads = case["execution"]["threads_requested"]
+        sig_key = (base_key, config_key)
+        target = next(
+            (row for row in index_by_key.get(sig_key, ()) if threads not in row["by_threads"]),
+            None,
+        )
+        if target is None:
+            target = {
+                "base_key": base_key,
+                "case": case,
+                "label_by_threads": {},
+                "by_threads": {},
+            }
+            rows.append(target)
+            index_by_key.setdefault(sig_key, []).append(target)
+        target["by_threads"][threads] = payload
+        target["label_by_threads"][threads] = label_candidates
+
+    by_base: dict[Any, list[dict[str, Any]]] = {}
+    for row in rows:
+        by_base.setdefault(row["base_key"], []).append(row)
+    for group in by_base.values():
+        if len(group) == 1:
+            group[0]["qualifier"] = ""
+            continue
+        shots = [row["case"]["execution"]["shots_per_call"] for row in group]
+        if len(set(shots)) == len(group):
+            for row, count in zip(group, shots, strict=True):
+                row["qualifier"] = f"{count:,} shots"
+            continue
+        ordered_candidates = [
+            row["label_by_threads"][min(row["label_by_threads"])] for row in group
+        ]
+        chosen = None
+        for index in range(len(ordered_candidates[0])):
+            options = [entry[index] for entry in ordered_candidates]
+            if len(set(options)) == len(group):
+                chosen = options
+                break
+        if chosen is None:
+            chosen = [entry[-1] for entry in ordered_candidates]
+        for row, qualifier in zip(group, chosen, strict=True):
+            row["qualifier"] = qualifier
+    return rows
+
+
+def _throughput_figure_specs(report: dict) -> list[tuple[str, str, str, str]]:
+    present = {_representative(entry)["execution"]["postselect"]
+               for entry in _throughput_entries(report)}
+    specs = [spec for spec in THROUGHPUT_MODES if spec[0] in present]
+    return specs or [THROUGHPUT_MODES[0]]
+
+
+def _throughput_plot_limits(rates: list[float], *, columns: int) -> tuple[float, float]:
+    if columns <= 1:
+        return _throughput_limits(rates)
+    low = min(rates) / 1.5 if rates else 0.1
+    peak = max(rates, default=1)
+    return low, peak * max(2.2, (peak / low) ** 0.28)
+
+
+def _throughput_band_key(case: dict) -> tuple[int, str]:
+    family = case["workload"]["family"]
+    if family == "quantum-volume":
+        return len(WORKLOAD_GROUPS) + 1, "quantum-volume"
+    if family in {"prepared-basis-arithmetic", "code-switching"}:
+        return len(WORKLOAD_GROUPS), "arithmetic-code-switching"
+    group_index, _, heading = _workload_group(case)
+    return group_index, heading
+
+
+def _throughput_band_heading(rows: list[dict]) -> str:
+    families = {row["case"]["workload"]["family"] for row in rows}
+    if families == {"quantum-volume"}:
+        return "Quantum Volume"
+    if families <= {"prepared-basis-arithmetic", "code-switching"}:
+        if families == {"prepared-basis-arithmetic"}:
+            return "Prepared-basis arithmetic"
+        if families == {"code-switching"}:
+            return "Code switching"
+        return "Arithmetic & code switching"
+    return _workload_group(rows[0]["case"])[2]
+
+
+def _throughput_mode_bands(
+    report: dict, entries: list[dict], variants: list[str], postselect: str,
+) -> tuple[list[int], list[tuple[str, list[dict]]]]:
+    mode_entries = [
+        entry for entry in entries
+        if _representative(entry)["execution"]["postselect"] == postselect
+    ]
+    has_peers = _has_peer_comparisons(report, entries, variants)
+    items = []
+    for entry in mode_entries:
+        case = _representative(entry)
+        visible = _visible_cases(entry, report, variants)
+        items.append((
+            case["workload"]["id"],
+            case,
+            _config_signature(case),
+            (entry["variant"],),
+            (entry, visible),
+        ))
+    rows = _group_rows_by_threads(items)
+    for row in rows:
+        label = _workload_label(row["case"])
+        row["label"] = f"{label} · {row['qualifier']}" if row["qualifier"] else label
+    if has_peers:
+        rows = [
+            row for row in rows
+            if any(
+                _has_recorded_peer(entry, visible)
+                for entry, visible in row["by_threads"].values()
+            )
+        ]
+    budgets = sorted({
+        threads for row in rows for threads in row["by_threads"]
+    }) or [1]
+    bands_by_key: dict[tuple[int, str], list[dict]] = {}
+    for row in rows:
+        bands_by_key.setdefault(_throughput_band_key(row["case"]), []).append(row)
+    bands = [(_throughput_band_heading(group), group) for group in bands_by_key.values()]
+    return budgets, bands or [("Other workloads", [])]
+
+
+def _render_throughput_mode(
+    report: dict, postselect: str, title: str, subtitle: str, theme: str,
+):
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+
+    background, _, grid, _ = THEMES[theme]
+    band_fill = _blend_hex(background, grid, 0.45)
     entries = _throughput_entries(report)
     series = _throughput_series(report, entries)
     variants = [item["variant_id"] for item in series]
     markers = {"circle": "o", "square": "s", "diamond": "D", "triangle": "^", "plus": "P"}
     styles = {item["variant_id"]: (item["colors"][theme], markers[item["marker"]])
               for item in series}
+
+    budgets, bands = _throughput_mode_bands(report, entries, variants, postselect)
+    num_cols = len(budgets)
+    fig_width = 13.0 if num_cols > 1 else 11.0
+    left = 0.235 if num_cols > 1 else 0.285
+    right = 0.975
+    col_gap = 0.032 if num_cols > 1 else 0.0
+    col_w = (right - left - col_gap * (num_cols - 1)) / num_cols
+    header_left = (0.02 - left) / col_w
+    bar_pitch = 0.21
+
     layouts = []
-    for heading, group in _throughput_panels(entries).items():
-        visible = [
-            sorted(((v, case) for v, case in entry["cases"].items()
-                    if _outcome(case, _representative(entry), report["variants"].get(v))
-                    != "unsupported"), key=lambda item: variants.index(item[0]))
-            for entry in group
-        ]
-        names = [textwrap.fill(_workload_label(_representative(entry)), 29) for entry in group]
-        heights = [
-            max(0.58, len(values) * 0.23 + 0.19, (name.count("\n") + 1) * 0.24 + 0.19)
-            for values, name in zip(visible, names, strict=True)
-        ]
-        positions, y = [], 0.55
+    for heading, rows in bands:
+        names = [textwrap.fill(row["label"], 28, break_on_hyphens=False) for row in rows]
+        heights = []
+        for row, name in zip(rows, names, strict=True):
+            max_bars = max((len(visible) for _, visible in row["by_threads"].values()), default=1)
+            heights.append(max(
+                0.50, max_bars * bar_pitch + 0.16, (name.count("\n") + 1) * 0.22 + 0.16,
+            ))
+        positions, y = [], 0.46
         for row_height in heights:
             positions.append(y + row_height / 2)
             y += row_height
-        layouts.append((heading, group, visible, names, heights, positions, y + 0.12))
-    top, gap = 0.95, 0.68
-    height = top + sum(layout[-1] for layout in layouts) + gap * len(layouts) + 0.05
-    figure = plt.figure(figsize=(12, height))
+        layouts.append((heading, rows, names, heights, positions, max(0.75, y + 0.08)))
+
+    top = 1.18
+    band_gap = 0.42
+    bottom_pad = 0.64
+    height = (
+        top + sum(layout[-1] for layout in layouts)
+        + band_gap * max(0, len(layouts) - 1) + bottom_pad
+    )
+    figure = plt.figure(figsize=(fig_width, height))
+    has_rows = any(rows for _, rows in bands)
     used, consumed = set(), top
-    for heading, group, visible, names, heights, positions, extent in layouts:
+
+    for band_index, (heading, rows, names, heights, positions, extent) in enumerate(layouts):
         bottom = height - consumed - extent
-        axis = figure.add_axes((0.32, bottom / height, 0.64, extent / height))
         rates = [
             report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-            for values in visible for _, case in values
+            for row in rows
+            for _, visible in row["by_threads"].values()
+            for _, case in visible
             if case is not None and case["status"] == "success"
         ]
-        low, high = _throughput_limits(rates)
-        axis.set_xscale("log")
-        axis.set_xlim(low, high)
-        axis.xaxis.set_major_locator(LogLocator(base=10, numticks=7))
-        axis.xaxis.set_major_formatter(FuncFormatter(lambda value, _: _number_label(value)))
-        axis.xaxis.set_minor_locator(NullLocator())
-        _style_axis(axis, extent, grid)
-        _header_bands(axis, [(heading, 0.10)], grid)
-        for entry, values, name, y, row_height in zip(
-            group, visible, names, positions, heights, strict=True,
+        low, high = _throughput_plot_limits(rates, columns=num_cols)
+        col_axes = []
+        for col_index, threads in enumerate(budgets):
+            x0 = left + col_index * (col_w + col_gap)
+            axis = figure.add_axes(
+                (x0, bottom / height, col_w, extent / height),
+                sharey=col_axes[0] if col_axes else None,
+            )
+            col_axes.append(axis)
+            _configure_log_x_axis(axis, low, high, lambda value, _: _number_label(value))
+            _style_axis(axis, extent, grid)
+            axis.tick_params(axis="x", labelsize=10.5)
+            if band_index == 0 and has_rows:
+                axis.set_title(_core_label(threads), fontsize=12.5, fontweight="bold", pad=12)
+            if band_index == len(layouts) - 1:
+                axis.set_xlabel(
+                    "Attempted shots per second · log scale · higher is faster",
+                    labelpad=8, fontsize=10.5,
+                )
+
+        _draw_section_band(
+            col_axes, -0.02, 0.34, heading,
+            header_left=header_left, col_gap=col_gap, col_w=col_w, fill=band_fill,
+        )
+
+        for row_index, (row, name, y, row_height) in enumerate(
+            zip(rows, names, positions, heights, strict=True)
         ):
-            axis.text(-0.025, y, name, transform=axis.get_yaxis_transform(),
-                      ha="right", va="center", fontsize=13)
-            for offset, (variant, case) in enumerate(values):
-                color, marker = styles[variant]
-                py = y + (offset - (len(values) - 1) / 2) * 0.23
-                state = _outcome(case, _representative(entry), report["variants"].get(variant))
-                used.add(variant)
-                if state == "measured":
-                    rate = report["rows"][case["case_id"]]["median_attempted_shots_per_second"]
-                    axis.hlines(py, low, rate, color=color, linewidth=2.4)
-                    axis.plot(rate, py, marker, color=color, markersize=7)
-                    axis.annotate(f"{_number_label(rate)}/s", (rate, py), xytext=(7, 0),
-                                  textcoords="offset points", va="center", color=color,
-                                  fontsize=11.5, fontweight="bold")
-                else:
-                    simulator = report["variants"].get(variant)
-                    label = simulator["name"] if simulator else variant
-                    axis.text(0.02, py, f"{label}: {state}", transform=axis.get_yaxis_transform(),
-                              va="center", fontsize=11, color=color)
-            axis.axhline(y + row_height / 2, color=grid, linewidth=0.5, alpha=0.65)
-        if not group:
-            axis.text(0.5, 0.5, "No main workloads selected", ha="center", transform=axis.transAxes)
-        axis.set_xlabel("Attempted shots per second · log scale · higher is faster", labelpad=10)
-        consumed += extent + gap
+            col_axes[0].text(
+                -0.035, y, name, transform=col_axes[0].get_yaxis_transform(),
+                ha="right", va="center", fontsize=11.5,
+            )
+            for col_index, threads in enumerate(budgets):
+                axis = col_axes[col_index]
+                cell = row["by_threads"].get(threads)
+                if cell is not None:
+                    entry, visible = cell
+                    representative = _representative(entry)
+                    for offset, (variant, case) in enumerate(visible):
+                        color, marker = styles[variant]
+                        py = y + (offset - (len(visible) - 1) / 2) * bar_pitch
+                        state = _outcome(case, representative, report["variants"].get(variant))
+                        used.add(variant)
+                        if state == "measured":
+                            rate = report["rows"][case["case_id"]][
+                                "median_attempted_shots_per_second"
+                            ]
+                            axis.hlines(py, low, rate, color=color, linewidth=2.2, zorder=3)
+                            axis.plot(rate, py, marker, color=color, markersize=6.5, zorder=4)
+                            axis.annotate(
+                                f"{_number_label(rate)}/s", (rate, py), xytext=(6, 0),
+                                textcoords="offset points", va="center", color=color,
+                                fontsize=10.5, fontweight="bold", zorder=4,
+                            )
+                        else:
+                            simulator = report["variants"].get(variant)
+                            label = simulator["name"] if simulator else variant
+                            axis.text(
+                                0.02, py, f"{label}: {state}",
+                                transform=axis.get_yaxis_transform(),
+                                va="center", fontsize=10, color=color, zorder=4,
+                            )
+                if row_index < len(rows) - 1:
+                    axis.axhline(y + row_height / 2, color=grid, linewidth=0.5, alpha=0.55)
+
+        if not rows:
+            col_axes[0].text(
+                0.5, 0.5, "No main workloads selected",
+                ha="center", transform=col_axes[0].transAxes,
+            )
+        consumed += extent + band_gap
+
     handles, names_seen = [], set()
     for variant in variants:
         if variant not in used:
@@ -672,72 +921,180 @@ def _render_throughput(report, theme):
             continue
         names_seen.add(name)
         color, marker = styles[variant]
-        handles.append(Line2D([], [], color=color, marker=marker, linewidth=2.4, label=name))
+        handles.append(Line2D([], [], color=color, marker=marker, linewidth=2.2, label=name))
     if handles:
-        figure.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.32, 1 - 0.34 / height),
-                      ncol=5, frameon=False, fontsize=11, handlelength=1.3, columnspacing=1.2)
-    figure.suptitle("CPU simulator throughput", x=0.035, ha="left", fontsize=19,
-                    fontweight="bold", y=1 - 0.04 / height)
+        figure.legend(
+            handles=handles, loc="upper left", bbox_to_anchor=(0.015, 1 - 0.58 / height),
+            ncol=len(handles), frameon=False, fontsize=11, handlelength=1.4, columnspacing=1.3,
+        )
+    figure.suptitle(
+        title, x=0.02, ha="left", fontsize=16.5, fontweight="bold", y=1 - 0.08 / height,
+    )
+    figure.text(
+        0.02, 1 - 0.40 / height, subtitle, ha="left", va="top",
+        fontsize=10.5, alpha=0.78,
+    )
     return figure
 
 
-def _render_release(report, colors, foreground, grid):
-    import matplotlib.pyplot as plt
-    from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
+def _render_throughput(report, theme, *, postselect: str | None = None):
+    specs = _throughput_figure_specs(report)
+    if postselect is None:
+        postselect, _, title, subtitle = specs[0]
+    else:
+        match = next((s for s in THROUGHPUT_MODES if s[0] == postselect), specs[0])
+        postselect, _, title, subtitle = match
+    return _render_throughput_mode(report, postselect, title, subtitle, theme)
 
+
+def _render_release(report, colors, foreground, grid, background="#ffffff"):
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter
+
+    band_fill = _blend_hex(background, grid, 0.42)
     pairs = _release_pairs(report)
-    cases = [p["candidate"] for p in pairs]
-    names = [textwrap.fill(_label(case), 29) for case in cases]
-    heights = [max(0.53, (name.count("\n") + 1) * 0.24 + 0.19) for name in names]
-    headers, positions, extent = _layout(cases, heights)
-    height = extent + 1.65
-    figure = plt.figure(figsize=(12, height))
-    percent = figure.add_axes((0.32, 0.74 / height, 0.295, extent / height))
-    ratio_axis = figure.add_axes((0.69, 0.74 / height, 0.27, extent / height), sharey=percent)
-    small = [p["ratio"] for p in pairs if 0.5 <= p["ratio"] <= 1.5]
-    large = [p["ratio"] for p in pairs if p["ratio"] < 0.5 or p["ratio"] > 1.5]
-    span = max([3, *(abs((ratio - 1) * 100) * 1.65 for ratio in small)])
-    percent.set_xlim(-span, span)
-    percent.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}%"))
+    modes = {pair["candidate"]["execution"]["postselect"] for pair in pairs}
+    budgets = sorted({pair["candidate"]["execution"]["threads_requested"] for pair in pairs}) or [1]
+    items = []
+    for pair in pairs:
+        candidate, baseline = pair["candidate"], pair["baseline"]
+        mode = candidate["execution"]["postselect"]
+        row_key = (pair["workload_id"], mode) if len(modes) > 1 else pair["workload_id"]
+        config_key = (
+            _config_signature(candidate),
+            baseline["simulator"]["implementation_id"],
+            _config_signature(baseline),
+        )
+        label_candidates = (
+            pair["candidate_variant"],
+            f"vs {pair['baseline_variant']}",
+            f"{pair['candidate_variant']} vs {pair['baseline_variant']}",
+        )
+        items.append((row_key, candidate, config_key, label_candidates, pair))
+    rows = _group_rows_by_threads(items)
+    for row in rows:
+        candidate = row["case"]
+        label = _workload_label(candidate)
+        if len(modes) > 1:
+            suffix = "survivors" if candidate["execution"]["postselect"] == "on" else "packed"
+            label = f"{label} ({suffix})"
+        row["label"] = f"{label} · {row['qualifier']}" if row["qualifier"] else label
+
+    cases = [row["case"] for row in rows]
+    names = [textwrap.fill(row["label"], 28, break_on_hyphens=False) for row in rows]
+    heights = [max(0.46, (name.count("\n") + 1) * 0.22 + 0.20) for name in names]
+
+    headers, positions = [], []
+    y, last = 0.0, None
+    for case, row_height in zip(cases, heights, strict=True):
+        group, _, heading = _workload_group(case)
+        if group != last:
+            if last is not None:
+                y += 0.16
+            headers.append((heading, y + 0.14))
+            y += 0.46
+            last = group
+        positions.append(y + row_height / 2)
+        y += row_height
+    extent = max(0.75, y + 0.08)
+
+    use_log = any(pair["ratio"] < 0.5 or pair["ratio"] > 1.5 for pair in pairs)
+    num_cols = len(budgets)
+    fig_width = 12.0 if num_cols > 1 else 10.0
+    left = 0.255 if num_cols > 1 else 0.30
+    right = 0.97
+    col_gap = 0.042 if num_cols > 1 else 0.0
+    col_w = (right - left - col_gap * (num_cols - 1)) / num_cols
+    header_left = (0.02 - left) / col_w
+
+    top = 1.12
+    bottom_pad = 0.66
+    height = top + extent + bottom_pad
+    figure = plt.figure(figsize=(fig_width, height))
+
     band = _release_change_band(report["document"])
-    if band is not None:
-        percent.axvspan(-band, band, color=grid, alpha=0.45, zorder=0)
-    percent.axvline(0, color=foreground, linestyle="--", linewidth=0.8)
-    percent.set_title("Percentage change", fontsize=12, pad=13)
-    percent.set_xlabel("0% = unchanged", labelpad=10, fontsize=11)
-    ratio_axis.set_xscale("log")
-    low, high = min([1, *large]), max([1, *large])
-    padding = max(math.log(high / low) * 0.32, math.log(1.5))
-    ratio_axis.set_xlim(low / math.exp(padding), high * math.exp(padding))
-    ratio_axis.xaxis.set_major_locator(LogLocator(base=10, numticks=5))
-    ratio_axis.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}×"))
-    ratio_axis.xaxis.set_minor_locator(NullLocator())
-    ratio_axis.axvline(1, color=foreground, linestyle="--", linewidth=0.8)
-    ratio_axis.set_title("Larger changes", fontsize=12, pad=13)
-    ratio_axis.set_xlabel("Current / previous · log scale", labelpad=10, fontsize=11)
-    for axis in (percent, ratio_axis):
+    if use_log:
+        ratios = [pair["ratio"] for pair in pairs]
+        min_r = min(1.0, *ratios)
+        max_r = max(1.0, *ratios)
+        low = (
+            min_r / max(1.8, (max_r / min_r) ** 0.26)
+            if min_r < 1.0
+            else 1.0 / max(1.18, max_r ** 0.06)
+        )
+        high = (
+            max_r * max(1.9, (max_r / min_r) ** 0.26)
+            if max_r > 1.0
+            else max(1.18, (1.0 / min_r) ** 0.06)
+        )
+    else:
+        span = max([3.0, *(abs((pair["ratio"] - 1) * 100) * 1.65 for pair in pairs)])
+
+    axes = []
+    for col_index, threads in enumerate(budgets):
+        x0 = left + col_index * (col_w + col_gap)
+        axis = figure.add_axes(
+            (x0, bottom_pad / height, col_w, extent / height),
+            sharey=axes[0] if axes else None,
+        )
+        axes.append(axis)
+        if use_log:
+            _configure_log_x_axis(axis, low, high, lambda value, _: f"{value:g}×")
+            if band is not None:
+                axis.axvspan(1 - band / 100, 1 + band / 100, color=grid, alpha=0.45, zorder=0)
+            axis.axvline(1, color=foreground, linestyle="--", linewidth=0.9, zorder=1)
+            axis.set_xlabel("Current / previous · log scale", labelpad=8, fontsize=10.5)
+        else:
+            axis.set_xlim(-span, span)
+            axis.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}%"))
+            if band is not None:
+                axis.axvspan(-band, band, color=grid, alpha=0.45, zorder=0)
+            axis.axvline(0, color=foreground, linestyle="--", linewidth=0.9, zorder=1)
+            axis.set_xlabel("Percentage change · 0% = unchanged", labelpad=8, fontsize=10.5)
         _style_axis(axis, extent, grid)
-    _header_bands(percent, headers, grid, left=-1, right=(0.96 - 0.32) / 0.295)
-    _header_bands(ratio_axis, headers, grid, left=0, labels=False)
-    for pair, name, y in zip(pairs, names, positions, strict=True):
-        percent.text(-0.055, y, name, transform=percent.get_yaxis_transform(),
-                     ha="right", va="center", fontsize=13)
-        ratio = pair["ratio"]
-        is_small = 0.5 <= ratio <= 1.5
-        axis = percent if is_small else ratio_axis
-        value, baseline = ((ratio - 1) * 100, 0) if is_small else (ratio, 1)
-        color = colors[0] if ratio >= 1 else colors[-1]
-        if band is not None and is_small and abs(value) <= band:
-            color = foreground
-        axis.hlines(y, baseline, value, color=color, linewidth=2.7)
-        axis.plot(value, y, "o", color=color, markersize=8)
-        axis.annotate(f"{value:+.2f}%" if is_small else f"{ratio:.3g}×", (value, y),
-                      xytext=(8 if ratio >= 1 else -8, 0), textcoords="offset points",
-                      ha="left" if ratio >= 1 else "right", va="center",
-                      fontsize=12, fontweight="bold", color=color)
+        axis.tick_params(axis="x", labelsize=10.5)
+        if pairs:
+            axis.set_title(_core_label(threads), fontsize=12.5, fontweight="bold", pad=12)
+
+    for heading, hy in headers:
+        _draw_section_band(
+            axes, hy - 0.16, hy + 0.18, heading,
+            header_left=header_left, col_gap=col_gap, col_w=col_w, fill=band_fill,
+        )
+
+    for row_index, (row, name, ry, row_height) in enumerate(
+        zip(rows, names, positions, heights, strict=True)
+    ):
+        axes[0].text(
+            -0.035, ry, name, transform=axes[0].get_yaxis_transform(),
+            ha="right", va="center", fontsize=11.5,
+        )
+        for col_index, threads in enumerate(budgets):
+            axis = axes[col_index]
+            pair = row["by_threads"].get(threads)
+            if pair is not None:
+                ratio = pair["ratio"]
+                pct = (ratio - 1) * 100
+                value, baseline = (ratio, 1.0) if use_log else (pct, 0.0)
+                color = colors[0] if ratio >= 1 else colors[-1]
+                if band is not None and abs(pct) <= band:
+                    color = foreground
+                axis.hlines(ry, baseline, value, color=color, linewidth=2.6, zorder=3)
+                axis.plot(value, ry, "o", color=color, markersize=7.5, zorder=4)
+                label_text = f"{ratio:.3g}×" if use_log else f"{pct:+.2f}%"
+                axis.annotate(
+                    label_text, (value, ry),
+                    xytext=(7 if ratio >= 1 else -7, 0), textcoords="offset points",
+                    ha="left" if ratio >= 1 else "right", va="center",
+                    fontsize=11, fontweight="bold", color=color, zorder=4,
+                )
+            if row_index < len(rows) - 1:
+                axis.axhline(ry + row_height / 2, color=grid, linewidth=0.5, alpha=0.45)
+
     if not pairs:
-        percent.text(0.5, 0.5, "No measured release pairs", ha="center",
-                     transform=percent.transAxes)
+        axes[0].text(0.5, 0.5, "No measured release pairs", ha="center",
+                     transform=axes[0].transAxes)
+
     versions = ""
     if report["release"]:
         pair = report["release"][0]
@@ -746,8 +1103,21 @@ def _render_release(report, colors, foreground, grid):
             for key in ("candidate_variant", "baseline_variant")
         )
         versions = f" · {current} vs {previous}"
-    figure.suptitle("Clifft release changes" + versions, x=0.035, ha="left",
-                    fontsize=19, fontweight="bold", y=1 - 0.04 / height)
+    figure.suptitle(
+        "Clifft release changes" + versions, x=0.02, ha="left",
+        fontsize=16.5, fontweight="bold", y=1 - 0.08 / height,
+    )
+    if len(modes) == 1:
+        mode = next(iter(modes))
+        subtitle = (
+            "Survivor counts (postselection on) · higher is faster"
+            if mode == "on"
+            else "Packed samples (postselection off) · higher is faster"
+        )
+        figure.text(
+            0.02, 1 - 0.42 / height, subtitle, ha="left", va="top",
+            fontsize=10.5, alpha=0.78,
+        )
     return figure
 
 
@@ -769,6 +1139,8 @@ def render(report: dict, output_dir: Path) -> list[Path]:
         "SMOKE / VALIDATION ONLY · "
         if run["classification"] != "official" or run["selection"] else ""
     )
+    throughput_specs = _throughput_figure_specs(report)
+    active_stems = {stem for _, stem, _, _ in throughput_specs}
     for theme, (background, foreground, grid, colors) in THEMES.items():
         with plt.rc_context({
             "font.family": "DejaVu Sans", "font.size": 12,
@@ -777,21 +1149,28 @@ def render(report: dict, output_dir: Path) -> list[Path]:
             "figure.facecolor": background, "axes.facecolor": background,
             "savefig.facecolor": background,
         }):
-            for kind in FIGURES:
-                figure = (
-                    _render_release(report, colors, foreground, grid)
-                    if kind == "release-change" else _render_throughput(report, theme)
-                )
+            for postselect, stem, title, subtitle in throughput_specs:
+                figure = _render_throughput_mode(report, postselect, title, subtitle, theme)
                 if qualifier:
                     figure.text(0.5, 1.01, qualifier.rstrip(" ·"), ha="center",
                                 transform=figure.transFigure, fontsize=14, color=colors[-1])
-                path = output_dir / f"{kind}-{theme}.png"
+                path = output_dir / f"{stem}-{theme}.png"
                 figure.savefig(path, dpi=160, bbox_inches="tight", pad_inches=0.16)
                 plt.close(figure)
                 outputs.append(path)
+            figure = _render_release(report, colors, foreground, grid, background)
+            if qualifier:
+                figure.text(0.5, 1.01, qualifier.rstrip(" ·"), ha="center",
+                            transform=figure.transFigure, fontsize=14, color=colors[-1])
+            path = output_dir / f"release-change-{theme}.png"
+            figure.savefig(path, dpi=160, bbox_inches="tight", pad_inches=0.16)
+            plt.close(figure)
+            outputs.append(path)
             # Remove superseded generated figures, preserving unrelated images.
-            (output_dir / f"clifft-throughput-{theme}.png").unlink(missing_ok=True)
-            for kind in ("clifft-throughput", *FIGURES):
+            for stale_stem in ("clifft-throughput", "simulator-throughput", *THROUGHPUT_STEMS):
+                if stale_stem not in active_stems:
+                    (output_dir / f"{stale_stem}-{theme}.png").unlink(missing_ok=True)
+            for kind in ("clifft-throughput", "simulator-throughput", *FIGURES):
                 for path in output_dir.glob(f"{kind}-*-{theme}.png"):
                     page = path.name.removeprefix(f"{kind}-").removesuffix(f"-{theme}.png")
                     if page.isdecimal():

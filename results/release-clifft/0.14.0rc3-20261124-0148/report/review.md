@@ -558,22 +558,32 @@ Rates count attempted shots after the first full call; compilation and that call
 are reported separately. Later lazy planning remains timed. The main figures
 share circuit selection and thematic ordering.
 Each case uses a fresh worker. Tsim retains its upstream Numba disk cache.
-Throughput panels have independent logarithmic axes; compare horizontal positions
-within a panel. Quantum Volume has its own panel.
+Peer-comparison throughput figures are split by output mode with 1-core and
+8-core budgets side by side; each thematic band has its own logarithmic scale.
+When peer comparisons are present, peerless circuits are omitted from the
+static peer-comparison PNGs while remaining in the tables above, `cases.csv`,
+`raw.json`, and `simulator-throughput.json`.
 The unverified cultivation proxy and bulk-call variants
 remain in the detailed results above. Colors and marker shapes identify simulators.
 Unsupported pairings have
 no marker; unmeasured and failed cases are labeled. Exact identities and outcomes
 are recorded above. Each source cases.csv/raw.json retains call sizes and postselection.
 
-Release changes within ±50% use a linear percentage axis; larger changes use
-a separate logarithmic ratio panel. Unpaired workloads have no ratio.
+Release changes use a single logarithmic ratio axis when any change exceeds ±50%,
+and a linear percentage axis when all changes remain within ±50%, with core
+budgets side by side. Unpaired workloads have no ratio.
 
-### CPU simulator throughput
+### CPU simulator throughput — packed samples
 
-[Dark version](simulator-throughput-dark.png)
+[Dark version](simulator-throughput-packed-dark.png)
 
-![CPU simulator throughput](simulator-throughput-light.png)
+![CPU simulator throughput — packed samples](simulator-throughput-packed-light.png)
+
+### CPU simulator throughput — survivor counts
+
+[Dark version](simulator-throughput-survivors-dark.png)
+
+![CPU simulator throughput — survivor counts](simulator-throughput-survivors-light.png)
 
 ### Clifft release changes
 

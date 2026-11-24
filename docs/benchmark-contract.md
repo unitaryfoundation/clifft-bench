@@ -55,26 +55,33 @@ Repeated QV sampling measures a different question from the optional
 Reports distinguish recorded failures, unsupported adapter pairings, and
 unmeasured combinations. Failed cases have no plotted throughput.
 
-The throughput figure combines Clifft and peer rates, grouped into magic-state
-preparation; surface-code memory and coherent noise; and arithmetic, code
-switching; and Quantum Volume. Each theme has an independent logarithmic axis
-with its own throughput ticks. Horizontal positions are comparable within a panel;
-absolute labels remain comparable across panels. Within each theme, circuits follow a stable
-family and size order, independent of measured speed. Each rate is directly
-labeled; short circuit names and consistent simulator colors and shapes aid
-comparison. Each postselection mode and physical-core budget has its own panels. The unverified
-cultivation proxy and bulk-call variants stay in the detailed tables rather than the main figures.
-Unsupported pairings have no marker; failed and unmeasured cases are labeled.
-Every selected case and declared comparison remains in the review tables.
-Call sizes and postselection modes are in `cases.csv`; exact masks remain in `raw.json`.
+The static throughput figures split by output mode (`simulator-throughput-packed`
+for postselection off and `simulator-throughput-survivors` for postselection on),
+laying out 1-core and 8-core budgets side by side with shared circuit labels and
+thematic bands for magic-state preparation; surface-code memory and coherent noise;
+arithmetic and code switching; and Quantum Volume. Each thematic band has an
+independent logarithmic axis with its own throughput ticks, while the x-axis caption
+appears once per column at the bottom. Horizontal positions are comparable within a
+band; absolute labels remain comparable across bands. Within each theme, circuits
+follow a stable family and size order, independent of measured speed. Each rate is
+directly labeled; short circuit names and consistent simulator colors and shapes aid
+comparison. When peer comparisons are present, circuits with no peer measurements
+(such as `BT27` and `BT81`) are omitted from the static peer-comparison PNGs while
+remaining in `raw.json`, `cases.csv`, `review.md`, and `simulator-throughput.json`.
+The unverified cultivation proxy and bulk-call variants stay in the detailed tables
+rather than the main figures. Unsupported pairings have no marker; failed and
+unmeasured cases are labeled. Every selected case and declared comparison remains in
+the review tables. Call sizes and postselection modes are in `cases.csv`; exact
+masks remain in `raw.json`.
 
-Release figures show changes within ±50% on a linear percentage axis and larger
-changes on an adjacent logarithmic ratio axis sharing the same rows. This display
-threshold keeps modest changes visible alongside large gains or losses.
-Both figures use the same circuit selection and ordering; the release figure
-includes only measured pairs. New pairs automatically appear in their circuit's
-thematic position when the recorded campaign includes compatible measurements.
-Exact identities and unpaired outcomes remain in the review tables and `cases.csv`.
+Release figures lay out 1-core and 8-core budgets side by side sharing one y-axis of
+circuit names. They use a single logarithmic ratio axis (`Current / previous`) when
+any measured change exceeds ±50%, and a linear percentage axis (`0% = unchanged`)
+when all measured changes stay within ±50%. Both figures use the same circuit
+selection and ordering; the release figure includes only measured pairs. New pairs
+automatically appear in their circuit's thematic position when the recorded campaign
+includes compatible measurements. Exact identities and unpaired outcomes remain in
+the review tables and `cases.csv`.
 
 ### Throughput widget data
 

@@ -159,7 +159,7 @@ def test_render_all_themes_and_regenerate_stale_csv(raw_result, tmp_path, all_fa
     (tmp_path / "report/simulator-throughput.json").write_text("stale widget data")
     report_execution(tmp_path)
     assert ("125.0" in (tmp_path / "cases.csv").read_text()) is not all_failed
-    for stem in ("simulator-throughput", "release-change"):
+    for stem in ("simulator-throughput-survivors", "release-change"):
         for theme in ("light", "dark"):
             path = tmp_path / "report" / f"{stem}-{theme}.png"
             assert path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
@@ -215,19 +215,21 @@ def test_figures_cover_every_measurement_and_separate_release_scales(
         figure.canvas.draw()
         renderer = figure.canvas.get_renderer()
         if path.name.startswith("release-change"):
-            for axis in figure.axes:
-                low, high = axis.get_xlim()
-                if axis.get_xscale() == "linear":
-                    assert -5 < low < -2 < 0 < 2 < high < 5
-                    assert all(abs(float(line.get_xdata()[0])) <= 50
-                               for line in axis.lines if line.get_marker() == "o")
-                else:
-                    assert low < 1 < high
-                    if workloads > 11:
-                        assert 224 < high
-                    assert all(float(line.get_xdata()[0]) > 1.5
-                               for line in axis.lines if line.get_marker() == "o")
-            assert figure.axes[0].get_ylim() == figure.axes[1].get_ylim()
+            assert len(figure.axes) == 1
+            axis = figure.axes[0]
+            low, high = axis.get_xlim()
+            if workloads <= 11:
+                assert axis.get_xscale() == "linear"
+                assert -5 < low < -2 < 0 < 2 < high < 5
+                assert all(abs(float(line.get_xdata()[0])) <= 50
+                           for line in axis.lines if line.get_marker() == "o")
+            else:
+                assert axis.get_xscale() == "log"
+                assert low < 1 < 224 < high
+                marks = [float(line.get_xdata()[0]) for line in axis.lines
+                         if line.get_marker() == "o"]
+                assert len(marks) == workloads
+                assert min(marks) < 1 < max(marks)
         else:
             axis = figure.axes[0]
             legend = figure.legends[0]
@@ -361,13 +363,19 @@ def test_regeneration_removes_obsolete_pages_but_keeps_unrelated_images(raw_resu
     destination.mkdir()
     stale = destination / "clifft-throughput-2-light.png"
     old_gallery = destination / "clifft-throughput-light.png"
+    old_combined = destination / "simulator-throughput-light.png"
+    old_inactive_mode = destination / "simulator-throughput-packed-light.png"
     unrelated = destination / "clifft-throughput-notes-light.png"
     stale.write_bytes(b"stale")
     old_gallery.write_bytes(b"stale")
+    old_combined.write_bytes(b"stale")
+    old_inactive_mode.write_bytes(b"stale")
     unrelated.write_bytes(b"keep")
     report_execution(tmp_path)
     assert not stale.exists()
     assert not old_gallery.exists()
+    assert not old_combined.exists()
+    assert not old_inactive_mode.exists()
     assert unrelated.read_bytes() == b"keep"
 
 
@@ -603,9 +611,9 @@ def test_throughput_panel_ranges_are_independent(raw_result):
         figure = _render_throughput(report, "light")
         try:
             limits, plotted = [], []
-            for axis, panel in zip(figure.axes, data["panels"], strict=True):
+            for index, (axis, panel) in enumerate(zip(figure.axes, data["panels"], strict=True)):
                 assert axis.get_xscale() == "log"
-                assert axis.get_xlabel()
+                assert bool(axis.get_xlabel()) == (index == len(figure.axes) - 1)
                 rates = [float(line.get_xdata()[0]) for line in axis.lines
                          if line.get_marker() == "o"]
                 low, high = axis.get_xlim()
@@ -739,7 +747,7 @@ def test_throughput_export_matches_plot_labels_order_and_styles(raw_result, peer
                 assert mark.get_color() == style["colors"][theme]
                 assert mark.get_marker() == markers[style["marker"]]
             labels = [text.get_text().replace("\n", " ") for text in axis.texts]
-            assert panel["title"] in labels
+            assert panel["title"].rsplit(" · ", 1)[-1] in labels
             assert all(row["label"] in labels for row in panel["rows"])
     finally:
         plt.close(figure)
@@ -771,6 +779,12 @@ def test_both_endpoints_render_separate_panels_from_one_canonical_workload(tmp_p
     output = tmp_path / "result"
     run_suite(load_suite(path), python_executable=sys.executable, output_dir=output)
     report_execution(output)
+    for stem in ("simulator-throughput-packed", "simulator-throughput-survivors", "release-change"):
+        for theme in ("light", "dark"):
+            assert (output / "report" / f"{stem}-{theme}.png").read_bytes().startswith(
+                b"\x89PNG\r\n\x1a\n"
+            )
+    assert not (output / "report/simulator-throughput-light.png").exists()
     data = json.loads((output / "report/simulator-throughput.json").read_text())
     assert len(data["panels"]) == 2
     assert {row["workload_id"] for panel in data["panels"] for row in panel["rows"]} == {
@@ -823,3 +837,275 @@ def test_scaling_requires_matched_successful_calls(raw_result, mismatch):
               for v in row["values"]}
     assert values[1]["eight_core_speedup"] is None
     assert values[8]["eight_core_speedup"] == (None if mismatch else 3)
+
+
+def test_release_and_peer_figures_use_side_by_side_cores_and_omit_peerless_rows(
+    raw_result, peer_result,
+):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release, _render_throughput
+
+    # Add an 8-core pair for the existing workload and a peerless Clifft-only workload
+    # in a second thematic family so we exercise both 2-column charts and peerless filtering.
+    for source in (raw_result, peer_result):
+        originals = list(zip(source["cases"], source["campaign"]["cases"], strict=True))
+        for case, contract in originals:
+            multi, definition = copy.deepcopy(case), copy.deepcopy(contract)
+            multi.update(case_id=case["case_id"] + "-8c", variant_id=case["variant_id"] + "-8c")
+            definition.update(id=multi["case_id"], variant_id=multi["variant_id"])
+            multi["execution"].update(threads=8, threads_requested=8)
+            definition["execution"]["threads"] = 8
+            for sample in multi["samples"]:
+                scale = 10 if case["variant_id"] == "current" else 2
+                sample["throughput_attempted_shots_per_second"] *= scale
+                sample["duration_seconds"] /= scale
+            source["cases"].append(multi)
+            source["campaign"]["cases"].append(definition)
+        source["campaign"]["comparisons"].extend(
+            {
+                "id": comp["id"] + "-8c",
+                "baseline_variant": comp["baseline_variant"] + "-8c",
+                "candidate_variants": [v + "-8c" for v in comp["candidate_variants"]],
+            }
+            for comp in list(source["campaign"]["comparisons"])
+        )
+
+    for suffix in ("", "-8c"):
+        base_case = next(c for c in raw_result["cases"] if c["variant_id"] == "current" + suffix)
+        base_def = next(
+            d for d in raw_result["campaign"]["cases"] if d["variant_id"] == "current" + suffix
+        )
+        peerless = copy.deepcopy(base_case)
+        peerless_def = copy.deepcopy(base_def)
+        peerless.update(case_id="bt27" + suffix)
+        peerless["workload"].update(
+            id="bt27-direct", family="code-switching", parameters={},
+            compatible_adapters=["clifft"],
+        )
+        peerless_def.update(id=peerless["case_id"], workload_id="bt27-direct")
+        raw_result["cases"].append(peerless)
+        raw_result["campaign"]["cases"].append(peerless_def)
+
+    report = build_report(raw_result, peer_document=peer_result)
+
+    # Peerless circuit stays in JSON and review, but is omitted from the peer PNG.
+    data = throughput_data(report)
+    json_workloads = {row["workload_id"] for panel in data["panels"] for row in panel["rows"]}
+    assert "bt27-direct" in json_workloads
+    assert "bt27-direct" in review_summary(report)
+
+    _, foreground, grid, colors = THEMES["light"]
+    release_fig = _render_release(report, colors, foreground, grid)
+    throughput_fig = _render_throughput(report, "light")
+    try:
+        assert len(release_fig.axes) == 2
+        assert [ax.get_title() for ax in release_fig.axes] == ["1 core", "8 cores"]
+        assert release_fig.axes[0].get_ylim() == release_fig.axes[1].get_ylim()
+        assert release_fig.axes[0].get_xlim() == release_fig.axes[1].get_xlim()
+        assert all(ax.get_xscale() == "log" for ax in release_fig.axes)
+        # Single row shared across 1 core and 8 cores (not repeated per core count).
+        row_labels = [t.get_text() for t in release_fig.axes[0].texts if t.get_ha() == "right"]
+        assert row_labels == ["tiny-fixture"]
+
+        assert len(throughput_fig.axes) == 2
+        assert [ax.get_title() for ax in throughput_fig.axes] == ["1 core", "8 cores"]
+        assert all(ax.get_xlabel() for ax in throughput_fig.axes)
+        rendered_texts = [t.get_text() for ax in throughput_fig.axes for t in ax.texts]
+        assert "BT27" not in rendered_texts
+        assert "tiny-fixture" in rendered_texts
+    finally:
+        plt.close(release_fig)
+        plt.close(throughput_fig)
+
+
+def test_multiple_configurations_per_workload_render_without_overwriting(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release, _render_throughput
+
+    for index in range(2):
+        case = copy.deepcopy(raw_result["cases"][index])
+        expected = copy.deepcopy(raw_result["campaign"]["cases"][index])
+        variant = case["variant_id"] + "-alt"
+        case.update(case_id=variant, variant_id=variant)
+        expected.update(id=variant, variant_id=variant, shots_per_call=16)
+        case["execution"]["shots_per_call"] = 16
+        for sample in [case["first_call_warmup"], *case["samples"]]:
+            for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"):
+                sample[key] *= 2
+            sample["duration_seconds"] *= 2
+        if case["variant_id"] == "current-alt":
+            for sample in case["samples"]:
+                sample["throughput_attempted_shots_per_second"] = 250.0
+                sample["duration_seconds"] = sample["attempted_shots"] / 250.0
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(expected)
+    raw_result["campaign"]["comparisons"].append(
+        {"id": "alt", "baseline_variant": "previous-alt", "candidate_variants": ["current-alt"]}
+    )
+    validate_result(raw_result)
+    report = build_report(raw_result)
+
+    _, foreground, grid, colors = THEMES["light"]
+    release_fig = _render_release(report, colors, foreground, grid)
+    throughput_fig = _render_throughput(report, "light")
+    try:
+        release_marks = [
+            float(line.get_xdata()[0]) for line in release_fig.axes[0].lines
+            if line.get_marker() == "o"
+        ]
+        assert sorted(release_marks) == [1.25, 2.5]
+        release_labels = [t.get_text() for t in release_fig.axes[0].texts if t.get_ha() == "right"]
+        assert release_labels == ["tiny-fixture · 8 shots", "tiny-fixture · 16 shots"]
+
+        throughput_marks = [
+            float(line.get_xdata()[0]) for line in throughput_fig.axes[0].lines
+            if line.get_marker() == "o"
+        ]
+        assert sorted(throughput_marks) == [125.0, 250.0]
+        throughput_labels = [
+            t.get_text() for t in throughput_fig.axes[0].texts if t.get_ha() == "right"
+        ]
+        assert throughput_labels == ["tiny-fixture · 8 shots", "tiny-fixture · 16 shots"]
+    finally:
+        plt.close(release_fig)
+        plt.close(throughput_fig)
+
+
+def test_peer_figure_omits_rows_with_only_unmeasured_peers(raw_result, peer_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import _render_throughput
+
+    new_case = copy.deepcopy(raw_result["cases"][1])
+    new_case.update(case_id="new-shared")
+    new_case["workload"].update(id="new-shared", compatible_adapters=["clifft", "symft"])
+    new_contract = copy.deepcopy(raw_result["campaign"]["cases"][1])
+    new_contract.update(id="new-shared", workload_id="new-shared")
+    raw_result["cases"].append(new_case)
+    raw_result["campaign"]["cases"].append(new_contract)
+
+    report = build_report(raw_result, peer_document=peer_result)
+    data = throughput_data(report)
+    json_workloads = {row["workload_id"] for panel in data["panels"] for row in panel["rows"]}
+    assert "new-shared" in json_workloads
+    assert "new-shared" in review_summary(report)
+
+    figure = _render_throughput(report, "light")
+    try:
+        rendered = [t.get_text() for ax in figure.axes for t in ax.texts]
+        assert "new-shared" not in rendered
+        assert not any("not measured" in text for text in rendered)
+        assert "tiny-fixture" in rendered
+    finally:
+        plt.close(figure)
+
+
+def test_single_column_figures_display_core_budget(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release, _render_throughput
+
+    for case, contract in zip(raw_result["cases"], raw_result["campaign"]["cases"], strict=True):
+        case["execution"].update(threads=8, threads_requested=8)
+        contract["execution"]["threads"] = 8
+
+    report = build_report(raw_result)
+    _, foreground, grid, colors = THEMES["light"]
+    release_fig = _render_release(report, colors, foreground, grid)
+    throughput_fig = _render_throughput(report, "light")
+    try:
+        for fig in (release_fig, throughput_fig):
+            assert [ax.get_title() for ax in fig.axes] == ["8 cores"]
+            fig.canvas.draw()
+            renderer = fig.canvas.get_renderer()
+            title_box = fig.axes[0].title.get_window_extent(renderer)
+            assert not title_box.overlaps(fig._suptitle.get_window_extent(renderer))
+            if fig.legends:
+                assert not title_box.overlaps(fig.legends[0].get_window_extent(renderer))
+    finally:
+        plt.close(release_fig)
+        plt.close(throughput_fig)
+
+
+def test_release_figure_pairs_baseline_configs_across_cores_regardless_of_order(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release
+
+    # Compare the same current candidate against two previous baseline configurations
+    # (scheduled and default) at 1 and 8 cores, reversing declaration order at 8 cores.
+    prev_base, cur_base = copy.deepcopy(raw_result["cases"])
+    prev_def, cur_def = copy.deepcopy(raw_result["campaign"]["cases"])
+    raw_result["cases"], raw_result["campaign"]["cases"] = [], []
+    raw_result["campaign"]["comparisons"] = []
+
+    def add_case(template, contract, variant_id, threads, rate, options):
+        case, definition = copy.deepcopy(template), copy.deepcopy(contract)
+        case.update(case_id=variant_id, variant_id=variant_id)
+        definition.update(id=variant_id, variant_id=variant_id)
+        case["execution"].update(threads=threads, threads_requested=threads, options=options)
+        definition["execution"].update(threads=threads, options=options)
+        for sample in case["samples"]:
+            sample["throughput_attempted_shots_per_second"] = rate
+            sample["duration_seconds"] = sample["attempted_shots"] / rate
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(definition)
+
+    sched_opt = {"scheduler": {"enabled": True}}
+    default_opt = {}
+    # 1 core: scheduled ratio = 200/100 = 2.0, default ratio = 200/50 = 4.0
+    add_case(prev_base, prev_def, "prev-scheduled", 1, 100.0, sched_opt)
+    add_case(prev_base, prev_def, "prev-default", 1, 50.0, default_opt)
+    add_case(cur_base, cur_def, "clifft-current", 1, 200.0, default_opt)
+    # 8 cores: scheduled ratio = 1200/400 = 3.0, default ratio = 1200/200 = 6.0
+    add_case(prev_base, prev_def, "prev-default-8c", 8, 200.0, default_opt)
+    add_case(prev_base, prev_def, "prev-scheduled-8c", 8, 400.0, sched_opt)
+    add_case(cur_base, cur_def, "clifft-current-8c", 8, 1200.0, default_opt)
+
+    raw_result["campaign"]["comparisons"] = [
+        {"id": "vs-sched-1c", "baseline_variant": "prev-scheduled",
+         "candidate_variants": ["clifft-current"]},
+        {"id": "vs-default-1c", "baseline_variant": "prev-default",
+         "candidate_variants": ["clifft-current"]},
+        # Reversed order at 8 cores: default first, scheduled second.
+        {"id": "vs-default-8c", "baseline_variant": "prev-default-8c",
+         "candidate_variants": ["clifft-current-8c"]},
+        {"id": "vs-sched-8c", "baseline_variant": "prev-scheduled-8c",
+         "candidate_variants": ["clifft-current-8c"]},
+    ]
+
+    report = build_report(raw_result)
+    _, foreground, grid, colors = THEMES["light"]
+    figure = _render_release(report, colors, foreground, grid)
+    try:
+        ax_1c, ax_8c = figure.axes
+        row_labels = [
+            " ".join(t.get_text().split()) for t in ax_1c.texts if t.get_ha() == "right"
+        ]
+        assert row_labels == [
+            "tiny-fixture · vs prev-scheduled",
+            "tiny-fixture · vs prev-default",
+        ]
+        by_y_1c = {
+            float(line.get_ydata()[0]): float(line.get_xdata()[0])
+            for line in ax_1c.lines if line.get_marker() == "o"
+        }
+        by_y_8c = {
+            float(line.get_ydata()[0]): float(line.get_xdata()[0])
+            for line in ax_8c.lines if line.get_marker() == "o"
+        }
+        ys = sorted(by_y_1c)
+        assert sorted(by_y_8c) == ys
+        # Row 0 (vs prev-scheduled): 1c=2.0x paired with 8c=3.0x
+        # Row 1 (vs prev-default):   1c=4.0x paired with 8c=6.0x
+        assert (by_y_1c[ys[0]], by_y_8c[ys[0]]) == (2.0, 3.0)
+        assert (by_y_1c[ys[1]], by_y_8c[ys[1]]) == (4.0, 6.0)
+    finally:
+        plt.close(figure)

@@ -33,16 +33,20 @@ first full sampling call. [Campaign report](results/release-clifft/0.14.0rc3-202
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/release-change-dark.png">
-  <img src="reporting/figures/web/release-change-light.png" alt="Clifft 0.14.0rc3 versus 0.13.0 survivor-count throughput on one and eight cores. RC3 led in all 18 measured pairs.">
+  <img src="reporting/figures/web/release-change-light.png" alt="Clifft 0.14.0rc3 versus 0.13.0 survivor-count throughput ratios on one and eight cores side by side. RC3 led in all 18 measured pairs, from 1.08× to 65.0×.">
 </picture>
 
 Clifft 0.14.0rc3 had higher survivor-count throughput than 0.13.0 on all nine
 circuits at both core counts. Fold d3 reached 65.0× the previous release’s
-throughput on one core and 54.9× on eight. Fold d5 appears in the peer figure
+throughput on one core and 54.9× on eight. Fold d5 appears in the peer figures
 below. The campaign omitted its two 0.13.0 survivor-count baselines because of
 their runtime.
 
 ### How does Clifft compare with other simulators?
+
+For interactive simulator filtering, full per-workload metrics, and Clifft-only
+circuits (`BT27`, `BT81`), use the
+[interactive throughput chart in the Clifft Performance guide](https://unitaryfoundation.github.io/clifft/stable/guide/performance/#cpu-simulator-throughput).
 
 Each entry counts workloads where Clifft had higher median throughput out of
 those measured by both tools. A dash means there was no paired measurement.
@@ -57,31 +61,29 @@ those measured by both tools. A dash means there was no paired measurement.
 On packed fold d3, Clifft delivered 1.63× Tsim’s throughput on one core
 and 5.73× on eight. Stim’s single measured comparison is
 one-core surface-code d7/r7, where both tools return packed detector and
-observable samples. [Benchmark contract](docs/benchmark-contract.md)
+observable samples. The peer charts below omit `BT27` and `BT81`, which have no
+peer measurements; their rates remain in the interactive chart, campaign report,
+and raw data. [Benchmark contract](docs/benchmark-contract.md)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/simulator-throughput-dark.png">
-  <img src="reporting/figures/web/simulator-throughput-light.png" alt="Attempted shots per second for Clifft 0.14.0rc3, Tsim, xtim, SymFT, and Stim, grouped by workload, postselection mode, and core count.">
+  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/simulator-throughput-packed-dark.png">
+  <img src="reporting/figures/web/simulator-throughput-packed-light.png" alt="Packed detector and observable sample throughput in attempted shots per second for Clifft 0.14.0rc3, xtim, Stim, and Tsim on one and eight cores side by side.">
 </picture>
 
-### Earlier Draper adder comparison
-
-The Clifft 0.12.0rc1 and 0.11.0rc1 campaign measured the prepared-basis
-adder separately. [Archived release results](results/release-v1/release-v1-20261009-192718/)
+<details>
+<summary>Survivor counts (postselection on) — 1 core and 8 cores</summary>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/draper-adder-dark.png">
-  <img src="reporting/figures/web/draper-adder-light.png" alt="Clifft 0.11 and 0.12 on the fixed-input 16-bit Draper adder. Throughput rises from 6.6 thousand to 217.6 million shots per second as peak active width falls from 15 to zero.">
+  <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/simulator-throughput-survivors-dark.png">
+  <img src="reporting/figures/web/simulator-throughput-survivors-light.png" alt="Survivor-count throughput in attempted shots per second for Clifft 0.14.0rc3, SymFT, xtim, and Tsim on one and eight cores side by side.">
 </picture>
 
-These adder rates apply to the specified basis input (37449 + 18724), with no
-noise or postselection. They exclude compilation, which is shown separately.
-The release configurations also differ in calibrated batch size, which rises from 1 to 1024.
+</details>
 
 ## Reproduce or contribute
 
 - [Generate release reports](CONTRIBUTING.md#release-reporting) from a full campaign or a Clifft refresh with its peer results.
-  The earlier adder figure uses the [archived tools](CONTRIBUTING.md#historical-evidence).
+  Archived 0.12 and earlier results use the [archived tools](CONTRIBUTING.md#historical-evidence).
 - [Collect release benchmarks](CONTRIBUTING.md#reference-host-collection) on the reference EC2 host.
 - [Contribute](CONTRIBUTING.md): local development, release setup, and new workloads.
 - [Explore other experiments](experiments/README.md), including
