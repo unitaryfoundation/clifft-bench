@@ -202,18 +202,23 @@ review summary without writing files or importing plotting dependencies. Without
 writes `report/review.md`, `report/simulator-throughput.json`, and these light/dark
 PNG pairs:
 
-- `simulator-throughput-{light,dark}.png`: Clifft and peer throughput in independent
-  log-scale panels by theme, with Quantum Volume separate.
-- `release-change-{light,dark}.png`: measured current/previous pairs in the same
-  thematic order.
+- `simulator-throughput-packed-{light,dark}.png` and
+  `simulator-throughput-survivors-{light,dark}.png`: Clifft and peer throughput
+  split by output mode, with 1-core and 8-core budgets side by side across
+  independent log-scale thematic bands (omitting peerless rows when peer
+  comparisons are present).
+- `release-change-{light,dark}.png`: measured current/previous pairs side by side
+  by core budget in the same thematic order, using a single log-ratio axis when
+  any change exceeds ±50% and a linear percentage axis otherwise.
 
-The generated review embeds both figures and links their dark counterparts.
+The generated review embeds these figures and links their dark counterparts.
 It also links the throughput JSON for the Clifft docs widget. The JSON
-contains the same selected rows, values, styles, and source identities as the
-throughput figures; its [field semantics](docs/benchmark-contract.md#throughput-widget-data)
+contains all main throughput rows (including peerless circuits), values, styles,
+and source identities; its [field semantics](docs/benchmark-contract.md#throughput-widget-data)
 belong to the benchmark contract. Regenerate it with the same explicit peer
 input as the figures; the primary `cases.csv` alone does not contain retained peers.
-Regenerating removes superseded Clifft-only figures and numbered pages.
+Regenerating removes superseded Clifft-only, combined, inactive-mode, and numbered
+figure files.
 
 For retired formats or adapter options, validate executions with their recorded
 `runner.suite_source.commit`; regenerate reports with the renderer revision

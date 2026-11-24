@@ -12,7 +12,7 @@ three timed samples each. The other 36 cases requested packed output from Clifft
 | [RC1 full campaign](https://github.com/unitaryfoundation/clifft-bench/tree/1993504c9217da4d4f432bcf853614b29c315bec/results/release-v1/0.14.0rc1-20261120-2134) | `1b252b89-75d2-4881-ade9-114e09db6c9d` | Tsim 1.0.0, xtim 4.1.2, SymFT 2026.10.8, and Stim 1.16.0 |
 
 The [throughput JSON](report/simulator-throughput.json) identifies the source of
-each plotted value. To regenerate both static figures and the JSON from the
+each plotted value. To regenerate the static figures and the JSON from the
 repository root, run the following command.
 
 ```bash
