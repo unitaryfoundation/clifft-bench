@@ -1031,3 +1031,81 @@ def test_single_column_figures_display_core_budget(raw_result):
     finally:
         plt.close(release_fig)
         plt.close(throughput_fig)
+
+
+def test_release_figure_pairs_baseline_configs_across_cores_regardless_of_order(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release
+
+    # Compare the same current candidate against two previous baseline configurations
+    # (scheduled and default) at 1 and 8 cores, reversing declaration order at 8 cores.
+    prev_base, cur_base = copy.deepcopy(raw_result["cases"])
+    prev_def, cur_def = copy.deepcopy(raw_result["campaign"]["cases"])
+    raw_result["cases"], raw_result["campaign"]["cases"] = [], []
+    raw_result["campaign"]["comparisons"] = []
+
+    def add_case(template, contract, variant_id, threads, rate, options):
+        case, definition = copy.deepcopy(template), copy.deepcopy(contract)
+        case.update(case_id=variant_id, variant_id=variant_id)
+        definition.update(id=variant_id, variant_id=variant_id)
+        case["execution"].update(threads=threads, threads_requested=threads, options=options)
+        definition["execution"].update(threads=threads, options=options)
+        for sample in case["samples"]:
+            sample["throughput_attempted_shots_per_second"] = rate
+            sample["duration_seconds"] = sample["attempted_shots"] / rate
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(definition)
+
+    sched_opt = {"scheduler": {"enabled": True}}
+    default_opt = {}
+    # 1 core: scheduled ratio = 200/100 = 2.0, default ratio = 200/50 = 4.0
+    add_case(prev_base, prev_def, "prev-scheduled", 1, 100.0, sched_opt)
+    add_case(prev_base, prev_def, "prev-default", 1, 50.0, default_opt)
+    add_case(cur_base, cur_def, "clifft-current", 1, 200.0, default_opt)
+    # 8 cores: scheduled ratio = 1200/400 = 3.0, default ratio = 1200/200 = 6.0
+    add_case(prev_base, prev_def, "prev-default-8c", 8, 200.0, default_opt)
+    add_case(prev_base, prev_def, "prev-scheduled-8c", 8, 400.0, sched_opt)
+    add_case(cur_base, cur_def, "clifft-current-8c", 8, 1200.0, default_opt)
+
+    raw_result["campaign"]["comparisons"] = [
+        {"id": "vs-sched-1c", "baseline_variant": "prev-scheduled",
+         "candidate_variants": ["clifft-current"]},
+        {"id": "vs-default-1c", "baseline_variant": "prev-default",
+         "candidate_variants": ["clifft-current"]},
+        # Reversed order at 8 cores: default first, scheduled second.
+        {"id": "vs-default-8c", "baseline_variant": "prev-default-8c",
+         "candidate_variants": ["clifft-current-8c"]},
+        {"id": "vs-sched-8c", "baseline_variant": "prev-scheduled-8c",
+         "candidate_variants": ["clifft-current-8c"]},
+    ]
+
+    report = build_report(raw_result)
+    _, foreground, grid, colors = THEMES["light"]
+    figure = _render_release(report, colors, foreground, grid)
+    try:
+        ax_1c, ax_8c = figure.axes
+        row_labels = [
+            " ".join(t.get_text().split()) for t in ax_1c.texts if t.get_ha() == "right"
+        ]
+        assert row_labels == [
+            "tiny-fixture · vs prev-scheduled",
+            "tiny-fixture · vs prev-default",
+        ]
+        by_y_1c = {
+            float(line.get_ydata()[0]): float(line.get_xdata()[0])
+            for line in ax_1c.lines if line.get_marker() == "o"
+        }
+        by_y_8c = {
+            float(line.get_ydata()[0]): float(line.get_xdata()[0])
+            for line in ax_8c.lines if line.get_marker() == "o"
+        }
+        ys = sorted(by_y_1c)
+        assert sorted(by_y_8c) == ys
+        # Row 0 (vs prev-scheduled): 1c=2.0x paired with 8c=3.0x
+        # Row 1 (vs prev-default):   1c=4.0x paired with 8c=6.0x
+        assert (by_y_1c[ys[0]], by_y_8c[ys[0]]) == (2.0, 3.0)
+        assert (by_y_1c[ys[1]], by_y_8c[ys[1]]) == (4.0, 6.0)
+    finally:
+        plt.close(figure)

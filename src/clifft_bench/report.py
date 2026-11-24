@@ -648,14 +648,14 @@ def _config_signature(case: dict) -> tuple:
 
 
 def _group_rows_by_threads(
-    items: list[tuple[Any, dict, str, Any]],
+    items: list[tuple[Any, dict, tuple, tuple[str, ...], Any]],
 ) -> list[dict[str, Any]]:
     """Pair matching configurations across core budgets without overwriting collisions."""
     rows: list[dict[str, Any]] = []
     index_by_key: dict[tuple, list[dict[str, Any]]] = {}
-    for base_key, case, variant_id, payload in items:
+    for base_key, case, config_key, label_candidates, payload in items:
         threads = case["execution"]["threads_requested"]
-        sig_key = (base_key, _config_signature(case))
+        sig_key = (base_key, config_key)
         target = next(
             (row for row in index_by_key.get(sig_key, ()) if threads not in row["by_threads"]),
             None,
@@ -664,12 +664,13 @@ def _group_rows_by_threads(
             target = {
                 "base_key": base_key,
                 "case": case,
-                "variant": variant_id,
+                "label_by_threads": {},
                 "by_threads": {},
             }
             rows.append(target)
             index_by_key.setdefault(sig_key, []).append(target)
         target["by_threads"][threads] = payload
+        target["label_by_threads"][threads] = label_candidates
 
     by_base: dict[Any, list[dict[str, Any]]] = {}
     for row in rows:
@@ -682,9 +683,20 @@ def _group_rows_by_threads(
         if len(set(shots)) == len(group):
             for row, count in zip(group, shots, strict=True):
                 row["qualifier"] = f"{count:,} shots"
-        else:
-            for row in group:
-                row["qualifier"] = row["variant"]
+            continue
+        ordered_candidates = [
+            row["label_by_threads"][min(row["label_by_threads"])] for row in group
+        ]
+        chosen = None
+        for index in range(len(ordered_candidates[0])):
+            options = [entry[index] for entry in ordered_candidates]
+            if len(set(options)) == len(group):
+                chosen = options
+                break
+        if chosen is None:
+            chosen = [entry[-1] for entry in ordered_candidates]
+        for row, qualifier in zip(group, chosen, strict=True):
+            row["qualifier"] = qualifier
     return rows
 
 
@@ -738,7 +750,13 @@ def _throughput_mode_bands(
     for entry in mode_entries:
         case = _representative(entry)
         visible = _visible_cases(entry, report, variants)
-        items.append((case["workload"]["id"], case, entry["variant"], (entry, visible)))
+        items.append((
+            case["workload"]["id"],
+            case,
+            _config_signature(case),
+            (entry["variant"],),
+            (entry, visible),
+        ))
     rows = _group_rows_by_threads(items)
     for row in rows:
         label = _workload_label(row["case"])
@@ -788,7 +806,7 @@ def _render_throughput_mode(
 
     layouts = []
     for heading, rows in bands:
-        names = [textwrap.fill(row["label"], 28) for row in rows]
+        names = [textwrap.fill(row["label"], 28, break_on_hyphens=False) for row in rows]
         heights = []
         for row, name in zip(rows, names, strict=True):
             max_bars = max((len(visible) for _, visible in row["by_threads"].values()), default=1)
@@ -939,10 +957,20 @@ def _render_release(report, colors, foreground, grid, background="#ffffff"):
     budgets = sorted({pair["candidate"]["execution"]["threads_requested"] for pair in pairs}) or [1]
     items = []
     for pair in pairs:
-        candidate = pair["candidate"]
+        candidate, baseline = pair["candidate"], pair["baseline"]
         mode = candidate["execution"]["postselect"]
         row_key = (pair["workload_id"], mode) if len(modes) > 1 else pair["workload_id"]
-        items.append((row_key, candidate, pair["candidate_variant"], pair))
+        config_key = (
+            _config_signature(candidate),
+            baseline["simulator"]["implementation_id"],
+            _config_signature(baseline),
+        )
+        label_candidates = (
+            pair["candidate_variant"],
+            f"vs {pair['baseline_variant']}",
+            f"{pair['candidate_variant']} vs {pair['baseline_variant']}",
+        )
+        items.append((row_key, candidate, config_key, label_candidates, pair))
     rows = _group_rows_by_threads(items)
     for row in rows:
         candidate = row["case"]
@@ -953,7 +981,7 @@ def _render_release(report, colors, foreground, grid, background="#ffffff"):
         row["label"] = f"{label} · {row['qualifier']}" if row["qualifier"] else label
 
     cases = [row["case"] for row in rows]
-    names = [textwrap.fill(row["label"], 28) for row in rows]
+    names = [textwrap.fill(row["label"], 28, break_on_hyphens=False) for row in rows]
     heights = [max(0.46, (name.count("\n") + 1) * 0.22 + 0.20) for name in names]
 
     headers, positions = [], []
