@@ -626,11 +626,66 @@ def _visible_cases(entry: dict, report: dict, variants: list[str]) -> list[tuple
     )
 
 
+def _has_recorded_peer(entry: dict, visible: list[tuple[str, dict | None]]) -> bool:
+    return any(variant != entry["variant"] and case is not None for variant, case in visible)
+
+
 def _has_peer_comparisons(report: dict, entries: list[dict], variants: list[str]) -> bool:
     return any(
-        any(variant != entry["variant"] for variant, _ in _visible_cases(entry, report, variants))
+        _has_recorded_peer(entry, _visible_cases(entry, report, variants))
         for entry in entries
     )
+
+
+def _config_signature(case: dict) -> tuple:
+    execution = case["execution"]
+    return (
+        execution["postselect"],
+        execution["shots_per_call"],
+        execution["batch_size"],
+        json.dumps(execution["options"], sort_keys=True),
+    )
+
+
+def _group_rows_by_threads(
+    items: list[tuple[Any, dict, str, Any]],
+) -> list[dict[str, Any]]:
+    """Pair matching configurations across core budgets without overwriting collisions."""
+    rows: list[dict[str, Any]] = []
+    index_by_key: dict[tuple, list[dict[str, Any]]] = {}
+    for base_key, case, variant_id, payload in items:
+        threads = case["execution"]["threads_requested"]
+        sig_key = (base_key, _config_signature(case))
+        target = next(
+            (row for row in index_by_key.get(sig_key, ()) if threads not in row["by_threads"]),
+            None,
+        )
+        if target is None:
+            target = {
+                "base_key": base_key,
+                "case": case,
+                "variant": variant_id,
+                "by_threads": {},
+            }
+            rows.append(target)
+            index_by_key.setdefault(sig_key, []).append(target)
+        target["by_threads"][threads] = payload
+
+    by_base: dict[Any, list[dict[str, Any]]] = {}
+    for row in rows:
+        by_base.setdefault(row["base_key"], []).append(row)
+    for group in by_base.values():
+        if len(group) == 1:
+            group[0]["qualifier"] = ""
+            continue
+        shots = [row["case"]["execution"]["shots_per_call"] for row in group]
+        if len(set(shots)) == len(group):
+            for row, count in zip(group, shots, strict=True):
+                row["qualifier"] = f"{count:,} shots"
+        else:
+            for row in group:
+                row["qualifier"] = row["variant"]
+    return rows
 
 
 def _throughput_figure_specs(report: dict) -> list[tuple[str, str, str, str]]:
@@ -679,27 +734,21 @@ def _throughput_mode_bands(
         if _representative(entry)["execution"]["postselect"] == postselect
     ]
     has_peers = _has_peer_comparisons(report, entries, variants)
-    grouped_rows: dict[str, dict[str, Any]] = {}
+    items = []
     for entry in mode_entries:
         case = _representative(entry)
-        workload_id = case["workload"]["id"]
-        threads = case["execution"]["threads_requested"]
         visible = _visible_cases(entry, report, variants)
-        row = grouped_rows.setdefault(workload_id, {
-            "workload_id": workload_id,
-            "case": case,
-            "label": _workload_label(case),
-            "by_threads": {},
-        })
-        row["by_threads"][threads] = (entry, visible)
-    rows = list(grouped_rows.values())
+        items.append((case["workload"]["id"], case, entry["variant"], (entry, visible)))
+    rows = _group_rows_by_threads(items)
+    for row in rows:
+        label = _workload_label(row["case"])
+        row["label"] = f"{label} · {row['qualifier']}" if row["qualifier"] else label
     if has_peers:
         rows = [
             row for row in rows
             if any(
-                variant != entry["variant"]
+                _has_recorded_peer(entry, visible)
                 for entry, visible in row["by_threads"].values()
-                for variant, _ in visible
             )
         ]
     budgets = sorted({
@@ -752,7 +801,7 @@ def _render_throughput_mode(
             y += row_height
         layouts.append((heading, rows, names, heights, positions, max(0.75, y + 0.08)))
 
-    top = 1.18 if num_cols > 1 else 1.06
+    top = 1.18
     band_gap = 0.42
     bottom_pad = 0.64
     height = (
@@ -760,6 +809,7 @@ def _render_throughput_mode(
         + band_gap * max(0, len(layouts) - 1) + bottom_pad
     )
     figure = plt.figure(figsize=(fig_width, height))
+    has_rows = any(rows for _, rows in bands)
     used, consumed = set(), top
 
     for band_index, (heading, rows, names, heights, positions, extent) in enumerate(layouts):
@@ -783,7 +833,7 @@ def _render_throughput_mode(
             _configure_log_x_axis(axis, low, high, lambda value, _: _number_label(value))
             _style_axis(axis, extent, grid)
             axis.tick_params(axis="x", labelsize=10.5)
-            if band_index == 0 and num_cols > 1:
+            if band_index == 0 and has_rows:
                 axis.set_title(_core_label(threads), fontsize=12.5, fontweight="bold", pad=12)
             if band_index == len(layouts) - 1:
                 axis.set_xlabel(
@@ -887,21 +937,21 @@ def _render_release(report, colors, foreground, grid, background="#ffffff"):
     pairs = _release_pairs(report)
     modes = {pair["candidate"]["execution"]["postselect"] for pair in pairs}
     budgets = sorted({pair["candidate"]["execution"]["threads_requested"] for pair in pairs}) or [1]
-    grouped: dict[Any, dict[str, Any]] = {}
+    items = []
     for pair in pairs:
         candidate = pair["candidate"]
         mode = candidate["execution"]["postselect"]
         row_key = (pair["workload_id"], mode) if len(modes) > 1 else pair["workload_id"]
+        items.append((row_key, candidate, pair["candidate_variant"], pair))
+    rows = _group_rows_by_threads(items)
+    for row in rows:
+        candidate = row["case"]
         label = _workload_label(candidate)
         if len(modes) > 1:
-            suffix = "survivors" if mode == "on" else "packed"
+            suffix = "survivors" if candidate["execution"]["postselect"] == "on" else "packed"
             label = f"{label} ({suffix})"
-        row = grouped.setdefault(row_key, {
-            "case": candidate, "label": label, "by_threads": {},
-        })
-        row["by_threads"][candidate["execution"]["threads_requested"]] = pair
+        row["label"] = f"{label} · {row['qualifier']}" if row["qualifier"] else label
 
-    rows = list(grouped.values())
     cases = [row["case"] for row in rows]
     names = [textwrap.fill(row["label"], 28) for row in rows]
     heights = [max(0.46, (name.count("\n") + 1) * 0.22 + 0.20) for name in names]
@@ -929,7 +979,7 @@ def _render_release(report, colors, foreground, grid, background="#ffffff"):
     col_w = (right - left - col_gap * (num_cols - 1)) / num_cols
     header_left = (0.02 - left) / col_w
 
-    top = 1.12 if num_cols > 1 else 0.92
+    top = 1.12
     bottom_pad = 0.66
     height = top + extent + bottom_pad
     figure = plt.figure(figsize=(fig_width, height))
@@ -975,7 +1025,7 @@ def _render_release(report, colors, foreground, grid, background="#ffffff"):
             axis.set_xlabel("Percentage change · 0% = unchanged", labelpad=8, fontsize=10.5)
         _style_axis(axis, extent, grid)
         axis.tick_params(axis="x", labelsize=10.5)
-        if num_cols > 1:
+        if pairs:
             axis.set_title(_core_label(threads), fontsize=12.5, fontweight="bold", pad=12)
 
     for heading, hy in headers:

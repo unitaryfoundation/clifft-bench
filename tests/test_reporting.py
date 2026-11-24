@@ -918,3 +918,116 @@ def test_release_and_peer_figures_use_side_by_side_cores_and_omit_peerless_rows(
     finally:
         plt.close(release_fig)
         plt.close(throughput_fig)
+
+
+def test_multiple_configurations_per_workload_render_without_overwriting(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release, _render_throughput
+
+    for index in range(2):
+        case = copy.deepcopy(raw_result["cases"][index])
+        expected = copy.deepcopy(raw_result["campaign"]["cases"][index])
+        variant = case["variant_id"] + "-alt"
+        case.update(case_id=variant, variant_id=variant)
+        expected.update(id=variant, variant_id=variant, shots_per_call=16)
+        case["execution"]["shots_per_call"] = 16
+        for sample in [case["first_call_warmup"], *case["samples"]]:
+            for key in ("attempted_shots", "accepted_shots", "discarded_shots", "logical_errors"):
+                sample[key] *= 2
+            sample["duration_seconds"] *= 2
+        if case["variant_id"] == "current-alt":
+            for sample in case["samples"]:
+                sample["throughput_attempted_shots_per_second"] = 250.0
+                sample["duration_seconds"] = sample["attempted_shots"] / 250.0
+        raw_result["cases"].append(case)
+        raw_result["campaign"]["cases"].append(expected)
+    raw_result["campaign"]["comparisons"].append(
+        {"id": "alt", "baseline_variant": "previous-alt", "candidate_variants": ["current-alt"]}
+    )
+    validate_result(raw_result)
+    report = build_report(raw_result)
+
+    _, foreground, grid, colors = THEMES["light"]
+    release_fig = _render_release(report, colors, foreground, grid)
+    throughput_fig = _render_throughput(report, "light")
+    try:
+        release_marks = [
+            float(line.get_xdata()[0]) for line in release_fig.axes[0].lines
+            if line.get_marker() == "o"
+        ]
+        assert sorted(release_marks) == [1.25, 2.5]
+        release_labels = [t.get_text() for t in release_fig.axes[0].texts if t.get_ha() == "right"]
+        assert release_labels == ["tiny-fixture · 8 shots", "tiny-fixture · 16 shots"]
+
+        throughput_marks = [
+            float(line.get_xdata()[0]) for line in throughput_fig.axes[0].lines
+            if line.get_marker() == "o"
+        ]
+        assert sorted(throughput_marks) == [125.0, 250.0]
+        throughput_labels = [
+            t.get_text() for t in throughput_fig.axes[0].texts if t.get_ha() == "right"
+        ]
+        assert throughput_labels == ["tiny-fixture · 8 shots", "tiny-fixture · 16 shots"]
+    finally:
+        plt.close(release_fig)
+        plt.close(throughput_fig)
+
+
+def test_peer_figure_omits_rows_with_only_unmeasured_peers(raw_result, peer_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import _render_throughput
+
+    new_case = copy.deepcopy(raw_result["cases"][1])
+    new_case.update(case_id="new-shared")
+    new_case["workload"].update(id="new-shared", compatible_adapters=["clifft", "symft"])
+    new_contract = copy.deepcopy(raw_result["campaign"]["cases"][1])
+    new_contract.update(id="new-shared", workload_id="new-shared")
+    raw_result["cases"].append(new_case)
+    raw_result["campaign"]["cases"].append(new_contract)
+
+    report = build_report(raw_result, peer_document=peer_result)
+    data = throughput_data(report)
+    json_workloads = {row["workload_id"] for panel in data["panels"] for row in panel["rows"]}
+    assert "new-shared" in json_workloads
+    assert "new-shared" in review_summary(report)
+
+    figure = _render_throughput(report, "light")
+    try:
+        rendered = [t.get_text() for ax in figure.axes for t in ax.texts]
+        assert "new-shared" not in rendered
+        assert not any("not measured" in text for text in rendered)
+        assert "tiny-fixture" in rendered
+    finally:
+        plt.close(figure)
+
+
+def test_single_column_figures_display_core_budget(raw_result):
+    pytest.importorskip("matplotlib")
+    import matplotlib.pyplot as plt
+
+    from clifft_bench.report import THEMES, _render_release, _render_throughput
+
+    for case, contract in zip(raw_result["cases"], raw_result["campaign"]["cases"], strict=True):
+        case["execution"].update(threads=8, threads_requested=8)
+        contract["execution"]["threads"] = 8
+
+    report = build_report(raw_result)
+    _, foreground, grid, colors = THEMES["light"]
+    release_fig = _render_release(report, colors, foreground, grid)
+    throughput_fig = _render_throughput(report, "light")
+    try:
+        for fig in (release_fig, throughput_fig):
+            assert [ax.get_title() for ax in fig.axes] == ["8 cores"]
+            fig.canvas.draw()
+            renderer = fig.canvas.get_renderer()
+            title_box = fig.axes[0].title.get_window_extent(renderer)
+            assert not title_box.overlaps(fig._suptitle.get_window_extent(renderer))
+            if fig.legends:
+                assert not title_box.overlaps(fig.legends[0].get_window_extent(renderer))
+    finally:
+        plt.close(release_fig)
+        plt.close(throughput_fig)
