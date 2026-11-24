@@ -272,7 +272,12 @@ when interpreting older QV and adder results.
 Historical plots may describe performance on an evolving representative suite.
 Label workload, hardware, and methodology changes rather than imply a precise
 same-task speedup across them. Historical refreshes are separate from the
-recurring release workflow.
+recurring release workflow. To regenerate the chained six-workload QEC
+`performance-over-time-{light,dark}.png` figures from committed results, run:
+
+```bash
+uv run --extra report python scripts/render_history.py
+```
 
 ## Adding a workload
 
