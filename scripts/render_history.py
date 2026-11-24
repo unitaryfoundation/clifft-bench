@@ -230,7 +230,7 @@ def _plot_theme(plt: Any, theme: dict[str, str], series: HistorySeries, output: 
     )
 
     axis.annotate(
-        f"{medians[-1]:.0f}\u00d7 median speedup",
+        f"{medians[-1]:.0f}\u00d7 median chained speedup",
         (positions[-1], medians[-1]),
         xytext=(0, 28),
         textcoords="offset points",
@@ -288,7 +288,7 @@ def _plot_theme(plt: Any, theme: dict[str, str], series: HistorySeries, output: 
         0.11,
         0.03,
         "Chained 1-core paired survivor-count ratios across the 6-workload QEC core "
-        "(v0.1\u2013v0.14)",
+        "(v0.1\u2013v0.14; host and call-size protocol updated at v0.14)",
         fontsize=8.5,
         color=theme["muted"],
     )
