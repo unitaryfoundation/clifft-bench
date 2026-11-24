@@ -19,26 +19,26 @@ Looking to use Clifft? Start with the
 See the [Performance guide](https://unitaryfoundation.github.io/clifft/stable/guide/performance/)
 for interpretation, methodology, and longer-term performance history.
 
-The release figure compares **Clifft 0.14.0rc2** with **0.13.0**. The peer
+The release figure compares **Clifft 0.14.0rc3** with **0.13.0**. The peer
 figure combines these new Clifft measurements with the peer results from the
 RC1 campaign. Both runs used the same AWS `m7a.4xlarge` and one or eight pinned
-physical cores. The 0.14.0 label refers to RC2. Throughput is the median
+physical cores. The 0.14.0 label refers to RC3. Throughput is the median
 attempted shots per second over three repetitions after compilation and the
-first full sampling call. [Campaign report](results/release-clifft/0.14.0rc2-20261123-1422/report/review.md) ·
-[Clifft case table](results/release-clifft/0.14.0rc2-20261123-1422/cases.csv) ·
-[Clifft raw measurements](results/release-clifft/0.14.0rc2-20261123-1422/raw.json) ·
+first full sampling call. [Campaign report](results/release-clifft/0.14.0rc3-20261124-0148/report/review.md) ·
+[Clifft case table](results/release-clifft/0.14.0rc3-20261124-0148/cases.csv) ·
+[Clifft raw measurements](results/release-clifft/0.14.0rc3-20261124-0148/raw.json) ·
 [Peer raw measurements](results/release-v1/0.14.0rc1-20261120-2134/raw.json)
 
 ### Did Clifft get faster in the latest release?
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/release-change-dark.png">
-  <img src="reporting/figures/web/release-change-light.png" alt="Clifft 0.14.0rc2 versus 0.13.0 survivor-count throughput on one and eight cores. RC2 led in all 18 measured pairs.">
+  <img src="reporting/figures/web/release-change-light.png" alt="Clifft 0.14.0rc3 versus 0.13.0 survivor-count throughput on one and eight cores. RC3 led in all 18 measured pairs.">
 </picture>
 
-Clifft 0.14.0rc2 had higher survivor-count throughput than 0.13.0 on all nine
-circuits at both core counts. Fold d3 reached 20.2× the previous release’s
-throughput on one core and 19.2× on eight. Fold d5 appears in the peer figure
+Clifft 0.14.0rc3 had higher survivor-count throughput than 0.13.0 on all nine
+circuits at both core counts. Fold d3 reached 65.0× the previous release’s
+throughput on one core and 54.9× on eight. Fold d5 appears in the peer figure
 below. The campaign omitted its two 0.13.0 survivor-count baselines because of
 their runtime.
 
@@ -49,19 +49,19 @@ those measured by both tools. A dash means there was no paired measurement.
 
 | Peer | Survivor counts, 1 core | Survivor counts, 8 cores | Packed samples, 1 core | Packed samples, 8 cores |
 | --- | ---: | ---: | ---: | ---: |
-| Tsim 1.0.0 | 8/10 | 10/10 | 9/16 | 16/16 |
+| Tsim 1.0.0 | 10/10 | 10/10 | 12/16 | 16/16 |
 | xtim 4.1.2 | 1/4 | 4/4 | 1/4 | 1/4 |
 | SymFT 2026.10.8 | 7/7 | 7/7 | — | — |
 | Stim 1.16.0 | — | — | 1/1 | — |
 
-On packed fold d3, Tsim delivered 2.02× Clifft’s throughput on one core, and
-Clifft delivered 1.83× Tsim’s on eight. Stim’s single measured comparison is
+On packed fold d3, Clifft delivered 1.63× Tsim’s throughput on one core
+and 5.73× on eight. Stim’s single measured comparison is
 one-core surface-code d7/r7, where both tools return packed detector and
 observable samples. [Benchmark contract](docs/benchmark-contract.md)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="reporting/figures/web/simulator-throughput-dark.png">
-  <img src="reporting/figures/web/simulator-throughput-light.png" alt="Attempted shots per second for Clifft 0.14.0rc2, Tsim, xtim, SymFT, and Stim, grouped by workload, postselection mode, and core count.">
+  <img src="reporting/figures/web/simulator-throughput-light.png" alt="Attempted shots per second for Clifft 0.14.0rc3, Tsim, xtim, SymFT, and Stim, grouped by workload, postselection mode, and core count.">
 </picture>
 
 ### Earlier Draper adder comparison
